@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+:root {
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  color: #f8fafc;
+  background: var(--fondo-principal);
+
+  --fondo-principal: #0f172a;
+  --paneles: #1e293b;
+  --primario: #8b5cf6;
+  --hover: #7c3aed;
+  --texto: #f8fafc;
+  --texto-secundario: #94a3b8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--fondo-principal);
+  color: var(--texto);
+}
