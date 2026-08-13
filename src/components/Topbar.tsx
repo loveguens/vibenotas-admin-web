@@ -33,6 +33,7 @@ type UsuarioGuardado = {
   nombre?: string;
   correo?: string;
   rol?: string;
+  avatarUrl?: string | null;
   foto_perfil?: string | null;
   usuario?: UsuarioGuardado;
   user?: UsuarioGuardado;
@@ -56,16 +57,38 @@ type NotificationVisual = {
   glowClassName: string;
 };
 
-const API_URL = "http://localhost/vibenotas-backend/public";
+function getPhotoUrl(
+  path?: string | null,
+): string {
+  if (!path) {
+    return "";
+  }
 
-function getPhotoUrl(path?: string | null) {
-  if (!path) return "";
+  if (
+    /^(https?:\/\/|blob:|data:)/i.test(
+      path,
+    )
+  ) {
+    return path;
+  }
 
-  const url = path.startsWith("http")
-    ? path
-    : `${API_URL}/${path.replace(/^\/+/, "")}`;
+  const baseURL = String(
+    api.defaults.baseURL ?? "",
+  ).trim();
 
-  return `${url}${url.includes("?") ? "&" : "?"}v=${Date.now()}`;
+  try {
+    const apiOrigin = new URL(
+      baseURL || window.location.origin,
+      window.location.origin,
+    ).origin;
+
+    return new URL(
+      path,
+      `${apiOrigin}/`,
+    ).toString();
+  } catch {
+    return path;
+  }
 }
 
 function getStoredUser(): UsuarioGuardado {
@@ -120,10 +143,8 @@ function getNotificationVisual(tipo: string): NotificationVisual {
     return {
       icon: <MessageCircle size={19} />,
       label: "Mensaje",
-      iconClassName:
-        "bg-sky-500/15 text-sky-300 ring-1 ring-sky-400/20",
-      badgeClassName:
-        "border-sky-400/20 bg-sky-500/10 text-sky-200",
+      iconClassName: "bg-sky-500/15 text-sky-300 ring-1 ring-sky-400/20",
+      badgeClassName: "border-sky-400/20 bg-sky-500/10 text-sky-200",
       glowClassName: "from-sky-500/20 via-transparent to-transparent",
     };
   }
@@ -134,10 +155,8 @@ function getNotificationVisual(tipo: string): NotificationVisual {
       label: "Grupo",
       iconClassName:
         "bg-violet-500/15 text-violet-300 ring-1 ring-violet-400/20",
-      badgeClassName:
-        "border-violet-400/20 bg-violet-500/10 text-violet-200",
-      glowClassName:
-        "from-violet-500/20 via-transparent to-transparent",
+      badgeClassName: "border-violet-400/20 bg-violet-500/10 text-violet-200",
+      glowClassName: "from-violet-500/20 via-transparent to-transparent",
     };
   }
 
@@ -149,8 +168,7 @@ function getNotificationVisual(tipo: string): NotificationVisual {
         "bg-fuchsia-500/15 text-fuchsia-300 ring-1 ring-fuchsia-400/20",
       badgeClassName:
         "border-fuchsia-400/20 bg-fuchsia-500/10 text-fuchsia-200",
-      glowClassName:
-        "from-fuchsia-500/20 via-transparent to-transparent",
+      glowClassName: "from-fuchsia-500/20 via-transparent to-transparent",
     };
   }
 
@@ -162,8 +180,7 @@ function getNotificationVisual(tipo: string): NotificationVisual {
         "bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-400/20",
       badgeClassName:
         "border-emerald-400/20 bg-emerald-500/10 text-emerald-200",
-      glowClassName:
-        "from-emerald-500/20 via-transparent to-transparent",
+      glowClassName: "from-emerald-500/20 via-transparent to-transparent",
     };
   }
 
@@ -171,10 +188,8 @@ function getNotificationVisual(tipo: string): NotificationVisual {
     return {
       icon: <ShieldCheck size={19} />,
       label: "Seguridad",
-      iconClassName:
-        "bg-red-500/15 text-red-300 ring-1 ring-red-400/20",
-      badgeClassName:
-        "border-red-400/20 bg-red-500/10 text-red-200",
+      iconClassName: "bg-red-500/15 text-red-300 ring-1 ring-red-400/20",
+      badgeClassName: "border-red-400/20 bg-red-500/10 text-red-200",
       glowClassName: "from-red-500/20 via-transparent to-transparent",
     };
   }
@@ -183,22 +198,17 @@ function getNotificationVisual(tipo: string): NotificationVisual {
     return {
       icon: <Settings size={19} />,
       label: "Sistema",
-      iconClassName:
-        "bg-amber-500/15 text-amber-300 ring-1 ring-amber-400/20",
-      badgeClassName:
-        "border-amber-400/20 bg-amber-500/10 text-amber-200",
-      glowClassName:
-        "from-amber-500/20 via-transparent to-transparent",
+      iconClassName: "bg-amber-500/15 text-amber-300 ring-1 ring-amber-400/20",
+      badgeClassName: "border-amber-400/20 bg-amber-500/10 text-amber-200",
+      glowClassName: "from-amber-500/20 via-transparent to-transparent",
     };
   }
 
   return {
     icon: <Bell size={19} />,
     label: "Aviso",
-    iconClassName:
-      "bg-slate-700/80 text-slate-300 ring-1 ring-white/10",
-    badgeClassName:
-      "border-slate-500/20 bg-slate-700/60 text-slate-300",
+    iconClassName: "bg-slate-700/80 text-slate-300 ring-1 ring-white/10",
+    badgeClassName: "border-slate-500/20 bg-slate-700/60 text-slate-300",
     glowClassName: "from-slate-500/20 via-transparent to-transparent",
   };
 }
@@ -229,9 +239,10 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
 
   const usuario = usuarioActual;
 
+  const fotoPerfil = usuario.foto_perfil ?? usuario.avatarUrl ?? null;
+
   const nombreUsuario =
-    usuario.nombre ||
-    (role === "superadmin" ? "Super Admin" : "Administrador");
+    usuario.nombre || (role === "superadmin" ? "Super Admin" : "Administrador");
 
   const iniciales =
     nombreUsuario
@@ -362,16 +373,14 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
   const abrirPerfil = () => {
     setProfileOpen(false);
 
-    navigate(
-      role === "superadmin" ? "/superadmin/profile" : "/admin/profile"
-    );
+    navigate(role === "superadmin" ? "/superadmin/profile" : "/admin/profile");
   };
 
   const abrirConfiguracion = () => {
     setProfileOpen(false);
 
     navigate(
-      role === "superadmin" ? "/superadmin/settings" : "/admin/settings"
+      role === "superadmin" ? "/superadmin/settings" : "/admin/settings",
     );
   };
 
@@ -385,7 +394,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
     navigate(
       role === "superadmin"
         ? `/superadmin/users?buscar=${encodeURIComponent(texto)}`
-        : `/admin/users?buscar=${encodeURIComponent(texto)}`
+        : `/admin/users?buscar=${encodeURIComponent(texto)}`,
     );
   };
 
@@ -396,7 +405,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
     }
 
     navigate(
-      role === "superadmin" ? "/superadmin/dashboard" : "/admin/dashboard"
+      role === "superadmin" ? "/superadmin/dashboard" : "/admin/dashboard",
     );
   };
 
@@ -410,7 +419,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
         current.map((notification) => ({
           ...notification,
           leida: 1,
-        }))
+        })),
       );
 
       setUnreadCount(0);
@@ -437,12 +446,12 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
 
       setNotifications((current) =>
         current.map((item) =>
-          item.id === notification.id ? { ...item, leida: 1 } : item
-        )
+          item.id === notification.id ? { ...item, leida: 1 } : item,
+        ),
       );
 
       setSelectedNotification((current) =>
-        current?.id === notification.id ? { ...current, leida: 1 } : current
+        current?.id === notification.id ? { ...current, leida: 1 } : current,
       );
 
       setUnreadCount((current) => Math.max(0, current - 1));
@@ -547,9 +556,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                   darkMode ? "text-white" : "text-slate-900"
                 }`}
               >
-                {esDashboard
-                  ? `Bienvenido, ${nombreUsuario} 👋`
-                  : tituloPagina}
+                {esDashboard ? `Bienvenido, ${nombreUsuario} 👋` : tituloPagina}
               </h2>
 
               <p
@@ -663,9 +670,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                       >
                         <RefreshCcw
                           size={16}
-                          className={
-                            loadingNotifications ? "animate-spin" : ""
-                          }
+                          className={loadingNotifications ? "animate-spin" : ""}
                         />
                       </button>
                     </div>
@@ -763,7 +768,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                                   <span className="flex items-center gap-1 text-[10px] text-slate-500">
                                     <Clock3 size={12} />
                                     {formatNotificationDate(
-                                      notification.creado_en
+                                      notification.creado_en,
                                     )}
                                   </span>
                                 </div>
@@ -805,9 +810,9 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                 }`}
               >
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-sm font-bold text-white shadow-lg shadow-violet-900/30 md:h-10 md:w-10">
-                  {usuario.foto_perfil && !profilePhotoError ? (
+                  {fotoPerfil && !profilePhotoError ? (
                     <img
-                      src={getPhotoUrl(usuario.foto_perfil)}
+                      src={getPhotoUrl(fotoPerfil)}
                       alt={`Foto de ${nombreUsuario}`}
                       className="h-full w-full object-cover"
                       onError={() => setProfilePhotoError(true)}

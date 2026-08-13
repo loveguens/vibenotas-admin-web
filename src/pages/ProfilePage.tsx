@@ -1,766 +1,1050 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { ChangeEvent, FormEvent } from "react";
 import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+  type ReactNode,
+} from "react";
+import {
+  AtSign,
+  BadgeCheck,
+  BriefcaseBusiness,
+  Building2,
+  CalendarDays,
   Camera,
-  KeyRound,
+  CheckCircle2,
+  Clock3,
+  Globe2,
   LoaderCircle,
-  LogOut,
   Mail,
-  Phone,
+  MapPin,
+  RefreshCw,
   Save,
   ShieldCheck,
+  TriangleAlert,
   UserRound,
-  Eye,
-EyeOff,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import api from "../services/api";
 import axios from "axios";
 
-type ProfileUser = {
-  id: number;
-  nombre: string;
-  correo: string;
-  telefono: string | null;
-  estado: string;
-  rol: string;
-  rol_nombre: string;
-  foto_perfil: string | null;
+import api from "../services/api";
+
+type ProfileDetails = {
+  bio: string | null;
+  coverUrl: string | null;
+  locale: string;
+  timezone: string;
+  countryCode: string | null;
+  occupation: string | null;
+  organization: string | null;
+  onboardingCompletedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
 };
 
-type ProfileResponse = {
-  success: boolean;
+type ProfileUser = {
+  id: string;
+  email: string;
+  firstName: string | null;
+  lastName: string | null;
+  username: string | null;
+  displayName: string;
+  avatarUrl: string | null;
+  status: string;
+  emailVerifiedAt: string | null;
+  lastLoginAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  profile: ProfileDetails | null;
+};
+
+type GetProfileResponse = {
+  profile: ProfileUser;
+};
+
+type UpdateProfileResponse = {
   message: string;
-  data?: {
-    usuario: ProfileUser;
-  };
+  profile: ProfileUser;
+};
+
+type AvatarUploadResponse = {
+  message: string;
+  avatarUrl: string;
 };
 
 type ProfileForm = {
-  nombre: string;
-  correo: string;
-  telefono: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  bio: string;
+  locale: string;
+  timezone: string;
+  countryCode: string;
+  occupation: string;
+  organization: string;
 };
 
-const API_URL = "http://localhost/vibenotas-backend/public";
+const EMPTY_FORM: ProfileForm = {
+  firstName: "",
+  lastName: "",
+  username: "",
+  bio: "",
+  locale: "es-419",
+  timezone: "America/Sao_Paulo",
+  countryCode: "",
+  occupation: "",
+  organization: "",
+};
 
+function formatDate(value?: string | null): string {
+  if (!value) {
+    return "No disponible";
+  }
 
+  const date = new Date(value);
 
-function getPhotoUrl(path?: string | null, version?: number) {
-  if (!path) return "";
+  if (Number.isNaN(date.getTime())) {
+    return "No disponible";
+  }
 
-  const url = path.startsWith("http")
-    ? path
-    : `${API_URL}/${path.replace(/^\/+/, "")}`;
+  return date.toLocaleString("es-CL", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 
-  return version ? `${url}?v=${version}` : url;
+function getAvatarUrl(value?: string | null): string {
+  if (!value) {
+    return "";
+  }
+
+  if (/^(https?:\/\/|blob:|data:)/i.test(value)) {
+    return value;
+  }
+
+  const baseURL = String(api.defaults.baseURL ?? "").trim();
+
+  try {
+    const apiOrigin = new URL(
+      baseURL || window.location.origin,
+      window.location.origin,
+    ).origin;
+
+    return new URL(value, `${apiOrigin}/`).toString();
+  } catch {
+    return value;
+  }
+}
+
+function getErrorMessage(error: unknown, fallback: string): string {
+  if (axios.isAxiosError(error)) {
+    const message = error.response?.data?.message;
+
+    if (typeof message === "string" && message.trim()) {
+      return message;
+    }
+
+    if (Array.isArray(message)) {
+      return message.join(" ");
+    }
+
+    const backendError = error.response?.data?.error;
+
+    if (typeof backendError === "string" && backendError.trim()) {
+      return backendError;
+    }
+  }
+
+  if (error instanceof Error && error.message.trim()) {
+    return error.message;
+  }
+
+  return fallback;
+}
+
+function profileToForm(user: ProfileUser): ProfileForm {
+  return {
+    firstName: user.firstName ?? "",
+    lastName: user.lastName ?? "",
+    username: user.username ?? "",
+    bio: user.profile?.bio ?? "",
+    locale: user.profile?.locale ?? "es-419",
+    timezone: user.profile?.timezone ?? "America/Sao_Paulo",
+    countryCode: user.profile?.countryCode ?? "",
+    occupation: user.profile?.occupation ?? "",
+    organization: user.profile?.organization ?? "",
+  };
+}
+
+function persistPublicProfile(updatedProfile: ProfileUser): void {
+  const raw = localStorage.getItem("usuario");
+
+  if (!raw) {
+    return;
+  }
+
+  try {
+    const current = JSON.parse(raw) as Record<string, unknown>;
+
+    const patch: Record<string, unknown> = {
+      id: updatedProfile.id,
+      email: updatedProfile.email,
+      username: updatedProfile.username,
+      firstName: updatedProfile.firstName,
+      lastName: updatedProfile.lastName,
+      displayName: updatedProfile.displayName,
+      avatarUrl: updatedProfile.avatarUrl,
+
+      // Compatibilidad temporal con componentes antiguos del admin.
+      nombre: updatedProfile.displayName,
+      correo: updatedProfile.email,
+      foto_perfil: updatedProfile.avatarUrl,
+    };
+
+    const storedUsuario = current.usuario;
+    const storedUser = current.user;
+
+    let next: Record<string, unknown>;
+
+    if (
+      typeof storedUsuario === "object" &&
+      storedUsuario !== null &&
+      !Array.isArray(storedUsuario)
+    ) {
+      next = {
+        ...current,
+        usuario: {
+          ...(storedUsuario as Record<string, unknown>),
+          ...patch,
+        },
+      };
+    } else if (
+      typeof storedUser === "object" &&
+      storedUser !== null &&
+      !Array.isArray(storedUser)
+    ) {
+      next = {
+        ...current,
+        user: {
+          ...(storedUser as Record<string, unknown>),
+          ...patch,
+        },
+      };
+    } else {
+      next = {
+        ...current,
+        ...patch,
+      };
+    }
+
+    localStorage.setItem("usuario", JSON.stringify(next));
+    window.dispatchEvent(new Event("usuarioActualizado"));
+  } catch {
+    // El backend continúa siendo la fuente de verdad.
+  }
 }
 
 export default function ProfilePage() {
-  const navigate = useNavigate();
-  const inputPhotoRef = useRef<HTMLInputElement | null>(null);
+  const avatarInputRef = useRef<HTMLInputElement | null>(null);
 
   const [user, setUser] = useState<ProfileUser | null>(null);
-  const [form, setForm] = useState<ProfileForm>({
-    nombre: "",
-    correo: "",
-    telefono: "",
-  });
-
-  const [photoPreview, setPhotoPreview] = useState("");
+  const [form, setForm] = useState<ProfileForm>(EMPTY_FORM);
   const [loading, setLoading] = useState(true);
-  const [savingProfile, setSavingProfile] = useState(false);
-  const [savingPassword, setSavingPassword] = useState(false);
-  const [uploadingPhoto, setUploadingPhoto] = useState(false);
-
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
+  const [saving, setSaving] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
-  const [photoError, setPhotoError] = useState(false);
-
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-const [showNewPassword, setShowNewPassword] = useState(false);
-const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState("");
 
   const initials = useMemo(() => {
-    if (!user?.nombre) return "SA";
+    const source =
+      user?.displayName ||
+      [form.firstName, form.lastName].filter(Boolean).join(" ");
 
-    return user.nombre
-      .split(" ")
-      .filter(Boolean)
+    if (!source.trim()) {
+      return "VN";
+    }
+
+    return source
+      .trim()
+      .split(/\s+/)
       .slice(0, 2)
-      .map((part) => part[0]?.toUpperCase())
+      .map((part) => part.charAt(0).toUpperCase())
       .join("");
-  }, [user?.nombre]);
+  }, [user?.displayName, form.firstName, form.lastName]);
 
-
-async function loadProfile() {
-  setLoading(true);
-  setError("");
-
-  try {
-    const response = await api.get<ProfileResponse>("/auth/profile");
-
-    if (!response.data.success || !response.data.data?.usuario) {
-      throw new Error(
-        response.data.message || "No se pudo cargar tu perfil."
-      );
+  const displayedAvatarUrl = useMemo(() => {
+    if (avatarPreview) {
+      return avatarPreview;
     }
 
-    const profileUser = response.data.data.usuario;
+    return getAvatarUrl(user?.avatarUrl);
+  }, [avatarPreview, user?.avatarUrl]);
 
-    setUser(profileUser);
+  const profileCompletion = useMemo(() => {
+    const fields = [
+      form.firstName,
+      form.lastName,
+      form.username,
+      form.bio,
+      form.countryCode,
+      form.occupation,
+      form.organization,
+    ];
 
-    setForm({
-      nombre: profileUser.nombre ?? "",
-      correo: profileUser.correo ?? "",
-      telefono: profileUser.telefono ?? "",
-    });
+    const complete = fields.filter((value) => value.trim().length > 0).length;
 
-    setPhotoError(false);
-    setPhotoPreview(getPhotoUrl(profileUser.foto_perfil));
-  } catch (err) {
-    setError(
-      err instanceof Error
-        ? err.message
-        : "No se pudo cargar la información del perfil."
-    );
-  } finally {
-    setLoading(false);
-  }
-}
+    return Math.round((complete / fields.length) * 100);
+  }, [form]);
 
-useEffect(() => {
-  void loadProfile();
-}, []);
-
-function updateField<K extends keyof ProfileForm>(
-  key: K,
-  value: ProfileForm[K]
-) {
-  setForm((current) => ({
-    ...current,
-    [key]: value,
-  }));
-}
-
-async function saveProfile(event: FormEvent) {
-  event.preventDefault();
-
-  setSavingProfile(true);
-  setError("");
-  setSuccess("");
-
-  try {
-    const response = await api.put("/auth/profile", {
-      nombre: form.nombre.trim(),
-      correo: form.correo.trim(),
-      telefono: form.telefono.trim(),
-    });
-
-    if (!response.data?.success) {
-      throw new Error(
-        response.data?.message || "No se pudieron guardar los cambios."
-      );
-    }
-
-    const updatedUser = response.data.data?.usuario;
-
-    if (updatedUser) {
-      setUser((current) =>
-        current
-          ? {
-              ...current,
-              ...updatedUser,
-            }
-          : current
-      );
-
-      const storedUser = localStorage.getItem("usuario");
-
-      if (storedUser) {
-        const parsedUser = JSON.parse(storedUser);
-
-        localStorage.setItem(
-          "usuario",
-          JSON.stringify({
-            ...parsedUser,
-            ...updatedUser,
-          })
-        );
-
-        window.dispatchEvent(new Event("usuarioActualizado"));
-      }
-    }
-
-    setSuccess("Tu información personal fue actualizada correctamente.");
-  } catch (err) {
-    setError(
-      err instanceof Error
-        ? err.message
-        : "No se pudo actualizar tu perfil."
-    );
-  } finally {
-    setSavingProfile(false);
-  }
-}
-
-async function uploadPhoto(event: ChangeEvent<HTMLInputElement>) {
-  const photo = event.target.files?.[0];
-
-  if (!photo) return;
-
-  const maxSize = 3 * 1024 * 1024;
-  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-
-  if (!allowedTypes.includes(photo.type)) {
-    setError("Selecciona una imagen JPG, PNG o WEBP.");
-    event.target.value = "";
-    return;
-  }
-
-  if (photo.size > maxSize) {
-    setError("La imagen no puede superar los 3 MB.");
-    event.target.value = "";
-    return;
-  }
-
-  setUploadingPhoto(true);
-  setError("");
-  setSuccess("");
-
-  const previousPhoto = user?.foto_perfil ?? null;
-  const temporaryPreview = URL.createObjectURL(photo);
-
-  setPhotoError(false);
-  setPhotoPreview(temporaryPreview);
-
-  try {
-    const formData = new FormData();
-    formData.append("foto", photo);
-
-    const response = await api.post("/auth/profile/photo", formData);
-
-    if (!response.data?.success) {
-      throw new Error(
-        response.data?.message || "No se pudo actualizar la foto."
-      );
-    }
-
-    const photoPath = response.data?.data?.foto_perfil ?? null;
-
-    if (!photoPath) {
-      throw new Error(
-        "La foto fue subida, pero el servidor no devolvió la ruta de la imagen."
-      );
-    }
-
-    const updatedPhotoUrl = getPhotoUrl(photoPath, Date.now());
-
-    console.log("Ruta devuelta por backend:", photoPath);
-    console.log("URL final de la foto:", updatedPhotoUrl);
-
-    setUser((current) =>
-      current
-        ? {
-            ...current,
-            foto_perfil: photoPath,
-          }
-        : current
-    );
-
-    setPhotoError(false);
-    setPhotoPreview(updatedPhotoUrl);
-
-    const storedUser = localStorage.getItem("usuario");
-
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-
-      localStorage.setItem(
-        "usuario",
-        JSON.stringify({
-          ...parsedUser,
-          foto_perfil: photoPath,
-        })
-      );
-
-      window.dispatchEvent(new Event("usuarioActualizado"));
-    }
-
-    setSuccess("Foto de perfil actualizada correctamente.");
-  } catch (err) {
-    console.error("ERROR AL SUBIR FOTO:", err);
-
-    setPhotoError(false);
-    setPhotoPreview(getPhotoUrl(previousPhoto));
-
-    if (axios.isAxiosError(err)) {
-      const backendMessage =
-        err.response?.data?.message ||
-        err.response?.data?.error ||
-        "El servidor no explicó el error.";
-
-      setError(`Error ${err.response?.status ?? ""}: ${backendMessage}`);
-    } else if (err instanceof Error) {
-      setError(err.message);
-    } else {
-      setError("No se pudo actualizar la foto.");
-    }
-  } finally {
-    URL.revokeObjectURL(temporaryPreview);
-    setUploadingPhoto(false);
-    event.target.value = "";
-  }
-}
-
-
-  async function savePassword(event: FormEvent) {
-    event.preventDefault();
-
-    setSavingPassword(true);
-    setError("");
-    setSuccess("");
-
+  const loadProfile = useCallback(async () => {
     try {
-      const response = await api.put("/auth/profile/password", {
-        contrasena_actual: currentPassword,
-        nueva_contrasena: newPassword,
-        confirmar_contrasena: confirmPassword,
-      });
+      setLoading(true);
+      setError("");
 
-      if (!response.data?.success) {
-        throw new Error(
-          response.data?.message || "No se pudo actualizar la contraseña."
-        );
+      const response = await api.get<GetProfileResponse>("/profile");
+      const profile = response.data?.profile;
+
+      if (!profile) {
+        throw new Error("El backend no devolvió un perfil válido.");
       }
 
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-
-      setSuccess("Tu contraseña fue actualizada correctamente.");
-    } catch (err) {
+      setUser(profile);
+      setForm(profileToForm(profile));
+      setAvatarError(false);
+      setAvatarPreview("");
+    } catch (caughtError) {
       setError(
-        err instanceof Error
-          ? err.message
-          : "No se pudo actualizar la contraseña."
+        getErrorMessage(caughtError, "No se pudo cargar tu perfil."),
       );
     } finally {
-      setSavingPassword(false);
+      setLoading(false);
     }
+  }, []);
+
+  useEffect(() => {
+    void loadProfile();
+  }, [loadProfile]);
+
+  function updateField<K extends keyof ProfileForm>(
+    key: K,
+    value: ProfileForm[K],
+  ): void {
+    setForm((current) => ({
+      ...current,
+      [key]: value,
+    }));
+
+    setSuccess("");
   }
 
-  const passwordStrength = useMemo(() => {
-  let score = 0;
+  async function uploadAvatar(
+    event: ChangeEvent<HTMLInputElement>,
+  ): Promise<void> {
+    const file = event.target.files?.[0];
+    event.target.value = "";
 
-  if (newPassword.length >= 8) score++;
-  if (/[A-Z]/.test(newPassword)) score++;
-  if (/[a-z]/.test(newPassword)) score++;
-  if (/\d/.test(newPassword)) score++;
-  if (/[^A-Za-z0-9]/.test(newPassword)) score++;
-
-  if (score <= 2) {
-    return {
-      label: "Débil",
-      width: "w-1/3",
-      color: "bg-red-500",
-      textColor: "text-red-300",
-    };
-  }
-
-  if (score <= 4) {
-    return {
-      label: "Media",
-      width: "w-2/3",
-      color: "bg-amber-400",
-      textColor: "text-amber-300",
-    };
-  }
-
-  return {
-    label: "Segura",
-    width: "w-full",
-    color: "bg-emerald-500",
-    textColor: "text-emerald-300",
-  };
-}, [newPassword]);
-
-  function logout(): void {
-    const confirmed = window.confirm(
-      "¿Quieres cerrar tu sesión actual?",
-    );
-
-    if (!confirmed) {
+    if (!file) {
       return;
     }
 
-    navigate("/logout", {
-      replace: true,
-    });
+    const currentUser = user;
+
+    if (!currentUser) {
+      setError("No se pudo identificar el usuario actual.");
+      return;
+    }
+
+    const allowedTypes = new Set([
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+    ]);
+
+    const maxBytes = 3 * 1024 * 1024;
+
+    if (!allowedTypes.has(file.type)) {
+      setError("Selecciona una imagen JPG, PNG o WEBP.");
+      return;
+    }
+
+    if (file.size > maxBytes) {
+      setError("La imagen no puede superar los 3 MB.");
+      return;
+    }
+
+    const temporaryPreview = URL.createObjectURL(file);
+
+    try {
+      setUploadingAvatar(true);
+      setError("");
+      setSuccess("");
+      setAvatarError(false);
+      setAvatarPreview(temporaryPreview);
+
+      const formData = new FormData();
+      formData.append("avatar", file);
+
+      const response = await api.post<AvatarUploadResponse>(
+        "/profile/avatar",
+        formData,
+      );
+
+      const nextAvatarUrl = response.data?.avatarUrl;
+
+      if (!nextAvatarUrl) {
+        throw new Error("El servidor no devolvió la ruta del avatar.");
+      }
+
+      const updatedUser: ProfileUser = {
+        ...currentUser,
+        avatarUrl: nextAvatarUrl,
+      };
+
+      setUser(updatedUser);
+      setAvatarPreview("");
+      setAvatarError(false);
+      persistPublicProfile(updatedUser);
+
+      setSuccess(
+        response.data?.message ||
+          "Foto de perfil actualizada correctamente.",
+      );
+    } catch (caughtError) {
+      setAvatarPreview("");
+      setError(
+        getErrorMessage(
+          caughtError,
+          "No se pudo actualizar la foto de perfil.",
+        ),
+      );
+    } finally {
+      URL.revokeObjectURL(temporaryPreview);
+      setUploadingAvatar(false);
+    }
+  }
+
+  async function saveProfile(event: FormEvent): Promise<void> {
+    event.preventDefault();
+
+    if (saving) {
+      return;
+    }
+
+    const firstName = form.firstName.trim();
+    const lastName = form.lastName.trim();
+    const username = form.username.trim();
+    const locale = form.locale.trim();
+    const timezone = form.timezone.trim();
+
+    if (!firstName && !lastName) {
+      setError("Debes indicar al menos un nombre o apellido.");
+      return;
+    }
+
+    if (!username) {
+      setError("El nombre de usuario es obligatorio.");
+      return;
+    }
+
+    if (!locale) {
+      setError("El idioma es obligatorio.");
+      return;
+    }
+
+    if (!timezone) {
+      setError("La zona horaria es obligatoria.");
+      return;
+    }
+
+    try {
+      setSaving(true);
+      setError("");
+      setSuccess("");
+
+      const payload = {
+        ...(firstName ? { firstName } : {}),
+        ...(lastName ? { lastName } : {}),
+        username,
+        bio: form.bio.trim(),
+        locale,
+        timezone,
+        countryCode: form.countryCode.trim()
+          ? form.countryCode.trim().toUpperCase()
+          : null,
+        occupation: form.occupation.trim() || null,
+        organization: form.organization.trim() || null,
+      };
+
+      const response = await api.patch<UpdateProfileResponse>(
+        "/profile",
+        payload,
+      );
+
+      const updatedProfile = response.data?.profile;
+
+      if (!updatedProfile) {
+        throw new Error("El backend no devolvió el perfil actualizado.");
+      }
+
+      setUser(updatedProfile);
+      setForm(profileToForm(updatedProfile));
+      setAvatarError(false);
+      persistPublicProfile(updatedProfile);
+
+      setSuccess(
+        response.data?.message || "Perfil actualizado correctamente.",
+      );
+    } catch (caughtError) {
+      setError(
+        getErrorMessage(
+          caughtError,
+          "No se pudo actualizar tu perfil.",
+        ),
+      );
+    } finally {
+      setSaving(false);
+    }
   }
 
   if (loading) {
     return (
-      
-        <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
-          <div className="h-96 animate-pulse rounded-3xl border border-white/10 bg-white/5" />
-          <div className="h-96 animate-pulse rounded-3xl border border-white/10 bg-white/5" />
+      <section className="mx-auto max-w-6xl space-y-6">
+        <div className="h-40 animate-pulse rounded-[30px] border border-white/10 bg-white/[0.04]" />
+
+        <div className="grid gap-6 lg:grid-cols-[340px_minmax(0,1fr)]">
+          <div className="h-[520px] animate-pulse rounded-[30px] border border-white/10 bg-white/[0.04]" />
+          <div className="h-[620px] animate-pulse rounded-[30px] border border-white/10 bg-white/[0.04]" />
         </div>
-      
+      </section>
+    );
+  }
+
+  if (!user) {
+    return (
+      <section className="mx-auto max-w-6xl">
+        <div className="flex min-h-[360px] flex-col items-center justify-center rounded-[30px] border border-red-500/20 bg-red-500/[0.06] p-8 text-center">
+          <div className="rounded-2xl bg-red-500/10 p-4 text-red-300">
+            <TriangleAlert size={28} />
+          </div>
+
+          <h1 className="mt-5 text-xl font-black text-white">
+            No pudimos cargar tu perfil
+          </h1>
+
+          <p className="mt-2 max-w-md text-sm leading-6 text-slate-400">
+            {error ||
+              "Ocurrió un problema al consultar la información de tu cuenta."}
+          </p>
+
+          <button
+            type="button"
+            onClick={() => void loadProfile()}
+            className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-violet-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-violet-400"
+          >
+            <RefreshCw size={17} />
+            Reintentar
+          </button>
+        </div>
+      </section>
     );
   }
 
   return (
-    
-      <section className="mx-auto max-w-6xl space-y-6">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
-            Cuenta administrativa
-          </p>
+    <section className="mx-auto max-w-6xl space-y-6">
+      <header className="relative overflow-hidden rounded-[30px] border border-white/10 bg-gradient-to-br from-[#151B31] via-[#111827] to-[#10253B] p-6 shadow-2xl shadow-black/20 sm:p-8">
+        <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-violet-500/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-28 left-20 h-72 w-72 rounded-full bg-sky-500/10 blur-3xl" />
 
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-white">
-            Mi perfil
-          </h1>
+        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-violet-400/20 bg-violet-500/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-violet-200">
+              <ShieldCheck size={15} />
+              Cuenta administrativa
+            </div>
 
-          <p className="mt-2 text-sm leading-6 text-slate-400">
-            Administra tu información, tu foto y la seguridad de tu cuenta.
-          </p>
+            <h1 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">
+              Mi perfil
+            </h1>
+
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-400 sm:text-base">
+              Administra tu identidad, información profesional y preferencias de
+              cuenta desde un solo lugar.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-4 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+            <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-lg font-black text-white">
+              {displayedAvatarUrl && !avatarError ? (
+                <img
+                  src={displayedAvatarUrl}
+                  alt={`Avatar de ${user.displayName}`}
+                  className="h-full w-full object-cover"
+                  onError={() => setAvatarError(true)}
+                />
+              ) : (
+                initials
+              )}
+            </div>
+
+            <div className="min-w-0">
+              <p className="truncate font-black text-white">
+                {user.displayName}
+              </p>
+              <p className="mt-1 truncate text-sm text-slate-400">
+                @{user.username || "sin-usuario"}
+              </p>
+            </div>
+          </div>
         </div>
+      </header>
 
-        {error && (
-          <div className="rounded-3xl border border-red-500/20 bg-red-500/10 p-5">
-            <p className="font-semibold text-red-200">Ocurrió un problema</p>
+      {error && (
+        <div className="flex items-start gap-3 rounded-3xl border border-red-500/20 bg-red-500/10 p-5">
+          <div className="rounded-xl bg-red-500/10 p-2 text-red-300">
+            <TriangleAlert size={18} />
+          </div>
+          <div>
+            <p className="font-bold text-red-100">Ocurrió un problema</p>
             <p className="mt-1 text-sm text-red-200/80">{error}</p>
           </div>
-        )}
+        </div>
+      )}
 
-        {success && (
-          <div className="rounded-3xl border border-emerald-500/20 bg-emerald-500/10 p-5">
-            <p className="font-semibold text-emerald-200">Cambios guardados</p>
+      {success && (
+        <div className="flex items-start gap-3 rounded-3xl border border-emerald-500/20 bg-emerald-500/10 p-5">
+          <div className="rounded-xl bg-emerald-500/10 p-2 text-emerald-300">
+            <CheckCircle2 size={18} />
+          </div>
+          <div>
+            <p className="font-bold text-emerald-100">Cambios guardados</p>
             <p className="mt-1 text-sm text-emerald-200/80">{success}</p>
           </div>
-        )}
+        </div>
+      )}
 
-        <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
-          <aside className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
-            <div className="flex flex-col items-center text-center">
+      <div className="grid gap-6 lg:grid-cols-[340px_minmax(0,1fr)]">
+        <aside className="space-y-6">
+          <div className="overflow-hidden rounded-[30px] border border-white/10 bg-[#111827] shadow-xl shadow-black/15">
+            <div className="relative h-28 overflow-hidden bg-gradient-to-r from-violet-600/30 via-fuchsia-600/20 to-sky-500/20">
+              {displayedAvatarUrl && !avatarError && (
+                <img
+                  src={displayedAvatarUrl}
+                  alt=""
+                  aria-hidden="true"
+                  className="h-full w-full scale-110 object-cover opacity-10 blur-xl"
+                />
+              )}
+            </div>
+
+            <div className="-mt-12 px-6 pb-6">
               <button
                 type="button"
-                onClick={() => inputPhotoRef.current?.click()}
-                className="group relative"
-                disabled={uploadingPhoto}
+                onClick={() => avatarInputRef.current?.click()}
+                disabled={uploadingAvatar}
+                className="group relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-[26px] border-4 border-[#111827] bg-gradient-to-br from-violet-500 to-fuchsia-600 text-2xl font-black text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-70"
+                aria-label="Cambiar foto de perfil"
+                title="Cambiar foto de perfil"
               >
-                <div className="flex h-32 w-32 items-center justify-center overflow-hidden rounded-[2rem] border-4 border-violet-400/20 bg-gradient-to-br from-violet-500 to-fuchsia-600 text-3xl font-bold text-white shadow-xl shadow-violet-950/30">
-                  {photoPreview && !photoError ? (
-                    <img
-                      src={photoPreview}
-                      alt={`Foto de ${user?.nombre ?? "usuario"}`}
-                      className="h-full w-full object-cover"
-                      onError={() => {
-                        console.error("No se pudo cargar la foto:", photoPreview);
-                        setPhotoError(true);
-                      }}
-                    />
-                  ) : (
-                    <span>{initials}</span>
-                  )}
-                </div>
+                {displayedAvatarUrl && !avatarError ? (
+                  <img
+                    src={displayedAvatarUrl}
+                    alt={`Foto de ${user.displayName}`}
+                    className="h-full w-full object-cover"
+                    onError={() => setAvatarError(true)}
+                  />
+                ) : (
+                  initials
+                )}
 
-                <span className="absolute bottom-0 right-0 flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-[#111827] text-violet-300 shadow-lg transition group-hover:bg-violet-600 group-hover:text-white">
-                  {uploadingPhoto ? (
-                    <LoaderCircle size={18} className="animate-spin" />
+                <span className="absolute inset-0 flex items-center justify-center bg-black/45 opacity-0 transition group-hover:opacity-100">
+                  {uploadingAvatar ? (
+                    <LoaderCircle size={22} className="animate-spin" />
                   ) : (
-                    <Camera size={18} />
+                    <Camera size={22} />
                   )}
                 </span>
               </button>
 
               <input
-                ref={inputPhotoRef}
+                ref={avatarInputRef}
                 type="file"
-                accept="image/png,image/jpeg,image/webp"
+                accept="image/jpeg,image/png,image/webp"
                 className="hidden"
-                onChange={uploadPhoto}
+                onChange={(event) => void uploadAvatar(event)}
               />
 
-              <h2 className="mt-5 text-xl font-bold text-white">
-                {user?.nombre}
+              <h2 className="mt-4 text-xl font-black text-white">
+                {user.displayName}
               </h2>
 
-              <p className="mt-1 text-sm text-slate-400">{user?.correo}</p>
+              <p className="mt-1 text-sm text-slate-400">{user.email}</p>
 
-              <span className="mt-4 inline-flex items-center gap-2 rounded-full border border-violet-400/20 bg-violet-500/10 px-3 py-1.5 text-xs font-semibold text-violet-200">
-                <ShieldCheck size={15} />
-                {user?.rol_nombre || "Super Administrador"}
-              </span>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/20 bg-violet-500/10 px-3 py-1.5 text-xs font-bold text-violet-200">
+                  <ShieldCheck size={14} />
+                  {user.status}
+                </span>
+
+                {user.emailVerifiedAt && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-200">
+                    <BadgeCheck size={14} />
+                    Correo verificado
+                  </span>
+                )}
+              </div>
 
               <button
                 type="button"
-                onClick={() => inputPhotoRef.current?.click()}
-                className="mt-6 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
+                disabled={uploadingAvatar}
+                onClick={() => avatarInputRef.current?.click()}
+                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-violet-400/20 bg-violet-500/10 px-4 py-3 text-sm font-bold text-violet-200 transition hover:bg-violet-500/20 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Cambiar foto
+                {uploadingAvatar ? (
+                  <LoaderCircle size={18} className="animate-spin" />
+                ) : (
+                  <Camera size={18} />
+                )}
+
+                {uploadingAvatar ? "Subiendo foto..." : "Cambiar foto"}
               </button>
 
-              <p className="mt-3 text-xs leading-5 text-slate-500">
+              <p className="mt-2 text-center text-xs leading-5 text-slate-500">
                 JPG, PNG o WEBP. Máximo 3 MB.
               </p>
             </div>
-
-            <div className="mt-8 border-t border-white/10 pt-6">
-              <button
-                type="button"
-                onClick={logout}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm font-bold text-red-300 transition hover:bg-red-500/20"
-              >
-                <LogOut size={18} />
-                Cerrar sesión
-              </button>
-            </div>
-          </aside>
-
-          <div className="space-y-6">
-            <form
-              onSubmit={saveProfile}
-              className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10"
-            >
-              <div className="flex items-center gap-3">
-                <div className="rounded-2xl bg-violet-500/10 p-3 text-violet-300">
-                  <UserRound size={21} />
-                </div>
-
-                <div>
-                  <p className="text-sm font-semibold text-violet-300">
-                    Información personal
-                  </p>
-
-                  <h2 className="mt-1 text-xl font-bold text-white">
-                    Datos de tu cuenta
-                  </h2>
-                </div>
-              </div>
-
-              <div className="mt-6 grid gap-5 sm:grid-cols-2">
-                <label className="block sm:col-span-2">
-                  <span className="text-sm font-medium text-slate-300">
-                    Nombre completo
-                  </span>
-
-                  <input
-                    value={form.nombre}
-                    onChange={(event) => updateField("nombre", event.target.value)}
-                    className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white outline-none transition focus:border-violet-400/50"
-                  />
-                </label>
-
-                <label className="block">
-                  <span className="text-sm font-medium text-slate-300">
-                    Correo electrónico
-                  </span>
-
-                  <div className="relative mt-2">
-                    <Mail
-                      size={18}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"
-                    />
-
-                    <input
-                      type="email"
-                      value={form.correo}
-                      onChange={(event) => updateField("correo", event.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-black/20 py-3 pl-11 pr-4 text-sm text-white outline-none transition focus:border-violet-400/50"
-                    />
-                  </div>
-                </label>
-
-                <label className="block">
-                  <span className="text-sm font-medium text-slate-300">
-                    Teléfono
-                  </span>
-
-                  <div className="relative mt-2">
-                    <Phone
-                      size={18}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"
-                    />
-
-                    <input
-                      value={form.telefono}
-                      onChange={(event) =>
-                        updateField("telefono", event.target.value)
-                      }
-                      className="w-full rounded-xl border border-white/10 bg-black/20 py-3 pl-11 pr-4 text-sm text-white outline-none transition focus:border-violet-400/50"
-                      placeholder="+56 9 1234 5678"
-                    />
-                  </div>
-                </label>
-              </div>
-
-              <button
-                type="submit"
-                disabled={savingProfile}
-                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {savingProfile ? (
-                  <LoaderCircle size={18} className="animate-spin" />
-                ) : (
-                  <Save size={18} />
-                )}
-                {savingProfile ? "Guardando..." : "Guardar información"}
-              </button>
-            </form>
-
-            <form
-              onSubmit={savePassword}
-              className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10"
-            >
-              <div className="flex items-center gap-3">
-                <div className="rounded-2xl bg-fuchsia-500/10 p-3 text-fuchsia-300">
-                  <KeyRound size={21} />
-                </div>
-
-                <div>
-                  <p className="text-sm font-semibold text-fuchsia-300">
-                    Seguridad de acceso
-                  </p>
-
-                  <h2 className="mt-1 text-xl font-bold text-white">
-                    Cambiar contraseña
-                  </h2>
-                </div>
-              </div>
-
-              <div className="mt-6 grid gap-5">
-                <label className="block">
-                  <span className="text-sm font-medium text-slate-300">
-                    Contraseña actual
-                  </span>
-
-                  <div className="relative mt-2">
-                    <input
-                      type={showCurrentPassword ? "text" : "password"}
-                      value={currentPassword}
-                      onChange={(event) => setCurrentPassword(event.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 pr-12 text-sm text-white outline-none transition focus:border-fuchsia-400/50"
-                    />
-
-                    <button
-                      type="button"
-                      onClick={() => setShowCurrentPassword((current) => !current)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-slate-400 transition hover:bg-white/10 hover:text-white"
-                      aria-label={
-                        showCurrentPassword
-                          ? "Ocultar contraseña actual"
-                          : "Mostrar contraseña actual"
-                      }
-                    >
-                      {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
-                  </div>
-                </label>
-
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <label className="block">
-                    <span className="text-sm font-medium text-slate-300">
-                      Nueva contraseña
-                    </span>
-
-                    <div className="relative mt-2">
-                      <input
-                        type={showNewPassword ? "text" : "password"}
-                        value={newPassword}
-                        onChange={(event) => setNewPassword(event.target.value)}
-                        className="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 pr-12 text-sm text-white outline-none transition focus:border-fuchsia-400/50"
-                      />
-
-                      <button
-                        type="button"
-                        onClick={() => setShowNewPassword((current) => !current)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-slate-400 transition hover:bg-white/10 hover:text-white"
-                        aria-label={
-                          showNewPassword
-                            ? "Ocultar nueva contraseña"
-                            : "Mostrar nueva contraseña"
-                        }
-                      >
-                        {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                      </button>
-                    </div>
-                  </label>
-
-                  <label className="block">
-                    <span className="text-sm font-medium text-slate-300">
-                      Confirmar contraseña
-                    </span>
-
-                    <div className="relative mt-2">
-                      <input
-                        type={showConfirmPassword ? "text" : "password"}
-                        value={confirmPassword}
-                        onChange={(event) => setConfirmPassword(event.target.value)}
-                        className="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 pr-12 text-sm text-white outline-none transition focus:border-fuchsia-400/50"
-                      />
-
-                      <button
-                        type="button"
-                        onClick={() => setShowConfirmPassword((current) => !current)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-slate-400 transition hover:bg-white/10 hover:text-white"
-                        aria-label={
-                          showConfirmPassword
-                            ? "Ocultar confirmación de contraseña"
-                            : "Mostrar confirmación de contraseña"
-                        }
-                      >
-                        {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                      </button>
-                    </div>
-                    {newPassword && (
-                      <div className="mt-3">
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="text-slate-400">Seguridad de contraseña</span>
-
-                          <span className={`font-semibold ${passwordStrength.textColor}`}>
-                            {passwordStrength.label}
-                          </span>
-                        </div>
-
-                        <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
-                          <div
-                            className={`h-full rounded-full transition-all duration-300 ${passwordStrength.width} ${passwordStrength.color}`}
-                          />
-                        </div>
-
-                        <p className="mt-2 text-xs text-slate-500">
-                          Usa al menos 8 caracteres, mayúscula, minúscula, número y símbolo.
-                        </p>
-                      </div>
-                    )}
-                  </label>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={savingPassword}
-                className="mt-6 inline-flex items-center gap-2 rounded-xl border border-fuchsia-400/20 bg-fuchsia-500/10 px-5 py-3 text-sm font-bold text-fuchsia-200 transition hover:bg-fuchsia-500/20 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {savingPassword ? (
-                  <LoaderCircle size={18} className="animate-spin" />
-                ) : (
-                  <KeyRound size={18} />
-                )}
-
-                {savingPassword ? "Actualizando..." : "Actualizar contraseña"}
-              </button>
-            </form>
           </div>
-        </div>
-      </section>
 
+          <div className="rounded-[30px] border border-white/10 bg-[#111827] p-5">
+            <div className="flex items-center justify-between">
+              <p className="font-bold text-white">Perfil completado</p>
+              <span className="text-sm font-black text-violet-300">
+                {profileCompletion}%
+              </span>
+            </div>
+
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-all"
+                style={{ width: `${profileCompletion}%` }}
+              />
+            </div>
+
+            <p className="mt-3 text-xs leading-5 text-slate-500">
+              Agrega información profesional y de ubicación para completar tu
+              perfil administrativo.
+            </p>
+          </div>
+
+          <div className="rounded-[30px] border border-white/10 bg-[#111827] p-5">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
+              Actividad de la cuenta
+            </p>
+
+            <div className="mt-4 space-y-4">
+              <AccountInfo
+                icon={<CalendarDays size={17} />}
+                label="Cuenta creada"
+                value={formatDate(user.createdAt)}
+              />
+
+              <AccountInfo
+                icon={<Clock3 size={17} />}
+                label="Último acceso"
+                value={formatDate(user.lastLoginAt)}
+              />
+            </div>
+          </div>
+        </aside>
+
+        <form onSubmit={saveProfile} className="space-y-6">
+          <div className="rounded-[30px] border border-white/10 bg-[#111827] p-6 shadow-xl shadow-black/15 sm:p-7">
+            <SectionHeader
+              icon={<UserRound size={20} />}
+              eyebrow="Identidad"
+              title="Información personal"
+              description="Estos datos forman parte de tu identidad dentro de VibeNotas."
+            />
+
+            <div className="mt-6 grid gap-5 sm:grid-cols-2">
+              <Field
+                label="Nombre"
+                value={form.firstName}
+                onChange={(value) => updateField("firstName", value)}
+                autoComplete="given-name"
+              />
+
+              <Field
+                label="Apellido"
+                value={form.lastName}
+                onChange={(value) => updateField("lastName", value)}
+                autoComplete="family-name"
+              />
+
+              <Field
+                label="Nombre de usuario"
+                value={form.username}
+                onChange={(value) => updateField("username", value)}
+                icon={<AtSign size={17} />}
+                autoComplete="username"
+              />
+
+              <ReadOnlyField
+                label="Correo electrónico"
+                value={user.email}
+                icon={<Mail size={17} />}
+                helper="El correo no se modifica desde esta pantalla."
+              />
+            </div>
+          </div>
+
+          <div className="rounded-[30px] border border-white/10 bg-[#111827] p-6 shadow-xl shadow-black/15 sm:p-7">
+            <SectionHeader
+              icon={<BriefcaseBusiness size={20} />}
+              eyebrow="Perfil público"
+              title="Información profesional"
+              description="Añade contexto sobre tu trabajo y organización."
+            />
+
+            <div className="mt-6 grid gap-5 sm:grid-cols-2">
+              <Field
+                label="Ocupación"
+                value={form.occupation}
+                onChange={(value) => updateField("occupation", value)}
+                icon={<BriefcaseBusiness size={17} />}
+                placeholder="Ej. Administrador"
+              />
+
+              <Field
+                label="Organización"
+                value={form.organization}
+                onChange={(value) => updateField("organization", value)}
+                icon={<Building2 size={17} />}
+                placeholder="Ej. VibeNotas"
+              />
+
+              <label className="block sm:col-span-2">
+                <span className="text-sm font-semibold text-slate-300">
+                  Biografía
+                </span>
+
+                <textarea
+                  value={form.bio}
+                  onChange={(event) => updateField("bio", event.target.value)}
+                  rows={4}
+                  maxLength={500}
+                  placeholder="Escribe una breve descripción sobre ti..."
+                  className="mt-2 w-full resize-y rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/50 focus:ring-2 focus:ring-violet-400/10"
+                />
+
+                <div className="mt-2 text-right text-xs text-slate-600">
+                  {form.bio.length}/500
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div className="rounded-[30px] border border-white/10 bg-[#111827] p-6 shadow-xl shadow-black/15 sm:p-7">
+            <SectionHeader
+              icon={<Globe2 size={20} />}
+              eyebrow="Localización"
+              title="Región y preferencias"
+              description="Estas opciones permiten adaptar fechas, idioma y zona horaria."
+            />
+
+            <div className="mt-6 grid gap-5 sm:grid-cols-2">
+              <Field
+                label="País"
+                value={form.countryCode}
+                onChange={(value) =>
+                  updateField("countryCode", value.toUpperCase())
+                }
+                icon={<MapPin size={17} />}
+                placeholder="CL"
+                maxLength={2}
+              />
+
+              <Field
+                label="Idioma"
+                value={form.locale}
+                onChange={(value) => updateField("locale", value)}
+                icon={<Globe2 size={17} />}
+                placeholder="es-419"
+              />
+
+              <Field
+                label="Zona horaria"
+                value={form.timezone}
+                onChange={(value) => updateField("timezone", value)}
+                icon={<Clock3 size={17} />}
+                placeholder="America/Santiago"
+              />
+            </div>
+          </div>
+
+          <div className="sticky bottom-4 z-20 flex flex-col gap-3 rounded-[24px] border border-white/10 bg-[#0F172A]/95 p-4 shadow-2xl shadow-black/30 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-slate-400">
+              Los cambios se aplicarán a tu perfil administrativo.
+            </p>
+
+            <button
+              type="submit"
+              disabled={saving}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-violet-500 px-5 py-3 text-sm font-black text-white shadow-lg shadow-violet-500/20 transition hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {saving ? (
+                <LoaderCircle size={18} className="animate-spin" />
+              ) : (
+                <Save size={18} />
+              )}
+
+              {saving ? "Guardando..." : "Guardar cambios"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+  );
+}
+
+type FieldProps = {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  icon?: ReactNode;
+  autoComplete?: string;
+  maxLength?: number;
+};
+
+function Field({
+  label,
+  value,
+  onChange,
+  placeholder,
+  icon,
+  autoComplete,
+  maxLength,
+}: FieldProps) {
+  return (
+    <label className="block">
+      <span className="text-sm font-semibold text-slate-300">{label}</span>
+
+      <div className="relative mt-2">
+        {icon && (
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
+            {icon}
+          </span>
+        )}
+
+        <input
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          maxLength={maxLength}
+          className={`w-full rounded-2xl border border-white/10 bg-black/20 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/50 focus:ring-2 focus:ring-violet-400/10 ${
+            icon ? "pl-11 pr-4" : "px-4"
+          }`}
+        />
+      </div>
+    </label>
+  );
+}
+
+type ReadOnlyFieldProps = {
+  label: string;
+  value: string;
+  helper?: string;
+  icon?: ReactNode;
+};
+
+function ReadOnlyField({
+  label,
+  value,
+  helper,
+  icon,
+}: ReadOnlyFieldProps) {
+  return (
+    <div>
+      <span className="text-sm font-semibold text-slate-300">{label}</span>
+
+      <div className="relative mt-2">
+        {icon && (
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600">
+            {icon}
+          </span>
+        )}
+
+        <div
+          className={`w-full rounded-2xl border border-white/[0.07] bg-white/[0.025] py-3 text-sm text-slate-500 ${
+            icon ? "pl-11 pr-4" : "px-4"
+          }`}
+        >
+          {value}
+        </div>
+      </div>
+
+      {helper && <p className="mt-2 text-xs text-slate-600">{helper}</p>}
+    </div>
+  );
+}
+
+type SectionHeaderProps = {
+  icon: ReactNode;
+  eyebrow: string;
+  title: string;
+  description: string;
+};
+
+function SectionHeader({
+  icon,
+  eyebrow,
+  title,
+  description,
+}: SectionHeaderProps) {
+  return (
+    <div className="flex items-start gap-3">
+      <div className="rounded-2xl bg-violet-500/10 p-3 text-violet-300 ring-1 ring-violet-400/10">
+        {icon}
+      </div>
+
+      <div>
+        <p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-300">
+          {eyebrow}
+        </p>
+        <h2 className="mt-1 text-xl font-black text-white">{title}</h2>
+        <p className="mt-1 text-sm leading-6 text-slate-500">
+          {description}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+type AccountInfoProps = {
+  icon: ReactNode;
+  label: string;
+  value: string;
+};
+
+function AccountInfo({ icon, label, value }: AccountInfoProps) {
+  return (
+    <div className="flex items-start gap-3">
+      <div className="rounded-xl bg-white/[0.04] p-2 text-slate-400">
+        {icon}
+      </div>
+
+      <div>
+        <p className="text-xs text-slate-500">{label}</p>
+        <p className="mt-1 text-sm font-semibold text-slate-300">{value}</p>
+      </div>
+    </div>
   );
 }
