@@ -1,84 +1,56 @@
 import { useEffect, useMemo, useState } from "react";
+import type { FormEvent } from "react";
+import axios from "axios";
 import {
+  AlertTriangle,
   CalendarDays,
-  CheckSquare,
-  Clock3,
-  Crown,
-  Download,
-  FileText,
-  Folder,
-  Globe2,
-  MonitorSmartphone,
+  CheckCircle2,
+  FileSpreadsheet,
+  Info,
+  MailCheck,
   MoreHorizontal,
   Pencil,
-  Plus,
   RefreshCw,
   Search,
-  ShieldAlert,
-  Smartphone,
-  StickyNote,
-  UserCheck,
+  ShieldCheck,
+  ShieldOff,
   UserPlus,
   UserRound,
-  UserX,
-  Wifi,
+  UserRoundCheck,
+  UserRoundX,
+  UsersRound,
   X,
 } from "lucide-react";
+
 import api from "../services/api";
-import axios from "axios";
 
 type Role = "admin" | "superadmin";
 
-type User = {
+type ApiUserStatus =
+  | "PENDING_VERIFICATION"
+  | "ACTIVE"
+  | "SUSPENDED"
+  | "DISABLED";
+
+type ApiRole = {
   id: string;
-  nombre: string;
-  correo: string;
-  telefono?: string | null;
-  estado?: string;
-  rol?: string;
-  rol_nombre?: string;
-  plan?: string;
-  plan_nombre?: string;
-  creado_en?: string;
-  ultima_actividad?: string;
-  foto_perfil?: string | null;
-  notas_total?: number;
-
-  // Datos de seguridad, sesiones y dispositivo.
-  ultimo_inicio_sesion?: string | null;
-  dispositivo_actual?: string | null;
-  sistema_operativo?: string | null;
-  navegador?: string | null;
-  ip_ultima?: string | null;
-  sesiones_activas?: number | null;
-
-    contenido?: {
-    notas: number;
-    checklists: number;
-    carpetas: number;
-    documentos: number;
-  };
+  name: string;
+  slug: string;
+  priority: number;
 };
-
-
 
 type ApiRoleAssignment = {
   assignedAt: string;
   expiresAt: string | null;
-  role: {
-    id: string;
-    name: string;
-    slug: string;
-    priority: number;
-  };
+  role: ApiRole;
 };
 
 type ApiUser = {
   id: string;
   email: string;
-  displayName: string;
+  displayName: string | null;
   avatarUrl: string | null;
-  status: string;
+  status: ApiUserStatus;
   emailVerifiedAt: string | null;
   mfaEnabled: boolean;
   lastLoginAt: string | null;
@@ -95,47 +67,148 @@ type UsersResponse = {
   users: ApiUser[];
 };
 
-type UserDetailResponse = ApiUser;
+type RegisterResponse = {
+  message?: string;
+  user?: {
+    id: string;
+    email: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    username?: string | null;
+    displayName?: string | null;
+    status?: ApiUserStatus;
+  };
+  developmentVerificationToken?: string;
+  verificationExpiresAt?: string;
+};
 
-type ManageableUserStatus =
-  | "ACTIVE"
-  | "SUSPENDED"
-  | "DISABLED";
+type User = {
+  id: string;
+  nombre: string;
+  correo: string;
+  estado: ApiUserStatus;
+  roles: ApiRole[];
+  creado_en: string;
+  ultima_actividad?: string;
+  foto_perfil?: string | null;
+  email_verificado: boolean;
+  mfa_habilitado: boolean;
+};
 
 type UsersPageProps = {
   role: Role;
 };
 
-type FilterKey = "todos" | "activos" | "suspendidos" | "vip" | "free";
+type StatusFilter =
+  | "todos"
+  | "ACTIVE"
+  | "PENDING_VERIFICATION"
+  | "SUSPENDED"
+  | "DISABLED";
 
-function getStatusLabel(user: User) {
-  return user.estado || "activo";
+const STATUS_FILTERS: Array<{
+  key: StatusFilter;
+  label: string;
+}> = [
+  { key: "todos", label: "Todos" },
+  { key: "ACTIVE", label: "Activos" },
+  {
+    key: "PENDING_VERIFICATION",
+    label: "Pendientes",
+  },
+  { key: "SUSPENDED", label: "Suspendidos" },
+  { key: "DISABLED", label: "Deshabilitados" },
+];
+
+const ADMIN_ROLE_SLUGS = new Set([
+  "admin",
+  "super_admin",
+  "owner",
+]);
+
+function isRoleAssignmentActive(
+  assignment: ApiRoleAssignment,
+) {
+  if (!assignment.expiresAt) {
+    return true;
+  }
+
+  const expiresAt = new Date(
+    assignment.expiresAt,
+  );
+
+  return (
+    !Number.isNaN(expiresAt.getTime()) &&
+    expiresAt.getTime() > Date.now()
+  );
 }
 
-function getPlanLabel(user: User) {
-  return (
-    user.plan_nombre ||
-    user.plan ||
-    "No disponible"
+function mapApiUser(apiUser: ApiUser): User {
+  const activeRoles = apiUser.roles
+    .filter(isRoleAssignmentActive)
+    .map((assignment) => assignment.role);
+
+  return {
+    id: apiUser.id,
+    nombre:
+      apiUser.displayName?.trim() ||
+      apiUser.email,
+    correo: apiUser.email,
+    estado: apiUser.status,
+    roles: activeRoles,
+    creado_en: apiUser.createdAt,
+    ultima_actividad:
+      apiUser.lastLoginAt ?? undefined,
+    foto_perfil: apiUser.avatarUrl,
+    email_verificado:
+      apiUser.emailVerifiedAt !== null,
+    mfa_habilitado: apiUser.mfaEnabled,
+  };
+}
+
+function isNormalUser(user: User) {
+  return !user.roles.some((role) =>
+    ADMIN_ROLE_SLUGS.has(role.slug),
   );
+}
+
+function getStatusLabel(
+  status: ApiUserStatus,
+) {
+  switch (status) {
+    case "ACTIVE":
+      return "Activo";
+    case "PENDING_VERIFICATION":
+      return "Verificación pendiente";
+    case "SUSPENDED":
+      return "Suspendido";
+    case "DISABLED":
+      return "Deshabilitado";
+    default:
+      return status;
+  }
 }
 
 function getInitials(nombre: string) {
   return nombre
     .trim()
-    .split(" ")
+    .split(/\s+/)
     .slice(0, 2)
-    .map((word) => word.charAt(0).toUpperCase())
+    .map((word) =>
+      word.charAt(0).toUpperCase(),
+    )
     .join("");
 }
 
-function formatDate(dateValue?: string) {
-  if (!dateValue) return "â€”";
+function formatDate(value?: string) {
+  if (!value) {
+    return "Sin información";
+  }
 
-  const date = new Date(dateValue);
+  const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return "â€”";
+    return "Sin información";
   }
 
   return date.toLocaleDateString("es-CL", {
@@ -145,142 +218,229 @@ function formatDate(dateValue?: string) {
   });
 }
 
-function isNormalUser(user: User) {
-  const role = `${user.rol ?? ""} ${user.rol_nombre ?? ""}`
-    .toLowerCase()
-    .trim();
+function formatDateTime(value?: string) {
+  if (!value) {
+    return "Sin información";
+  }
 
-  return !role.includes("admin") && !role.includes("administrador");
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Sin información";
+  }
+
+  return date.toLocaleString("es-CL", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
-function mapApiUser(apiUser: ApiUser): User {
-  const now = Date.now();
+function getAxiosErrorMessage(
+  error: unknown,
+  fallback: string,
+) {
+  if (!axios.isAxiosError(error)) {
+    return error instanceof Error
+      ? error.message
+      : fallback;
+  }
 
-  const activeRoles = apiUser.roles.filter(
-    ({ expiresAt }) => {
-      if (!expiresAt) return true;
+  const message =
+    error.response?.data?.message;
 
-      const expiration =
-        new Date(expiresAt).getTime();
+  if (Array.isArray(message)) {
+    return message.join(" ");
+  }
 
-      return (
-        !Number.isNaN(expiration) &&
-        expiration > now
-      );
-    },
+  return (
+    message ||
+    error.response?.data?.error ||
+    fallback
   );
-
-  return {
-    id: apiUser.id,
-    nombre: apiUser.displayName,
-    correo: apiUser.email,
-    estado: apiUser.status,
-    rol: activeRoles
-      .map(({ role }) => role.slug)
-      .join(" "),
-    rol_nombre: activeRoles
-      .map(({ role }) => role.name)
-      .join(", "),
-    creado_en: apiUser.createdAt,
-    ultima_actividad:
-      apiUser.lastLoginAt ??
-      apiUser.updatedAt,
-    foto_perfil: apiUser.avatarUrl,
-  };
 }
 
-function toManageableStatus(
-  value: string,
-): ManageableUserStatus | null {
-  const status = value
-    .trim()
-    .toLowerCase();
-
-  if (
-    status === "active" ||
-    status === "activo"
-  ) {
-    return "ACTIVE";
-  }
-
-  if (
-    status === "suspended" ||
-    status === "suspendido"
-  ) {
-    return "SUSPENDED";
-  }
-
-  if (
-    status === "disabled" ||
-    status === "deshabilitado"
-  ) {
-    return "DISABLED";
-  }
-
-  return null;
+function UserAvatar({
+  user,
+  large = false,
+}: {
+  user: User;
+  large?: boolean;
+}) {
+  return (
+    <div
+      className={`flex shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br from-sky-500 via-violet-600 to-fuchsia-600 font-bold text-white shadow-lg shadow-violet-950/30 ${
+        large
+          ? "h-20 w-20 rounded-3xl text-xl"
+          : "h-11 w-11 rounded-2xl text-sm"
+      }`}
+    >
+      {user.foto_perfil ? (
+        <img
+          src={user.foto_perfil}
+          alt={user.nombre}
+          className="h-full w-full object-cover"
+        />
+      ) : (
+        getInitials(
+          user.nombre || "Usuario",
+        )
+      )}
+    </div>
+  );
 }
-export default function UsersPage({ role }: UsersPageProps) {
-  const [users, setUsers] = useState<User[]>([]);
-  const [search, setSearch] = useState("");
-  const [activeFilter, setActiveFilter] =
-    useState<FilterKey>("todos");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [loadingUserDetail, setLoadingUserDetail] = useState(false);
 
-  const [showEditModal, setShowEditModal] = useState(false);
-const [userToEdit, setUserToEdit] = useState<User | null>(null);
+function StatusBadge({
+  status,
+}: {
+  status: ApiUserStatus;
+}) {
+  const active = status === "ACTIVE";
+  const pending =
+    status === "PENDING_VERIFICATION";
+  const suspended =
+    status === "SUSPENDED";
 
-const [editNombre, setEditNombre] = useState("");
-const [editCorreo, setEditCorreo] = useState("");
-const [editTelefono, setEditTelefono] = useState("");
-const [editEstado, setEditEstado] = useState("activo");
-const [editContrasena, setEditContrasena] = useState("");
-const [savingEdit, setSavingEdit] = useState(false);
-const [, setSuccess] = useState("");
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
+        active
+          ? "border-emerald-400/15 bg-emerald-500/10 text-emerald-300"
+          : pending
+            ? "border-sky-400/15 bg-sky-500/10 text-sky-300"
+            : suspended
+              ? "border-amber-400/15 bg-amber-500/10 text-amber-300"
+              : "border-red-400/15 bg-red-500/10 text-red-300"
+      }`}
+    >
+      {active ? (
+        <UserRoundCheck size={13} />
+      ) : (
+        <UserRoundX size={13} />
+      )}
+      {getStatusLabel(status)}
+    </span>
+  );
+}
 
-const [showCreateModal, setShowCreateModal] = useState(false);
-const [creatingUser, setCreatingUser] = useState(false);
+function VerificationBadge({
+  verified,
+}: {
+  verified: boolean;
+}) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
+        verified
+          ? "border-emerald-400/15 bg-emerald-500/10 text-emerald-300"
+          : "border-slate-400/10 bg-slate-500/10 text-slate-400"
+      }`}
+    >
+      <MailCheck size={13} />
+      {verified
+        ? "Correo verificado"
+        : "Sin verificar"}
+    </span>
+  );
+}
 
-const [createNombre, setCreateNombre] = useState("");
-const [createCorreo, setCreateCorreo] = useState("");
-const [createTelefono, setCreateTelefono] = useState("");
-const [createContrasena, setCreateContrasena] = useState("");
-const [createPlan, setCreatePlan] = useState("free");
+export default function UsersPage({
+  role,
+}: UsersPageProps) {
+  const [users, setUsers] = useState<
+    User[]
+  >([]);
+  const [loading, setLoading] =
+    useState(true);
+  const [saving, setSaving] =
+    useState(false);
+  const [creating, setCreating] =
+    useState(false);
+  const [exporting, setExporting] =
+    useState(false);
 
-const [showActionsModal, setShowActionsModal] = useState(false);
-const [userForActions, setUserForActions] = useState<User | null>(null);
-const [changingPlan, setChangingPlan] = useState(false);
+  const [error, setError] =
+    useState("");
+  const [success, setSuccess] =
+    useState("");
+
+  const [search, setSearch] =
+    useState("");
+  const [
+    statusFilter,
+    setStatusFilter,
+  ] =
+    useState<StatusFilter>("todos");
+
+  const [
+    selectedUser,
+    setSelectedUser,
+  ] = useState<User | null>(null);
+
+  const [
+    showActionsModal,
+    setShowActionsModal,
+  ] = useState(false);
+  const [
+    userForActions,
+    setUserForActions,
+  ] = useState<User | null>(null);
+
+  const [
+    showEditModal,
+    setShowEditModal,
+  ] = useState(false);
+  const [
+    userToEdit,
+    setUserToEdit,
+  ] = useState<User | null>(null);
+  const [
+    editNombre,
+    setEditNombre,
+  ] = useState("");
+  const [
+    editCorreo,
+    setEditCorreo,
+  ] = useState("");
+
+  const [
+    showCreateModal,
+    setShowCreateModal,
+  ] = useState(false);
+  const [
+    createFirstName,
+    setCreateFirstName,
+  ] = useState("");
+  const [
+    createLastName,
+    setCreateLastName,
+  ] = useState("");
+  const [
+    createUsername,
+    setCreateUsername,
+  ] = useState("");
+  const [
+    createEmail,
+    setCreateEmail,
+  ] = useState("");
+  const [
+    createPassword,
+    setCreatePassword,
+  ] = useState("");
 
   async function loadUsers() {
     setLoading(true);
     setError("");
 
     try {
-      const firstResponse =
-        await api.get<UsersResponse>(
-          "/users",
-          {
-            params: {
-              page: 1,
-              limit: 100,
-              sortBy: "createdAt",
-              sortOrder: "desc",
-            },
-          },
-        );
+      const allUsers: ApiUser[] = [];
+      let page = 1;
+      let totalPages = 1;
 
-      const apiUsers = [
-        ...firstResponse.data.users,
-      ];
-
-      for (
-        let page = 2;
-        page <= firstResponse.data.totalPages;
-        page += 1
-      ) {
-        const pageResponse =
+      do {
+        const response =
           await api.get<UsersResponse>(
             "/users",
             {
@@ -293,24 +453,26 @@ const [changingPlan, setChangingPlan] = useState(false);
             },
           );
 
-        apiUsers.push(
-          ...pageResponse.data.users,
+        allUsers.push(
+          ...response.data.users,
         );
-      }
+
+        totalPages =
+          response.data.totalPages;
+        page += 1;
+      } while (page <= totalPages);
 
       setUsers(
-        apiUsers
+        allUsers
           .map(mapApiUser)
           .filter(isNormalUser),
       );
     } catch (err) {
       setError(
-        axios.isAxiosError(err)
-          ? err.response?.data?.message ||
-              "No se pudieron cargar los usuarios."
-          : err instanceof Error
-            ? err.message
-            : "No se pudieron cargar los usuarios.",
+        getAxiosErrorMessage(
+          err,
+          "No se pudieron cargar los usuarios.",
+        ),
       );
     } finally {
       setLoading(false);
@@ -318,433 +480,822 @@ const [changingPlan, setChangingPlan] = useState(false);
   }
 
   useEffect(() => {
-    loadUsers();
+    void loadUsers();
   }, [role]);
 
-  async function openUserProfile(user: User) {
-    setLoadingUserDetail(true);
-    setError("");
-
-    try {
-      const response =
-        await api.get<UserDetailResponse>(
-          `/users/${user.id}`,
-        );
-
-      setSelectedUser({
-        ...user,
-        ...mapApiUser(response.data),
-      });
-
-      closeActions();
-    } catch (err) {
-      setError(
-        axios.isAxiosError(err)
-          ? err.response?.data?.message ||
-              "No se pudo cargar el detalle del usuario."
-          : err instanceof Error
-            ? err.message
-            : "No se pudo cargar el detalle del usuario.",
-      );
-    } finally {
-      setLoadingUserDetail(false);
-    }
-  }
-
   const filteredUsers = useMemo(() => {
-    const text = search.trim().toLowerCase();
+    const text =
+      search.trim().toLowerCase();
 
     return users.filter((user) => {
-      const status = getStatusLabel(user).toLowerCase();
-      const plan = getPlanLabel(user).toLowerCase();
-
       const matchesSearch =
         !text ||
-        user.nombre.toLowerCase().includes(text) ||
-        user.correo.toLowerCase().includes(text) ||
-        String(user.id).includes(text);
+        user.nombre
+          .toLowerCase()
+          .includes(text) ||
+        user.correo
+          .toLowerCase()
+          .includes(text) ||
+        user.id
+          .toLowerCase()
+          .includes(text);
 
-      const matchesFilter =
-        activeFilter === "todos" ||
-        (activeFilter === "activos" &&
-          (status === "activo" || status === "active")) ||
-        (activeFilter === "suspendidos" &&
-          (status === "suspendido" || status === "suspended")) ||
-        (activeFilter === "vip" && plan.includes("vip")) ||
-        (activeFilter === "free" && plan.includes("free"));
+      const matchesStatus =
+        statusFilter === "todos" ||
+        user.estado === statusFilter;
 
-      return matchesSearch && matchesFilter;
+      return (
+        matchesSearch &&
+        matchesStatus
+      );
     });
-  }, [search, users, activeFilter]);
+  }, [
+    users,
+    search,
+    statusFilter,
+  ]);
 
   const totals = useMemo(() => {
     return {
       total: users.length,
-      activos: users.filter((user) => {
-        const status = getStatusLabel(user).toLowerCase();
-        return status === "activo" || status === "active";
-      }).length,
-      suspendidos: users.filter((user) => {
-        const status = getStatusLabel(user).toLowerCase();
-        return status === "suspendido" || status === "suspended";
-      }).length,
-      vip: users.filter((user) =>
-        getPlanLabel(user).toLowerCase().includes("vip")
+      active: users.filter(
+        (user) =>
+          user.estado === "ACTIVE",
+      ).length,
+      pending: users.filter(
+        (user) =>
+          user.estado ===
+          "PENDING_VERIFICATION",
+      ).length,
+      restricted: users.filter(
+        (user) =>
+          user.estado ===
+            "SUSPENDED" ||
+          user.estado === "DISABLED",
       ).length,
     };
   }, [users]);
 
-  function exportCsv() {
-    const headers = [
-      "ID",
-      "Nombre",
-      "Correo",
-      "Plan",
-      "Estado",
-      "Registro",
-    ];
-
-    const rows = filteredUsers.map((user) => [
-      user.id,
-      user.nombre,
-      user.correo,
-      getPlanLabel(user),
-      getStatusLabel(user),
-      user.creado_en ?? "",
-    ]);
-
-    const csv = [headers, ...rows]
-      .map((row) =>
-        row.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(",")
-      )
-      .join("\n");
-
-    const blob = new Blob([csv], {
-      type: "text/csv;charset=utf-8;",
-    });
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.download = "usuarios-vibenotas.csv";
-    link.click();
-
-    URL.revokeObjectURL(url);
+  function resetCreateForm() {
+    setCreateFirstName("");
+    setCreateLastName("");
+    setCreateUsername("");
+    setCreateEmail("");
+    setCreatePassword("");
   }
 
-  const filters: { key: FilterKey; label: string }[] = [
-    { key: "todos", label: "Todos" },
-    { key: "activos", label: "Activos" },
-    { key: "suspendidos", label: "Suspendidos" },
-    { key: "free", label: "Plan Free" },
-    { key: "vip", label: "Plan VIP" },
-  ];
+  async function createUser(
+    event: FormEvent<HTMLFormElement>,
+  ) {
+    event.preventDefault();
+
+    const firstName =
+      createFirstName.trim();
+    const lastName =
+      createLastName.trim();
+    const username =
+      createUsername.trim();
+    const email =
+      createEmail.trim();
+
+    if (
+      firstName.length < 1 ||
+      firstName.length > 80
+    ) {
+      setError(
+        "El nombre debe tener entre 1 y 80 caracteres.",
+      );
+      return;
+    }
+
+    if (
+      lastName.length < 1 ||
+      lastName.length > 80
+    ) {
+      setError(
+        "El apellido debe tener entre 1 y 80 caracteres.",
+      );
+      return;
+    }
+
+    if (
+      username.length < 3 ||
+      username.length > 30 ||
+      !/^[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])$/.test(
+        username,
+      )
+    ) {
+      setError(
+        "El username debe tener entre 3 y 30 caracteres y solo puede usar letras, números, puntos, guiones y guiones bajos.",
+      );
+      return;
+    }
+
+    if (
+      createPassword.length < 12 ||
+      createPassword.length > 128
+    ) {
+      setError(
+        "La contraseña debe tener entre 12 y 128 caracteres.",
+      );
+      return;
+    }
+
+    setCreating(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const response =
+        await api.post<RegisterResponse>(
+          "/auth/register",
+          {
+            firstName,
+            lastName,
+            username,
+            email,
+            password: createPassword,
+          },
+        );
+
+      let verifiedInDevelopment =
+        false;
+
+      const token =
+        response.data
+          .developmentVerificationToken;
+
+      if (
+        typeof token === "string" &&
+        token.length >= 32
+      ) {
+        try {
+          await api.post(
+            "/auth/verify-email",
+            {
+              token,
+            },
+          );
+
+          verifiedInDevelopment =
+            true;
+        } catch {
+          // La cuenta queda pendiente de verificación.
+        }
+      }
+
+      resetCreateForm();
+      setShowCreateModal(false);
+
+      await loadUsers();
+
+      setSuccess(
+        verifiedInDevelopment
+          ? "Usuario creado y activado correctamente."
+          : "Usuario creado correctamente. La cuenta queda pendiente de verificación de correo.",
+      );
+    } catch (err) {
+      setError(
+        getAxiosErrorMessage(
+          err,
+          "No se pudo crear el usuario.",
+        ),
+      );
+    } finally {
+      setCreating(false);
+    }
+  }
+
+  function openActions(user: User) {
+    setUserForActions(user);
+    setShowActionsModal(true);
+  }
+
+  function closeActions() {
+    setShowActionsModal(false);
+    setUserForActions(null);
+  }
 
   function openEditUser(user: User) {
-  setUserToEdit(user);
-  setEditNombre(user.nombre);
-  setEditCorreo(user.correo);
-  setEditTelefono(user.telefono || "");
-  setEditEstado(getStatusLabel(user));
-  setEditContrasena("");
-
-  setSelectedUser(null);
-  setShowEditModal(true);
-}
-
-async function updateUser(
-  event: React.FormEvent<HTMLFormElement>,
-) {
-  event.preventDefault();
-
-  if (!userToEdit) return;
-
-  const displayName = editNombre.trim();
-  const email = editCorreo.trim();
-
-  if (displayName.length < 2) {
-    setError(
-      "El nombre debe tener al menos 2 caracteres.",
-    );
-    return;
-  }
-
-  if (editContrasena.trim()) {
-    setError(
-      "El backend administrativo no permite cambiar contraseñas desde esta operación.",
-    );
-    return;
-  }
-
-  if (
-    editTelefono.trim() !==
-    (userToEdit.telefono ?? "").trim()
-  ) {
-    setError(
-      "El backend administrativo actual no expone edición de teléfono.",
-    );
-    return;
-  }
-
-  const requestedStatus =
-    toManageableStatus(editEstado);
-
-  const currentStatus =
-    toManageableStatus(
-      getStatusLabel(userToEdit),
-    );
-
-  if (!requestedStatus) {
-    setError("Estado de usuario inválido.");
-    return;
-  }
-
-  const identityChanged =
-    displayName !== userToEdit.nombre ||
-    email.toLowerCase() !==
-      userToEdit.correo.toLowerCase();
-
-  const statusChanged =
-    requestedStatus !== currentStatus;
-
-  if (!identityChanged && !statusChanged) {
-    setShowEditModal(false);
-    setUserToEdit(null);
-    return;
-  }
-
-  setSavingEdit(true);
-  setError("");
-
-  try {
-    if (identityChanged) {
-      await api.patch<ApiUser>(
-        `/users/${userToEdit.id}`,
-        {
-          displayName,
-          email,
-        },
-      );
-    }
-
-    if (statusChanged) {
-      await api.patch<ApiUser>(
-        `/users/${userToEdit.id}/status`,
-        {
-          status: requestedStatus,
-        },
-      );
-    }
-
-    setSuccess(
-      "Usuario actualizado correctamente.",
-    );
-
-    setShowEditModal(false);
-    setUserToEdit(null);
-
-    await loadUsers();
-  } catch (err) {
-    setError(
-      axios.isAxiosError(err)
-        ? err.response?.data?.message ||
-            "No se pudo actualizar el usuario."
-        : err instanceof Error
-          ? err.message
-          : "No se pudo actualizar el usuario.",
-    );
-  } finally {
-    setSavingEdit(false);
-  }
-}
-
-function getAvatarUrl(path?: string | null) {
-  return path ?? "";
-}
-
-function openActions(user: User) {
-  setUserForActions(user);
-  setShowActionsModal(true);
-}
-
-function closeActions() {
-  setShowActionsModal(false);
-  setUserForActions(null);
-}
-
-async function changeUserStatus(user: User) {
-  const currentStatus =
-    toManageableStatus(
-      getStatusLabel(user),
-    );
-
-  const newStatus: ManageableUserStatus =
-    currentStatus === "ACTIVE"
-      ? "SUSPENDED"
-      : "ACTIVE";
-
-  const confirmed = window.confirm(
-    newStatus === "SUSPENDED"
-      ? `¿Quieres suspender a ${user.nombre}? Sus sesiones activas serán revocadas.`
-      : `¿Quieres activar nuevamente a ${user.nombre}?`,
-  );
-
-  if (!confirmed) return;
-
-  setError("");
-  setSuccess("");
-
-  try {
-    await api.patch<ApiUser>(
-      `/users/${user.id}/status`,
-      {
-        status: newStatus,
-      },
-    );
-
-    setSuccess(
-      newStatus === "ACTIVE"
-        ? "Usuario activado correctamente."
-        : "Usuario suspendido correctamente.",
-    );
-
-    closeActions();
+    setError("");
+    setSuccess("");
+    setUserToEdit(user);
+    setEditNombre(user.nombre);
+    setEditCorreo(user.correo);
     setSelectedUser(null);
-
-    await loadUsers();
-  } catch (err) {
-    setError(
-      axios.isAxiosError(err)
-        ? err.response?.data?.message ||
-            "No se pudo cambiar el estado."
-        : err instanceof Error
-          ? err.message
-          : "No se pudo cambiar el estado.",
-    );
+    closeActions();
+    setShowEditModal(true);
   }
-}
 
-async function createUser(
-  event: React.FormEvent<HTMLFormElement>,
-) {
-  event.preventDefault();
+  async function updateUser(
+    event: FormEvent<HTMLFormElement>,
+  ) {
+    event.preventDefault();
 
-  setCreatingUser(false);
-  setError(
-    "La creación administrativa de usuarios todavía no está implementada en el backend NestJS.",
-  );
-}
+    if (!userToEdit) {
+      return;
+    }
 
-async function changeUserPlan(user: User) {
-  void user;
+    const displayName =
+      editNombre.trim();
+    const email =
+      editCorreo.trim();
 
-  setChangingPlan(false);
-  setError(
-    "La administración de planes todavía no está implementada en el backend NestJS.",
-  );
-}
+    if (displayName.length < 2) {
+      setError(
+        "El nombre debe tener al menos 2 caracteres.",
+      );
+      return;
+    }
+
+    const changes: {
+      displayName?: string;
+      email?: string;
+    } = {};
+
+    if (
+      displayName !== userToEdit.nombre
+    ) {
+      changes.displayName =
+        displayName;
+    }
+
+    if (
+      email.toLowerCase() !==
+      userToEdit.correo.toLowerCase()
+    ) {
+      changes.email = email;
+    }
+
+    if (
+      Object.keys(changes).length === 0
+    ) {
+      setShowEditModal(false);
+      setUserToEdit(null);
+      return;
+    }
+
+    setSaving(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      await api.patch(
+        `/users/${userToEdit.id}`,
+        changes,
+      );
+
+      setShowEditModal(false);
+      setUserToEdit(null);
+
+      await loadUsers();
+
+      setSuccess(
+        "Usuario actualizado correctamente.",
+      );
+    } catch (err) {
+      setError(
+        getAxiosErrorMessage(
+          err,
+          "No se pudo actualizar el usuario.",
+        ),
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function changeUserStatus(
+    user: User,
+  ) {
+    const nextStatus:
+      | "ACTIVE"
+      | "SUSPENDED" =
+      user.estado === "ACTIVE"
+        ? "SUSPENDED"
+        : "ACTIVE";
+
+    const confirmed =
+      window.confirm(
+        nextStatus === "SUSPENDED"
+          ? `¿Quieres suspender a ${user.nombre}? Sus sesiones activas serán revocadas.`
+          : `¿Quieres activar nuevamente a ${user.nombre}?`,
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setSaving(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      await api.patch(
+        `/users/${user.id}/status`,
+        {
+          status: nextStatus,
+        },
+      );
+
+      closeActions();
+      setSelectedUser(null);
+
+      await loadUsers();
+
+      setSuccess(
+        nextStatus === "ACTIVE"
+          ? "Usuario activado correctamente."
+          : "Usuario suspendido correctamente.",
+      );
+    } catch (err) {
+      setError(
+        getAxiosErrorMessage(
+          err,
+          "No se pudo cambiar el estado del usuario.",
+        ),
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function disableUser(
+    user: User,
+  ) {
+    const confirmed =
+      window.confirm(
+        `¿Deshabilitar la cuenta de ${user.nombre}? Se revocará su acceso sin eliminar sus datos.`,
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setSaving(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      await api.patch(
+        `/users/${user.id}/status`,
+        {
+          status: "DISABLED",
+        },
+      );
+
+      closeActions();
+      setSelectedUser(null);
+
+      await loadUsers();
+
+      setSuccess(
+        "Usuario deshabilitado correctamente.",
+      );
+    } catch (err) {
+      setError(
+        getAxiosErrorMessage(
+          err,
+          "No se pudo deshabilitar el usuario.",
+        ),
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function exportExcel() {
+    if (
+      filteredUsers.length === 0 ||
+      exporting
+    ) {
+      return;
+    }
+
+    setExporting(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const ExcelJS =
+        await import("exceljs");
+
+      const workbook =
+        new ExcelJS.Workbook();
+
+      workbook.creator = "VibeNotas";
+      workbook.created = new Date();
+
+      const sheet =
+        workbook.addWorksheet(
+          "Usuarios",
+          {
+            views: [
+              {
+                state: "frozen",
+                ySplit: 1,
+              },
+            ],
+          },
+        );
+
+      sheet.columns = [
+        {
+          header: "Nombre",
+          key: "nombre",
+          width: 30,
+        },
+        {
+          header: "Correo",
+          key: "correo",
+          width: 34,
+        },
+        {
+          header: "Estado",
+          key: "estado",
+          width: 23,
+        },
+        {
+          header: "Correo verificado",
+          key: "verificado",
+          width: 20,
+        },
+        {
+          header: "MFA",
+          key: "mfa",
+          width: 14,
+        },
+        {
+          header: "Registro",
+          key: "registro",
+          width: 22,
+        },
+        {
+          header: "Último acceso",
+          key: "actividad",
+          width: 24,
+        },
+        {
+          header: "ID",
+          key: "id",
+          width: 40,
+        },
+      ];
+
+      for (const user of filteredUsers) {
+        sheet.addRow({
+          nombre: user.nombre,
+          correo: user.correo,
+          estado: getStatusLabel(
+            user.estado,
+          ),
+          verificado:
+            user.email_verificado
+              ? "Sí"
+              : "No",
+          mfa: user.mfa_habilitado
+            ? "Habilitado"
+            : "Deshabilitado",
+          registro: new Date(
+            user.creado_en,
+          ),
+          actividad:
+            user.ultima_actividad
+              ? new Date(
+                  user.ultima_actividad,
+                )
+              : null,
+          id: user.id,
+        });
+      }
+
+      const header =
+        sheet.getRow(1);
+
+      header.height = 28;
+      header.font = {
+        bold: true,
+        color: {
+          argb: "FFFFFFFF",
+        },
+      };
+      header.alignment = {
+        vertical: "middle",
+      };
+      header.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: {
+          argb: "FF6D28D9",
+        },
+      };
+
+      sheet.autoFilter = {
+        from: "A1",
+        to: "H1",
+      };
+
+      sheet.eachRow(
+        (row, rowNumber) => {
+          row.alignment = {
+            vertical: "middle",
+          };
+
+          if (rowNumber > 1) {
+            row.height = 22;
+
+            if (
+              rowNumber % 2 === 0
+            ) {
+              row.fill = {
+                type: "pattern",
+                pattern: "solid",
+                fgColor: {
+                  argb:
+                    "FFF8FAFC",
+                },
+              };
+            }
+          }
+        },
+      );
+
+      for (const column of [
+        "F",
+        "G",
+      ]) {
+        for (
+          let row = 2;
+          row <= sheet.rowCount;
+          row += 1
+        ) {
+          sheet.getCell(
+            `${column}${row}`,
+          ).numFmt =
+            "dd/mm/yyyy hh:mm";
+        }
+      }
+
+      const buffer =
+        await workbook.xlsx.writeBuffer();
+
+      const blob = new Blob(
+        [buffer as BlobPart],
+        {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        },
+      );
+
+      const url =
+        URL.createObjectURL(blob);
+      const link =
+        document.createElement("a");
+
+      const date =
+        new Date()
+          .toISOString()
+          .slice(0, 10);
+
+      link.href = url;
+      link.download = `vibenotas-usuarios-${date}.xlsx`;
+      link.click();
+
+      URL.revokeObjectURL(url);
+
+      setSuccess(
+        `Excel generado con ${filteredUsers.length} usuario${
+          filteredUsers.length === 1
+            ? ""
+            : "s"
+        }.`,
+      );
+    } catch (err) {
+      setError(
+        getAxiosErrorMessage(
+          err,
+          "No se pudo generar el archivo Excel.",
+        ),
+      );
+    } finally {
+      setExporting(false);
+    }
+  }
 
   return (
-    <section className="space-y-6 pb-8">
-      <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
-            Comunidad VibeNotas
-          </p>
+    <section className="space-y-6 pb-10">
+      <header className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.16),transparent_38%),linear-gradient(135deg,rgba(30,41,59,0.96),rgba(15,23,42,0.96))] p-6 shadow-2xl shadow-black/20 sm:p-8">
+        <div className="absolute -right-16 -top-20 h-52 w-52 rounded-full bg-sky-500/10 blur-3xl" />
+        <div className="absolute -bottom-24 left-1/3 h-52 w-52 rounded-full bg-violet-500/10 blur-3xl" />
 
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-white">
-            Usuarios de la aplicaciÃ³n
-          </h1>
+        <div className="relative flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/15 bg-sky-500/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-sky-200">
+              <UsersRound size={14} />
+              Comunidad VibeNotas
+            </div>
 
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-            Revisa las cuentas de usuarios, sus planes y el estado de acceso
-            dentro de VibeNotas.
-          </p>
+            <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              Usuarios
+            </h1>
+
+            <p className="mt-3 max-w-xl text-sm leading-6 text-slate-400 sm:text-base">
+              Gestiona cuentas de usuario, verifica su estado de acceso y revisa información real de identidad y seguridad.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={() =>
+                void exportExcel()
+              }
+              disabled={
+                filteredUsers.length ===
+                  0 || exporting
+              }
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.055] px-4 py-2.5 text-sm font-semibold text-slate-200 transition hover:border-white/15 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              {exporting ? (
+                <RefreshCw
+                  size={17}
+                  className="animate-spin"
+                />
+              ) : (
+                <FileSpreadsheet
+                  size={18}
+                />
+              )}
+              {exporting
+                ? "Generando..."
+                : "Exportar Excel"}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setError("");
+                setSuccess("");
+                resetCreateForm();
+                setShowCreateModal(true);
+              }}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-950/30 transition hover:-translate-y-0.5 hover:brightness-110"
+            >
+              <UserPlus size={18} />
+              Nuevo usuario
+            </button>
+          </div>
         </div>
+      </header>
 
-        <div className="flex flex-wrap items-center gap-3">
+      {error && (
+        <div className="flex items-start gap-3 rounded-2xl border border-red-400/15 bg-red-500/[0.08] p-4 text-red-100">
+          <div className="mt-0.5 rounded-xl bg-red-500/10 p-2 text-red-300">
+            <AlertTriangle size={18} />
+          </div>
+
+          <div className="min-w-0">
+            <p className="font-semibold">
+              No pudimos completar la acción
+            </p>
+            <p className="mt-1 text-sm leading-5 text-red-200/70">
+              {error}
+            </p>
+          </div>
+
           <button
             type="button"
-            onClick={() => {
-              setError("");
-              setSuccess("");
-              setShowCreateModal(true);
-            }}
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-violet-950/30 transition hover:scale-[1.02]"
+            onClick={() =>
+              setError("")
+            }
+            className="ml-auto rounded-lg p-1.5 text-red-200/60 transition hover:bg-red-500/10 hover:text-red-100"
+            aria-label="Cerrar alerta"
           >
-            <UserPlus size={18} />
-            Crear usuario
+            <X size={16} />
           </button>
+        </div>
+      )}
+
+      {success && (
+        <div className="flex items-start gap-3 rounded-2xl border border-emerald-400/15 bg-emerald-500/[0.08] p-4 text-emerald-100">
+          <div className="mt-0.5 rounded-xl bg-emerald-500/10 p-2 text-emerald-300">
+            <CheckCircle2 size={18} />
+          </div>
+
+          <div>
+            <p className="font-semibold">
+              Acción completada
+            </p>
+            <p className="mt-1 text-sm text-emerald-200/70">
+              {success}
+            </p>
+          </div>
 
           <button
             type="button"
-            onClick={exportCsv}
-            disabled={filteredUsers.length === 0}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+            onClick={() =>
+              setSuccess("")
+            }
+            className="ml-auto rounded-lg p-1.5 text-emerald-200/60 transition hover:bg-emerald-500/10 hover:text-emerald-100"
+            aria-label="Cerrar confirmación"
           >
-            <Download size={18} />
-            Exportar CSV
+            <X size={16} />
           </button>
         </div>
-      </div>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <article className="rounded-2xl border border-violet-500/15 bg-violet-500/[0.08] p-4">
-          <p className="text-sm font-medium text-slate-400">
-            Usuarios totales
-          </p>
-          <p className="mt-2 text-3xl font-bold text-white">
-            {totals.total}
-          </p>
-        </article>
+        {[
+          {
+            label: "Usuarios totales",
+            value: totals.total,
+            helper: "Cuentas no administrativas",
+            icon: UsersRound,
+            tone:
+              "border-violet-400/15 bg-violet-500/[0.07] text-violet-300",
+          },
+          {
+            label: "Activos",
+            value: totals.active,
+            helper: "Acceso disponible",
+            icon: UserRoundCheck,
+            tone:
+              "border-emerald-400/15 bg-emerald-500/[0.07] text-emerald-300",
+          },
+          {
+            label: "Pendientes",
+            value: totals.pending,
+            helper: "Esperando verificación",
+            icon: MailCheck,
+            tone:
+              "border-sky-400/15 bg-sky-500/[0.07] text-sky-300",
+          },
+          {
+            label: "Restringidos",
+            value: totals.restricted,
+            helper:
+              "Suspendidos o deshabilitados",
+            icon: ShieldOff,
+            tone:
+              "border-amber-400/15 bg-amber-500/[0.07] text-amber-300",
+          },
+        ].map((item) => {
+          const Icon = item.icon;
 
-        <article className="rounded-2xl border border-emerald-500/15 bg-emerald-500/[0.08] p-4">
-          <p className="text-sm font-medium text-slate-400">
-            Usuarios activos
-          </p>
-          <p className="mt-2 text-3xl font-bold text-emerald-300">
-            {totals.activos}
-          </p>
-        </article>
+          return (
+            <article
+              key={item.label}
+              className={`rounded-2xl border p-5 ${item.tone}`}
+            >
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+                    {item.label}
+                  </p>
+                  <p className="mt-2 text-3xl font-bold text-white">
+                    {item.value}
+                  </p>
+                </div>
 
-        <article className="rounded-2xl border border-red-500/15 bg-red-500/[0.08] p-4">
-          <p className="text-sm font-medium text-slate-400">
-            Suspendidos
-          </p>
-          <p className="mt-2 text-3xl font-bold text-red-300">
-            {totals.suspendidos}
-          </p>
-        </article>
+                <div className="rounded-xl bg-white/[0.055] p-2.5">
+                  <Icon size={19} />
+                </div>
+              </div>
 
-        <article className="rounded-2xl border border-amber-500/15 bg-amber-500/[0.08] p-4">
-          <p className="text-sm font-medium text-slate-400">
-            Usuarios VIP
-          </p>
-          <p className="mt-2 text-3xl font-bold text-amber-300">
-            {totals.vip}
-          </p>
-        </article>
+              <p className="mt-4 text-xs font-medium text-slate-500">
+                {item.helper}
+              </p>
+            </article>
+          );
+        })}
       </div>
 
-      <div className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-4 shadow-xl shadow-black/10 backdrop-blur-xl">
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-          <div className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3">
-            <Search size={19} className="shrink-0 text-slate-500" />
+      <div className="rounded-3xl border border-white/10 bg-[#172033]/85 p-4 shadow-xl shadow-black/10 backdrop-blur-xl sm:p-5">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+          <div className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3 transition focus-within:border-violet-400/35 focus-within:bg-black/15">
+            <Search
+              size={18}
+              className="shrink-0 text-slate-500"
+            />
 
             <input
               value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Buscar por nombre, correo o ID..."
-              className="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-500"
+              onChange={(event) =>
+                setSearch(
+                  event.target.value,
+                )
+              }
+              placeholder="Buscar por nombre, correo o ID"
+              className="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-600"
             />
 
             {search && (
               <button
                 type="button"
-                onClick={() => setSearch("")}
+                onClick={() =>
+                  setSearch("")
+                }
                 className="rounded-lg p-1 text-slate-500 transition hover:bg-white/10 hover:text-white"
-                title="Limpiar bÃºsqueda"
+                aria-label="Limpiar búsqueda"
               >
                 <X size={16} />
               </button>
@@ -753,735 +1304,901 @@ async function changeUserPlan(user: User) {
 
           <button
             type="button"
-            onClick={loadUsers}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-3 text-sm font-semibold text-violet-300 transition hover:bg-violet-500/20"
+            onClick={() =>
+              void loadUsers()
+            }
+            disabled={loading}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-violet-400/15 bg-violet-500/10 px-4 py-2.5 text-sm font-semibold text-violet-200 transition hover:bg-violet-500/15 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <RefreshCw size={17} />
-            Actualizar lista
-          </button>
-        </div>
-
-        <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
-          {filters.map((filter) => (
-            <button
-              key={filter.key}
-              type="button"
-              onClick={() => setActiveFilter(filter.key)}
-              className={`whitespace-nowrap rounded-xl px-4 py-2 text-sm font-semibold transition ${
-                activeFilter === filter.key
-                  ? "bg-violet-500 text-white shadow-lg shadow-violet-950/30"
-                  : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              {filter.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {loading && (
-        <div className="grid gap-4">
-          {[1, 2, 3, 4, 5].map((item) => (
-            <div
-              key={item}
-              className="h-20 animate-pulse rounded-2xl border border-white/10 bg-white/5"
+            <RefreshCw
+              size={17}
+              className={
+                loading
+                  ? "animate-spin"
+                  : ""
+              }
             />
-          ))}
-        </div>
-      )}
-
-      {!loading && error && (
-        <div className="rounded-3xl border border-red-500/20 bg-red-500/10 p-6 text-red-200">
-          <h2 className="font-bold">No se pudieron cargar los usuarios</h2>
-          <p className="mt-2 text-sm text-red-200/80">{error}</p>
-
-          <button
-            type="button"
-            onClick={loadUsers}
-            className="mt-4 rounded-xl bg-red-500 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-red-400"
-          >
-            Reintentar
-          </button>
-        </div>
-      )}
-
-      {!loading && !error && (
-        <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10 backdrop-blur-xl">
-          <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
-            <div>
-              <h2 className="font-bold text-white">Usuarios registrados</h2>
-              <p className="mt-1 text-sm text-slate-500">
-                Mostrando {filteredUsers.length} de {users.length} usuarios.
-              </p>
-            </div>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[900px] text-left">
-              <thead className="bg-black/10 text-xs uppercase tracking-wide text-slate-500">
-                <tr>
-                  <th className="px-6 py-4 font-semibold">Usuario</th>
-                  <th className="px-6 py-4 font-semibold">Plan</th>
-                  <th className="px-6 py-4 font-semibold">Estado</th>
-                  <th className="px-6 py-4 font-semibold">Registro</th>
-                  <th className="px-6 py-4 font-semibold">
-                    Ãšltima actividad
-                  </th>
-                  <th className="px-6 py-4 text-right font-semibold">
-                    Detalle
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {filteredUsers.map((user) => {
-                  const status = getStatusLabel(user).toLowerCase();
-                  const isActive =
-                    status === "activo" || status === "active";
-
-                  const plan = getPlanLabel(user);
-                  const isVip = plan.toLowerCase().includes("vip");
-
-                  return (
-                    <tr
-                      key={user.id}
-                      className="border-t border-white/5 text-sm transition hover:bg-white/[0.035]"
-                    >
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-600 font-bold text-white shadow-lg shadow-violet-950/30">
-                            {user.foto_perfil ? (
-                              <img
-                                src={getAvatarUrl(user.foto_perfil)}
-                                alt={user.nombre}
-                                className="h-full w-full object-cover"
-                              />
-                            ) : (
-                              getInitials(user.nombre || "Usuario")
-                            )}
-                          </div>
-
-                          <div className="min-w-0">
-                            <p className="truncate font-semibold text-white">
-                              {user.nombre}
-                            </p>
-
-                            <p className="truncate text-xs text-slate-500">
-                              {user.correo}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td className="px-6 py-4">
-                        <span
-                          className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
-                            isVip
-                              ? "bg-amber-500/10 text-amber-300"
-                              : "bg-sky-500/10 text-sky-300"
-                          }`}
-                        >
-                          {isVip && <Crown size={13} />}
-                          {plan}
-                        </span>
-                      </td>
-
-                      <td className="px-6 py-4">
-                        <span
-                          className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
-                            isActive
-                              ? "bg-emerald-500/10 text-emerald-400"
-                              : "bg-red-500/10 text-red-400"
-                          }`}
-                        >
-                          {isActive ? (
-                            <UserCheck size={14} />
-                          ) : (
-                            <UserX size={14} />
-                          )}
-
-                          {getStatusLabel(user)}
-                        </span>
-                      </td>
-
-                      <td className="px-6 py-4 text-sm text-slate-500">
-                        {formatDate(user.creado_en)}
-                      </td>
-
-                      <td className="px-6 py-4 text-sm text-slate-500">
-                        {formatDate(user.ultima_actividad)}
-                      </td>
-
-                      <td className="px-6 py-4 text-right">
-                        <button
-                          type="button"
-                          onClick={() => openActions(user)}
-                          className="rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
-                          title="Ver informaciÃ³n del usuario"
-                        >
-                          <MoreHorizontal size={19} />
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-
-                {filteredUsers.length === 0 && (
-                  <tr>
-                    <td
-                      colSpan={6}
-                      className="px-6 py-16 text-center text-slate-500"
-                    >
-                      <div className="flex flex-col items-center gap-3">
-                        <div className="rounded-2xl bg-white/5 p-4">
-                          <UserRound size={30} />
-                        </div>
-
-                        <div>
-                          <p className="font-semibold text-slate-300">
-                            No encontramos usuarios
-                          </p>
-                          <p className="mt-1 text-sm">
-                            Prueba con otra bÃºsqueda o cambia los filtros.
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-{selectedUser && (
-  <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md sm:p-6">
-    <button
-      type="button"
-      onClick={() => setSelectedUser(null)}
-      className="absolute inset-0 cursor-default"
-      aria-label="Cerrar perfil"
-    />
-
-    <section className="relative z-10 max-h-[92vh] w-full max-w-4xl overflow-y-auto rounded-[32px] border border-white/10 bg-[#111827] shadow-2xl shadow-black/70">
-      <div className="relative overflow-hidden border-b border-white/10 px-6 pb-6 pt-7 sm:px-8">
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-br from-violet-600/25 via-fuchsia-500/10 to-transparent" />
-
-        <div className="relative flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
-              Perfil de usuario
-            </p>
-
-            <h2 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-              InformaciÃ³n de cuenta
-            </h2>
-
-            <p className="mt-2 text-sm text-slate-400">
-              Resumen administrativo sin acceso al contenido privado.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setSelectedUser(null)}
-            className="rounded-2xl border border-white/10 bg-white/5 p-2.5 text-slate-400 transition hover:bg-white/10 hover:text-white"
-            aria-label="Cerrar perfil"
-          >
-            <X size={20} />
+            Actualizar
           </button>
         </div>
 
-        <div className="relative mt-8 flex flex-col gap-5 sm:flex-row sm:items-center">
-          <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-[28px] border border-white/15 bg-gradient-to-br from-violet-500 via-fuchsia-500 to-pink-500 text-2xl font-bold text-white shadow-xl shadow-violet-950/50">
-            {selectedUser.foto_perfil ? (
-              <img
-                src={getAvatarUrl(selectedUser.foto_perfil)}
-                alt={selectedUser.nombre}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              getInitials(selectedUser.nombre || "Usuario")
-            )}
-          </div>
-
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-3">
-              <h3 className="truncate text-2xl font-bold text-white">
-                {selectedUser.nombre}
-              </h3>
-
-              <span
-                className={`rounded-full px-3 py-1 text-xs font-bold ${
-                  getStatusLabel(selectedUser).toLowerCase() === "activo"
-                    ? "border border-emerald-400/20 bg-emerald-500/10 text-emerald-300"
-                    : "border border-red-400/20 bg-red-500/10 text-red-300"
+        <div className="mt-4 flex flex-wrap gap-2">
+          {STATUS_FILTERS.map(
+            (filter) => (
+              <button
+                key={filter.key}
+                type="button"
+                onClick={() =>
+                  setStatusFilter(
+                    filter.key,
+                  )
+                }
+                className={`rounded-xl px-3.5 py-2 text-xs font-semibold transition sm:text-sm ${
+                  statusFilter ===
+                  filter.key
+                    ? "bg-violet-500 text-white shadow-lg shadow-violet-950/20"
+                    : "bg-white/[0.045] text-slate-400 hover:bg-white/[0.08] hover:text-white"
                 }`}
               >
-                {getStatusLabel(selectedUser)}
-              </span>
-            </div>
-
-            <p className="mt-2 truncate text-sm text-slate-400">
-              {selectedUser.correo}
-            </p>
-
-            <div className="mt-4 flex flex-wrap gap-2">
-              <span className="inline-flex items-center gap-2 rounded-xl border border-amber-400/15 bg-amber-500/10 px-3 py-2 text-xs font-semibold text-amber-200">
-                <Crown size={15} className="text-amber-300" />
-                {getPlanLabel(selectedUser)}
-              </span>
-
-              <span className="inline-flex items-center gap-2 rounded-xl border border-sky-400/15 bg-sky-500/10 px-3 py-2 text-xs font-semibold text-sky-200">
-                <UserCheck size={15} className="text-sky-300" />
-                {selectedUser.sesiones_activas ?? 0} sesiones activas
-              </span>
-            </div>
-          </div>
+                {filter.label}
+              </button>
+            ),
+          )}
         </div>
       </div>
 
-      <div className="space-y-6 p-6 sm:p-8">
-        <div className="rounded-3xl border border-violet-400/15 bg-gradient-to-br from-violet-500/[0.10] via-fuchsia-500/[0.04] to-transparent p-5">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-violet-300">
-                Actividad de VibeNotas
-              </p>
-
-              <h4 className="mt-2 text-lg font-bold text-white">
-                Resumen de contenido
-              </h4>
-
-              <p className="mt-1 text-sm text-slate-400">
-                Solo se muestran cantidades; las notas y archivos permanecen privados.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-white/10 bg-black/10 px-3 py-2 text-xs font-semibold text-slate-400">
-              Cuenta #{selectedUser.id}
-            </div>
-          </div>
-
-          <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-            <div className="rounded-2xl border border-violet-400/15 bg-violet-500/[0.10] p-4">
-              <StickyNote size={19} className="text-violet-300" />
-              <p className="mt-4 text-xs font-medium text-slate-400">Notas</p>
-              <p className="mt-1 text-3xl font-bold text-violet-100">
-                {selectedUser.contenido?.notas ?? 0}
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-sky-400/15 bg-sky-500/[0.10] p-4">
-              <CheckSquare size={19} className="text-sky-300" />
-              <p className="mt-4 text-xs font-medium text-slate-400">
-                Checklists
-              </p>
-              <p className="mt-1 text-3xl font-bold text-sky-100">
-                {selectedUser.contenido?.checklists ?? 0}
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-emerald-400/15 bg-emerald-500/[0.10] p-4">
-              <Folder size={19} className="text-emerald-300" />
-              <p className="mt-4 text-xs font-medium text-slate-400">
-                Carpetas
-              </p>
-              <p className="mt-1 text-3xl font-bold text-emerald-100">
-                {selectedUser.contenido?.carpetas ?? 0}
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-amber-400/15 bg-amber-500/[0.10] p-4">
-              <FileText size={19} className="text-amber-300" />
-              <p className="mt-4 text-xs font-medium text-slate-400">
-                Documentos
-              </p>
-              <p className="mt-1 text-3xl font-bold text-amber-100">
-                {selectedUser.contenido?.documentos ?? 0}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid gap-5 lg:grid-cols-2">
-          <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-5">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-              Registro y actividad
-            </p>
-
-            <div className="mt-5 space-y-4 text-sm">
-              <div className="flex items-center gap-3 rounded-2xl bg-black/10 p-3">
-                <div className="rounded-xl bg-violet-500/10 p-2 text-violet-300">
-                  <CalendarDays size={17} />
-                </div>
-
-                <div>
-                  <p className="text-xs text-slate-500">Registro</p>
-                  <p className="mt-1 font-semibold text-slate-200">
-                    {formatDate(selectedUser.creado_en)}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 rounded-2xl bg-black/10 p-3">
-                <div className="rounded-xl bg-sky-500/10 p-2 text-sky-300">
-                  <Clock3 size={17} />
-                </div>
-
-                <div>
-                  <p className="text-xs text-slate-500">Ãšltima actividad</p>
-                  <p className="mt-1 font-semibold text-slate-200">
-                    {formatDate(selectedUser.ultima_actividad)}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-5">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-              Dispositivo y seguridad
-            </p>
-
-            <div className="mt-5 space-y-3 text-sm">
-              <div className="flex items-center gap-3 rounded-2xl bg-black/10 p-3 text-slate-200">
-                <MonitorSmartphone size={17} className="shrink-0 text-sky-300" />
-                <span>{selectedUser.dispositivo_actual || "Sin informaciÃ³n"}</span>
-              </div>
-
-              <div className="flex items-center gap-3 rounded-2xl bg-black/10 p-3 text-slate-200">
-                <Smartphone size={17} className="shrink-0 text-violet-300" />
-                <span>
-                  {selectedUser.sistema_operativo || "Sistema no registrado"}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-3 rounded-2xl bg-black/10 p-3 text-slate-200">
-                <Globe2 size={17} className="shrink-0 text-fuchsia-300" />
-                <span>{selectedUser.navegador || "Navegador no registrado"}</span>
-              </div>
-
-              <div className="flex items-center gap-3 rounded-2xl bg-black/10 p-3 text-slate-200">
-                <Wifi size={17} className="shrink-0 text-emerald-300" />
-                <span>{selectedUser.ip_ultima || "IP no registrada"}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex justify-end border-t border-white/10 bg-black/10 px-6 py-4 sm:px-8">
-        <button
-          type="button"
-          onClick={() => setSelectedUser(null)}
-          className="rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
-        >
-          Cerrar perfil
-        </button>
-      </div>
-    </section>
-  </div>
-)}
-
-{showActionsModal && userForActions && (
-  <div className="fixed inset-0 z-[75] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-    <button
-      type="button"
-      className="absolute inset-0"
-      onClick={closeActions}
-      aria-label="Cerrar gestiÃ³n"
-    />
-
-    <div className="relative z-10 w-full max-w-md rounded-3xl border border-white/10 bg-[#1E293B] p-6 shadow-2xl shadow-black/60">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-violet-300">
-            GestiÃ³n de usuario
-          </p>
-
-          <h2 className="mt-2 text-xl font-bold text-white">
-            {userForActions.nombre}
-          </h2>
-
-          <p className="mt-1 text-sm text-slate-400">
-            {userForActions.correo}
-          </p>
-        </div>
-
-        <button
-          type="button"
-          onClick={closeActions}
-          className="rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
-          aria-label="Cerrar gestiÃ³n"
-        >
-          <X size={20} />
-        </button>
-      </div>
-
-      <div className="mt-6 grid gap-3">
-        <button
-          type="button"
-          onClick={() => void openUserProfile(userForActions)}
-          disabled={loadingUserDetail}
-          className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4 text-left text-slate-100 transition hover:bg-white/10"
-        >
-          <UserRound size={20} className="text-violet-300" />
+      <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#172033]/85 shadow-xl shadow-black/10 backdrop-blur-xl">
+        <div className="flex flex-col gap-3 border-b border-white/10 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div>
-            <p className="font-semibold">
-              {loadingUserDetail ? "Cargando perfil..." : "Ver perfil completo"}
+            <p className="text-sm font-semibold text-sky-300">
+              Comunidad
             </p>
-            <p className="mt-1 text-xs text-slate-500">
-              Consulta plan, actividad, y cantidades de contenido.
-            </p>
+            <h2 className="mt-1 text-xl font-bold text-white">
+              Usuarios registrados
+            </h2>
           </div>
-        </button>
 
-        <button
-          type="button"
-          onClick={() => openEditUser(userForActions)}
-          className="flex items-center gap-3 rounded-2xl border border-sky-400/20 bg-sky-500/[0.08] px-4 py-4 text-left text-sky-100 transition hover:bg-sky-500/[0.15]"
-        >
-          <Pencil size={20} className="text-sky-300" />
-          <div>
-            <p className="font-semibold">Editar informaciÃ³n</p>
-            <p className="mt-1 text-xs text-sky-100/60">
-              Nombre, correo, telÃ©fono, estado y contraseÃ±a.
-            </p>
-          </div>
-        </button>
-
-        <button
-          type="button"
-          disabled={changingPlan}
-          onClick={() => changeUserPlan(userForActions)}
-          className="flex items-center gap-3 rounded-2xl border border-amber-400/20 bg-amber-500/[0.08] px-4 py-4 text-left text-amber-100 transition hover:bg-amber-500/[0.15] disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          <Crown size={20} className="text-amber-300" />
-          <div>
-            <p className="font-semibold">
-              {getPlanLabel(userForActions).toLowerCase().includes("vip")
-                ? "Cambiar a Plan Free"
-                : "Activar Plan VIP"}
-            </p>
-            <p className="mt-1 text-xs text-amber-100/60">
-              {changingPlan
-                ? "Actualizando plan..."
-                : "Gestiona los beneficios de la cuenta."}
-            </p>
-          </div>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => changeUserStatus(userForActions)}
-          className="flex items-center gap-3 rounded-2xl border border-red-400/20 bg-red-500/[0.08] px-4 py-4 text-left text-red-100 transition hover:bg-red-500/[0.15]"
-        >
-          <ShieldAlert size={20} className="text-red-300" />
-          <div>
-            <p className="font-semibold">
-              {getStatusLabel(userForActions).toLowerCase() === "activo"
-                ? "Suspender acceso"
-                : "Activar acceso"}
-            </p>
-            <p className="mt-1 text-xs text-red-100/60">
-              Controla si la cuenta puede iniciar sesiÃ³n.
-            </p>
-          </div>
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-{showCreateModal && (
-  <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-    <button
-      type="button"
-      className="absolute inset-0"
-      onClick={() => setShowCreateModal(false)}
-      aria-label="Cerrar creaciÃ³n"
-    />
-
-    <div className="relative z-10 w-full max-w-lg rounded-3xl border border-white/10 bg-[#1E293B] p-6 shadow-2xl shadow-black/60">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-violet-300">
-            Nueva cuenta
-          </p>
-          <h2 className="mt-2 text-xl font-bold text-white">
-            Crear usuario
-          </h2>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => setShowCreateModal(false)}
-          className="rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
-          aria-label="Cerrar"
-        >
-          <X size={20} />
-        </button>
-      </div>
-
-      <form onSubmit={createUser} className="mt-6 space-y-4">
-        <input
-          value={createNombre}
-          onChange={(event) => setCreateNombre(event.target.value)}
-          placeholder="Nombre completo"
-          required
-          className="w-full rounded-xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none transition focus:border-violet-400/60"
-        />
-
-        <input
-          type="email"
-          value={createCorreo}
-          onChange={(event) => setCreateCorreo(event.target.value)}
-          placeholder="Correo electrÃ³nico"
-          required
-          className="w-full rounded-xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none transition focus:border-violet-400/60"
-        />
-
-        <input
-          value={createTelefono}
-          onChange={(event) => setCreateTelefono(event.target.value)}
-          placeholder="TelÃ©fono opcional"
-          className="w-full rounded-xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none transition focus:border-violet-400/60"
-        />
-
-        <select
-          value={createPlan}
-          onChange={(event) => setCreatePlan(event.target.value)}
-          className="w-full rounded-xl border border-white/10 bg-[#111827] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-400/60"
-        >
-          <option value="free">Plan Free</option>
-          <option value="vip">Plan VIP</option>
-        </select>
-
-        <input
-          type="password"
-          value={createContrasena}
-          onChange={(event) => setCreateContrasena(event.target.value)}
-          placeholder="ContraseÃ±a inicial"
-          minLength={8}
-          required
-          className="w-full rounded-xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none transition focus:border-violet-400/60"
-        />
-
-        <button
-          type="submit"
-          disabled={creatingUser}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 py-3 text-sm font-bold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          <Plus size={18} />
-          {creatingUser ? "Creando usuario..." : "Crear usuario"}
-        </button>
-      </form>
-    </div>
-  </div>
-)}
-
-{showEditModal && userToEdit && (
-  <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-    <button
-      type="button"
-      className="absolute inset-0"
-      onClick={() => {
-        setShowEditModal(false);
-        setUserToEdit(null);
-      }}
-      aria-label="Cerrar ediciÃ³n"
-    />
-
-    <div className="relative z-10 w-full max-w-lg rounded-3xl border border-white/10 bg-[#1E293B] p-6 shadow-2xl shadow-black/60">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-sky-300">
-            InformaciÃ³n de usuario
-          </p>
-
-          <h2 className="mt-2 text-xl font-bold text-white">
-            Editar usuario
-          </h2>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => {
-            setShowEditModal(false);
-            setUserToEdit(null);
-          }}
-          className="rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
-          aria-label="Cerrar ediciÃ³n"
-        >
-          <X size={20} />
-        </button>
-      </div>
-
-      <form onSubmit={updateUser} className="mt-6 space-y-4">
-        <input
-          value={editNombre}
-          onChange={(event) => setEditNombre(event.target.value)}
-          placeholder="Nombre completo"
-          required
-          className="w-full rounded-xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none transition focus:border-sky-400/60"
-        />
-
-        <input
-          type="email"
-          value={editCorreo}
-          onChange={(event) => setEditCorreo(event.target.value)}
-          placeholder="Correo electrÃ³nico"
-          required
-          className="w-full rounded-xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none transition focus:border-sky-400/60"
-        />
-
-        <input
-          value={editTelefono}
-          onChange={(event) => setEditTelefono(event.target.value)}
-          placeholder="TelÃ©fono opcional"
-          className="w-full rounded-xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none transition focus:border-sky-400/60"
-        />
-
-        <select
-          value={editEstado}
-          onChange={(event) => setEditEstado(event.target.value)}
-          className="w-full rounded-xl border border-white/10 bg-[#111827] px-4 py-3 text-sm text-white outline-none transition focus:border-sky-400/60"
-        >
-          <option value="activo">Activo</option>
-          <option value="inactivo">Inactivo</option>
-          <option value="suspendido">Suspendido</option>
-        </select>
-
-        <div className="rounded-xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-slate-400">
-          Plan actual:{" "}
-          <span className="font-semibold text-amber-300">
-            {getPlanLabel(userToEdit)}
+          <span className="rounded-full border border-white/10 bg-white/[0.045] px-3 py-1.5 text-xs font-bold text-slate-400">
+            {filteredUsers.length} visibles
           </span>
         </div>
 
-        <input
-          type="password"
-          value={editContrasena}
-          onChange={(event) => setEditContrasena(event.target.value)}
-          placeholder="Nueva contraseÃ±a (opcional)"
-          minLength={8}
-          className="w-full rounded-xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none transition focus:border-sky-400/60"
-        />
+        {loading ? (
+          <div className="space-y-3 p-5 sm:p-6">
+            {[1, 2, 3, 4].map(
+              (item) => (
+                <div
+                  key={item}
+                  className="h-20 animate-pulse rounded-2xl bg-white/[0.045]"
+                />
+              ),
+            )}
+          </div>
+        ) : filteredUsers.length ===
+          0 ? (
+          <div className="flex flex-col items-center px-6 py-16 text-center">
+            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 text-slate-500">
+              <UserRound size={32} />
+            </div>
+            <p className="mt-4 font-semibold text-slate-200">
+              No hay resultados
+            </p>
+            <p className="mt-1 max-w-sm text-sm leading-6 text-slate-500">
+              No encontramos usuarios que coincidan con la búsqueda y el estado seleccionado.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setSearch("");
+                setStatusFilter(
+                  "todos",
+                );
+              }}
+              className="mt-5 rounded-xl border border-white/10 bg-white/[0.05] px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
+            >
+              Limpiar filtros
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="hidden overflow-x-auto lg:block">
+              <table className="w-full min-w-[1000px] text-left">
+                <thead className="bg-black/10 text-[11px] uppercase tracking-[0.12em] text-slate-500">
+                  <tr>
+                    <th className="px-6 py-4 font-semibold">
+                      Usuario
+                    </th>
+                    <th className="px-6 py-4 font-semibold">
+                      Verificación
+                    </th>
+                    <th className="px-6 py-4 font-semibold">
+                      Estado
+                    </th>
+                    <th className="px-6 py-4 font-semibold">
+                      Registro
+                    </th>
+                    <th className="px-6 py-4 font-semibold">
+                      Último acceso
+                    </th>
+                    <th className="px-6 py-4 text-right font-semibold">
+                      Acciones
+                    </th>
+                  </tr>
+                </thead>
 
-        <button
-          type="submit"
-          disabled={savingEdit}
-          className="w-full rounded-xl bg-gradient-to-r from-sky-600 to-violet-600 py-3 text-sm font-bold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {savingEdit ? "Guardando cambios..." : "Guardar cambios"}
-        </button>
-      </form>
-    </div>
-  </div>
-)}
+                <tbody>
+                  {filteredUsers.map(
+                    (user) => (
+                      <tr
+                        key={user.id}
+                        className="border-t border-white/[0.055] text-sm transition hover:bg-white/[0.03]"
+                      >
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <UserAvatar
+                              user={user}
+                            />
 
+                            <div className="min-w-0">
+                              <p className="truncate font-semibold text-white">
+                                {user.nombre}
+                              </p>
+                              <p className="mt-0.5 truncate text-xs text-slate-500">
+                                {user.correo}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td className="px-6 py-4">
+                          <VerificationBadge
+                            verified={
+                              user.email_verificado
+                            }
+                          />
+                        </td>
+
+                        <td className="px-6 py-4">
+                          <StatusBadge
+                            status={
+                              user.estado
+                            }
+                          />
+                        </td>
+
+                        <td className="px-6 py-4 text-slate-500">
+                          {formatDate(
+                            user.creado_en,
+                          )}
+                        </td>
+
+                        <td className="px-6 py-4 text-slate-500">
+                          {formatDate(
+                            user.ultima_actividad,
+                          )}
+                        </td>
+
+                        <td className="px-6 py-4 text-right">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              openActions(
+                                user,
+                              )
+                            }
+                            className="rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
+                            aria-label={`Acciones de ${user.nombre}`}
+                          >
+                            <MoreHorizontal
+                              size={19}
+                            />
+                          </button>
+                        </td>
+                      </tr>
+                    ),
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="grid gap-3 p-4 lg:hidden">
+              {filteredUsers.map(
+                (user) => (
+                  <article
+                    key={user.id}
+                    className="rounded-2xl border border-white/10 bg-white/[0.025] p-4"
+                  >
+                    <div className="flex items-start gap-3">
+                      <UserAvatar
+                        user={user}
+                      />
+
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate font-semibold text-white">
+                          {user.nombre}
+                        </p>
+                        <p className="mt-0.5 truncate text-xs text-slate-500">
+                          {user.correo}
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          openActions(user)
+                        }
+                        className="rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
+                        aria-label={`Acciones de ${user.nombre}`}
+                      >
+                        <MoreHorizontal
+                          size={18}
+                        />
+                      </button>
+                    </div>
+
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <StatusBadge
+                        status={
+                          user.estado
+                        }
+                      />
+                      <VerificationBadge
+                        verified={
+                          user.email_verificado
+                        }
+                      />
+                    </div>
+
+                    <div className="mt-4 grid grid-cols-2 gap-3 border-t border-white/[0.06] pt-4">
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
+                          Registro
+                        </p>
+                        <p className="mt-1 text-xs font-medium text-slate-400">
+                          {formatDate(
+                            user.creado_en,
+                          )}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
+                          Último acceso
+                        </p>
+                        <p className="mt-1 text-xs font-medium text-slate-400">
+                          {formatDate(
+                            user.ultima_actividad,
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  </article>
+                ),
+              )}
+            </div>
+          </>
+        )}
+      </div>
+
+      {showActionsModal &&
+        userForActions && (
+          <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/70 p-3 backdrop-blur-sm sm:items-center sm:p-4">
+            <button
+              type="button"
+              onClick={closeActions}
+              className="absolute inset-0"
+              aria-label="Cerrar acciones"
+            />
+
+            <div className="relative z-10 w-full max-w-md rounded-[28px] border border-white/10 bg-[#172033] p-5 shadow-2xl shadow-black/60 sm:p-6">
+              <div className="flex items-start gap-3">
+                <UserAvatar
+                  user={userForActions}
+                />
+
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-lg font-bold text-white">
+                    {userForActions.nombre}
+                  </p>
+                  <p className="mt-0.5 truncate text-sm text-slate-500">
+                    {userForActions.correo}
+                  </p>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <StatusBadge
+                      status={
+                        userForActions.estado
+                      }
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={closeActions}
+                  className="rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
+                  aria-label="Cerrar"
+                >
+                  <X size={19} />
+                </button>
+              </div>
+
+              <div className="mt-6 grid gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedUser(
+                      userForActions,
+                    );
+                    closeActions();
+                  }}
+                  className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-3.5 text-left text-slate-200 transition hover:bg-white/[0.07]"
+                >
+                  <UserRound
+                    size={19}
+                    className="text-violet-300"
+                  />
+                  <div>
+                    <p className="font-semibold">
+                      Ver detalles
+                    </p>
+                    <p className="mt-0.5 text-xs text-slate-500">
+                      Identidad y seguridad real de la cuenta.
+                    </p>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    openEditUser(
+                      userForActions,
+                    )
+                  }
+                  className="flex items-center gap-3 rounded-2xl border border-sky-400/15 bg-sky-500/[0.07] px-4 py-3.5 text-left text-sky-100 transition hover:bg-sky-500/10"
+                >
+                  <Pencil
+                    size={19}
+                    className="text-sky-300"
+                  />
+                  <div>
+                    <p className="font-semibold">
+                      Editar identidad
+                    </p>
+                    <p className="mt-0.5 text-xs text-sky-200/55">
+                      Cambiar nombre o correo.
+                    </p>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={() =>
+                    void changeUserStatus(
+                      userForActions,
+                    )
+                  }
+                  className="flex items-center gap-3 rounded-2xl border border-amber-400/15 bg-amber-500/[0.07] px-4 py-3.5 text-left text-amber-100 transition hover:bg-amber-500/10 disabled:opacity-50"
+                >
+                  {userForActions.estado ===
+                  "ACTIVE" ? (
+                    <ShieldOff
+                      size={19}
+                      className="text-amber-300"
+                    />
+                  ) : (
+                    <ShieldCheck
+                      size={19}
+                      className="text-emerald-300"
+                    />
+                  )}
+                  <div>
+                    <p className="font-semibold">
+                      {userForActions.estado ===
+                      "ACTIVE"
+                        ? "Suspender acceso"
+                        : "Activar acceso"}
+                    </p>
+                    <p className="mt-0.5 text-xs text-amber-200/55">
+                      Actualiza el estado de la cuenta.
+                    </p>
+                  </div>
+                </button>
+
+                {userForActions.estado !==
+                  "DISABLED" && (
+                  <button
+                    type="button"
+                    disabled={saving}
+                    onClick={() =>
+                      void disableUser(
+                        userForActions,
+                      )
+                    }
+                    className="flex items-center gap-3 rounded-2xl border border-red-400/15 bg-red-500/[0.07] px-4 py-3.5 text-left text-red-100 transition hover:bg-red-500/10 disabled:opacity-50"
+                  >
+                    <UserRoundX
+                      size={19}
+                      className="text-red-300"
+                    />
+                    <div>
+                      <p className="font-semibold">
+                        Deshabilitar cuenta
+                      </p>
+                      <p className="mt-0.5 text-xs text-red-200/55">
+                        Revoca el acceso sin borrar sus datos.
+                      </p>
+                    </div>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+      {selectedUser && (
+        <div className="fixed inset-0 z-[75] flex justify-end bg-black/70 backdrop-blur-sm">
+          <button
+            type="button"
+            onClick={() =>
+              setSelectedUser(null)
+            }
+            className="absolute inset-0"
+            aria-label="Cerrar panel"
+          />
+
+          <aside className="relative z-10 flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-white/10 bg-[#101827] p-5 shadow-2xl shadow-black/60 sm:p-6">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-sky-300">
+                  Perfil de usuario
+                </p>
+                <h2 className="mt-2 text-2xl font-bold text-white">
+                  {selectedUser.nombre}
+                </h2>
+                <p className="mt-1 break-all text-sm text-slate-500">
+                  {selectedUser.correo}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setSelectedUser(null)
+                }
+                className="rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
+                aria-label="Cerrar"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="mt-7 rounded-3xl border border-white/10 bg-white/[0.03] p-6 text-center">
+              <div className="flex justify-center">
+                <UserAvatar
+                  user={selectedUser}
+                  large
+                />
+              </div>
+
+              <div className="mt-4 flex flex-wrap justify-center gap-2">
+                <StatusBadge
+                  status={
+                    selectedUser.estado
+                  }
+                />
+                <VerificationBadge
+                  verified={
+                    selectedUser.email_verificado
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="mt-5 grid gap-3">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <CalendarDays size={15} />
+                  Fecha de registro
+                </div>
+                <p className="mt-2 font-semibold text-slate-200">
+                  {formatDateTime(
+                    selectedUser.creado_en,
+                  )}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Último acceso
+                </p>
+                <p className="mt-2 font-semibold text-slate-200">
+                  {formatDateTime(
+                    selectedUser.ultima_actividad,
+                  )}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  MFA
+                </p>
+                <p className="mt-2 font-semibold text-slate-200">
+                  {selectedUser.mfa_habilitado
+                    ? "Habilitado"
+                    : "Deshabilitado"}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Roles activos
+                </p>
+                <p className="mt-2 font-semibold text-slate-200">
+                  {selectedUser.roles.length >
+                  0
+                    ? selectedUser.roles
+                        .map(
+                          (roleItem) =>
+                            roleItem.name,
+                        )
+                        .join(", ")
+                    : "Sin rol activo"}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Identificador
+                </p>
+                <p className="mt-2 break-all font-mono text-xs leading-5 text-slate-400">
+                  {selectedUser.id}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 border-t border-white/10 pt-5">
+              <button
+                type="button"
+                onClick={() =>
+                  openEditUser(
+                    selectedUser,
+                  )
+                }
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-sky-400/15 bg-sky-500/[0.08] px-4 py-3 text-sm font-semibold text-sky-200 transition hover:bg-sky-500/15"
+              >
+                <Pencil size={17} />
+                Editar identidad
+              </button>
+            </div>
+          </aside>
+        </div>
+      )}
+
+      {showEditModal &&
+        userToEdit && (
+          <div className="fixed inset-0 z-[90] flex items-end justify-center bg-black/70 p-3 backdrop-blur-sm sm:items-center sm:p-4">
+            <button
+              type="button"
+              onClick={() => {
+                setShowEditModal(false);
+                setUserToEdit(null);
+              }}
+              className="absolute inset-0"
+              aria-label="Cerrar edición"
+            />
+
+            <div className="relative z-10 w-full max-w-lg rounded-[28px] border border-white/10 bg-[#172033] p-5 shadow-2xl shadow-black/60 sm:p-6">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-sky-300">
+                    Identidad
+                  </p>
+                  <h2 className="mt-2 text-xl font-bold text-white">
+                    Editar usuario
+                  </h2>
+                  <p className="mt-1 text-sm leading-5 text-slate-500">
+                    Actualiza nombre o correo con los campos admitidos por el backend.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowEditModal(false);
+                    setUserToEdit(null);
+                  }}
+                  className="rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
+                  aria-label="Cerrar"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <form
+                onSubmit={updateUser}
+                className="mt-6 space-y-5"
+              >
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-300">
+                    Nombre visible
+                  </label>
+                  <input
+                    value={editNombre}
+                    onChange={(event) =>
+                      setEditNombre(
+                        event.target.value,
+                      )
+                    }
+                    className="w-full rounded-xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/40 focus:ring-2 focus:ring-violet-500/10"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-300">
+                    Correo electrónico
+                  </label>
+                  <input
+                    type="email"
+                    value={editCorreo}
+                    onChange={(event) =>
+                      setEditCorreo(
+                        event.target.value,
+                      )
+                    }
+                    className="w-full rounded-xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/40 focus:ring-2 focus:ring-violet-500/10"
+                    required
+                  />
+                  <p className="mt-2 text-xs leading-5 text-slate-500">
+                    Cambiar el correo puede revocar las sesiones del usuario por seguridad.
+                  </p>
+                </div>
+
+                <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowEditModal(false);
+                      setUserToEdit(null);
+                    }}
+                    className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-semibold text-slate-300 transition hover:bg-white/[0.08] hover:text-white"
+                  >
+                    Cancelar
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-950/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55"
+                  >
+                    {saving ? (
+                      <RefreshCw
+                        size={17}
+                        className="animate-spin"
+                      />
+                    ) : (
+                      <Pencil size={17} />
+                    )}
+                    {saving
+                      ? "Guardando..."
+                      : "Guardar cambios"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+      {showCreateModal && (
+        <div className="fixed inset-0 z-[95] flex items-end justify-center bg-black/70 p-3 backdrop-blur-sm sm:items-center sm:p-4">
+          <button
+            type="button"
+            onClick={() => {
+              if (!creating) {
+                setShowCreateModal(false);
+              }
+            }}
+            className="absolute inset-0"
+            aria-label="Cerrar creación"
+          />
+
+          <div className="relative z-10 w-full max-w-2xl overflow-hidden rounded-[28px] border border-white/10 bg-[#172033] shadow-2xl shadow-black/60">
+            <div className="border-b border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.18),transparent_42%),rgba(15,23,42,0.45)] p-5 sm:p-6">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/15 bg-sky-500/10 px-3 py-1.5 text-xs font-bold text-sky-200">
+                    <UserPlus size={14} />
+                    Nueva cuenta
+                  </div>
+
+                  <h2 className="mt-4 text-2xl font-bold text-white">
+                    Crear usuario
+                  </h2>
+
+                  <p className="mt-2 max-w-xl text-sm leading-6 text-slate-400">
+                    Registra una cuenta real usando el flujo de autenticación actual de VibeNotas.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  disabled={creating}
+                  onClick={() =>
+                    setShowCreateModal(false)
+                  }
+                  className="rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                  aria-label="Cerrar"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            </div>
+
+            <form
+              onSubmit={createUser}
+              className="max-h-[78vh] overflow-y-auto p-5 sm:p-6"
+            >
+              <div className="grid gap-4 sm:grid-cols-2">
+                <label className="block">
+                  <span className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-slate-500">
+                    Nombre
+                  </span>
+                  <input
+                    type="text"
+                    value={createFirstName}
+                    onChange={(event) =>
+                      setCreateFirstName(
+                        event.target.value,
+                      )
+                    }
+                    required
+                    minLength={1}
+                    maxLength={80}
+                    autoComplete="given-name"
+                    placeholder="Ej. Ana"
+                    className="w-full rounded-2xl border border-white/10 bg-[#101827] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/40 focus:ring-4 focus:ring-violet-500/10"
+                  />
+                </label>
+
+                <label className="block">
+                  <span className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-slate-500">
+                    Apellido
+                  </span>
+                  <input
+                    type="text"
+                    value={createLastName}
+                    onChange={(event) =>
+                      setCreateLastName(
+                        event.target.value,
+                      )
+                    }
+                    required
+                    minLength={1}
+                    maxLength={80}
+                    autoComplete="family-name"
+                    placeholder="Ej. Pérez"
+                    className="w-full rounded-2xl border border-white/10 bg-[#101827] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/40 focus:ring-4 focus:ring-violet-500/10"
+                  />
+                </label>
+
+                <label className="block">
+                  <span className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-slate-500">
+                    Username
+                  </span>
+                  <input
+                    type="text"
+                    value={createUsername}
+                    onChange={(event) =>
+                      setCreateUsername(
+                        event.target.value,
+                      )
+                    }
+                    required
+                    minLength={3}
+                    maxLength={30}
+                    autoComplete="username"
+                    placeholder="ana.perez"
+                    className="w-full rounded-2xl border border-white/10 bg-[#101827] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/40 focus:ring-4 focus:ring-violet-500/10"
+                  />
+                  <span className="mt-2 block text-xs leading-5 text-slate-500">
+                    3–30 caracteres. Letras, números, punto, guion y guion bajo.
+                  </span>
+                </label>
+
+                <label className="block">
+                  <span className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-slate-500">
+                    Correo electrónico
+                  </span>
+                  <input
+                    type="email"
+                    value={createEmail}
+                    onChange={(event) =>
+                      setCreateEmail(
+                        event.target.value,
+                      )
+                    }
+                    required
+                    maxLength={320}
+                    autoComplete="email"
+                    placeholder="usuario@correo.com"
+                    className="w-full rounded-2xl border border-white/10 bg-[#101827] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/40 focus:ring-4 focus:ring-violet-500/10"
+                  />
+                </label>
+              </div>
+
+              <label className="mt-4 block">
+                <span className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-slate-500">
+                  Contraseña temporal
+                </span>
+                <input
+                  type="password"
+                  value={createPassword}
+                  onChange={(event) =>
+                    setCreatePassword(
+                      event.target.value,
+                    )
+                  }
+                  required
+                  minLength={12}
+                  maxLength={128}
+                  autoComplete="new-password"
+                  placeholder="Mínimo 12 caracteres"
+                  className="w-full rounded-2xl border border-white/10 bg-[#101827] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/40 focus:ring-4 focus:ring-violet-500/10"
+                />
+              </label>
+
+              <div className="mt-5 flex items-start gap-3 rounded-2xl border border-sky-400/15 bg-sky-500/[0.06] p-4">
+                <Info
+                  size={18}
+                  className="mt-0.5 shrink-0 text-sky-300"
+                />
+                <div>
+                  <p className="font-semibold text-sky-100">
+                    Rol de usuario normal
+                  </p>
+                  <p className="mt-1 text-xs leading-5 text-sky-200/60">
+                    Este formulario no asigna privilegios administrativos. El registro utiliza el rol base configurado por el backend.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 flex flex-col-reverse gap-3 border-t border-white/10 pt-5 sm:flex-row sm:justify-end">
+                <button
+                  type="button"
+                  disabled={creating}
+                  onClick={() =>
+                    setShowCreateModal(false)
+                  }
+                  className="rounded-xl bg-white/[0.06] px-5 py-3 text-sm font-semibold text-slate-200 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-45"
+                >
+                  Cancelar
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={creating}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-950/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55"
+                >
+                  {creating ? (
+                    <RefreshCw
+                      size={17}
+                      className="animate-spin"
+                    />
+                  ) : (
+                    <UserPlus size={17} />
+                  )}
+
+                  {creating
+                    ? "Creando usuario..."
+                    : "Crear usuario"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
