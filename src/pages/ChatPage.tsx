@@ -3,24 +3,36 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
-import { ChatComposer } from "../components/Chat/chat/ChatComposer";
-import { ChatHeader } from "../components/Chat/chat/ChatHeader";
-import { ChatInfoDrawer } from "../components/Chat/chat/ChatInfoDrawer";
-import { ChatSidebar } from "../components/Chat/chat/ChatSidebar";
-import { ChatThemeModal } from "../components/Chat/chat/ChatThemeModal";
-import { ConfirmActionModal } from "../components/Chat/chat/ConfirmActionModal";
-import { ConversationActionsMenu } from "../components/Chat/chat/ConversationActionsMenu";
-import { ConversationList } from "../components/Chat/chat/ConversationList";
-import { CreateGroupModal } from "../components/Chat/chat/CreateGroupModal";
-import { GroupInfoDrawer } from "../components/Chat/chat/GroupInfoDrawer";
-import { MessageActionsMenu } from "../components/Chat/chat/MessageActionsMenu";
-import { MessageList } from "../components/Chat/chat/MessageList";
-import { TemporaryMessagesModal } from "../components/Chat/chat/TemporaryMessagesModal";
-import { AddGroupMembersModal } from "../components/Chat/chat/AddGroupMembersModal";
 import {
-  API_ROUTES,
-  WEBSOCKET_URL,
-} from "../components/Chat/features/constants";
+  adaptConversation,
+  adaptMessage,
+  adaptRealtimeMessage,
+} from "../features/messaging/adapters";
+import type {
+  BackendChatMessage,
+  BackendConversation,
+} from "../features/messaging/types/backend.types";
+import { ChatComposer } from "../features/messaging/components/ChatComposer";
+import { ChatHeader } from "../features/messaging/components/ChatHeader";
+import { ChatInfoDrawer } from "../features/messaging/components/ChatInfoDrawer";
+import { ChatSidebar } from "../features/messaging/components/ChatSidebar";
+import { ChatThemeModal } from "../features/messaging/components/ChatThemeModal";
+import { ConfirmActionModal } from "../features/messaging/components/ConfirmActionModal";
+import { ConversationActionsMenu } from "../features/messaging/components/ConversationActionsMenu";
+import { ConversationList } from "../features/messaging/components/ConversationList";
+import { CreateGroupModal } from "../features/messaging/components/CreateGroupModal";
+import { GroupInfoDrawer } from "../features/messaging/components/GroupInfoDrawer";
+import { MessageActionsMenu } from "../features/messaging/components/MessageActionsMenu";
+import { MessageList } from "../features/messaging/components/MessageList";
+import { TemporaryMessagesModal } from "../features/messaging/components/TemporaryMessagesModal";
+import { AddGroupMembersModal } from "../features/messaging/components/AddGroupMembersModal";
+import { API_ROUTES } from "../features/messaging/constants";
+import {
+  createChatRealtimeSocket,
+  getRealtimeErrorCode,
+  refreshChatRealtimeAuthentication,
+  type ChatRealtimeSocket,
+} from "../features/messaging/services/chat-realtime.service";
 import type {
   BlockedUser,
   ChatTab,
@@ -34,7 +46,7 @@ import type {
   MessageMenuState,
   SearchUser,
   TemporaryDuration,
-} from "../components/Chat/features/types";
+} from "../features/messaging/types/chat.types";
 import {
   getConversationTheme,
   getCurrentUser,
@@ -42,30 +54,26 @@ import {
   getFixedMenuPosition,
   getTheme,
   persistConversationTheme,
-} from "../components/Chat/features/utils";
-import { ScheduledMessagesModal } from "../components/Chat/chat/ScheduledMessagesModal";
-
+} from "../features/messaging/utils";
+import { ScheduledMessagesModal } from "../features/messaging/components/ScheduledMessagesModal";
 
 export default function ChatPage() {
   const navigate = useNavigate();
   const { conversacionId } = useParams();
   const currentUser = getCurrentUser();
-  const token = localStorage.getItem("token");
 
-  const selectedConversationIdRef = useRef<number | null>(null);
+  const selectedConversationIdRef = useRef<string | null>(null);
 
   const chatBasePath =
-    currentUser?.rol === "super_admin" ||
-    currentUser?.rol === "superadmin"
+    currentUser?.rol === "super_admin" || currentUser?.rol === "superadmin"
       ? "/superadmin/chat"
       : "/admin/chat";
 
   const [activeTab, setActiveTab] = useState<ChatTab>("chats");
 
-  const [selectedConversationId, setSelectedConversationId] =
-    useState<number | null>(
-      conversacionId ? Number(conversacionId) : null
-    );
+  const [selectedConversationId, setSelectedConversationId] = useState<
+    string | null
+  >(conversacionId ?? null);
 
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -77,10 +85,23 @@ export default function ChatPage() {
   const [chatSearch, setChatSearch] = useState("");
   const [peopleSearch, setPeopleSearch] = useState("");
   const [messageText, setMessageText] = useState("");
+
+  const [typingUserIds, setTypingUserIds] = useState<string[]>([]);
+
+  const typingStopTimerRef = useRef<number | null>(null);
+
+  const localTypingActiveRef = useRef(false);
+
+  const localTypingConversationRef = useRef<string | null>(null);
+
+  const remoteTypingTimersRef = useRef<Map<string, number>>(new Map());
+
+  const markReadInFlightRef = useRef<Set<string>>(new Set());
+
+  const selectedConversationTypeRef = useRef<Conversation["tipo"] | null>(null);
   const [replyTo, setReplyTo] = useState<Message | null>(null);
 
-  const [messageMenu, setMessageMenu] =
-    useState<MessageMenuState | null>(null);
+  const [messageMenu, setMessageMenu] = useState<MessageMenuState | null>(null);
 
   const [conversationMenu, setConversationMenu] =
     useState<ConversationMenuState | null>(null);
@@ -90,31 +111,25 @@ export default function ChatPage() {
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
   const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
 
-  const [
-    isTemporaryMessagesModalOpen,
-    setIsTemporaryMessagesModalOpen,
-  ] = useState(false);
+  const [isTemporaryMessagesModalOpen, setIsTemporaryMessagesModalOpen] =
+    useState(false);
 
-  const [confirmAction, setConfirmAction] =
-    useState<ConfirmAction | null>(null);
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(
+    null,
+  );
 
   const [confirmBusy, setConfirmBusy] = useState(false);
 
-  const [editingMessageId, setEditingMessageId] =
-    useState<number | null>(null);
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
 
   const [editingText, setEditingText] = useState("");
 
-  const [chatTheme, setChatTheme] =
-    useState<ChatThemeId>("violet");
+  const [chatTheme, setChatTheme] = useState<ChatThemeId>("violet");
 
-  const [
-    temporaryMessagesDuration,
-    setTemporaryMessagesDuration,
-  ] = useState<TemporaryDuration>("off");
+  const [temporaryMessagesDuration, setTemporaryMessagesDuration] =
+    useState<TemporaryDuration>("off");
 
-  const [loadingConversations, setLoadingConversations] =
-    useState(true);
+  const [loadingConversations, setLoadingConversations] = useState(true);
 
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [loadingFriends, setLoadingFriends] = useState(false);
@@ -124,8 +139,7 @@ export default function ChatPage() {
   const [sendingMessage, setSendingMessage] = useState(false);
   const [creatingGroup, setCreatingGroup] = useState(false);
   const [addingMembers, setAddingMembers] = useState(false);
-  const [isScheduledMessagesOpen, setIsScheduledMessagesOpen] =
-  useState(false);
+  const [isScheduledMessagesOpen, setIsScheduledMessagesOpen] = useState(false);
 
   const [error, setError] = useState("");
   const [toast, setToast] = useState("");
@@ -133,19 +147,17 @@ export default function ChatPage() {
   const [nearEnd, setNearEnd] = useState(true);
 
   const messageAreaRef = useRef<HTMLDivElement | null>(null);
-  const websocketRef = useRef<WebSocket | null>(null);
-  
+  const chatSocketRef = useRef<ChatRealtimeSocket | null>(null);
+
   useEffect(() => {
-  selectedConversationIdRef.current = selectedConversationId;
+    selectedConversationIdRef.current = selectedConversationId;
   }, [selectedConversationId]);
 
   const [isAddMembersOpen, setIsAddMembersOpen] = useState(false);
 
   const selectedConversation = useMemo(() => {
     return (
-      conversations.find(
-        (item) => item.id === selectedConversationId
-      ) ?? null
+      conversations.find((item) => item.id === selectedConversationId) ?? null
     );
   }, [conversations, selectedConversationId]);
 
@@ -154,6 +166,11 @@ export default function ChatPage() {
 
   const theme = getTheme(chatTheme);
 
+  useEffect(() => {
+    selectedConversationTypeRef.current = selectedConversation?.tipo ?? null;
+
+    setTypingUserIds([]);
+  }, [selectedConversation?.id, selectedConversation?.tipo]);
   const filteredConversations = useMemo(() => {
     const query = chatSearch.trim().toLowerCase();
 
@@ -164,102 +181,95 @@ export default function ChatPage() {
     return conversations.filter((item) => {
       const title =
         item.tipo === "grupo"
-          ? item.titulo ?? ""
-          : item.otro_usuario_nombre ?? "";
+          ? (item.titulo ?? "")
+          : (item.otro_usuario_nombre ?? "");
 
       return (
         !item.isArchived &&
-        `${title} ${item.ultimo_mensaje ?? ""}`
-          .toLowerCase()
-          .includes(query)
+        `${title} ${item.ultimo_mensaje ?? ""}`.toLowerCase().includes(query)
       );
     });
   }, [chatSearch, conversations]);
 
-  const loadConversations = useCallback(async (silent = false) => {
-    try {
-      if (!silent) {
-        setLoadingConversations(true);
-      }
-
-      const response = await api.get(API_ROUTES.conversations);
-      const payload = response.data?.data ?? response.data;
-
-      const raw = (payload?.conversaciones ?? []) as Conversation[];
-
-      setConversations((old) =>
-        raw.map((incoming) => {
-          const previous = old.find(
-            (item) => item.id === incoming.id
-          );
-
-          return {
-            ...incoming,
-            isPinned: previous?.isPinned ?? false,
-            isMuted: previous?.isMuted ?? false,
-            isArchived: previous?.isArchived ?? false,
-            temporaryMessagesDuration:
-              previous?.temporaryMessagesDuration ?? "off",
-          };
-        })
-      );
-    } catch (requestError) {
-      setError(
-        getErrorMessage(
-          requestError,
-          "No se pudieron cargar los chats."
-        )
-      );
-    } finally {
-      if (!silent) {
-        setLoadingConversations(false);
-      }
-    }
-  }, []);
-
-  const loadMessages = useCallback(
-    async (id: number, keepPosition = false) => {
+  const loadConversations = useCallback(
+    async (silent = false) => {
       try {
-        setLoadingMessages(!keepPosition);
+        if (!silent) {
+          setLoadingConversations(true);
+        }
 
-        const response = await api.get(
-          API_ROUTES.conversationMessages(id)
-        );
-
+        const response = await api.get(API_ROUTES.conversations);
         const payload = response.data?.data ?? response.data;
 
-        const incoming = (payload?.mensajes ?? []) as Message[];
+        const raw = (payload?.conversaciones ?? []) as BackendConversation[];
 
-        setMessages((old) => {
-          const messagesAreUnchanged =
-            keepPosition &&
-            old.length === incoming.length &&
-            old.every(
-              (message, index) =>
-                message.id === incoming[index]?.id &&
-                message.actualizado_en ===
-                  incoming[index]?.actualizado_en
-            );
+        const adapted = raw.map((incoming) =>
+          adaptConversation(incoming, currentUser?.id ?? null),
+        );
 
-          if (messagesAreUnchanged) {
-            return old;
-          }
+        setConversations((old) =>
+          adapted.map((incoming) => {
+            const previous = old.find((item) => item.id === incoming.id);
 
-          return incoming;
-        });
+            return {
+              ...incoming,
+              isPinned: previous?.isPinned ?? false,
+              isMuted: previous?.isMuted ?? false,
+              isArchived: previous?.isArchived ?? false,
+              temporaryMessagesDuration:
+                previous?.temporaryMessagesDuration ?? "off",
+            };
+          }),
+        );
       } catch (requestError) {
         setError(
-          getErrorMessage(
-            requestError,
-            "No se pudieron cargar los mensajes."
-          )
+          getErrorMessage(requestError, "No se pudieron cargar los chats."),
         );
       } finally {
-        setLoadingMessages(false);
+        if (!silent) {
+          setLoadingConversations(false);
+        }
       }
     },
-    []
+    [currentUser?.id],
   );
+
+  const loadMessages = useCallback(async (id: string, keepPosition = false) => {
+    try {
+      setLoadingMessages(!keepPosition);
+
+      const response = await api.get(API_ROUTES.conversationMessages(id));
+
+      const payload = response.data?.data ?? response.data;
+
+      const raw = (payload?.mensajes ?? []) as BackendChatMessage[];
+
+      const incoming = raw.map(adaptMessage);
+
+      setMessages((old) => {
+        const messagesAreUnchanged =
+          keepPosition &&
+          old.length === incoming.length &&
+          old.every(
+            (message, index) =>
+              message.id === incoming[index]?.id &&
+              message.actualizado_en === incoming[index]?.actualizado_en,
+          );
+
+        if (messagesAreUnchanged) {
+          return old;
+        }
+
+        return incoming;
+      });
+    } catch (requestError) {
+      setError(
+        getErrorMessage(requestError, "No se pudieron cargar los mensajes."),
+      );
+    } finally {
+      setLoadingMessages(false);
+    }
+  }, []);
 
   const loadFriends = useCallback(async () => {
     try {
@@ -271,10 +281,7 @@ export default function ChatPage() {
       setFriends(payload?.amigos ?? []);
     } catch (requestError) {
       setError(
-        getErrorMessage(
-          requestError,
-          "No se pudo cargar la lista de amigos."
-        )
+        getErrorMessage(requestError, "No se pudo cargar la lista de amigos."),
       );
     } finally {
       setLoadingFriends(false);
@@ -291,10 +298,7 @@ export default function ChatPage() {
       setRequests(payload?.solicitudes ?? []);
     } catch (requestError) {
       setError(
-        getErrorMessage(
-          requestError,
-          "No se pudieron cargar las solicitudes."
-        )
+        getErrorMessage(requestError, "No se pudieron cargar las solicitudes."),
       );
     } finally {
       setLoadingRequests(false);
@@ -313,8 +317,8 @@ export default function ChatPage() {
       setError(
         getErrorMessage(
           requestError,
-          "No se pudieron cargar los usuarios bloqueados."
-        )
+          "No se pudieron cargar los usuarios bloqueados.",
+        ),
       );
     } finally {
       setLoadingBlocked(false);
@@ -322,169 +326,293 @@ export default function ChatPage() {
   }, []);
 
   useEffect(() => {
-  const savedToken = localStorage.getItem("token");
-
-  if (!savedToken) {
-    navigate("/login", { replace: true });
-  }
-}, [navigate]);
-
-  useEffect(() => {
-  const savedToken = localStorage.getItem("token");
-
-if (!savedToken) {
-  return;
-}
-
-  void Promise.all([
-    loadConversations(),
-    loadFriends(),
-    loadRequests(),
-    loadBlocked(),
-  ]);
-  }, [
-    token,
-    currentUser?.id,
-    loadBlocked,
-    loadConversations,
-    loadFriends,
-    loadRequests,
-  ]);
-
-    useEffect(() => {
-
-  const savedToken = localStorage.getItem("token");
-
-  if (!savedToken || !currentUser?.id) {
-    return;
-  }
-
-  const safeToken = savedToken;
-
-  let reconnectTimer: number | null = null;
-  let manuallyClosed = false;
-  let reconnectAttempts = 0;
-
-  function connectWebSocket(): void {
-    if (manuallyClosed) {
+    if (!currentUser?.id) {
       return;
     }
 
-    const socket = new WebSocket(
-      `${WEBSOCKET_URL}?token=${encodeURIComponent(safeToken)}`
-    );
+    const currentUserId = currentUser.id;
 
-    websocketRef.current = socket;
+    let disposed = false;
 
-    socket.onopen = () => {
-      reconnectAttempts = 0;
-      console.log("WebSocket conectado.");
-    };
+    let socket: ChatRealtimeSocket | null = null;
 
-    socket.onmessage = (event) => {
-      try {
-        const payload = JSON.parse(event.data) as {
-          event?: string;
-          data?: {
-            message?: Message;
-            conversation_id?: number;
-            usuario_id?: number;
-            is_typing?: boolean;
-          };
-        };
+    let refreshingAuthentication = false;
 
-        if (payload.event !== "new_message") {
-          return;
-        }
+    function joinSelectedConversation(): void {
+      const conversationId = selectedConversationIdRef.current;
 
-        const incomingMessage = payload.data?.message;
-
-        if (!incomingMessage) {
-          return;
-        }
-
-        const conversationId = Number(incomingMessage.conversacion_id);
-        const currentSelectedId = selectedConversationIdRef.current;
-
-        setMessages((old) => {
-          const alreadyExists = old.some(
-            (message) => Number(message.id) === Number(incomingMessage.id)
-          );
-
-          if (alreadyExists) {
-            return old;
-          }
-
-          if (conversationId !== currentSelectedId) {
-            return old;
-          }
-
-          return [...old, incomingMessage];
-        });
-
-        void loadConversations(true);
-
-        if (conversationId === currentSelectedId) {
-          setNearEnd(true);
-        }
-      } catch {
-        console.warn("Evento WebSocket inválido.");
-      }
-    };
-
-    socket.onerror = () => {
-      console.warn("Error de conexión WebSocket.");
-    };
-
-    socket.onclose = () => {
-      websocketRef.current = null;
-
-      if (manuallyClosed) {
+      if (!conversationId || !socket?.connected) {
         return;
       }
 
-      reconnectAttempts += 1;
+      socket.emit(
+        "chat:conversation:join",
+        {
+          conversationId,
+        },
+        (response) => {
+          if (disposed || response.ok) {
+            return;
+          }
 
-      const delay = Math.min(3000 * reconnectAttempts, 15000);
-
-      reconnectTimer = window.setTimeout(() => {
-        connectWebSocket();
-      }, delay);
-    };
-  }
-
-  connectWebSocket();
-
-  return () => {
-    manuallyClosed = true;
-
-    if (reconnectTimer !== null) {
-      window.clearTimeout(reconnectTimer);
+          setError(response.error.message);
+        },
+      );
     }
 
-    websocketRef.current?.close();
-    websocketRef.current = null;
-  };
-}, [currentUser?.id, loadConversations]);
+    async function connectRealtime(): Promise<void> {
+      try {
+        socket = await createChatRealtimeSocket();
+
+        if (disposed) {
+          socket.disconnect();
+          return;
+        }
+
+        chatSocketRef.current = socket;
+
+        socket.on("connect", () => {
+          joinSelectedConversation();
+        });
+
+        socket.on("chat:message:new", (event) => {
+          if (event.conversationId !== event.message.conversationId) {
+            return;
+          }
+
+          const incomingMessage = adaptRealtimeMessage(
+            event.message,
+            currentUserId,
+          );
+
+          const currentSelectedId = selectedConversationIdRef.current;
+
+          if (event.conversationId === currentSelectedId) {
+            setMessages((old) => {
+              const alreadyExists = old.some(
+                (message) =>
+                  message.id === incomingMessage.id ||
+                  (incomingMessage.client_message_id &&
+                    message.client_message_id ===
+                      incomingMessage.client_message_id),
+              );
+
+              if (alreadyExists) {
+                return old;
+              }
+
+              return [...old, incomingMessage];
+            });
+
+            setNearEnd(true);
+          }
+
+          void loadConversations(true);
+        });
+
+        socket.on("chat:typing:updated", (event) => {
+          if (
+            event.userId === currentUserId ||
+            event.conversationId !== selectedConversationIdRef.current
+          ) {
+            return;
+          }
+
+          const oldTimer = remoteTypingTimersRef.current.get(event.userId);
+
+          if (oldTimer !== undefined) {
+            window.clearTimeout(oldTimer);
+
+            remoteTypingTimersRef.current.delete(event.userId);
+          }
+
+          if (!event.isTyping) {
+            setTypingUserIds((old) => old.filter((id) => id !== event.userId));
+
+            return;
+          }
+
+          setTypingUserIds((old) =>
+            old.includes(event.userId) ? old : [...old, event.userId],
+          );
+
+          const timer = window.setTimeout(() => {
+            setTypingUserIds((old) => old.filter((id) => id !== event.userId));
+
+            remoteTypingTimersRef.current.delete(event.userId);
+          }, 3500);
+
+          remoteTypingTimersRef.current.set(event.userId, timer);
+        });
+
+        socket.on("chat:read:updated", (event) => {
+          if (event.userId === currentUserId) {
+            setConversations((old) =>
+              old.map((conversation) =>
+                conversation.id === event.conversationId
+                  ? {
+                      ...conversation,
+                      no_leidos: 0,
+                    }
+                  : conversation,
+              ),
+            );
+
+            return;
+          }
+
+          if (
+            event.conversationId !== selectedConversationIdRef.current ||
+            selectedConversationTypeRef.current !== "privado"
+          ) {
+            return;
+          }
+
+          const readAt = Date.parse(event.readAt);
+
+          if (Number.isNaN(readAt)) {
+            return;
+          }
+
+          setMessages((old) =>
+            old.map((message) => {
+              if (message.emisor_id !== currentUserId) {
+                return message;
+              }
+
+              const createdAt = Date.parse(message.creado_en);
+
+              if (Number.isNaN(createdAt) || createdAt > readAt) {
+                return message;
+              }
+
+              return {
+                ...message,
+                leido: 1,
+              };
+            }),
+          );
+        });
+
+        socket.on("chat:presence:updated", (event) => {
+          setConversations((old) =>
+            old.map((conversation) => {
+              if (conversation.otro_usuario_id !== event.userId) {
+                return conversation;
+              }
+
+              return {
+                ...conversation,
+
+                presencia: {
+                  status: event.status,
+
+                  online: event.online,
+
+                  occurredAt: event.occurredAt,
+
+                  lastSeenAt: event.lastSeenAt,
+                },
+              };
+            }),
+          );
+        });
+        socket.on("connect_error", (connectionError) => {
+          if (disposed) {
+            return;
+          }
+
+          const code = getRealtimeErrorCode(connectionError);
+
+          if (code !== "AUTHENTICATION_REQUIRED") {
+            setError("No se pudo conectar al servicio realtime.");
+            return;
+          }
+
+          if (refreshingAuthentication) {
+            return;
+          }
+
+          refreshingAuthentication = true;
+
+          void refreshChatRealtimeAuthentication(socket!)
+            .then(() => {
+              if (!disposed) {
+                socket?.connect();
+              }
+            })
+            .catch(() => {
+              if (!disposed) {
+                setError("La sesión realtime expiró y no pudo renovarse.");
+              }
+
+              socket?.disconnect();
+            })
+            .finally(() => {
+              refreshingAuthentication = false;
+            });
+        });
+
+        socket.connect();
+      } catch (connectionError) {
+        if (!disposed) {
+          setError(
+            getErrorMessage(
+              connectionError,
+              "No se pudo iniciar el servicio realtime.",
+            ),
+          );
+        }
+      }
+    }
+
+    void connectRealtime();
+
+    return () => {
+      disposed = true;
+
+      if (chatSocketRef.current === socket) {
+        chatSocketRef.current = null;
+      }
+
+      for (const timer of remoteTypingTimersRef.current.values()) {
+        window.clearTimeout(timer);
+      }
+
+      remoteTypingTimersRef.current.clear();
+
+      socket?.removeAllListeners();
+      socket?.disconnect();
+    };
+  }, [currentUser?.id, loadConversations]);
 
   useEffect(() => {
-  const savedToken = localStorage.getItem("token");
+    if (!selectedConversationId) {
+      return;
+    }
 
-  if (!savedToken) {
-    return;
-  }
+    const socket = chatSocketRef.current;
 
-  const timer = window.setInterval(() => {
-    void loadConversations(true);
-  }, 20000);
+    if (!socket?.connected) {
+      return;
+    }
 
-  return () => {
-    window.clearInterval(timer);
-  };
-}, [loadConversations]);
+    socket.emit(
+      "chat:conversation:join",
+      {
+        conversationId: selectedConversationId,
+      },
+      (response) => {
+        if (response.ok) {
+          return;
+        }
 
+        setError(response.error.message);
+      },
+    );
+  }, [selectedConversationId]);
   useEffect(() => {
-    const id = conversacionId ? Number(conversacionId) : null;
+    const id = conversacionId ?? null;
 
     if (id && id !== selectedConversationId) {
       setSelectedConversationId(id);
@@ -497,10 +625,12 @@ if (!savedToken) {
     setChatTheme(getConversationTheme(selectedConversationId));
 
     setTemporaryMessagesDuration(
-      selectedConversation?.temporaryMessagesDuration ?? "off"
+      selectedConversation?.temporaryMessagesDuration ?? "off",
     );
 
     void loadMessages(selectedConversationId);
+
+    void markConversationRead(selectedConversationId);
   }, [selectedConversationId]);
 
   useEffect(() => {
@@ -534,7 +664,7 @@ if (!savedToken) {
     setConversationMenu(null);
   }
 
-  function selectConversation(id: number): void {
+  function selectConversation(id: string): void {
     closeMenus();
     setSelectedConversationId(id);
     setActiveTab("chats");
@@ -565,7 +695,7 @@ if (!savedToken) {
 
   function openMessageActions(
     button: HTMLButtonElement,
-    message: Message
+    message: Message,
   ): void {
     setConversationMenu(null);
 
@@ -574,14 +704,12 @@ if (!savedToken) {
       position: getFixedMenuPosition(
         button,
         224,
-        Number(message.emisor_id) === currentUser?.id ? 420 : 330
+        message.emisor_id === currentUser?.id ? 420 : 330,
       ),
     });
   }
 
-  function openConversationActions(
-    button: HTMLButtonElement
-  ): void {
+  function openConversationActions(button: HTMLButtonElement): void {
     if (!selectedConversation) return;
 
     setMessageMenu(null);
@@ -592,84 +720,206 @@ if (!savedToken) {
     });
   }
 
-  async function sendMessage(
-    event: FormEvent<HTMLFormElement>
-  ): Promise<void> {
+  function emitTyping(conversationId: string, isTyping: boolean): void {
+    const socket = chatSocketRef.current;
+
+    if (!socket?.connected) {
+      return;
+    }
+
+    const eventName = isTyping ? "chat:typing:start" : "chat:typing:stop";
+
+    socket.emit(
+      eventName,
+      {
+        conversationId,
+      },
+      () => {
+        /*
+         * Typing es best-effort.
+         * Un fallo no debe bloquear escritura
+         * ni mostrar errores persistentes.
+         */
+      },
+    );
+  }
+
+  function stopLocalTyping(): void {
+    if (typingStopTimerRef.current !== null) {
+      window.clearTimeout(typingStopTimerRef.current);
+
+      typingStopTimerRef.current = null;
+    }
+
+    const conversationId = localTypingConversationRef.current;
+
+    if (conversationId && localTypingActiveRef.current) {
+      emitTyping(conversationId, false);
+    }
+
+    localTypingActiveRef.current = false;
+
+    localTypingConversationRef.current = null;
+  }
+
+  function handleMessageTextChange(value: string): void {
+    setMessageText(value);
+
+    const conversationId = selectedConversationId;
+
+    if (!conversationId) {
+      stopLocalTyping();
+      return;
+    }
+
+    if (!value.trim()) {
+      stopLocalTyping();
+      return;
+    }
+
+    if (
+      localTypingConversationRef.current &&
+      localTypingConversationRef.current !== conversationId
+    ) {
+      stopLocalTyping();
+    }
+
+    if (!localTypingActiveRef.current) {
+      emitTyping(conversationId, true);
+
+      localTypingActiveRef.current = true;
+
+      localTypingConversationRef.current = conversationId;
+    }
+
+    if (typingStopTimerRef.current !== null) {
+      window.clearTimeout(typingStopTimerRef.current);
+    }
+
+    typingStopTimerRef.current = window.setTimeout(() => {
+      stopLocalTyping();
+    }, 1500);
+  }
+
+  async function markConversationRead(conversationId: string): Promise<void> {
+    if (markReadInFlightRef.current.has(conversationId)) {
+      return;
+    }
+
+    markReadInFlightRef.current.add(conversationId);
+
+    try {
+      await api.put(API_ROUTES.markConversationRead(conversationId));
+
+      setConversations((old) =>
+        old.map((conversation) =>
+          conversation.id === conversationId
+            ? {
+                ...conversation,
+                no_leidos: 0,
+              }
+            : conversation,
+        ),
+      );
+    } catch {
+      /*
+       * No bloqueamos el chat si falla
+       * únicamente la confirmación de lectura.
+       */
+    } finally {
+      markReadInFlightRef.current.delete(conversationId);
+    }
+  }
+  async function sendMessage(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
 
     const contenido = messageText.trim();
 
-    if (
-      !contenido ||
-      !selectedConversationId ||
-      sendingMessage
-    ) {
+    if (!contenido || !selectedConversationId || sendingMessage) {
       return;
     }
 
+    /*
+     * El backend V2 todavía no expone reply_to
+     * en SendChatMessageDto.
+     *
+     * No enviamos ni simulamos datos que el
+     * servidor no pueda persistir.
+     */
+    if (replyTo) {
+      setError(
+        "Las respuestas a mensajes todavía no están disponibles en el contrato actual del backend.",
+      );
+      return;
+    }
+
+    setSendingMessage(true);
+    setError("");
+
     try {
-      setSendingMessage(true);
+      /*
+       * UUID v4 generado por el cliente.
+       *
+       * El backend lo utiliza como clave
+       * idempotente para impedir duplicados
+       * cuando una solicitud se reintenta.
+       */
+      const clientMessageId = crypto.randomUUID();
 
       const response = await api.post(
         API_ROUTES.conversationMessages(selectedConversationId),
         {
-          contenido,
-          tipo: "texto",
-          ...(replyTo
-            ? {
-                reply_to_id: replyTo.id,
-              }
-            : {}),
-        }
+          clientMessageId,
+          content: contenido,
+        },
       );
 
       const payload = response.data?.data ?? response.data;
 
-      const created = payload?.mensaje as Message | undefined;
+      const createdRaw = payload?.mensaje as BackendChatMessage | undefined;
+
+      const created = createdRaw ? adaptMessage(createdRaw) : null;
 
       if (created) {
-        setMessages((old) => [
-          ...old,
-          {
-            ...created,
-            emisor_nombre:
-              created.emisor_nombre ||
-              currentUser?.nombre ||
-              "Tú",
-            emisor_avatar:
-              created.emisor_avatar ??
-              currentUser?.avatar ??
-              null,
-            reply_to: replyTo
-              ? {
-                  id: replyTo.id,
-                  emisor_nombre: replyTo.emisor_nombre,
-                  contenido: replyTo.contenido,
-                }
-              : null,
-          },
-        ]);
+        setMessages((old) => {
+          const alreadyExists = old.some(
+            (message) =>
+              message.id === created.id ||
+              (created.client_message_id &&
+                message.client_message_id === created.client_message_id),
+          );
+
+          if (alreadyExists) {
+            return old;
+          }
+
+          return [...old, created];
+        });
+
+        setNearEnd(true);
       } else {
+        /*
+         * Fallback seguro:
+         * si el backend confirma la operación
+         * pero no devuelve mensaje, recargamos
+         * la fuente de verdad.
+         */
         await loadMessages(selectedConversationId, true);
       }
+
+      stopLocalTyping();
 
       setMessageText("");
       setReplyTo(null);
 
       await loadConversations(true);
     } catch (requestError) {
-      setError(
-        getErrorMessage(
-          requestError,
-          "No se pudo enviar el mensaje."
-        )
-      );
+      setError(getErrorMessage(requestError, "No se pudo enviar el mensaje."));
     } finally {
       setSendingMessage(false);
     }
   }
-
-  async function saveEdit(messageId: number): Promise<void> {
+  async function saveEdit(messageId: string): Promise<void> {
     const contenido = editingText.trim();
 
     if (!contenido) return;
@@ -687,8 +937,8 @@ if (!savedToken) {
                 contenido,
                 editado: 1,
               }
-            : message
-        )
+            : message,
+        ),
       );
 
       setEditingMessageId(null);
@@ -696,20 +946,13 @@ if (!savedToken) {
 
       await loadConversations(true);
     } catch (requestError) {
-      setError(
-        getErrorMessage(
-          requestError,
-          "No se pudo editar el mensaje."
-        )
-      );
+      setError(getErrorMessage(requestError, "No se pudo editar el mensaje."));
     }
   }
 
   function askDelete(message: Message, everyone: boolean): void {
     setConfirmAction({
-      title: everyone
-        ? "¿Eliminar para todos?"
-        : "¿Eliminar de tu vista?",
+      title: everyone ? "¿Eliminar para todos?" : "¿Eliminar de tu vista?",
       description: everyone
         ? "La acción necesita que el backend confirme que el mensaje puede borrarse para todos."
         : "Esta acción eliminará el mensaje de tu vista. El endpoint actual elimina el mensaje; adapta el backend para diferenciar ambos casos.",
@@ -734,18 +977,15 @@ if (!savedToken) {
                         eliminado: 1,
                         contenido: "",
                       }
-                    : item
+                    : item,
                 )
-              : old.filter((item) => item.id !== message.id)
+              : old.filter((item) => item.id !== message.id),
           );
 
           setConfirmAction(null);
         } catch (requestError) {
           setError(
-            getErrorMessage(
-              requestError,
-              "No se pudo eliminar el mensaje."
-            )
+            getErrorMessage(requestError, "No se pudo eliminar el mensaje."),
           );
         } finally {
           setConfirmBusy(false);
@@ -782,9 +1022,7 @@ if (!savedToken) {
     }
   }
 
-  function updateSelectedConversation(
-    patch: Partial<Conversation>
-  ): void {
+  function updateSelectedConversation(patch: Partial<Conversation>): void {
     if (!selectedConversationId) return;
 
     setConversations((old) =>
@@ -794,8 +1032,8 @@ if (!savedToken) {
               ...item,
               ...patch,
             }
-          : item
-      )
+          : item,
+      ),
     );
   }
 
@@ -807,7 +1045,7 @@ if (!savedToken) {
     setToast(
       selectedIsPinned
         ? "Conversación quitada de fijados."
-        : "Conversación fijada arriba."
+        : "Conversación fijada arriba.",
     );
   }
 
@@ -817,9 +1055,7 @@ if (!savedToken) {
     });
 
     setToast(
-      selectedIsMuted
-        ? "Notificaciones activadas."
-        : "Chat silenciado."
+      selectedIsMuted ? "Notificaciones activadas." : "Chat silenciado.",
     );
   }
 
@@ -844,9 +1080,9 @@ if (!savedToken) {
     setMessages((old) => [
       ...old,
       {
-        id: -Date.now(),
-        conversacion_id: selectedConversationId ?? 0,
-        emisor_id: 0,
+        id: crypto.randomUUID(),
+        conversacion_id: selectedConversationId ?? "",
+        emisor_id: null,
         emisor_nombre: "Sistema",
         contenido: `Mensajes temporales configurados: ${
           value === "off" ? "desactivados" : value
@@ -860,7 +1096,7 @@ if (!savedToken) {
     ]);
 
     setToast(
-      "Configuración guardada visualmente; falta confirmar el endpoint PHP."
+      "Configuración guardada visualmente; falta confirmar el endpoint PHP.",
     );
   }
 
@@ -874,19 +1110,14 @@ if (!savedToken) {
     });
   }
 
-  async function createOrOpenPrivateChat(
-    friendId: number
-  ): Promise<void> {
+  async function createOrOpenPrivateChat(friendId: string): Promise<void> {
     try {
-      const response = await api.post(
-        API_ROUTES.createPrivateChat,
-        {
-          amigo_id: friendId,
-        }
-      );
+      const response = await api.post(API_ROUTES.createDirectChat, {
+        userId: friendId,
+      });
 
       const payload = response.data?.data ?? response.data;
-      const id = Number(payload?.conversacion_id);
+      const id = String(payload?.conversacion?.id ?? "");
 
       if (!id) {
         throw new Error("El servidor no devolvió el ID.");
@@ -898,24 +1129,26 @@ if (!savedToken) {
       setError(
         getErrorMessage(
           requestError,
-          "No se pudo iniciar la conversación privada."
-        )
+          "No se pudo iniciar la conversación privada.",
+        ),
       );
     }
   }
 
   const [groupMembers, setGroupMembers] = useState<
-  {
-    usuario_id: number;
-    rol: "admin" | "miembro";
-    nombre: string;
-    correo: string;
-    foto_perfil?: string | null;
-  }[]
->([]);
+    {
+      usuario_id: string;
+      rol: "admin" | "miembro";
+      nombre: string;
+      correo: string;
+      foto_perfil?: string | null;
+    }[]
+  >([]);
 
-const [loadingGroupMembers, setLoadingGroupMembers] = useState(false);
-const [myGroupRole, setMyGroupRole] = useState<"admin" | "miembro">("miembro");
+  const [loadingGroupMembers, setLoadingGroupMembers] = useState(false);
+  const [myGroupRole, setMyGroupRole] = useState<"admin" | "miembro">(
+    "miembro",
+  );
 
   async function searchPeople(value: string): Promise<void> {
     setPeopleSearch(value);
@@ -926,9 +1159,7 @@ const [myGroupRole, setMyGroupRole] = useState<"admin" | "miembro">("miembro");
     }
 
     try {
-      const response = await api.get(
-        API_ROUTES.searchUsers(value)
-      );
+      const response = await api.get(API_ROUTES.searchUsers(value));
 
       const payload = response.data?.data ?? response.data;
 
@@ -938,9 +1169,7 @@ const [myGroupRole, setMyGroupRole] = useState<"admin" | "miembro">("miembro");
     }
   }
 
-  async function sendFriendRequest(
-    userId: number
-  ): Promise<void> {
+  async function sendFriendRequest(userId: string): Promise<void> {
     try {
       await api.post(API_ROUTES.requestFriendship, {
         amigo_id: userId,
@@ -951,44 +1180,35 @@ const [myGroupRole, setMyGroupRole] = useState<"admin" | "miembro">("miembro");
       setToast("Solicitud enviada.");
     } catch (requestError) {
       setError(
-        getErrorMessage(
-          requestError,
-          "No se pudo enviar la solicitud."
-        )
+        getErrorMessage(requestError, "No se pudo enviar la solicitud."),
       );
     }
   }
 
-  async function acceptRequest(id: number): Promise<void> {
+  async function acceptRequest(id: string): Promise<void> {
     try {
       await api.put(API_ROUTES.acceptRequest(id));
 
       await Promise.all([loadRequests(), loadFriends()]);
     } catch (requestError) {
       setError(
-        getErrorMessage(
-          requestError,
-          "No se pudo aceptar la solicitud."
-        )
+        getErrorMessage(requestError, "No se pudo aceptar la solicitud."),
       );
     }
   }
 
-  async function rejectRequest(id: number): Promise<void> {
+  async function rejectRequest(id: string): Promise<void> {
     try {
       await api.put(API_ROUTES.rejectRequest(id));
       await loadRequests();
     } catch (requestError) {
       setError(
-        getErrorMessage(
-          requestError,
-          "No se pudo rechazar la solicitud."
-        )
+        getErrorMessage(requestError, "No se pudo rechazar la solicitud."),
       );
     }
   }
 
-  async function unblockUser(id: number): Promise<void> {
+  async function unblockUser(id: string): Promise<void> {
     try {
       await api.post(API_ROUTES.unblockUser(id));
 
@@ -997,181 +1217,156 @@ const [myGroupRole, setMyGroupRole] = useState<"admin" | "miembro">("miembro");
       setToast("Usuario desbloqueado.");
     } catch (requestError) {
       setError(
-        getErrorMessage(
-          requestError,
-          "No se pudo desbloquear al usuario."
-        )
+        getErrorMessage(requestError, "No se pudo desbloquear al usuario."),
       );
     }
   }
 
-  function createGroup(
-    name: string,
-    memberIds: number[]
-  ): void {
+  function createGroup(name: string, memberIds: string[]): void {
     setCreatingGroup(true);
 
     futureAction(
       "Grupo listo para conectar",
-      `El formulario validó “${name}” con ${memberIds.length} miembro(s). Crea POST /chat/groups en PHP y luego sustituye esta acción visual por api.post(API_ROUTES.createGroup, { nombre: name, miembros: memberIds }).`
+      `El formulario validó “${name}” con ${memberIds.length} miembro(s). Crea POST /chat/groups en PHP y luego sustituye esta acción visual por api.post(API_ROUTES.createGroup, { nombre: name, miembros: memberIds }).`,
     );
 
     setCreatingGroup(false);
     setIsCreateGroupOpen(false);
   }
 
-  async function addMembersToGroup(
-  memberIds: number[]
-): Promise<void> {
-  if (!selectedConversation || memberIds.length === 0) {
-    return;
+  async function addMembersToGroup(memberIds: string[]): Promise<void> {
+    if (!selectedConversation || memberIds.length === 0) {
+      return;
+    }
+
+    setAddingMembers(true);
+    setError("");
+
+    try {
+      for (const usuarioId of memberIds) {
+        const response = await api.post(
+          API_ROUTES.addGroupMember(selectedConversation.id),
+          {
+            usuario_id: usuarioId,
+          },
+        );
+
+        if (!response.data?.success) {
+          throw new Error(
+            response.data?.message ||
+              "No se pudo agregar una persona al grupo.",
+          );
+        }
+      }
+
+      setToast(
+        memberIds.length === 1
+          ? "Persona agregada correctamente al grupo."
+          : `${memberIds.length} personas agregadas correctamente al grupo.`,
+      );
+
+      setIsAddMembersOpen(false);
+    } catch (error) {
+      setError(
+        getErrorMessage(error, "No se pudieron agregar las personas al grupo."),
+      );
+    } finally {
+      setAddingMembers(false);
+    }
   }
 
-  setAddingMembers(true);
-  setError("");
+  async function loadGroupDetail(groupId: string): Promise<void> {
+    setLoadingGroupMembers(true);
 
-  try {
-    for (const usuarioId of memberIds) {
-      const response = await api.post(
-        API_ROUTES.addGroupMember(selectedConversation.id),
-        {
-          usuario_id: usuarioId,
-        }
-      );
+    try {
+      const response = await api.get(`/chat/groups/${groupId}`);
 
       if (!response.data?.success) {
         throw new Error(
           response.data?.message ||
-            "No se pudo agregar una persona al grupo."
+            "No se pudo cargar la información del grupo.",
         );
       }
+
+      setGroupMembers(response.data.data?.miembros ?? []);
+      setMyGroupRole(
+        response.data.data?.mi_rol === "admin" ? "admin" : "miembro",
+      );
+    } catch (error) {
+      setError(
+        getErrorMessage(error, "No se pudo cargar la información del grupo."),
+      );
+    } finally {
+      setLoadingGroupMembers(false);
+    }
+  }
+
+  async function removeMemberFromGroup(userId: string): Promise<void> {
+    if (!selectedConversation) {
+      return;
     }
 
-    setToast(
-      memberIds.length === 1
-        ? "Persona agregada correctamente al grupo."
-        : `${memberIds.length} personas agregadas correctamente al grupo.`
-    );
+    setError("");
 
-    setIsAddMembersOpen(false);
-  } catch (error) {
-  setError(
-    getErrorMessage(
-      error,
-      "No se pudieron agregar las personas al grupo."
-    )
-  );
-} finally {
-  setAddingMembers(false);
-}
-}
+    try {
+      const response = await api.delete(
+        API_ROUTES.removeGroupMember(selectedConversation.id, userId),
+      );
 
-async function loadGroupDetail(groupId: number): Promise<void> {
-  setLoadingGroupMembers(true);
+      if (!response.data?.success) {
+        throw new Error(
+          response.data?.message || "No se pudo quitar a la persona del grupo.",
+        );
+      }
 
-  try {
-    const response = await api.get(
-      `/chat/groups/${groupId}`
-    );
-
-    if (!response.data?.success) {
-      throw new Error(
-        response.data?.message ||
-          "No se pudo cargar la información del grupo."
+      setToast("Persona eliminada correctamente del grupo.");
+      await loadGroupDetail(selectedConversation.id);
+    } catch (error) {
+      setError(
+        getErrorMessage(error, "No se pudo quitar a la persona del grupo."),
       );
     }
-
-    setGroupMembers(response.data.data?.miembros ?? []);
-    setMyGroupRole(
-      response.data.data?.mi_rol === "admin"
-        ? "admin"
-        : "miembro"
-    );
-  } catch (error) {
-    setError(
-      getErrorMessage(
-        error,
-        "No se pudo cargar la información del grupo."
-      )
-    );
-  } finally {
-    setLoadingGroupMembers(false);
   }
-}
-
-async function removeMemberFromGroup(userId: number): Promise<void> {
-  if (!selectedConversation) {
-    return;
-  }
-
-  setError("");
-
-  try {
-    const response = await api.delete(
-      API_ROUTES.removeGroupMember(
-        selectedConversation.id,
-        userId,
-      ),
-    );
-
-    if (!response.data?.success) {
-      throw new Error(
-        response.data?.message ||
-          "No se pudo quitar a la persona del grupo.",
-      );
-    }
-
-    setToast("Persona eliminada correctamente del grupo.");
-    await loadGroupDetail(selectedConversation.id);
-  } catch (error) {
-    setError(
-      getErrorMessage(
-        error,
-        "No se pudo quitar a la persona del grupo.",
-      ),
-    );
-  }
-}
 
   const unreadChats = conversations.reduce(
     (total, item) => total + Number(item.no_leidos ?? 0),
-    0
+    0,
   );
 
   async function scheduleMessage(programadoPara: string): Promise<void> {
-  if (!selectedConversationId) {
-    throw new Error("Selecciona una conversación.");
-  }
-
-  const contenido = messageText.trim();
-
-  if (!contenido) {
-    throw new Error("Escribe un mensaje.");
-  }
-
-  await api.post("/chat/scheduled-messages", {
-    conversacion_id: selectedConversationId,
-    contenido,
-    programado_para: programadoPara,
-  });
-
-  setToast("Mensaje programado correctamente.");
-}
-
-const uniqueMessages = useMemo(() => {
-  const seen = new Set<string>();
-
-  return messages.filter((message, index) => {
-    const key = `${message.id}-${message.creado_en ?? index}`;
-
-    if (seen.has(key)) {
-      return false;
+    if (!selectedConversationId) {
+      throw new Error("Selecciona una conversación.");
     }
 
-    seen.add(key);
-    return true;
-  });
-}, [messages]);
+    const contenido = messageText.trim();
+
+    if (!contenido) {
+      throw new Error("Escribe un mensaje.");
+    }
+
+    await api.post("/chat/scheduled-messages", {
+      conversacion_id: selectedConversationId,
+      contenido,
+      programado_para: programadoPara,
+    });
+
+    setToast("Mensaje programado correctamente.");
+  }
+
+  const uniqueMessages = useMemo(() => {
+    const seen = new Set<string>();
+
+    return messages.filter((message, index) => {
+      const key = `${message.id}-${message.creado_en ?? index}`;
+
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+      return true;
+    });
+  }, [messages]);
 
   return (
     <div
@@ -1221,8 +1416,8 @@ const uniqueMessages = useMemo(() => {
                     </h2>
 
                     <p className="mt-3 max-w-md text-sm leading-7 text-slate-400">
-                      Selecciona un chat para ver los mensajes o busca
-                      un amigo para iniciar una nueva conversación.
+                      Selecciona un chat para ver los mensajes o busca un amigo
+                      para iniciar una nueva conversación.
                     </p>
 
                     <button
@@ -1238,6 +1433,28 @@ const uniqueMessages = useMemo(() => {
                     <ChatHeader
                       conversation={selectedConversation}
                       isPinned={selectedIsPinned}
+                      typingLabel={
+                        typingUserIds.length > 0
+                          ? selectedConversation.tipo === "grupo"
+                            ? typingUserIds.length === 1
+                              ? "Alguien está escribiendo…"
+                              : `${typingUserIds.length} personas están escribiendo…`
+                            : "Escribiendo…"
+                          : null
+                      }
+                      presenceOnline={
+                        selectedConversation.presencia?.online ??
+                        String(
+                          selectedConversation.presencia?.status ??
+                            selectedConversation.presencia?.estado ??
+                            "",
+                        ).toUpperCase() === "ONLINE"
+                      }
+                      lastSeenAt={
+                        selectedConversation.presencia?.lastSeenAt ??
+                        selectedConversation.presencia?.ultima_vez_en_linea ??
+                        null
+                      }
                       onBack={() => {
                         setSelectedConversationId(null);
                         navigate(chatBasePath);
@@ -1253,9 +1470,7 @@ const uniqueMessages = useMemo(() => {
                       <MessageList
                         messages={uniqueMessages}
                         currentUserId={currentUser?.id}
-                        isGroup={
-                          selectedConversation.tipo === "grupo"
-                        }
+                        isGroup={selectedConversation.tipo === "grupo"}
                         loading={loadingMessages}
                         mineBubbleClass={theme.mineBubble}
                         editingMessageId={editingMessageId}
@@ -1285,7 +1500,7 @@ const uniqueMessages = useMemo(() => {
                       replyTo={replyTo}
                       sending={sendingMessage}
                       sendClass={theme.sendButton}
-                      onChange={setMessageText}
+                      onChange={handleMessageTextChange}
                       onCancelReply={() => setReplyTo(null)}
                       onSubmit={sendMessage}
                       onSchedule={scheduleMessage}
@@ -1329,9 +1544,7 @@ const uniqueMessages = useMemo(() => {
 
       <MessageActionsMenu
         menu={messageMenu}
-        mine={
-          Number(messageMenu?.message.emisor_id) === currentUser?.id
-        }
+        mine={messageMenu?.message.emisor_id === currentUser?.id}
         onClose={() => setMessageMenu(null)}
         onCopy={(message) => void copyMessage(message)}
         onShare={(message) => void shareMessage(message)}
@@ -1341,10 +1554,10 @@ const uniqueMessages = useMemo(() => {
             "Reenviar mensaje",
             `El mensaje “${message.contenido.slice(
               0,
-              80
+              80,
             )}” está listo para conectar con POST /chat/messages/${
               message.id
-            }/forward.`
+            }/forward.`,
           )
         }
         onFavorite={(message) => {
@@ -1355,8 +1568,8 @@ const uniqueMessages = useMemo(() => {
                     ...item,
                     favorito: !item.favorito,
                   }
-                : item
-            )
+                : item,
+            ),
           );
 
           setToast("Favorito actualizado localmente.");
@@ -1366,9 +1579,7 @@ const uniqueMessages = useMemo(() => {
             "Información del mensaje",
             `Enviado por ${message.emisor_nombre} el ${
               message.creado_en
-            }. Estado de lectura: ${
-              message.leido ? "leído" : "enviado"
-            }.`
+            }. Estado de lectura: ${message.leido ? "leído" : "enviado"}.`,
           )
         }
         onEdit={(message) => {
@@ -1380,7 +1591,7 @@ const uniqueMessages = useMemo(() => {
         onReport={() =>
           futureAction(
             "Reportar mensaje",
-            "Crea POST /chat/messages/{id}/report para guardar y revisar los reportes."
+            "Crea POST /chat/messages/{id}/report para guardar y revisar los reportes.",
           )
         }
       />
@@ -1403,9 +1614,7 @@ const uniqueMessages = useMemo(() => {
         onMute={toggleMute}
         onTheme={() => setIsThemeModalOpen(true)}
         onScheduledMessages={() => setIsScheduledMessagesOpen(true)}
-        onTemporary={() =>
-          setIsTemporaryMessagesModalOpen(true)
-        }
+        onTemporary={() => setIsTemporaryMessagesModalOpen(true)}
         onCreateGroup={() => setIsCreateGroupOpen(true)}
         onArchive={() => {
           updateSelectedConversation({
@@ -1416,31 +1625,31 @@ const uniqueMessages = useMemo(() => {
           navigate(chatBasePath);
 
           setToast(
-            "Archivada localmente; conecta PUT /chat/conversations/{id}/archive para persistir."
+            "Archivada localmente; conecta PUT /chat/conversations/{id}/archive para persistir.",
           );
         }}
         onBlock={() =>
           futureAction(
             "Bloquear usuario",
-            "Crea POST /chat/conversations/{id}/block y valida que no se pueda iniciar un chat privado con usuarios bloqueados."
+            "Crea POST /chat/conversations/{id}/block y valida que no se pueda iniciar un chat privado con usuarios bloqueados.",
           )
         }
         onReport={() =>
           futureAction(
             "Reportar usuario",
-            "Crea el controlador PHP de reportes de usuario antes de activar esta acción."
+            "Crea el controlador PHP de reportes de usuario antes de activar esta acción.",
           )
         }
         onDeleteLocal={() =>
           futureAction(
             "Eliminar conversación de mi vista",
-            "Crea DELETE /chat/conversations/{id}/local para ocultarla sin borrar mensajes del otro usuario."
+            "Crea DELETE /chat/conversations/{id}/local para ocultarla sin borrar mensajes del otro usuario.",
           )
         }
         onLeaveGroup={() =>
           futureAction(
             "Salir del grupo",
-            "Crea POST /chat/groups/{id}/leave y actualiza la lista de conversaciones."
+            "Crea POST /chat/groups/{id}/leave y actualiza la lista de conversaciones.",
           )
         }
       />
@@ -1453,9 +1662,7 @@ const uniqueMessages = useMemo(() => {
         onClose={() => setIsChatInfoOpen(false)}
         onMute={toggleMute}
         onTheme={() => setIsThemeModalOpen(true)}
-        onTemporary={() =>
-          setIsTemporaryMessagesModalOpen(true)
-        }
+        onTemporary={() => setIsTemporaryMessagesModalOpen(true)}
         onOpenGroupInfo={() => {
           if (!selectedConversation) return;
 
@@ -1506,9 +1713,7 @@ const uniqueMessages = useMemo(() => {
       <TemporaryMessagesModal
         open={isTemporaryMessagesModalOpen}
         value={temporaryMessagesDuration}
-        onClose={() =>
-          setIsTemporaryMessagesModalOpen(false)
-        }
+        onClose={() => setIsTemporaryMessagesModalOpen(false)}
         onChange={selectTemporary}
       />
 
@@ -1562,8 +1767,8 @@ function FriendsPanel({
   results: SearchUser[];
   loading: boolean;
   onSearch: (value: string) => Promise<void>;
-  onAdd: (id: number) => Promise<void>;
-  onChat: (id: number) => Promise<void>;
+  onAdd: (id: string) => Promise<void>;
+  onChat: (id: string) => Promise<void>;
 }) {
   return (
     <section className="flex min-h-0 flex-1 flex-col">
@@ -1572,9 +1777,7 @@ function FriendsPanel({
           Comunidad
         </p>
 
-        <h1 className="mt-2 text-2xl font-bold text-white">
-          Amigos
-        </h1>
+        <h1 className="mt-2 text-2xl font-bold text-white">Amigos</h1>
 
         <p className="mt-1 text-sm text-slate-400">
           Busca personas, envía solicitudes e inicia conversaciones.
@@ -1633,9 +1836,7 @@ function FriendsPanel({
         </h2>
 
         {loading ? (
-          <p className="text-sm text-slate-500">
-            Cargando amigos...
-          </p>
+          <p className="text-sm text-slate-500">Cargando amigos...</p>
         ) : friends.length === 0 ? (
           <p className="rounded-3xl border border-dashed border-slate-700 p-10 text-center text-slate-500">
             Tu lista está vacía.
@@ -1647,9 +1848,7 @@ function FriendsPanel({
                 key={friend.amistad_id}
                 className="rounded-3xl border border-slate-800 bg-slate-900/45 p-4"
               >
-                <p className="font-bold text-white">
-                  {friend.nombre}
-                </p>
+                <p className="font-bold text-white">{friend.nombre}</p>
 
                 <p className="mt-1 truncate text-xs text-slate-500">
                   {friend.correo}
@@ -1679,14 +1878,12 @@ function RequestsPanel({
 }: {
   requests: FriendRequest[];
   loading: boolean;
-  onAccept: (id: number) => Promise<void>;
-  onReject: (id: number) => Promise<void>;
+  onAccept: (id: string) => Promise<void>;
+  onReject: (id: string) => Promise<void>;
 }) {
   return (
     <section className="flex-1 overflow-y-auto p-5 sm:p-8">
-      <h1 className="text-2xl font-bold text-white">
-        Solicitudes de amistad
-      </h1>
+      <h1 className="text-2xl font-bold text-white">Solicitudes de amistad</h1>
 
       <p className="mt-1 text-sm text-slate-400">
         Decide quién puede entrar a tu red de contactos.
@@ -1694,9 +1891,7 @@ function RequestsPanel({
 
       <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {loading ? (
-          <p className="text-slate-500">
-            Cargando solicitudes...
-          </p>
+          <p className="text-slate-500">Cargando solicitudes...</p>
         ) : requests.length === 0 ? (
           <p className="rounded-3xl border border-dashed border-slate-700 p-10 text-center text-slate-500">
             No tienes solicitudes pendientes.
@@ -1707,20 +1902,14 @@ function RequestsPanel({
               key={request.amistad_id}
               className="rounded-3xl border border-slate-800 bg-slate-900/45 p-5"
             >
-              <p className="font-bold text-white">
-                {request.nombre}
-              </p>
+              <p className="font-bold text-white">{request.nombre}</p>
 
-              <p className="text-xs text-slate-500">
-                {request.correo}
-              </p>
+              <p className="text-xs text-slate-500">{request.correo}</p>
 
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <button
                   type="button"
-                  onClick={() =>
-                    void onAccept(request.amistad_id)
-                  }
+                  onClick={() => void onAccept(request.amistad_id)}
                   className="rounded-xl bg-violet-500 px-4 py-2.5 text-sm font-bold text-white"
                 >
                   Aceptar
@@ -1728,9 +1917,7 @@ function RequestsPanel({
 
                 <button
                   type="button"
-                  onClick={() =>
-                    void onReject(request.amistad_id)
-                  }
+                  onClick={() => void onReject(request.amistad_id)}
                   className="rounded-xl border border-slate-700 px-4 py-2.5 text-sm font-bold text-slate-300"
                 >
                   Rechazar
@@ -1751,13 +1938,11 @@ function BlockedPanel({
 }: {
   users: BlockedUser[];
   loading: boolean;
-  onUnblock: (id: number) => Promise<void>;
+  onUnblock: (id: string) => Promise<void>;
 }) {
   return (
     <section className="flex-1 overflow-y-auto p-5 sm:p-8">
-      <h1 className="text-2xl font-bold text-white">
-        Usuarios bloqueados
-      </h1>
+      <h1 className="text-2xl font-bold text-white">Usuarios bloqueados</h1>
 
       <p className="mt-1 text-sm text-slate-400">
         Estas personas no pueden iniciar conversaciones contigo.
@@ -1765,9 +1950,7 @@ function BlockedPanel({
 
       <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {loading ? (
-          <p className="text-slate-500">
-            Cargando usuarios bloqueados...
-          </p>
+          <p className="text-slate-500">Cargando usuarios bloqueados...</p>
         ) : users.length === 0 ? (
           <p className="rounded-3xl border border-dashed border-slate-700 p-10 text-center text-slate-500">
             No tienes usuarios bloqueados.
@@ -1778,13 +1961,9 @@ function BlockedPanel({
               key={user.amistad_id}
               className="rounded-3xl border border-slate-800 bg-slate-900/45 p-5"
             >
-              <p className="font-bold text-white">
-                {user.nombre}
-              </p>
+              <p className="font-bold text-white">{user.nombre}</p>
 
-              <p className="text-xs text-slate-500">
-                {user.correo}
-              </p>
+              <p className="text-xs text-slate-500">{user.correo}</p>
 
               <button
                 type="button"

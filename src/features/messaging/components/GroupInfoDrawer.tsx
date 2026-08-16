@@ -6,11 +6,11 @@ import {
   Users,
   X,
 } from "lucide-react";
-import type { Conversation } from "../features/types";
+import type { Conversation } from "../types/chat.types";
 import { Avatar } from "./Avatar";
 
 type GroupMember = {
-  usuario_id: number;
+  usuario_id: string;
   rol: "admin" | "miembro";
   nombre: string;
   correo: string;
@@ -25,15 +25,15 @@ type GroupInfoDrawerProps = {
   isAdmin?: boolean;
   onClose: () => void;
   onAddMember?: () => void;
-  onRemoveMember?: (userId: number) => void;
-  onMakeAdmin?: (userId: number) => void;
+  onRemoveMember?: (userId: string) => void;
+  onMakeAdmin?: (userId: string) => void;
 };
 
 export function GroupInfoDrawer({
   open,
   conversation,
   members,
-loading,
+  loading,
   isAdmin = true,
   onClose,
   onAddMember,
@@ -72,9 +72,7 @@ loading,
             <Avatar name={title} size="lg" group />
 
             <div className="min-w-0 flex-1">
-              <h3 className="truncate text-lg font-bold text-white">
-                {title}
-              </h3>
+              <h3 className="truncate text-lg font-bold text-white">{title}</h3>
 
               <p className="mt-1 text-sm text-slate-400">
                 AdministraciÃƒÂ³n y miembros del grupo
@@ -116,9 +114,7 @@ loading,
 
           <section>
             <div className="mb-3 flex items-center justify-between">
-              <h4 className="text-sm font-bold text-white">
-                Participantes
-              </h4>
+              <h4 className="text-sm font-bold text-white">Participantes</h4>
 
               <span className="rounded-lg bg-slate-900 px-2 py-1 text-[10px] font-bold text-slate-400">
                 {members.length + 1} total
@@ -188,10 +184,7 @@ loading,
 
           <section className="mt-5 rounded-2xl border border-slate-800 bg-slate-900/35 p-4">
             <div className="flex items-start gap-3">
-              <ShieldCheck
-                size={19}
-                className="mt-0.5 shrink-0 text-sky-300"
-              />
+              <ShieldCheck size={19} className="mt-0.5 shrink-0 text-sky-300" />
 
               <div>
                 <p className="text-sm font-bold text-white">
@@ -199,8 +192,9 @@ loading,
                 </p>
 
                 <p className="mt-1 text-xs leading-5 text-slate-500">
-                  Los administradores podrÃƒÂ¡n aÃƒÂ±adir miembros, quitar miembros,
-                  cambiar el nombre y administrar la configuraciÃƒÂ³n del grupo.
+                  Los administradores podrÃƒÂ¡n aÃƒÂ±adir miembros, quitar
+                  miembros, cambiar el nombre y administrar la configuraciÃƒÂ³n
+                  del grupo.
                 </p>
               </div>
             </div>

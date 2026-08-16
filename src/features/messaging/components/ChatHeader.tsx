@@ -1,26 +1,42 @@
-import {
-  ArrowLeft,
-  LockKeyhole,
-  MoreVertical,
-  Pin,
-  Users,
-} from "lucide-react";
-import type { Conversation } from "../features/types";
+import { ArrowLeft, LockKeyhole, MoreVertical, Pin, Users } from "lucide-react";
+
+import type { Conversation } from "../types/chat.types";
+
 import { Avatar } from "./Avatar";
 
 type ChatHeaderProps = {
   conversation: Conversation;
   isPinned: boolean;
   isMuted?: boolean;
+  typingLabel?: string | null;
+  presenceOnline?: boolean;
+  lastSeenAt?: string | null;
   onBack: () => void;
   onOpenInfo: () => void;
   onOpenMenu: (button: HTMLButtonElement) => void;
 };
 
+function formatLastSeen(value?: string | null): string {
+  if (!value) {
+    return "Desconectado";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Desconectado";
+  }
+
+  return `Última vez ${date.toLocaleString()}`;
+}
+
 export function ChatHeader({
   conversation,
   isPinned,
   isMuted = false,
+  typingLabel = null,
+  presenceOnline = false,
+  lastSeenAt = null,
   onBack,
   onOpenInfo,
   onOpenMenu,
@@ -31,11 +47,19 @@ export function ChatHeader({
     ? conversation.titulo?.trim() || "Grupo sin nombre"
     : conversation.otro_usuario_nombre?.trim() || "Usuario";
 
-  const subtitle = isGroup
-    ? "Grupo de conversación"
-    : isMuted
-      ? "Notificaciones silenciadas"
-      : "En línea · Conversación protegida";
+  let subtitle: string;
+
+  if (typingLabel) {
+    subtitle = typingLabel;
+  } else if (isGroup) {
+    subtitle = "Grupo de conversación";
+  } else if (isMuted) {
+    subtitle = "Notificaciones silenciadas";
+  } else if (presenceOnline) {
+    subtitle = "En línea · Conversación protegida";
+  } else {
+    subtitle = `${formatLastSeen(lastSeenAt)} · Conversación protegida`;
+  }
 
   return (
     <header className="flex items-center gap-3 border-b border-slate-800 bg-gradient-to-r from-slate-950/95 via-slate-950/75 to-violet-950/20 px-4 py-3.5 backdrop-blur-xl sm:px-6">
@@ -59,7 +83,7 @@ export function ChatHeader({
           name={title}
           src={isGroup ? null : conversation.otro_usuario_avatar}
           group={isGroup}
-          online={!isGroup && !isMuted}
+          online={!isGroup && presenceOnline}
         />
 
         <div className="min-w-0">
@@ -93,6 +117,7 @@ export function ChatHeader({
         type="button"
         onClick={(event) => {
           event.stopPropagation();
+
           onOpenMenu(event.currentTarget);
         }}
         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-800 hover:text-white focus-visible:ring-2 focus-visible:ring-violet-400/50"

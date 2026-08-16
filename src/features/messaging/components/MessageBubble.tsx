@@ -7,8 +7,8 @@ import {
   Star,
   Volume2,
 } from "lucide-react";
-import type { Message } from "../features/types";
-import { formatChatDate } from "../features/utils";
+import type { Message } from "../types/chat.types";
+import { formatChatDate } from "../utils";
 import { Avatar } from "./Avatar";
 
 type MessageBubbleProps = {
@@ -21,10 +21,7 @@ type MessageBubbleProps = {
   onEditingTextChange: (value: string) => void;
   onCancelEdit: () => void;
   onSaveEdit: () => void;
-  onOpenActions: (
-    button: HTMLButtonElement,
-    message: Message,
-  ) => void;
+  onOpenActions: (button: HTMLButtonElement, message: Message) => void;
 };
 
 export function MessageBubble({
@@ -41,12 +38,9 @@ export function MessageBubble({
 }: MessageBubbleProps) {
   const isDeleted = Number(message.eliminado ?? 0) === 1;
 
-  const hasAttachment =
-    message.tipo === "archivo" || message.tipo === "imagen";
+  const hasAttachment = message.tipo === "archivo" || message.tipo === "imagen";
 
-  function handleEditKeyDown(
-    event: React.KeyboardEvent<HTMLTextAreaElement>,
-  ) {
+  function handleEditKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (event.key === "Escape") {
       event.preventDefault();
       onCancelEdit();
@@ -106,9 +100,7 @@ export function MessageBubble({
               <>
                 <textarea
                   value={editingText}
-                  onChange={(event) =>
-                    onEditingTextChange(event.target.value)
-                  }
+                  onChange={(event) => onEditingTextChange(event.target.value)}
                   onKeyDown={handleEditKeyDown}
                   autoFocus
                   maxLength={3000}
@@ -215,9 +207,7 @@ export function MessageBubble({
                 >
                   <span>{formatChatDate(message.creado_en)}</span>
 
-                  {Number(message.editado ?? 0) === 1 && (
-                    <span>· editado</span>
-                  )}
+                  {Number(message.editado ?? 0) === 1 && <span>· editado</span>}
 
                   {message.fijado && <Pin size={11} />}
 

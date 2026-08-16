@@ -14,7 +14,7 @@ import {
   Volume2,
 } from "lucide-react";
 import type { ReactNode } from "react";
-import type { ConversationMenuState } from "../features/types";
+import type { ConversationMenuState } from "../types/chat.types";
 
 type ConversationActionsMenuProps = {
   menu: ConversationMenuState | null;
@@ -129,9 +129,7 @@ export function ConversationActionsMenu({
       </MenuItem>
 
       <MenuItem icon={Pin} onClick={() => handleAction(onPin)}>
-        {isPinned
-          ? "Quitar conversación fijada"
-          : "Fijar conversación"}
+        {isPinned ? "Quitar conversación fijada" : "Fijar conversación"}
       </MenuItem>
 
       <MenuItem
@@ -167,7 +165,6 @@ export function ConversationActionsMenu({
       >
         <span className="flex items-center gap-2">
           Buscar mensajes
-
           {!onSearchMessages && (
             <span className="text-[10px] font-medium text-slate-500">
               Próximamente
@@ -196,11 +193,7 @@ export function ConversationActionsMenu({
             Bloquear usuario
           </MenuItem>
 
-          <MenuItem
-            icon={Flag}
-            danger
-            onClick={() => handleAction(onReport)}
-          >
+          <MenuItem icon={Flag} danger onClick={() => handleAction(onReport)}>
             Reportar usuario
           </MenuItem>
         </>

@@ -1,13 +1,8 @@
-import {
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import api, {
-  clearClientSession,
-} from "../services/api";
+import api, { clearClientSession } from "../services/api";
 
 type LogoutResponse = {
   message?: string;
@@ -29,29 +24,17 @@ type ErrorResponse = {
  * remontaje de LogoutPage genere dos llamadas
  * POST /auth/logout para la misma sesión.
  */
-let logoutPromise:
-  | Promise<void>
-  | null = null;
+let logoutPromise: Promise<void> | null = null;
 
-function getErrorMessage(
-  error: unknown,
-): string {
-  if (
-    axios.isAxiosError<ErrorResponse>(
-      error,
-    )
-  ) {
-    const message =
-      error.response?.data?.message;
+function getErrorMessage(error: unknown): string {
+  if (axios.isAxiosError<ErrorResponse>(error)) {
+    const message = error.response?.data?.message;
 
     if (Array.isArray(message)) {
       return message.join(" ");
     }
 
-    if (
-      typeof message === "string" &&
-      message.trim()
-    ) {
+    if (typeof message === "string" && message.trim()) {
       return message;
     }
 
@@ -62,13 +45,9 @@ function getErrorMessage(
       );
     }
 
-    const backendError =
-      error.response.data?.error;
+    const backendError = error.response.data?.error;
 
-    if (
-      typeof backendError === "string" &&
-      backendError.trim()
-    ) {
+    if (typeof backendError === "string" && backendError.trim()) {
       return backendError;
     }
   }
@@ -86,13 +65,9 @@ function clearLocalAuthenticationState(): void {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
 
-  sessionStorage.removeItem(
-    "mfaChallengeToken",
-  );
+  sessionStorage.removeItem("mfaChallengeToken");
 
-  sessionStorage.removeItem(
-    "mfaChallengeExpiresAt",
-  );
+  sessionStorage.removeItem("mfaChallengeExpiresAt");
 }
 
 async function performLogout(): Promise<void> {
@@ -101,15 +76,39 @@ async function performLogout(): Promise<void> {
   }
 
   logoutPromise = (async () => {
-    await api.post<LogoutResponse>(
-      "/auth/logout",
-    );
+    /*
+     * Presence debe cerrarse antes de revocar
+     * la sesión porque este endpoint todavía
+     * necesita un principal autenticado.
+     *
+     * Es best-effort: una caída puntual del
+     * servicio de presencia no debe impedir
+     * el cierre de sesión de seguridad.
+     */
+    try {
+      await api.delete("/chat/presence");
+    } catch {
+      // Continuamos con el logout autoritativo.
+    }
+
+    await api.post<LogoutResponse>("/auth/logout");
 
     clearLocalAuthenticationState();
   })();
 
   try {
     await logoutPromise;
+
+    /*
+     * Permitimos un logout futuro si el
+     * usuario vuelve a iniciar sesión dentro
+     * de la misma ejecución de la SPA.
+     *
+     * StrictMode sigue protegido porque sus
+     * remontajes concurrentes comparten la
+     * misma promesa mientras está pendiente.
+     */
+    logoutPromise = null;
   } catch (error: unknown) {
     /*
      * Si falló realmente, permitimos que el
@@ -121,15 +120,12 @@ async function performLogout(): Promise<void> {
     throw error;
   }
 }
-
 export default function LogoutPage() {
   const navigate = useNavigate();
 
-  const [error, setError] =
-    useState("");
+  const [error, setError] = useState("");
 
-  const [attempt, setAttempt] =
-    useState(0);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let active = true;
@@ -147,18 +143,12 @@ export default function LogoutPage() {
         navigate("/login", {
           replace: true,
         });
-      } catch (
-        caughtError: unknown
-      ) {
+      } catch (caughtError: unknown) {
         if (!active) {
           return;
         }
 
-        setError(
-          getErrorMessage(
-            caughtError,
-          ),
-        );
+        setError(getErrorMessage(caughtError));
       }
     }
 
@@ -177,18 +167,11 @@ export default function LogoutPage() {
             No se pudo cerrar la sesión
           </h1>
 
-          <p className="mt-3 text-sm text-slate-600">
-            {error}
-          </p>
+          <p className="mt-3 text-sm text-slate-600">{error}</p>
 
           <button
             type="button"
-            onClick={() =>
-              setAttempt(
-                (current) =>
-                  current + 1,
-              )
-            }
+            onClick={() => setAttempt((current) => current + 1)}
             className="mt-6 w-full rounded-2xl bg-violet-600 px-4 py-3 font-bold text-white transition hover:bg-violet-700"
           >
             Intentar nuevamente

@@ -1,27 +1,21 @@
 import { ArrowDown, MessageCircle } from "lucide-react";
 import { useEffect, useRef } from "react";
-import type { Message } from "../features/types";
-import {
-  getDateDivider,
-  isDifferentDay,
-} from "../features/utils";
+import type { Message } from "../types/chat.types";
+import { getDateDivider, isDifferentDay } from "../utils";
 import { MessageBubble } from "./MessageBubble";
 
 type MessageListProps = {
   messages: Message[];
-  currentUserId?: number;
+  currentUserId?: string;
   isGroup: boolean;
   loading: boolean;
   mineBubbleClass: string;
-  editingMessageId: number | null;
+  editingMessageId: string | null;
   editingText: string;
   onEditingTextChange: (value: string) => void;
   onCancelEdit: () => void;
-  onSaveEdit: (id: number) => void;
-  onOpenActions: (
-    button: HTMLButtonElement,
-    message: Message,
-  ) => void;
+  onSaveEdit: (id: string) => void;
+  onOpenActions: (button: HTMLButtonElement, message: Message) => void;
   onNearEndChange: (nearEnd: boolean) => void;
   showJump: boolean;
   onJumpToBottom: () => void;
@@ -46,37 +40,37 @@ export function MessageList({
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-  function handleScroll() {
+    function handleScroll() {
+      const scrollElement = scrollRef.current;
+
+      if (!scrollElement) {
+        return;
+      }
+
+      const distanceToBottom =
+        scrollElement.scrollHeight -
+        scrollElement.scrollTop -
+        scrollElement.clientHeight;
+
+      onNearEndChange(distanceToBottom < 160);
+    }
+
     const scrollElement = scrollRef.current;
 
     if (!scrollElement) {
       return;
     }
 
-    const distanceToBottom =
-      scrollElement.scrollHeight -
-      scrollElement.scrollTop -
-      scrollElement.clientHeight;
+    handleScroll();
 
-    onNearEndChange(distanceToBottom < 160);
-  }
+    scrollElement.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
 
-  const scrollElement = scrollRef.current;
-
-  if (!scrollElement) {
-    return;
-  }
-
-  handleScroll();
-
-  scrollElement.addEventListener("scroll", handleScroll, {
-    passive: true,
-  });
-
-  return () => {
-    scrollElement.removeEventListener("scroll", handleScroll);
-  };
-}, [onNearEndChange]);
+    return () => {
+      scrollElement.removeEventListener("scroll", handleScroll);
+    };
+  }, [onNearEndChange]);
 
   return (
     <div
@@ -109,8 +103,7 @@ export function MessageList({
         <div className="mx-auto flex max-w-4xl flex-col gap-5">
           {messages.map((message, index) => {
             const previousMessage = messages[index - 1];
-            const isMine =
-              Number(message.emisor_id) === Number(currentUserId);
+            const isMine = message.emisor_id === currentUserId;
 
             return (
               <div key={message.id}>

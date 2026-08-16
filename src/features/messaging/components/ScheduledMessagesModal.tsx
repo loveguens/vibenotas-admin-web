@@ -12,15 +12,11 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../../../services/api";
 
-type ScheduledMessageStatus =
-  | "pendiente"
-  | "enviado"
-  | "cancelado"
-  | "fallido";
+type ScheduledMessageStatus = "pendiente" | "enviado" | "cancelado" | "fallido";
 
 type ScheduledMessage = {
   id: number;
-  conversacion_id: number;
+  conversacion_id: string;
   contenido: string;
   tipo: string;
   programado_para: string;
@@ -34,7 +30,7 @@ type ScheduledMessage = {
 
 type ScheduledMessagesModalProps = {
   open: boolean;
-  conversationId: number | null;
+  conversationId: string | null;
   onClose: () => void;
   onToast: (message: string) => void;
   onError: (message: string) => void;
@@ -54,9 +50,7 @@ function toMySqlDateTime(value: string): string {
 function formatDateTime(value: string | null): string {
   if (!value) return "â€”";
 
-  const normalized = value.includes("T")
-    ? value
-    : value.replace(" ", "T");
+  const normalized = value.includes("T") ? value : value.replace(" ", "T");
 
   const date = new Date(normalized);
 
@@ -111,7 +105,7 @@ export function ScheduledMessagesModal({
     if (!conversationId) return [];
 
     return messages.filter(
-      (message) => Number(message.conversacion_id) === conversationId
+      (message) => message.conversacion_id === conversationId,
     );
   }, [conversationId, messages]);
 
@@ -126,9 +120,7 @@ export function ScheduledMessagesModal({
       const response = await api.get("/chat/scheduled-messages");
       const payload = response.data?.data ?? response.data;
 
-      setMessages(
-        (payload?.mensajes_programados ?? []) as ScheduledMessage[]
-      );
+      setMessages((payload?.mensajes_programados ?? []) as ScheduledMessage[]);
     } catch {
       onError("No se pudieron cargar los mensajes programados.");
     } finally {
@@ -176,10 +168,7 @@ export function ScheduledMessagesModal({
 
     const selectedDate = new Date(editingDateTime);
 
-    if (
-      Number.isNaN(selectedDate.getTime()) ||
-      selectedDate <= new Date()
-    ) {
+    if (Number.isNaN(selectedDate.getTime()) || selectedDate <= new Date()) {
       onError("La fecha programada debe ser futura.");
       return;
     }
@@ -200,26 +189,26 @@ export function ScheduledMessagesModal({
                 contenido,
                 programado_para: toMySqlDateTime(editingDateTime),
               }
-            : message
-        )
+            : message,
+        ),
       );
 
       cancelEdit();
       onToast("Mensaje programado actualizado.");
     } catch (requestError: unknown) {
-  const responseError = requestError as {
-    response?: {
-      data?: {
-        message?: string;
+      const responseError = requestError as {
+        response?: {
+          data?: {
+            message?: string;
+          };
+        };
       };
-    };
-  };
 
-  onError(
-    responseError.response?.data?.message ??
-      "No se pudo actualizar el mensaje programado."
-  );
-} finally {
+      onError(
+        responseError.response?.data?.message ??
+          "No se pudo actualizar el mensaje programado.",
+      );
+    } finally {
       setBusyId(null);
     }
   }
@@ -237,8 +226,8 @@ export function ScheduledMessagesModal({
                 ...message,
                 estado: "cancelado",
               }
-            : message
-        )
+            : message,
+        ),
       );
 
       onToast("Mensaje programado cancelado.");
@@ -263,8 +252,8 @@ export function ScheduledMessagesModal({
                 estado: "enviado",
                 enviado_en: new Date().toISOString(),
               }
-            : message
-        )
+            : message,
+        ),
       );
 
       onToast("Mensaje enviado correctamente.");
@@ -313,10 +302,7 @@ export function ScheduledMessagesModal({
               title="Actualizar"
               aria-label="Actualizar mensajes programados"
             >
-              <RefreshCw
-                size={18}
-                className={loading ? "animate-spin" : ""}
-              />
+              <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
             </button>
 
             <button
@@ -334,7 +320,10 @@ export function ScheduledMessagesModal({
         <div className="min-h-0 flex-1 overflow-y-auto p-5 sm:p-6">
           {loading ? (
             <div className="flex min-h-48 items-center justify-center gap-3 text-sm text-slate-400">
-              <LoaderCircle size={19} className="animate-spin text-violet-300" />
+              <LoaderCircle
+                size={19}
+                className="animate-spin text-violet-300"
+              />
               Cargando mensajes programados...
             </div>
           ) : filteredMessages.length === 0 ? (
@@ -365,7 +354,7 @@ export function ScheduledMessagesModal({
                       <div className="min-w-0">
                         <span
                           className={`inline-flex rounded-full border px-2.5 py-1 text-[11px] font-bold ${getStatusClass(
-                            message.estado
+                            message.estado,
                           )}`}
                         >
                           {getStatusLabel(message.estado)}
@@ -380,7 +369,7 @@ export function ScheduledMessagesModal({
                           {formatDateTime(
                             isPending
                               ? message.programado_para
-                              : message.enviado_en ?? message.programado_para
+                              : (message.enviado_en ?? message.programado_para),
                           )}
                         </p>
                       </div>
