@@ -515,12 +515,12 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <section className="mx-auto max-w-6xl space-y-6">
-        <div className="h-40 animate-pulse rounded-[30px] border border-white/10 bg-white/[0.04]" />
+      <section className="mx-auto max-w-6xl space-y-6 text-slate-900 dark:text-white">
+        <div className="h-40 animate-pulse rounded-[30px] border border-slate-200 bg-slate-200/70 dark:border-white/10 dark:bg-white/[0.04]" />
 
         <div className="grid gap-6 lg:grid-cols-[340px_minmax(0,1fr)]">
-          <div className="h-[520px] animate-pulse rounded-[30px] border border-white/10 bg-white/[0.04]" />
-          <div className="h-[620px] animate-pulse rounded-[30px] border border-white/10 bg-white/[0.04]" />
+          <div className="h-[520px] animate-pulse rounded-[30px] border border-slate-200 bg-slate-200/70 dark:border-white/10 dark:bg-white/[0.04]" />
+          <div className="h-[620px] animate-pulse rounded-[30px] border border-slate-200 bg-slate-200/70 dark:border-white/10 dark:bg-white/[0.04]" />
         </div>
       </section>
     );
@@ -528,17 +528,17 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <section className="mx-auto max-w-6xl">
-        <div className="flex min-h-[360px] flex-col items-center justify-center rounded-[30px] border border-red-500/20 bg-red-500/[0.06] p-8 text-center">
-          <div className="rounded-2xl bg-red-500/10 p-4 text-red-300">
+      <section className="mx-auto max-w-6xl text-slate-900 dark:text-white">
+        <div className="flex min-h-[360px] flex-col items-center justify-center rounded-[30px] border border-red-200 bg-red-50 p-8 text-center dark:border-red-500/20 dark:bg-red-500/[0.06]">
+          <div className="rounded-2xl bg-red-100 p-4 text-red-700 dark:bg-red-500/10 dark:text-red-300">
             <TriangleAlert size={28} />
           </div>
 
-          <h1 className="mt-5 text-xl font-black text-white">
+          <h1 className="mt-5 text-xl font-black text-slate-950 dark:text-white">
             No pudimos cargar tu perfil
           </h1>
 
-          <p className="mt-2 max-w-md text-sm leading-6 text-slate-400">
+          <p className="mt-2 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-400">
             {error ||
               "Ocurrió un problema al consultar la información de tu cuenta."}
           </p>
@@ -557,29 +557,29 @@ export default function ProfilePage() {
   }
 
   return (
-    <section className="mx-auto max-w-6xl space-y-6">
-      <header className="relative overflow-hidden rounded-[30px] border border-white/10 bg-gradient-to-br from-[#151B31] via-[#111827] to-[#10253B] p-6 shadow-2xl shadow-black/20 sm:p-8">
-        <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-violet-500/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-28 left-20 h-72 w-72 rounded-full bg-sky-500/10 blur-3xl" />
+    <section className="mx-auto max-w-6xl space-y-6 text-slate-900 dark:text-white">
+      <header className="relative overflow-hidden rounded-[30px] border border-slate-200 bg-gradient-to-br from-violet-50 via-white to-sky-50 p-6 shadow-xl shadow-slate-200/60 sm:p-8 dark:border-white/10 dark:from-[#151B31] dark:via-[#111827] dark:to-[#10253B] dark:shadow-2xl dark:shadow-black/20">
+        <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-violet-300/25 blur-3xl dark:bg-violet-500/10" />
+        <div className="pointer-events-none absolute -bottom-28 left-20 h-72 w-72 rounded-full bg-sky-300/25 blur-3xl dark:bg-sky-500/10" />
 
         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-violet-400/20 bg-violet-500/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-violet-200">
+            <div className="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-violet-700 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-200">
               <ShieldCheck size={15} />
               Cuenta administrativa
             </div>
 
-            <h1 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">
+            <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-950 dark:text-white sm:text-4xl">
               Mi perfil
             </h1>
 
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-400 sm:text-base">
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 dark:text-slate-400 sm:text-base">
               Administra tu identidad, información profesional y preferencias de
               cuenta desde un solo lugar.
             </p>
           </div>
 
-          <div className="flex items-center gap-4 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+          <div className="flex items-center gap-4 rounded-3xl border border-slate-200 bg-white/80 p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.04] dark:shadow-none">
             <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-lg font-black text-white">
               {displayedAvatarUrl && !avatarError ? (
                 <img
@@ -594,10 +594,10 @@ export default function ProfilePage() {
             </div>
 
             <div className="min-w-0">
-              <p className="truncate font-black text-white">
+              <p className="truncate font-black text-slate-950 dark:text-white">
                 {user.displayName}
               </p>
-              <p className="mt-1 truncate text-sm text-slate-400">
+              <p className="mt-1 truncate text-sm text-slate-600 dark:text-slate-400">
                 @{user.username || "sin-usuario"}
               </p>
             </div>
@@ -606,32 +606,32 @@ export default function ProfilePage() {
       </header>
 
       {error && (
-        <div className="flex items-start gap-3 rounded-3xl border border-red-500/20 bg-red-500/10 p-5">
-          <div className="rounded-xl bg-red-500/10 p-2 text-red-300">
+        <div className="flex items-start gap-3 rounded-3xl border border-red-200 bg-red-50 p-5 dark:border-red-500/20 dark:bg-red-500/10">
+          <div className="rounded-xl bg-red-100 p-2 text-red-700 dark:bg-red-500/10 dark:text-red-300">
             <TriangleAlert size={18} />
           </div>
           <div>
-            <p className="font-bold text-red-100">Ocurrió un problema</p>
-            <p className="mt-1 text-sm text-red-200/80">{error}</p>
+            <p className="font-bold text-red-900 dark:text-red-100">Ocurrió un problema</p>
+            <p className="mt-1 text-sm text-red-700 dark:text-red-200/80">{error}</p>
           </div>
         </div>
       )}
 
       {success && (
-        <div className="flex items-start gap-3 rounded-3xl border border-emerald-500/20 bg-emerald-500/10 p-5">
-          <div className="rounded-xl bg-emerald-500/10 p-2 text-emerald-300">
+        <div className="flex items-start gap-3 rounded-3xl border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-500/20 dark:bg-emerald-500/10">
+          <div className="rounded-xl bg-emerald-100 p-2 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
             <CheckCircle2 size={18} />
           </div>
           <div>
-            <p className="font-bold text-emerald-100">Cambios guardados</p>
-            <p className="mt-1 text-sm text-emerald-200/80">{success}</p>
+            <p className="font-bold text-emerald-900 dark:text-emerald-100">Cambios guardados</p>
+            <p className="mt-1 text-sm text-emerald-700 dark:text-emerald-200/80">{success}</p>
           </div>
         </div>
       )}
 
       <div className="grid gap-6 lg:grid-cols-[340px_minmax(0,1fr)]">
         <aside className="space-y-6">
-          <div className="overflow-hidden rounded-[30px] border border-white/10 bg-[#111827] shadow-xl shadow-black/15">
+          <div className="overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-xl shadow-slate-200/50 dark:border-white/10 dark:bg-[#111827] dark:shadow-black/15">
             <div className="relative h-28 overflow-hidden bg-gradient-to-r from-violet-600/30 via-fuchsia-600/20 to-sky-500/20">
               {displayedAvatarUrl && !avatarError && (
                 <img
@@ -648,7 +648,7 @@ export default function ProfilePage() {
                 type="button"
                 onClick={() => avatarInputRef.current?.click()}
                 disabled={uploadingAvatar}
-                className="group relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-[26px] border-4 border-[#111827] bg-gradient-to-br from-violet-500 to-fuchsia-600 text-2xl font-black text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-70"
+                className="group relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-[26px] border-4 border-white bg-gradient-to-br from-violet-500 to-fuchsia-600 text-2xl font-black text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-70 dark:border-[#111827]"
                 aria-label="Cambiar foto de perfil"
                 title="Cambiar foto de perfil"
               >
@@ -680,20 +680,20 @@ export default function ProfilePage() {
                 onChange={(event) => void uploadAvatar(event)}
               />
 
-              <h2 className="mt-4 text-xl font-black text-white">
+              <h2 className="mt-4 text-xl font-black text-slate-950 dark:text-white">
                 {user.displayName}
               </h2>
 
-              <p className="mt-1 text-sm text-slate-400">{user.email}</p>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{user.email}</p>
 
               <div className="mt-4 flex flex-wrap gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/20 bg-violet-500/10 px-3 py-1.5 text-xs font-bold text-violet-200">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-700 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-200">
                   <ShieldCheck size={14} />
                   {user.status}
                 </span>
 
                 {user.emailVerifiedAt && (
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-200">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 dark:border-emerald-400/20 dark:bg-emerald-500/10 dark:text-emerald-200">
                     <BadgeCheck size={14} />
                     Correo verificado
                   </span>
@@ -704,7 +704,7 @@ export default function ProfilePage() {
                 type="button"
                 disabled={uploadingAvatar}
                 onClick={() => avatarInputRef.current?.click()}
-                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-violet-400/20 bg-violet-500/10 px-4 py-3 text-sm font-bold text-violet-200 transition hover:bg-violet-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm font-bold text-violet-700 transition hover:bg-violet-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-200 dark:hover:bg-violet-500/20"
               >
                 {uploadingAvatar ? (
                   <LoaderCircle size={18} className="animate-spin" />
@@ -715,35 +715,35 @@ export default function ProfilePage() {
                 {uploadingAvatar ? "Subiendo foto..." : "Cambiar foto"}
               </button>
 
-              <p className="mt-2 text-center text-xs leading-5 text-slate-500">
+              <p className="mt-2 text-center text-xs leading-5 text-slate-600 dark:text-slate-500">
                 JPG, PNG o WEBP. Máximo 3 MB.
               </p>
             </div>
           </div>
 
-          <div className="rounded-[30px] border border-white/10 bg-[#111827] p-5">
+          <div className="rounded-[30px] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#111827] dark:shadow-none">
             <div className="flex items-center justify-between">
-              <p className="font-bold text-white">Perfil completado</p>
-              <span className="text-sm font-black text-violet-300">
+              <p className="font-bold text-slate-900 dark:text-white">Perfil completado</p>
+              <span className="text-sm font-black text-violet-700 dark:text-violet-300">
                 {profileCompletion}%
               </span>
             </div>
 
-            <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-white/10">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-all"
                 style={{ width: `${profileCompletion}%` }}
               />
             </div>
 
-            <p className="mt-3 text-xs leading-5 text-slate-500">
+            <p className="mt-3 text-xs leading-5 text-slate-600 dark:text-slate-500">
               Agrega información profesional y de ubicación para completar tu
               perfil administrativo.
             </p>
           </div>
 
-          <div className="rounded-[30px] border border-white/10 bg-[#111827] p-5">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
+          <div className="rounded-[30px] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#111827] dark:shadow-none">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-600 dark:text-slate-500">
               Actividad de la cuenta
             </p>
 
@@ -764,7 +764,7 @@ export default function ProfilePage() {
         </aside>
 
         <form onSubmit={saveProfile} className="space-y-6">
-          <div className="rounded-[30px] border border-white/10 bg-[#111827] p-6 shadow-xl shadow-black/15 sm:p-7">
+          <div className="rounded-[30px] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/50 sm:p-7 dark:border-white/10 dark:bg-[#111827] dark:shadow-black/15">
             <SectionHeader
               icon={<UserRound size={20} />}
               eyebrow="Identidad"
@@ -804,7 +804,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div className="rounded-[30px] border border-white/10 bg-[#111827] p-6 shadow-xl shadow-black/15 sm:p-7">
+          <div className="rounded-[30px] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/50 sm:p-7 dark:border-white/10 dark:bg-[#111827] dark:shadow-black/15">
             <SectionHeader
               icon={<BriefcaseBusiness size={20} />}
               eyebrow="Perfil público"
@@ -830,7 +830,7 @@ export default function ProfilePage() {
               />
 
               <label className="block sm:col-span-2">
-                <span className="text-sm font-semibold text-slate-300">
+                <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                   Biografía
                 </span>
 
@@ -840,17 +840,17 @@ export default function ProfilePage() {
                   rows={4}
                   maxLength={500}
                   placeholder="Escribe una breve descripción sobre ti..."
-                  className="mt-2 w-full resize-y rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/50 focus:ring-2 focus:ring-violet-400/10"
+                  className="mt-2 w-full resize-y rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:bg-white focus:ring-2 focus:ring-violet-400/10 dark:border-white/10 dark:bg-black/20 dark:text-white dark:placeholder:text-slate-600 dark:focus:border-violet-400/50"
                 />
 
-                <div className="mt-2 text-right text-xs text-slate-600">
+                <div className="mt-2 text-right text-xs text-slate-500 dark:text-slate-600">
                   {form.bio.length}/500
                 </div>
               </label>
             </div>
           </div>
 
-          <div className="rounded-[30px] border border-white/10 bg-[#111827] p-6 shadow-xl shadow-black/15 sm:p-7">
+          <div className="rounded-[30px] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/50 sm:p-7 dark:border-white/10 dark:bg-[#111827] dark:shadow-black/15">
             <SectionHeader
               icon={<Globe2 size={20} />}
               eyebrow="Localización"
@@ -888,8 +888,8 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div className="sticky bottom-4 z-20 flex flex-col gap-3 rounded-[24px] border border-white/10 bg-[#0F172A]/95 p-4 shadow-2xl shadow-black/30 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-slate-400">
+          <div className="sticky bottom-4 z-20 flex flex-col gap-3 rounded-[24px] border border-slate-200 bg-white/95 p-4 shadow-2xl shadow-slate-300/40 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between dark:border-white/10 dark:bg-[#0F172A]/95 dark:shadow-black/30">
+            <p className="text-sm text-slate-600 dark:text-slate-400">
               Los cambios se aplicarán a tu perfil administrativo.
             </p>
 
@@ -934,7 +934,7 @@ function Field({
 }: FieldProps) {
   return (
     <label className="block">
-      <span className="text-sm font-semibold text-slate-300">{label}</span>
+      <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">{label}</span>
 
       <div className="relative mt-2">
         {icon && (
@@ -949,7 +949,7 @@ function Field({
           placeholder={placeholder}
           autoComplete={autoComplete}
           maxLength={maxLength}
-          className={`w-full rounded-2xl border border-white/10 bg-black/20 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/50 focus:ring-2 focus:ring-violet-400/10 ${
+          className={`w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:bg-white focus:ring-2 focus:ring-violet-400/10 dark:border-white/10 dark:bg-black/20 dark:text-white dark:placeholder:text-slate-600 dark:focus:border-violet-400/50 ${
             icon ? "pl-11 pr-4" : "px-4"
           }`}
         />
@@ -973,7 +973,7 @@ function ReadOnlyField({
 }: ReadOnlyFieldProps) {
   return (
     <div>
-      <span className="text-sm font-semibold text-slate-300">{label}</span>
+      <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">{label}</span>
 
       <div className="relative mt-2">
         {icon && (
@@ -983,7 +983,7 @@ function ReadOnlyField({
         )}
 
         <div
-          className={`w-full rounded-2xl border border-white/[0.07] bg-white/[0.025] py-3 text-sm text-slate-500 ${
+          className={`w-full rounded-2xl border border-slate-200 bg-slate-100 py-3 text-sm text-slate-600 dark:border-white/[0.07] dark:bg-white/[0.025] dark:text-slate-500 ${
             icon ? "pl-11 pr-4" : "px-4"
           }`}
         >
@@ -1011,16 +1011,16 @@ function SectionHeader({
 }: SectionHeaderProps) {
   return (
     <div className="flex items-start gap-3">
-      <div className="rounded-2xl bg-violet-500/10 p-3 text-violet-300 ring-1 ring-violet-400/10">
+      <div className="rounded-2xl bg-violet-100 p-3 text-violet-700 ring-1 ring-violet-200 dark:bg-violet-500/10 dark:text-violet-300 dark:ring-violet-400/10">
         {icon}
       </div>
 
       <div>
-        <p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-300">
+        <p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-700 dark:text-violet-300">
           {eyebrow}
         </p>
-        <h2 className="mt-1 text-xl font-black text-white">{title}</h2>
-        <p className="mt-1 text-sm leading-6 text-slate-500">
+        <h2 className="mt-1 text-xl font-black text-slate-950 dark:text-white">{title}</h2>
+        <p className="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-500">
           {description}
         </p>
       </div>
@@ -1037,13 +1037,13 @@ type AccountInfoProps = {
 function AccountInfo({ icon, label, value }: AccountInfoProps) {
   return (
     <div className="flex items-start gap-3">
-      <div className="rounded-xl bg-white/[0.04] p-2 text-slate-400">
+      <div className="rounded-xl bg-slate-100 p-2 text-slate-600 dark:bg-white/[0.04] dark:text-slate-400">
         {icon}
       </div>
 
       <div>
-        <p className="text-xs text-slate-500">{label}</p>
-        <p className="mt-1 text-sm font-semibold text-slate-300">{value}</p>
+        <p className="text-xs text-slate-600 dark:text-slate-500">{label}</p>
+        <p className="mt-1 text-sm font-semibold text-slate-700 dark:text-slate-300">{value}</p>
       </div>
     </div>
   );

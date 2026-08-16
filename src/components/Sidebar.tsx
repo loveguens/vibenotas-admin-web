@@ -215,8 +215,32 @@ export default function Sidebar({
           outline-none transition-all duration-200
           ${
             active
-              ? "bg-gradient-to-r from-violet-500/25 to-fuchsia-500/10 text-white shadow-lg shadow-violet-950/20"
-              : "text-slate-400 hover:bg-white/5 hover:text-white focus-visible:bg-white/5 focus-visible:text-white"
+              ? `
+                bg-violet-100
+                text-violet-950
+                shadow-sm
+                ring-1 ring-violet-200
+                dark:bg-gradient-to-r
+                dark:from-violet-500/25
+                dark:to-fuchsia-500/10
+                dark:text-white
+                dark:shadow-lg
+                dark:shadow-violet-950/20
+                dark:ring-0
+              `
+              : `
+                text-slate-600
+                hover:bg-slate-100
+                hover:text-slate-950
+                focus-visible:bg-slate-100
+                focus-visible:text-slate-950
+
+                dark:text-slate-400
+                dark:hover:bg-white/5
+                dark:hover:text-white
+                dark:focus-visible:bg-white/5
+                dark:focus-visible:text-white
+              `
           }
         `}
       >
@@ -226,9 +250,13 @@ export default function Sidebar({
               absolute left-0 h-7 w-1
               rounded-r-full
               bg-gradient-to-b
-              from-violet-300
-              to-fuchsia-400
-              shadow-[0_0_12px_rgba(192,132,252,0.9)]
+              from-violet-500
+              to-fuchsia-500
+              shadow-[0_0_10px_rgba(139,92,246,0.35)]
+
+              dark:from-violet-300
+              dark:to-fuchsia-400
+              dark:shadow-[0_0_12px_rgba(192,132,252,0.9)]
             "
           />
         )}
@@ -240,8 +268,21 @@ export default function Sidebar({
             rounded-xl transition
             ${
               active
-                ? "bg-violet-400/20 text-violet-200"
-                : "text-slate-500 group-hover:bg-violet-500/10 group-hover:text-violet-300"
+                ? `
+                  bg-violet-200/70
+                  text-violet-700
+                  dark:bg-violet-400/20
+                  dark:text-violet-200
+                `
+                : `
+                  text-slate-500
+                  group-hover:bg-violet-100
+                  group-hover:text-violet-700
+
+                  dark:text-slate-500
+                  dark:group-hover:bg-violet-500/10
+                  dark:group-hover:text-violet-300
+                `
             }
           `}
         >
@@ -284,14 +325,13 @@ export default function Sidebar({
 
   return (
     <>
-      {/* Overlay en móvil */}
       {isOpen && (
         <button
           type="button"
           onClick={onClose}
           className="
             fixed inset-0 z-[60]
-            bg-slate-950/75
+            bg-slate-950/60
             backdrop-blur-sm
             lg:hidden
           "
@@ -307,11 +347,17 @@ export default function Sidebar({
           w-[280px] flex-col
           overflow-hidden
           rounded-[28px]
-          border border-white/10
-          bg-[#0F172A]/95
-          shadow-2xl shadow-black/50
+
+          border border-slate-200
+          bg-white/95
+          shadow-2xl shadow-slate-300/40
           backdrop-blur-2xl
+
           transition-all duration-300
+
+          dark:border-white/10
+          dark:bg-[#0F172A]/95
+          dark:shadow-black/50
 
           lg:sticky
           lg:top-3
@@ -330,13 +376,13 @@ export default function Sidebar({
           }
         `}
       >
-        {/* Encabezado */}
         <div
           className="
             flex min-h-[78px]
             items-center justify-between
-            border-b border-white/10
+            border-b border-slate-200
             px-4
+            dark:border-white/10
           "
         >
           <Link
@@ -359,7 +405,8 @@ export default function Sidebar({
                 to-indigo-600
                 text-white
                 shadow-lg
-                shadow-violet-900/50
+                shadow-violet-500/20
+                dark:shadow-violet-900/50
               "
             >
               <Crown size={20} />
@@ -381,7 +428,8 @@ export default function Sidebar({
                   text-[15px]
                   font-extrabold
                   tracking-tight
-                  text-white
+                  text-slate-950
+                  dark:text-white
                 "
               >
                 VibeNotas
@@ -394,7 +442,8 @@ export default function Sidebar({
                   font-bold
                   uppercase
                   tracking-[0.18em]
-                  text-violet-300
+                  text-violet-600
+                  dark:text-violet-300
                 "
               >
                 {role === "superadmin"
@@ -404,7 +453,6 @@ export default function Sidebar({
             </div>
           </Link>
 
-          {/* Contraer en escritorio */}
           <button
             type="button"
             onClick={() =>
@@ -416,10 +464,14 @@ export default function Sidebar({
               hidden h-9 w-9
               items-center justify-center
               rounded-xl
-              text-slate-400
+              text-slate-500
               transition
-              hover:bg-white/10
-              hover:text-white
+              hover:bg-slate-100
+              hover:text-slate-950
+
+              dark:text-slate-400
+              dark:hover:bg-white/10
+              dark:hover:text-white
               lg:flex
             "
             aria-label={
@@ -434,17 +486,12 @@ export default function Sidebar({
             }
           >
             {collapsed ? (
-              <ChevronRight
-                size={18}
-              />
+              <ChevronRight size={18} />
             ) : (
-              <ChevronLeft
-                size={18}
-              />
+              <ChevronLeft size={18} />
             )}
           </button>
 
-          {/* Cerrar en móvil */}
           <button
             type="button"
             onClick={onClose}
@@ -452,10 +499,14 @@ export default function Sidebar({
               flex h-9 w-9
               items-center justify-center
               rounded-xl
-              text-slate-400
+              text-slate-500
               transition
-              hover:bg-white/10
-              hover:text-white
+              hover:bg-slate-100
+              hover:text-slate-950
+
+              dark:text-slate-400
+              dark:hover:bg-white/10
+              dark:hover:text-white
               lg:hidden
             "
             aria-label="Cerrar menú"
@@ -465,7 +516,6 @@ export default function Sidebar({
           </button>
         </div>
 
-        {/* Navegación */}
         <nav
           className="
             flex-1
@@ -482,7 +532,13 @@ export default function Sidebar({
             )}
           </SidebarSection>
 
-          <div className="my-4 border-t border-white/10" />
+          <div
+            className="
+              my-4
+              border-t border-slate-200
+              dark:border-white/10
+            "
+          />
 
           <SidebarSection
             label="Gestión"
@@ -495,7 +551,13 @@ export default function Sidebar({
 
           {sistema.length > 0 && (
             <>
-              <div className="my-4 border-t border-white/10" />
+              <div
+                className="
+                  my-4
+                  border-t border-slate-200
+                  dark:border-white/10
+                "
+              />
 
               <SidebarSection
                 label="Sistema"
@@ -509,8 +571,13 @@ export default function Sidebar({
           )}
         </nav>
 
-        {/* Acciones inferiores */}
-        <div className="border-t border-white/10 p-3">
+        <div
+          className="
+            border-t border-slate-200
+            p-3
+            dark:border-white/10
+          "
+        >
           <Link
             to={`${basePath}/profile`}
             onClick={onClose}
@@ -530,8 +597,20 @@ export default function Sidebar({
                 esRutaActiva(
                   `${basePath}/profile`,
                 )
-                  ? "bg-violet-500/15 text-violet-200"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white"
+                  ? `
+                    bg-violet-100
+                    text-violet-800
+                    dark:bg-violet-500/15
+                    dark:text-violet-200
+                  `
+                  : `
+                    text-slate-600
+                    hover:bg-slate-100
+                    hover:text-slate-950
+                    dark:text-slate-400
+                    dark:hover:bg-white/5
+                    dark:hover:text-white
+                  `
               }
             `}
           >
@@ -544,13 +623,15 @@ export default function Sidebar({
                 rounded-xl
                 text-slate-500
                 transition
-                group-hover:bg-violet-500/10
-                group-hover:text-violet-300
+                group-hover:bg-violet-100
+                group-hover:text-violet-700
+
+                dark:text-slate-500
+                dark:group-hover:bg-violet-500/10
+                dark:group-hover:text-violet-300
               "
             >
-              <UserCircle2
-                size={19}
-              />
+              <UserCircle2 size={19} />
             </div>
 
             <span
@@ -583,8 +664,20 @@ export default function Sidebar({
                 esRutaActiva(
                   `${basePath}/settings`,
                 )
-                  ? "bg-violet-500/15 text-violet-200"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white"
+                  ? `
+                    bg-violet-100
+                    text-violet-800
+                    dark:bg-violet-500/15
+                    dark:text-violet-200
+                  `
+                  : `
+                    text-slate-600
+                    hover:bg-slate-100
+                    hover:text-slate-950
+                    dark:text-slate-400
+                    dark:hover:bg-white/5
+                    dark:hover:text-white
+                  `
               }
             `}
           >
@@ -597,8 +690,12 @@ export default function Sidebar({
                 rounded-xl
                 text-slate-500
                 transition
-                group-hover:bg-violet-500/10
-                group-hover:text-violet-300
+                group-hover:bg-violet-100
+                group-hover:text-violet-700
+
+                dark:text-slate-500
+                dark:group-hover:bg-violet-500/10
+                dark:group-hover:text-violet-300
               "
             >
               <Settings size={19} />
@@ -615,7 +712,13 @@ export default function Sidebar({
             </span>
           </Link>
 
-          <div className="my-2 border-t border-white/[0.06]" />
+          <div
+            className="
+              my-2
+              border-t border-slate-200
+              dark:border-white/[0.06]
+            "
+          />
 
           <button
             type="button"
@@ -631,10 +734,14 @@ export default function Sidebar({
               gap-3 rounded-2xl
               px-3 py-2.5
               text-sm font-semibold
-              text-red-400
+              text-red-600
               transition
-              hover:bg-red-500/10
-              hover:text-red-300
+              hover:bg-red-50
+              hover:text-red-700
+
+              dark:text-red-400
+              dark:hover:bg-red-500/10
+              dark:hover:text-red-300
             "
           >
             <div
@@ -645,7 +752,8 @@ export default function Sidebar({
                 justify-center
                 rounded-xl
                 transition
-                group-hover:bg-red-500/10
+                group-hover:bg-red-100
+                dark:group-hover:bg-red-500/10
               "
             >
               <LogOut size={19} />
@@ -682,6 +790,7 @@ function SidebarSection({
           uppercase
           tracking-[0.18em]
           text-slate-500
+          dark:text-slate-500
           ${
             collapsed
               ? "lg:hidden"
