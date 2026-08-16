@@ -7,7 +7,7 @@ import {
   RefreshCw,
   Search,
   StickyNote,
-  Trash2,
+  Files,
 } from "lucide-react";
 
 import api from "../services/api";
@@ -685,7 +685,7 @@ export default function ContentPage() {
                     >
                       <div className="flex flex-col items-center gap-3">
                         <div className="rounded-2xl bg-slate-100 p-4 dark:bg-white/5">
-                          <Trash2 size={28} />
+                          <Files size={28} />
                         </div>
 
                         <div>

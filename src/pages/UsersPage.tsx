@@ -271,7 +271,7 @@ function UserAvatar({
 }) {
   return (
     <div
-      className={`flex shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br from-sky-500 via-violet-600 to-fuchsia-600 font-bold text-white shadow-lg shadow-violet-950/30 ${
+      className={`flex shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br from-sky-500 via-violet-600 to-fuchsia-600 font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 ${
         large
           ? "h-20 w-20 rounded-3xl text-xl"
           : "h-11 w-11 rounded-2xl text-sm"
@@ -307,12 +307,12 @@ function StatusBadge({
     <span
       className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
         active
-          ? "border-emerald-400/15 bg-emerald-500/10 text-emerald-300"
+          ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-400/15 dark:bg-emerald-500/10 dark:text-emerald-300"
           : pending
-            ? "border-sky-400/15 bg-sky-500/10 text-sky-300"
+            ? "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-400/15 dark:bg-sky-500/10 dark:text-sky-300"
             : suspended
-              ? "border-amber-400/15 bg-amber-500/10 text-amber-300"
-              : "border-red-400/15 bg-red-500/10 text-red-300"
+              ? "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-400/15 dark:bg-amber-500/10 dark:text-amber-300"
+              : "border-red-200 bg-red-50 text-red-700 dark:border-red-400/15 dark:bg-red-500/10 dark:text-red-300"
       }`}
     >
       {active ? (
@@ -334,8 +334,8 @@ function VerificationBadge({
     <span
       className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
         verified
-          ? "border-emerald-400/15 bg-emerald-500/10 text-emerald-300"
-          : "border-slate-400/10 bg-slate-500/10 text-slate-400"
+          ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-400/15 dark:bg-emerald-500/10 dark:text-emerald-300"
+          : "border-slate-200 bg-slate-100 text-slate-600 dark:border-slate-400/10 dark:bg-slate-500/10 dark:text-slate-400"
       }`}
     >
       <MailCheck size={13} />
@@ -1082,23 +1082,23 @@ export default function UsersPage({
   }
 
   return (
-    <section className="space-y-6 pb-10">
-      <header className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.16),transparent_38%),linear-gradient(135deg,rgba(30,41,59,0.96),rgba(15,23,42,0.96))] p-6 shadow-2xl shadow-black/20 sm:p-8">
-        <div className="absolute -right-16 -top-20 h-52 w-52 rounded-full bg-sky-500/10 blur-3xl" />
-        <div className="absolute -bottom-24 left-1/3 h-52 w-52 rounded-full bg-violet-500/10 blur-3xl" />
+    <section className="space-y-6 pb-10 text-slate-900 dark:text-white">
+      <header className="relative overflow-hidden rounded-[28px] border border-slate-200 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.12),transparent_38%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(248,250,252,0.98))] p-6 shadow-xl shadow-slate-200/60 sm:p-8 dark:border-white/10 dark:bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.16),transparent_38%),linear-gradient(135deg,rgba(30,41,59,0.96),rgba(15,23,42,0.96))] dark:shadow-2xl dark:shadow-black/20">
+        <div className="absolute -right-16 -top-20 h-52 w-52 rounded-full bg-sky-300/20 blur-3xl dark:bg-sky-500/10" />
+        <div className="absolute -bottom-24 left-1/3 h-52 w-52 rounded-full bg-violet-300/20 blur-3xl dark:bg-violet-500/10" />
 
         <div className="relative flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/15 bg-sky-500/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-sky-200">
+            <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-sky-700 dark:border-sky-400/15 dark:bg-sky-500/10 dark:text-sky-200">
               <UsersRound size={14} />
               Comunidad VibeNotas
             </div>
 
-            <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-950 dark:text-white sm:text-4xl">
               Usuarios
             </h1>
 
-            <p className="mt-3 max-w-xl text-sm leading-6 text-slate-400 sm:text-base">
+            <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600 dark:text-slate-400 sm:text-base">
               Gestiona cuentas de usuario, verifica su estado de acceso y revisa información real de identidad y seguridad.
             </p>
           </div>
@@ -1113,7 +1113,7 @@ export default function UsersPage({
                 filteredUsers.length ===
                   0 || exporting
               }
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.055] px-4 py-2.5 text-sm font-semibold text-slate-200 transition hover:border-white/15 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-45"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-45 dark:border-white/10 dark:bg-white/[0.055] dark:text-slate-200 dark:hover:border-white/15 dark:hover:bg-white/10"
             >
               {exporting ? (
                 <RefreshCw
@@ -1138,7 +1138,7 @@ export default function UsersPage({
                 resetCreateForm();
                 setShowCreateModal(true);
               }}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-950/30 transition hover:-translate-y-0.5 hover:brightness-110"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 transition hover:-translate-y-0.5 hover:brightness-110"
             >
               <UserPlus size={18} />
               Nuevo usuario
@@ -1148,8 +1148,8 @@ export default function UsersPage({
       </header>
 
       {error && (
-        <div className="flex items-start gap-3 rounded-2xl border border-red-400/15 bg-red-500/[0.08] p-4 text-red-100">
-          <div className="mt-0.5 rounded-xl bg-red-500/10 p-2 text-red-300">
+        <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-red-900 dark:border-red-400/15 dark:bg-red-500/[0.08] dark:text-red-100">
+          <div className="mt-0.5 rounded-xl bg-red-100 p-2 text-red-700 dark:bg-red-500/10 dark:text-red-300">
             <AlertTriangle size={18} />
           </div>
 
@@ -1157,7 +1157,7 @@ export default function UsersPage({
             <p className="font-semibold">
               No pudimos completar la acción
             </p>
-            <p className="mt-1 text-sm leading-5 text-red-200/70">
+            <p className="mt-1 text-sm leading-5 text-red-700 dark:text-red-200/70">
               {error}
             </p>
           </div>
@@ -1167,7 +1167,7 @@ export default function UsersPage({
             onClick={() =>
               setError("")
             }
-            className="ml-auto rounded-lg p-1.5 text-red-200/60 transition hover:bg-red-500/10 hover:text-red-100"
+            className="ml-auto rounded-lg p-1.5 text-red-500 transition hover:bg-red-100 hover:text-red-800 dark:text-red-200/60 dark:hover:bg-red-500/10 dark:hover:text-red-100"
             aria-label="Cerrar alerta"
           >
             <X size={16} />
@@ -1176,8 +1176,8 @@ export default function UsersPage({
       )}
 
       {success && (
-        <div className="flex items-start gap-3 rounded-2xl border border-emerald-400/15 bg-emerald-500/[0.08] p-4 text-emerald-100">
-          <div className="mt-0.5 rounded-xl bg-emerald-500/10 p-2 text-emerald-300">
+        <div className="flex items-start gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-900 dark:border-emerald-400/15 dark:bg-emerald-500/[0.08] dark:text-emerald-100">
+          <div className="mt-0.5 rounded-xl bg-emerald-100 p-2 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
             <CheckCircle2 size={18} />
           </div>
 
@@ -1185,7 +1185,7 @@ export default function UsersPage({
             <p className="font-semibold">
               Acción completada
             </p>
-            <p className="mt-1 text-sm text-emerald-200/70">
+            <p className="mt-1 text-sm text-emerald-700 dark:text-emerald-200/70">
               {success}
             </p>
           </div>
@@ -1195,7 +1195,7 @@ export default function UsersPage({
             onClick={() =>
               setSuccess("")
             }
-            className="ml-auto rounded-lg p-1.5 text-emerald-200/60 transition hover:bg-emerald-500/10 hover:text-emerald-100"
+            className="ml-auto rounded-lg p-1.5 text-emerald-500 transition hover:bg-emerald-100 hover:text-emerald-800 dark:text-emerald-200/60 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-100"
             aria-label="Cerrar confirmación"
           >
             <X size={16} />
@@ -1211,7 +1211,7 @@ export default function UsersPage({
             helper: "Cuentas no administrativas",
             icon: UsersRound,
             tone:
-              "border-violet-400/15 bg-violet-500/[0.07] text-violet-300",
+              "border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-400/15 dark:bg-violet-500/[0.07] dark:text-violet-300",
           },
           {
             label: "Activos",
@@ -1219,7 +1219,7 @@ export default function UsersPage({
             helper: "Acceso disponible",
             icon: UserRoundCheck,
             tone:
-              "border-emerald-400/15 bg-emerald-500/[0.07] text-emerald-300",
+              "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-400/15 dark:bg-emerald-500/[0.07] dark:text-emerald-300",
           },
           {
             label: "Pendientes",
@@ -1227,7 +1227,7 @@ export default function UsersPage({
             helper: "Esperando verificación",
             icon: MailCheck,
             tone:
-              "border-sky-400/15 bg-sky-500/[0.07] text-sky-300",
+              "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-400/15 dark:bg-sky-500/[0.07] dark:text-sky-300",
           },
           {
             label: "Restringidos",
@@ -1236,7 +1236,7 @@ export default function UsersPage({
               "Suspendidos o deshabilitados",
             icon: ShieldOff,
             tone:
-              "border-amber-400/15 bg-amber-500/[0.07] text-amber-300",
+              "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-400/15 dark:bg-amber-500/[0.07] dark:text-amber-300",
           },
         ].map((item) => {
           const Icon = item.icon;
@@ -1251,12 +1251,12 @@ export default function UsersPage({
                   <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
                     {item.label}
                   </p>
-                  <p className="mt-2 text-3xl font-bold text-white">
+                  <p className="mt-2 text-3xl font-bold text-slate-950 dark:text-white">
                     {item.value}
                   </p>
                 </div>
 
-                <div className="rounded-xl bg-white/[0.055] p-2.5">
+                <div className="rounded-xl bg-white/70 p-2.5 ring-1 ring-black/5 dark:bg-white/[0.055] dark:ring-0">
                   <Icon size={19} />
                 </div>
               </div>
@@ -1269,9 +1269,9 @@ export default function UsersPage({
         })}
       </div>
 
-      <div className="rounded-3xl border border-white/10 bg-[#172033]/85 p-4 shadow-xl shadow-black/10 backdrop-blur-xl sm:p-5">
+      <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-xl shadow-slate-200/50 backdrop-blur-xl sm:p-5 dark:border-white/10 dark:bg-[#172033]/85 dark:shadow-black/10">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-          <div className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3 transition focus-within:border-violet-400/35 focus-within:bg-black/15">
+          <div className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 transition focus-within:border-violet-400 focus-within:bg-white dark:border-white/10 dark:bg-black/10 dark:focus-within:border-violet-400/35 dark:focus-within:bg-black/15">
             <Search
               size={18}
               className="shrink-0 text-slate-500"
@@ -1285,7 +1285,7 @@ export default function UsersPage({
                 )
               }
               placeholder="Buscar por nombre, correo o ID"
-              className="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-600"
+              className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-600"
             />
 
             {search && (
@@ -1294,7 +1294,7 @@ export default function UsersPage({
                 onClick={() =>
                   setSearch("")
                 }
-                className="rounded-lg p-1 text-slate-500 transition hover:bg-white/10 hover:text-white"
+                className="rounded-lg p-1 text-slate-500 transition hover:bg-slate-200 hover:text-slate-900 dark:hover:bg-white/10 dark:hover:text-white"
                 aria-label="Limpiar búsqueda"
               >
                 <X size={16} />
@@ -1308,7 +1308,7 @@ export default function UsersPage({
               void loadUsers()
             }
             disabled={loading}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-violet-400/15 bg-violet-500/10 px-4 py-2.5 text-sm font-semibold text-violet-200 transition hover:bg-violet-500/15 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-4 py-2.5 text-sm font-semibold text-violet-700 transition hover:bg-violet-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-violet-400/15 dark:bg-violet-500/10 dark:text-violet-200 dark:hover:bg-violet-500/15"
           >
             <RefreshCw
               size={17}
@@ -1337,7 +1337,7 @@ export default function UsersPage({
                   statusFilter ===
                   filter.key
                     ? "bg-violet-500 text-white shadow-lg shadow-violet-950/20"
-                    : "bg-white/[0.045] text-slate-400 hover:bg-white/[0.08] hover:text-white"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-950 dark:bg-white/[0.045] dark:text-slate-400 dark:hover:bg-white/[0.08] dark:hover:text-white"
                 }`}
               >
                 {filter.label}
@@ -1347,18 +1347,18 @@ export default function UsersPage({
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#172033]/85 shadow-xl shadow-black/10 backdrop-blur-xl">
-        <div className="flex flex-col gap-3 border-b border-white/10 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-white/10 dark:bg-[#172033]/85 dark:shadow-black/10">
+        <div className="flex flex-col gap-3 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:border-white/10">
           <div>
-            <p className="text-sm font-semibold text-sky-300">
+            <p className="text-sm font-semibold text-sky-700 dark:text-sky-300">
               Comunidad
             </p>
-            <h2 className="mt-1 text-xl font-bold text-white">
+            <h2 className="mt-1 text-xl font-bold text-slate-950 dark:text-white">
               Usuarios registrados
             </h2>
           </div>
 
-          <span className="rounded-full border border-white/10 bg-white/[0.045] px-3 py-1.5 text-xs font-bold text-slate-400">
+          <span className="rounded-full border border-slate-200 bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600 dark:border-white/10 dark:bg-white/[0.045] dark:text-slate-400">
             {filteredUsers.length} visibles
           </span>
         </div>
@@ -1369,7 +1369,7 @@ export default function UsersPage({
               (item) => (
                 <div
                   key={item}
-                  className="h-20 animate-pulse rounded-2xl bg-white/[0.045]"
+                  className="h-20 animate-pulse rounded-2xl bg-slate-200/70 dark:bg-white/[0.045]"
                 />
               ),
             )}
@@ -1377,10 +1377,10 @@ export default function UsersPage({
         ) : filteredUsers.length ===
           0 ? (
           <div className="flex flex-col items-center px-6 py-16 text-center">
-            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 text-slate-500">
+            <div className="rounded-3xl border border-slate-200 bg-slate-100 p-5 text-slate-500 dark:border-white/10 dark:bg-white/[0.04]">
               <UserRound size={32} />
             </div>
-            <p className="mt-4 font-semibold text-slate-200">
+            <p className="mt-4 font-semibold text-slate-800 dark:text-slate-200">
               No hay resultados
             </p>
             <p className="mt-1 max-w-sm text-sm leading-6 text-slate-500">
@@ -1394,7 +1394,7 @@ export default function UsersPage({
                   "todos",
                 );
               }}
-              className="mt-5 rounded-xl border border-white/10 bg-white/[0.05] px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
+              className="mt-5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
             >
               Limpiar filtros
             </button>
@@ -1403,7 +1403,7 @@ export default function UsersPage({
           <>
             <div className="hidden overflow-x-auto lg:block">
               <table className="w-full min-w-[1000px] text-left">
-                <thead className="bg-black/10 text-[11px] uppercase tracking-[0.12em] text-slate-500">
+                <thead className="bg-slate-50 text-[11px] uppercase tracking-[0.12em] text-slate-500 dark:bg-black/10">
                   <tr>
                     <th className="px-6 py-4 font-semibold">
                       Usuario
@@ -1431,7 +1431,7 @@ export default function UsersPage({
                     (user) => (
                       <tr
                         key={user.id}
-                        className="border-t border-white/[0.055] text-sm transition hover:bg-white/[0.03]"
+                        className="border-t border-slate-100 text-sm transition hover:bg-slate-50 dark:border-white/[0.055] dark:hover:bg-white/[0.03]"
                       >
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
@@ -1440,7 +1440,7 @@ export default function UsersPage({
                             />
 
                             <div className="min-w-0">
-                              <p className="truncate font-semibold text-white">
+                              <p className="truncate font-semibold text-slate-900 dark:text-white">
                                 {user.nombre}
                               </p>
                               <p className="mt-0.5 truncate text-xs text-slate-500">
@@ -1486,7 +1486,7 @@ export default function UsersPage({
                                 user,
                               )
                             }
-                            className="rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
+                            className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
                             aria-label={`Acciones de ${user.nombre}`}
                           >
                             <MoreHorizontal
@@ -1506,7 +1506,7 @@ export default function UsersPage({
                 (user) => (
                   <article
                     key={user.id}
-                    className="rounded-2xl border border-white/10 bg-white/[0.025] p-4"
+                    className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]"
                   >
                     <div className="flex items-start gap-3">
                       <UserAvatar
@@ -1514,7 +1514,7 @@ export default function UsersPage({
                       />
 
                       <div className="min-w-0 flex-1">
-                        <p className="truncate font-semibold text-white">
+                        <p className="truncate font-semibold text-slate-900 dark:text-white">
                           {user.nombre}
                         </p>
                         <p className="mt-0.5 truncate text-xs text-slate-500">
@@ -1527,7 +1527,7 @@ export default function UsersPage({
                         onClick={() =>
                           openActions(user)
                         }
-                        className="rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
+                        className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
                         aria-label={`Acciones de ${user.nombre}`}
                       >
                         <MoreHorizontal
@@ -1549,12 +1549,12 @@ export default function UsersPage({
                       />
                     </div>
 
-                    <div className="mt-4 grid grid-cols-2 gap-3 border-t border-white/[0.06] pt-4">
+                    <div className="mt-4 grid grid-cols-2 gap-3 border-t border-slate-200 pt-4 dark:border-white/[0.06]">
                       <div>
                         <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
                           Registro
                         </p>
-                        <p className="mt-1 text-xs font-medium text-slate-400">
+                        <p className="mt-1 text-xs font-medium text-slate-600 dark:text-slate-400">
                           {formatDate(
                             user.creado_en,
                           )}
@@ -1565,7 +1565,7 @@ export default function UsersPage({
                         <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
                           Último acceso
                         </p>
-                        <p className="mt-1 text-xs font-medium text-slate-400">
+                        <p className="mt-1 text-xs font-medium text-slate-600 dark:text-slate-400">
                           {formatDate(
                             user.ultima_actividad,
                           )}
@@ -1590,14 +1590,14 @@ export default function UsersPage({
               aria-label="Cerrar acciones"
             />
 
-            <div className="relative z-10 w-full max-w-md rounded-[28px] border border-white/10 bg-[#172033] p-5 shadow-2xl shadow-black/60 sm:p-6">
+            <div className="relative z-10 w-full max-w-md rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
               <div className="flex items-start gap-3">
                 <UserAvatar
                   user={userForActions}
                 />
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-lg font-bold text-white">
+                  <p className="truncate text-lg font-bold text-slate-950 dark:text-white">
                     {userForActions.nombre}
                   </p>
                   <p className="mt-0.5 truncate text-sm text-slate-500">
@@ -1616,7 +1616,7 @@ export default function UsersPage({
                 <button
                   type="button"
                   onClick={closeActions}
-                  className="rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
+                  className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
                   aria-label="Cerrar"
                 >
                   <X size={19} />
@@ -1632,11 +1632,11 @@ export default function UsersPage({
                     );
                     closeActions();
                   }}
-                  className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-3.5 text-left text-slate-200 transition hover:bg-white/[0.07]"
+                  className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-left text-slate-800 transition hover:bg-slate-100 dark:border-white/10 dark:bg-white/[0.035] dark:text-slate-200 dark:hover:bg-white/[0.07]"
                 >
                   <UserRound
                     size={19}
-                    className="text-violet-300"
+                    className="text-violet-700 dark:text-violet-300"
                   />
                   <div>
                     <p className="font-semibold">
@@ -1655,17 +1655,17 @@ export default function UsersPage({
                       userForActions,
                     )
                   }
-                  className="flex items-center gap-3 rounded-2xl border border-sky-400/15 bg-sky-500/[0.07] px-4 py-3.5 text-left text-sky-100 transition hover:bg-sky-500/10"
+                  className="flex items-center gap-3 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-left text-sky-900 transition hover:bg-sky-100 dark:border-sky-400/15 dark:bg-sky-500/[0.07] dark:text-sky-100 dark:hover:bg-sky-500/10"
                 >
                   <Pencil
                     size={19}
-                    className="text-sky-300"
+                    className="text-sky-700 dark:text-sky-300"
                   />
                   <div>
                     <p className="font-semibold">
                       Editar identidad
                     </p>
-                    <p className="mt-0.5 text-xs text-sky-200/55">
+                    <p className="mt-0.5 text-xs text-sky-700 dark:text-sky-200/55">
                       Cambiar nombre o correo.
                     </p>
                   </div>
@@ -1679,18 +1679,18 @@ export default function UsersPage({
                       userForActions,
                     )
                   }
-                  className="flex items-center gap-3 rounded-2xl border border-amber-400/15 bg-amber-500/[0.07] px-4 py-3.5 text-left text-amber-100 transition hover:bg-amber-500/10 disabled:opacity-50"
+                  className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3.5 text-left text-amber-900 transition hover:bg-amber-100 disabled:opacity-50 dark:border-amber-400/15 dark:bg-amber-500/[0.07] dark:text-amber-100 dark:hover:bg-amber-500/10"
                 >
                   {userForActions.estado ===
                   "ACTIVE" ? (
                     <ShieldOff
                       size={19}
-                      className="text-amber-300"
+                      className="text-amber-700 dark:text-amber-300"
                     />
                   ) : (
                     <ShieldCheck
                       size={19}
-                      className="text-emerald-300"
+                      className="text-emerald-700 dark:text-emerald-300"
                     />
                   )}
                   <div>
@@ -1700,7 +1700,7 @@ export default function UsersPage({
                         ? "Suspender acceso"
                         : "Activar acceso"}
                     </p>
-                    <p className="mt-0.5 text-xs text-amber-200/55">
+                    <p className="mt-0.5 text-xs text-amber-700 dark:text-amber-200/55">
                       Actualiza el estado de la cuenta.
                     </p>
                   </div>
@@ -1716,17 +1716,17 @@ export default function UsersPage({
                         userForActions,
                       )
                     }
-                    className="flex items-center gap-3 rounded-2xl border border-red-400/15 bg-red-500/[0.07] px-4 py-3.5 text-left text-red-100 transition hover:bg-red-500/10 disabled:opacity-50"
+                    className="flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3.5 text-left text-red-900 transition hover:bg-red-100 disabled:opacity-50 dark:border-red-400/15 dark:bg-red-500/[0.07] dark:text-red-100 dark:hover:bg-red-500/10"
                   >
                     <UserRoundX
                       size={19}
-                      className="text-red-300"
+                      className="text-red-700 dark:text-red-300"
                     />
                     <div>
                       <p className="font-semibold">
                         Deshabilitar cuenta
                       </p>
-                      <p className="mt-0.5 text-xs text-red-200/55">
+                      <p className="mt-0.5 text-xs text-red-700 dark:text-red-200/55">
                         Revoca el acceso sin borrar sus datos.
                       </p>
                     </div>
@@ -1748,13 +1748,13 @@ export default function UsersPage({
             aria-label="Cerrar panel"
           />
 
-          <aside className="relative z-10 flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-white/10 bg-[#101827] p-5 shadow-2xl shadow-black/60 sm:p-6">
+          <aside className="relative z-10 flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#101827] dark:shadow-black/60">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-sky-300">
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-sky-700 dark:text-sky-300">
                   Perfil de usuario
                 </p>
-                <h2 className="mt-2 text-2xl font-bold text-white">
+                <h2 className="mt-2 text-2xl font-bold text-slate-950 dark:text-white">
                   {selectedUser.nombre}
                 </h2>
                 <p className="mt-1 break-all text-sm text-slate-500">
@@ -1767,14 +1767,14 @@ export default function UsersPage({
                 onClick={() =>
                   setSelectedUser(null)
                 }
-                className="rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
+                className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
                 aria-label="Cerrar"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <div className="mt-7 rounded-3xl border border-white/10 bg-white/[0.03] p-6 text-center">
+            <div className="mt-7 rounded-3xl border border-slate-200 bg-slate-50 p-6 text-center dark:border-white/10 dark:bg-white/[0.03]">
               <div className="flex justify-center">
                 <UserAvatar
                   user={selectedUser}
@@ -1797,45 +1797,45 @@ export default function UsersPage({
             </div>
 
             <div className="mt-5 grid gap-3">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500">
                   <CalendarDays size={15} />
                   Fecha de registro
                 </div>
-                <p className="mt-2 font-semibold text-slate-200">
+                <p className="mt-2 font-semibold text-slate-800 dark:text-slate-200">
                   {formatDateTime(
                     selectedUser.creado_en,
                   )}
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Último acceso
                 </p>
-                <p className="mt-2 font-semibold text-slate-200">
+                <p className="mt-2 font-semibold text-slate-800 dark:text-slate-200">
                   {formatDateTime(
                     selectedUser.ultima_actividad,
                   )}
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   MFA
                 </p>
-                <p className="mt-2 font-semibold text-slate-200">
+                <p className="mt-2 font-semibold text-slate-800 dark:text-slate-200">
                   {selectedUser.mfa_habilitado
                     ? "Habilitado"
                     : "Deshabilitado"}
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Roles activos
                 </p>
-                <p className="mt-2 font-semibold text-slate-200">
+                <p className="mt-2 font-semibold text-slate-800 dark:text-slate-200">
                   {selectedUser.roles.length >
                   0
                     ? selectedUser.roles
@@ -1848,7 +1848,7 @@ export default function UsersPage({
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Identificador
                 </p>
@@ -1858,7 +1858,7 @@ export default function UsersPage({
               </div>
             </div>
 
-            <div className="mt-6 border-t border-white/10 pt-5">
+            <div className="mt-6 border-t border-slate-200 pt-5 dark:border-white/10">
               <button
                 type="button"
                 onClick={() =>
@@ -1866,7 +1866,7 @@ export default function UsersPage({
                     selectedUser,
                   )
                 }
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-sky-400/15 bg-sky-500/[0.08] px-4 py-3 text-sm font-semibold text-sky-200 transition hover:bg-sky-500/15"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-700 transition hover:bg-sky-100 dark:border-sky-400/15 dark:bg-sky-500/[0.08] dark:text-sky-200 dark:hover:bg-sky-500/15"
               >
                 <Pencil size={17} />
                 Editar identidad
@@ -1889,13 +1889,13 @@ export default function UsersPage({
               aria-label="Cerrar edición"
             />
 
-            <div className="relative z-10 w-full max-w-lg rounded-[28px] border border-white/10 bg-[#172033] p-5 shadow-2xl shadow-black/60 sm:p-6">
+            <div className="relative z-10 w-full max-w-lg rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-sky-300">
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-sky-700 dark:text-sky-300">
                     Identidad
                   </p>
-                  <h2 className="mt-2 text-xl font-bold text-white">
+                  <h2 className="mt-2 text-xl font-bold text-slate-950 dark:text-white">
                     Editar usuario
                   </h2>
                   <p className="mt-1 text-sm leading-5 text-slate-500">
@@ -1909,7 +1909,7 @@ export default function UsersPage({
                     setShowEditModal(false);
                     setUserToEdit(null);
                   }}
-                  className="rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
+                  className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
                   aria-label="Cerrar"
                 >
                   <X size={20} />
@@ -1921,7 +1921,7 @@ export default function UsersPage({
                 className="mt-6 space-y-5"
               >
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-slate-300">
+                  <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
                     Nombre visible
                   </label>
                   <input
@@ -1931,13 +1931,13 @@ export default function UsersPage({
                         event.target.value,
                       )
                     }
-                    className="w-full rounded-xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/40 focus:ring-2 focus:ring-violet-500/10"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:bg-white focus:ring-2 focus:ring-violet-500/10 dark:border-white/10 dark:bg-black/10 dark:text-white dark:placeholder:text-slate-600 dark:focus:border-violet-400/40"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-semibold text-slate-300">
+                  <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
                     Correo electrónico
                   </label>
                   <input
@@ -1948,7 +1948,7 @@ export default function UsersPage({
                         event.target.value,
                       )
                     }
-                    className="w-full rounded-xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/40 focus:ring-2 focus:ring-violet-500/10"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:bg-white focus:ring-2 focus:ring-violet-500/10 dark:border-white/10 dark:bg-black/10 dark:text-white dark:placeholder:text-slate-600 dark:focus:border-violet-400/40"
                     required
                   />
                   <p className="mt-2 text-xs leading-5 text-slate-500">
@@ -1963,7 +1963,7 @@ export default function UsersPage({
                       setShowEditModal(false);
                       setUserToEdit(null);
                     }}
-                    className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-semibold text-slate-300 transition hover:bg-white/[0.08] hover:text-white"
+                    className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 dark:hover:bg-white/[0.08] dark:hover:text-white"
                   >
                     Cancelar
                   </button>
@@ -1971,7 +1971,7 @@ export default function UsersPage({
                   <button
                     type="submit"
                     disabled={saving}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-950/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55"
                   >
                     {saving ? (
                       <RefreshCw
@@ -2004,16 +2004,16 @@ export default function UsersPage({
             aria-label="Cerrar creación"
           />
 
-          <div className="relative z-10 w-full max-w-2xl overflow-hidden rounded-[28px] border border-white/10 bg-[#172033] shadow-2xl shadow-black/60">
-            <div className="border-b border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.18),transparent_42%),rgba(15,23,42,0.45)] p-5 sm:p-6">
+          <div className="relative z-10 w-full max-w-2xl overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-2xl shadow-slate-400/30 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
+            <div className="border-b border-slate-200 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.12),transparent_42%),rgba(248,250,252,0.9)] p-5 sm:p-6 dark:border-white/10 dark:bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.18),transparent_42%),rgba(15,23,42,0.45)]">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/15 bg-sky-500/10 px-3 py-1.5 text-xs font-bold text-sky-200">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1.5 text-xs font-bold text-sky-700 dark:border-sky-400/15 dark:bg-sky-500/10 dark:text-sky-200">
                     <UserPlus size={14} />
                     Nueva cuenta
                   </div>
 
-                  <h2 className="mt-4 text-2xl font-bold text-white">
+                  <h2 className="mt-4 text-2xl font-bold text-slate-950 dark:text-white">
                     Crear usuario
                   </h2>
 
@@ -2028,7 +2028,7 @@ export default function UsersPage({
                   onClick={() =>
                     setShowCreateModal(false)
                   }
-                  className="rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                  className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-40 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
                   aria-label="Cerrar"
                 >
                   <X size={20} />
@@ -2058,7 +2058,7 @@ export default function UsersPage({
                     maxLength={80}
                     autoComplete="given-name"
                     placeholder="Ej. Ana"
-                    className="w-full rounded-2xl border border-white/10 bg-[#101827] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/40 focus:ring-4 focus:ring-violet-500/10"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-white/10 dark:bg-[#101827] dark:text-white dark:placeholder:text-slate-600 dark:focus:border-violet-400/40"
                   />
                 </label>
 
@@ -2079,7 +2079,7 @@ export default function UsersPage({
                     maxLength={80}
                     autoComplete="family-name"
                     placeholder="Ej. Pérez"
-                    className="w-full rounded-2xl border border-white/10 bg-[#101827] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/40 focus:ring-4 focus:ring-violet-500/10"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-white/10 dark:bg-[#101827] dark:text-white dark:placeholder:text-slate-600 dark:focus:border-violet-400/40"
                   />
                 </label>
 
@@ -2100,7 +2100,7 @@ export default function UsersPage({
                     maxLength={30}
                     autoComplete="username"
                     placeholder="ana.perez"
-                    className="w-full rounded-2xl border border-white/10 bg-[#101827] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/40 focus:ring-4 focus:ring-violet-500/10"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-white/10 dark:bg-[#101827] dark:text-white dark:placeholder:text-slate-600 dark:focus:border-violet-400/40"
                   />
                   <span className="mt-2 block text-xs leading-5 text-slate-500">
                     3–30 caracteres. Letras, números, punto, guion y guion bajo.
@@ -2123,7 +2123,7 @@ export default function UsersPage({
                     maxLength={320}
                     autoComplete="email"
                     placeholder="usuario@correo.com"
-                    className="w-full rounded-2xl border border-white/10 bg-[#101827] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/40 focus:ring-4 focus:ring-violet-500/10"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-white/10 dark:bg-[#101827] dark:text-white dark:placeholder:text-slate-600 dark:focus:border-violet-400/40"
                   />
                 </label>
               </div>
@@ -2145,33 +2145,33 @@ export default function UsersPage({
                   maxLength={128}
                   autoComplete="new-password"
                   placeholder="Mínimo 12 caracteres"
-                  className="w-full rounded-2xl border border-white/10 bg-[#101827] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-violet-400/40 focus:ring-4 focus:ring-violet-500/10"
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:bg-white focus:ring-4 focus:ring-violet-500/10 dark:border-white/10 dark:bg-[#101827] dark:text-white dark:placeholder:text-slate-600 dark:focus:border-violet-400/40"
                 />
               </label>
 
-              <div className="mt-5 flex items-start gap-3 rounded-2xl border border-sky-400/15 bg-sky-500/[0.06] p-4">
+              <div className="mt-5 flex items-start gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 dark:border-sky-400/15 dark:bg-sky-500/[0.06]">
                 <Info
                   size={18}
                   className="mt-0.5 shrink-0 text-sky-300"
                 />
                 <div>
-                  <p className="font-semibold text-sky-100">
+                  <p className="font-semibold text-sky-900 dark:text-sky-100">
                     Rol de usuario normal
                   </p>
-                  <p className="mt-1 text-xs leading-5 text-sky-200/60">
+                  <p className="mt-1 text-xs leading-5 text-sky-700 dark:text-sky-200/60">
                     Este formulario no asigna privilegios administrativos. El registro utiliza el rol base configurado por el backend.
                   </p>
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-col-reverse gap-3 border-t border-white/10 pt-5 sm:flex-row sm:justify-end">
+              <div className="mt-6 flex flex-col-reverse gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:justify-end dark:border-white/10">
                 <button
                   type="button"
                   disabled={creating}
                   onClick={() =>
                     setShowCreateModal(false)
                   }
-                  className="rounded-xl bg-white/[0.06] px-5 py-3 text-sm font-semibold text-slate-200 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-45"
+                  className="rounded-xl bg-slate-100 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-200 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-45 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:bg-white/10"
                 >
                   Cancelar
                 </button>
@@ -2179,7 +2179,7 @@ export default function UsersPage({
                 <button
                   type="submit"
                   disabled={creating}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-950/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55"
                 >
                   {creating ? (
                     <RefreshCw

@@ -39,6 +39,14 @@ type UsuarioGuardado = {
   user?: UsuarioGuardado;
 };
 
+type CurrentProfileResponse = {
+  profile?: {
+    email?: string | null;
+    displayName?: string | null;
+    avatarUrl?: string | null;
+  };
+};
+
 type NotificationItem = {
   id: string;
   titulo: string;
@@ -287,8 +295,65 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
     : null;
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode);
-    localStorage.setItem("tema", darkMode ? "dark" : "light");
+    let cancelled = false;
+
+    async function cargarPerfilActual(): Promise<void> {
+      try {
+        const response =
+          await api.get<CurrentProfileResponse>("/profile");
+
+        const profile = response.data?.profile;
+
+        if (!profile || cancelled) {
+          return;
+        }
+
+        setUsuarioActual((actual) => ({
+          ...actual,
+          nombre:
+            profile.displayName?.trim() ||
+            actual.nombre ||
+            (role === "superadmin"
+              ? "Super Admin"
+              : "Administrador"),
+          correo:
+            profile.email?.trim() ||
+            actual.correo,
+          avatarUrl:
+            profile.avatarUrl ?? null,
+          foto_perfil:
+            profile.avatarUrl ?? null,
+        }));
+
+        setProfilePhotoError(false);
+      } catch (error) {
+        console.error(
+          "ERROR CARGANDO PERFIL EN TOPBAR:",
+          error,
+        );
+      }
+    }
+
+    void cargarPerfilActual();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [location.pathname, role]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    root.classList.toggle("dark", darkMode);
+    root.dataset.theme =
+      darkMode ? "dark" : "light";
+    root.style.colorScheme =
+      darkMode ? "dark" : "light";
+
+    localStorage.setItem(
+      "tema",
+      darkMode ? "dark" : "light",
+    );
   }, [darkMode]);
 
   useEffect(() => {
