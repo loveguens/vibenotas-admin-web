@@ -1,5 +1,5 @@
 import { AlertTriangle, CheckCircle2, X } from "lucide-react";
-import type { ConfirmAction } from "../features/types";
+import type { ConfirmAction } from "../types/chat.types";
 
 type ConfirmActionModalProps = {
   action: ConfirmAction | null;
@@ -13,9 +13,7 @@ type ToneConfig = {
   buttonClass: string;
 };
 
-function getToneConfig(
-  tone: "primary" | "warning" | "danger",
-): ToneConfig {
+function getToneConfig(tone: "primary" | "warning" | "danger"): ToneConfig {
   const configs: Record<"primary" | "warning" | "danger", ToneConfig> = {
     primary: {
       icon: CheckCircle2,
@@ -53,12 +51,12 @@ export function ConfirmActionModal({
   const { icon: Icon, iconClass, buttonClass } = getToneConfig(tone);
 
   function handleConfirm() {
-  if (busy || !action) {
-    return;
-  }
+    if (busy || !action) {
+      return;
+    }
 
-  void action.onConfirm();
-}
+    void action.onConfirm();
+  }
 
   return (
     <div

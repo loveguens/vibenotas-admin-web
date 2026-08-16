@@ -6,7 +6,7 @@ import {
   type FormEvent,
   type KeyboardEvent,
 } from "react";
-import type { Message } from "../features/types";
+import type { Message } from "../types/chat.types";
 
 type ChatComposerProps = {
   value: string;
@@ -92,7 +92,7 @@ export function ChatComposer({
   }
 
   async function handleSchedule(
-    event: FormEvent<HTMLFormElement>
+    event: FormEvent<HTMLFormElement>,
   ): Promise<void> {
     event.preventDefault();
 
@@ -285,9 +285,7 @@ export function ChatComposer({
               </div>
 
               {scheduleError && (
-                <p className="mt-3 text-sm text-red-300">
-                  {scheduleError}
-                </p>
+                <p className="mt-3 text-sm text-red-300">{scheduleError}</p>
               )}
 
               <div className="mt-6 grid grid-cols-2 gap-3">

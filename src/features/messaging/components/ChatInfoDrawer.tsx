@@ -10,10 +10,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-import type {
-  Conversation,
-  TemporaryDuration,
-} from "../features/types";
+import type { Conversation, TemporaryDuration } from "../types/chat.types";
 import { Avatar } from "./Avatar";
 
 type DrawerRowProps = {
@@ -78,12 +75,12 @@ function DrawerRow({
 
 function getTemporaryDurationLabel(duration: TemporaryDuration): string {
   const labels: Record<TemporaryDuration, string> = {
-  off: "Desactivados",
-  "24h": "24 horas",
-  "7d": "7 días",
-  "30d": "30 días",
-  custom: "Personalizado",
-};
+    off: "Desactivados",
+    "24h": "24 horas",
+    "7d": "7 días",
+    "30d": "30 días",
+    custom: "Personalizado",
+  };
 
   return labels[duration] ?? "Desactivados";
 }
@@ -180,9 +177,7 @@ export function ChatInfoDrawer({
           <DrawerRow
             icon={Bell}
             title={
-              muted
-                ? "Notificaciones silenciadas"
-                : "Notificaciones activas"
+              muted ? "Notificaciones silenciadas" : "Notificaciones activas"
             }
             text={
               muted
@@ -230,22 +225,22 @@ export function ChatInfoDrawer({
           />
 
           {isGroup ? (
-              <>
-                <DrawerRow
-                  icon={UserPlus}
-                  title="Agregar personas"
-                  text="Invita amigos a este grupo."
-                  onClick={onAddMembers}
-                />
+            <>
+              <DrawerRow
+                icon={UserPlus}
+                title="Agregar personas"
+                text="Invita amigos a este grupo."
+                onClick={onAddMembers}
+              />
 
-                <DrawerRow
-                  icon={Users}
-                  title="Información del grupo"
-                  text="Miembros, administradores, permisos y configuración."
-                  onClick={onOpenGroupInfo}
-                />
-              </>
-            ) : (
+              <DrawerRow
+                icon={Users}
+                title="Información del grupo"
+                text="Miembros, administradores, permisos y configuración."
+                onClick={onOpenGroupInfo}
+              />
+            </>
+          ) : (
             <DrawerRow
               icon={ShieldAlert}
               title="Privacidad y seguridad"

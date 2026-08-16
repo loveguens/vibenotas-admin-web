@@ -1,6 +1,6 @@
 import { Check, Clock3, X } from "lucide-react";
-import { TEMPORARY_OPTIONS } from "../features/constants";
-import type { TemporaryDuration } from "../features/types";
+import { TEMPORARY_OPTIONS } from "../constants";
+import type { TemporaryDuration } from "../types/chat.types";
 
 type TemporaryMessagesModalProps = {
   open: boolean;
@@ -91,10 +91,7 @@ export function TemporaryMessagesModal({
                 </span>
 
                 {selected && (
-                  <Check
-                    size={18}
-                    className="shrink-0 text-violet-300"
-                  />
+                  <Check size={18} className="shrink-0 text-violet-300" />
                 )}
               </button>
             );

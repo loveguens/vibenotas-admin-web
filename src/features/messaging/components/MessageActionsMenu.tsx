@@ -9,10 +9,7 @@ import {
   Trash2,
   TriangleAlert,
 } from "lucide-react";
-import type {
-  Message,
-  MessageMenuState,
-} from "../features/types";
+import type { Message, MessageMenuState } from "../types/chat.types";
 
 type MessageActionsMenuProps = {
   menu: MessageMenuState | null;
@@ -103,7 +100,10 @@ export function MessageActionsMenu({
       }}
       onClick={(event) => event.stopPropagation()}
     >
-      <MenuButton onClick={() => handleAction(() => onCopy(message))} icon={Copy}>
+      <MenuButton
+        onClick={() => handleAction(() => onCopy(message))}
+        icon={Copy}
+      >
         Copiar mensaje
       </MenuButton>
 

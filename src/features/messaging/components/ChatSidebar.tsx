@@ -5,7 +5,7 @@ import {
   MessageCircle,
   Users,
 } from "lucide-react";
-import type { ChatTab, CurrentUser } from "../features/types";
+import type { ChatTab, CurrentUser } from "../types/chat.types";
 import { Avatar } from "./Avatar";
 
 type ChatSidebarProps = {

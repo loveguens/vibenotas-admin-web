@@ -1,6 +1,6 @@
 import { Check, X } from "lucide-react";
-import { CHAT_THEMES } from "../features/constants";
-import type { ChatThemeId } from "../features/types";
+import { CHAT_THEMES } from "../constants";
+import type { ChatThemeId } from "../types/chat.types";
 
 type ChatThemeModalProps = {
   open: boolean;
@@ -40,9 +40,7 @@ export function ChatThemeModal({
               Personalización
             </p>
 
-            <h3 className="mt-1 text-xl font-bold text-white">
-              Tema del chat
-            </h3>
+            <h3 className="mt-1 text-xl font-bold text-white">Tema del chat</h3>
 
             <p className="mt-1 text-sm leading-6 text-slate-400">
               El tema se guarda solo para tu cuenta en este dispositivo.

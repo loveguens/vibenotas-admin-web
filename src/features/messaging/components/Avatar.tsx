@@ -1,5 +1,5 @@
 import { Users } from "lucide-react";
-import { getInitials } from "../features/utils";
+import { getInitials } from "../utils";
 
 type AvatarSize = "sm" | "md" | "lg" | "xl";
 

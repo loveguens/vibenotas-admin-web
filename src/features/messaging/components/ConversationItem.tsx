@@ -1,6 +1,6 @@
 import { BellOff, Pin } from "lucide-react";
-import type { Conversation } from "../features/types";
-import { formatChatDate } from "../features/utils";
+import type { Conversation } from "../types/chat.types";
+import { formatChatDate } from "../utils";
 import { Avatar } from "./Avatar";
 
 type ConversationItemProps = {
@@ -53,22 +53,19 @@ export function ConversationItem({
             <p className="truncate text-sm font-bold text-white">{title}</p>
 
             {conversation.isPinned && (
-                  <span title="Conversación fijada">
-                    <Pin
-                      size={12}
-                      className="shrink-0 fill-violet-300 text-violet-300"
-                    />
-                  </span>
-                )}
+              <span title="Conversación fijada">
+                <Pin
+                  size={12}
+                  className="shrink-0 fill-violet-300 text-violet-300"
+                />
+              </span>
+            )}
 
-                {conversation.isMuted && (
-                  <span title="Notificaciones silenciadas">
-                    <BellOff
-                      size={12}
-                      className="shrink-0 text-slate-500"
-                    />
-                  </span>
-                )}
+            {conversation.isMuted && (
+              <span title="Notificaciones silenciadas">
+                <BellOff size={12} className="shrink-0 text-slate-500" />
+              </span>
+            )}
           </div>
 
           <span
@@ -83,9 +80,7 @@ export function ConversationItem({
         <div className="mt-1 flex items-center gap-2">
           <p
             className={`min-w-0 flex-1 truncate text-xs ${
-              unreadCount > 0
-                ? "font-medium text-slate-200"
-                : "text-slate-400"
+              unreadCount > 0 ? "font-medium text-slate-200" : "text-slate-400"
             }`}
           >
             {previewText}

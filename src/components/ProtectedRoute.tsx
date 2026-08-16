@@ -7,6 +7,8 @@ import api, {
   refreshAccessToken,
 } from "../services/api";
 
+import { useChatPresenceHeartbeat } from "../features/messaging/hooks/useChatPresenceHeartbeat";
+
 type ProtectedRole = "admin" | "super_admin";
 
 type ProtectedRouteProps = {
@@ -163,6 +165,8 @@ export default function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
     status: "loading",
     user: null,
   });
+
+  useChatPresenceHeartbeat(session.status === "authenticated");
 
   useEffect(() => {
     let cancelled = false;
