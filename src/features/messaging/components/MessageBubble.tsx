@@ -38,6 +38,24 @@ export function MessageBubble({
 }: MessageBubbleProps) {
   const isDeleted = Number(message.eliminado ?? 0) === 1;
 
+  const isSystem = message.tipo === "sistema";
+
+  if (isSystem) {
+    return (
+      <div className="flex justify-center py-1">
+        <div className="max-w-[90%] rounded-full border border-slate-700/70 bg-slate-900/70 px-4 py-2 text-center shadow-sm">
+          <p className="text-xs leading-5 text-slate-400">
+            {message.contenido}
+          </p>
+
+          <p className="mt-0.5 text-[9px] text-slate-600">
+            {formatChatDate(message.creado_en)}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const hasAttachment = message.tipo === "archivo" || message.tipo === "imagen";
 
   function handleEditKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -184,10 +202,6 @@ export function MessageBubble({
                     <Volume2 size={18} />
                     <div className="h-1 w-36 rounded-full bg-white/35" />
                   </div>
-                ) : message.tipo === "sistema" ? (
-                  <p className="text-center text-xs text-slate-300">
-                    {message.contenido}
-                  </p>
                 ) : (
                   <p className="whitespace-pre-wrap break-words text-sm leading-6">
                     {message.reenviado && (

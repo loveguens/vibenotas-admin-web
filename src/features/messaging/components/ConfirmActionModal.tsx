@@ -71,7 +71,7 @@ export function ConfirmActionModal({
         onClick={onClose}
         disabled={busy}
         className="absolute inset-0 cursor-default"
-        aria-label="Cerrar confirmaciÃ³n"
+        aria-label="Cerrar confirmación"
       />
 
       <section className="relative w-full max-w-md rounded-[28px] border border-slate-700 bg-[#111827] p-6 shadow-2xl shadow-black/60">

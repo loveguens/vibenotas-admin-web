@@ -18,21 +18,46 @@ export const API_ROUTES = {
   searchUsers: (query: string) =>
     `/friends/search?q=${encodeURIComponent(query)}`,
 
-  // FUTURE PHP ROUTES: do not call these until their controllers exist.
-  createGroup: "/chat/groups",
+  createGroup: "/chat/conversations/group",
+
+  updateGroup: (conversationId: string) =>
+    `/chat/conversations/${conversationId}/group`,
+
+  deleteGroup: (conversationId: string) =>
+    `/chat/conversations/${conversationId}/group`,
+
+  groupMembers: (conversationId: string) =>
+    `/chat/conversations/${conversationId}/members`,
+
+  addGroupMember: (conversationId: string) =>
+    `/chat/conversations/${conversationId}/members`,
+
+  leaveGroup: (conversationId: string) =>
+    `/chat/conversations/${conversationId}/members/me`,
+
+  removeGroupMember: (conversationId: string, userId: string) =>
+    `/chat/conversations/${conversationId}/members/${userId}`,
+
+  updateGroupMemberRole: (conversationId: string, userId: string) =>
+    `/chat/conversations/${conversationId}/members/${userId}/role`,
+
+  transferGroupOwner: (conversationId: string) =>
+    `/chat/conversations/${conversationId}/owner`,
+
+  // Funcionalidades que todavía no existen en el backend actual.
   updateConversationSettings: (id: string) =>
     `/chat/conversations/${id}/settings`,
+
   updateConversationTheme: (id: string) => `/chat/conversations/${id}/theme`,
+
   temporaryMessages: (id: string) =>
     `/chat/conversations/${id}/temporary-messages`,
+
   archiveConversation: (id: string) => `/chat/conversations/${id}/archive`,
+
   removeConversationLocally: (id: string) => `/chat/conversations/${id}/local`,
+
   blockConversationUser: (id: string) => `/chat/conversations/${id}/block`,
-
-  addGroupMember: (groupId: string) => `/chat/groups/${groupId}/members`,
-
-  removeGroupMember: (groupId: string, userId: string) =>
-    `/chat/groups/${groupId}/members/${userId}`,
 } as const;
 
 export const CHAT_THEMES: Array<{

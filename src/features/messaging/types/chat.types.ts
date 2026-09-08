@@ -4,6 +4,26 @@ export type ConversationType = "privado" | "grupo" | "soporte";
 
 export type MessageType = "texto" | "imagen" | "archivo" | "audio" | "sistema";
 
+export type GroupRole = "owner" | "admin" | "member";
+
+export type GroupMember = {
+  id: string;
+
+  usuario: {
+    id: string;
+    nombre: string;
+    avatar_url: string | null;
+  };
+
+  rol: GroupRole;
+
+  es_propietario: boolean;
+  es_miembro_actual: boolean;
+
+  unido_en: string;
+  leido_hasta: string | null;
+};
+
 export type CurrentUser = {
   id: string;
   nombre: string;
@@ -25,6 +45,7 @@ export type Conversation = {
   id: string;
   tipo: ConversationType;
   titulo: string | null;
+  avatar_url?: string | null;
   creado_en: string;
   actualizado_en: string;
 

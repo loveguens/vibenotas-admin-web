@@ -42,6 +42,8 @@ import type {
   ConversationMenuState,
   Friend,
   FriendRequest,
+  GroupMember,
+  GroupRole,
   Message,
   MessageMenuState,
   SearchUser,
@@ -410,6 +412,90 @@ export default function ChatPage() {
           void loadConversations(true);
         });
 
+        socket.on("chat:message:edited", (event) => {
+          if (event.conversationId !== event.message.conversationId) {
+            return;
+          }
+
+          if (event.conversationId === selectedConversationIdRef.current) {
+            const editedMessage = adaptRealtimeMessage(
+              event.message,
+              currentUserId,
+            );
+
+            setMessages((old) =>
+              old.map((message) => {
+                if (message.id !== editedMessage.id) {
+                  return message;
+                }
+
+                /*
+                 * Conservamos estado puramente
+                 * local del frontend, por ejemplo
+                 * read receipt, favoritos,
+                 * reacciones y reply preview.
+                 */
+                return {
+                  ...message,
+
+                  contenido: editedMessage.contenido,
+
+                  tipo: editedMessage.tipo,
+
+                  emisor_id: editedMessage.emisor_id,
+
+                  emisor_nombre: editedMessage.emisor_nombre,
+
+                  emisor_avatar: editedMessage.emisor_avatar,
+
+                  client_message_id: editedMessage.client_message_id,
+
+                  es_mio: editedMessage.es_mio,
+
+                  editado: 1,
+
+                  eliminado: editedMessage.eliminado,
+
+                  actualizado_en: editedMessage.actualizado_en,
+                };
+              }),
+            );
+          }
+
+          /*
+           * Si se editó el último mensaje,
+           * actualizamos también el preview
+           * de la lista de conversaciones.
+           */
+          void loadConversations(true);
+        });
+
+        socket.on("chat:message:deleted", (event) => {
+          if (event.conversationId === selectedConversationIdRef.current) {
+            setMessages((old) =>
+              old.map((message) =>
+                message.id === event.messageId
+                  ? {
+                      ...message,
+
+                      eliminado: 1,
+
+                      actualizado_en: event.deletedAt,
+                    }
+                  : message,
+              ),
+            );
+          }
+
+          /*
+           * El backend decide cuál pasa a ser
+           * ultimo_mensaje después del borrado,
+           * así que recargamos solo la lista
+           * de conversaciones.
+           */
+          void loadConversations(true);
+        });
+
         socket.on("chat:typing:updated", (event) => {
           if (
             event.userId === currentUserId ||
@@ -517,6 +603,96 @@ export default function ChatPage() {
             }),
           );
         });
+
+        socket.on("chat:group:updated", (event) => {
+          setConversations((old) =>
+            old.map((conversation) =>
+              conversation.id === event.conversationId
+                ? {
+                    ...conversation,
+
+                    titulo: event.title ?? conversation.titulo,
+
+                    avatar_url: event.avatarUrl,
+
+                    actualizado_en: event.changedAt,
+                  }
+                : conversation,
+            ),
+          );
+
+          if (event.conversationId === selectedConversationIdRef.current) {
+            void loadGroupDetail(event.conversationId);
+          }
+
+          void loadConversations(true);
+        });
+
+        socket.on("chat:group:deleted", (event) => {
+          setConversations((old) =>
+            old.filter(
+              (conversation) => conversation.id !== event.conversationId,
+            ),
+          );
+
+          if (event.conversationId !== selectedConversationIdRef.current) {
+            return;
+          }
+
+          setMessages([]);
+          setGroupMembers([]);
+          setMyGroupRole(null);
+
+          setIsGroupInfoOpen(false);
+          setIsChatInfoOpen(false);
+
+          setSelectedConversationId(null);
+
+          selectedConversationIdRef.current = null;
+
+          navigate(chatBasePath);
+        });
+
+        socket.on("chat:group:member:added", (event) => {
+          refreshRealtimeGroup(event.conversationId);
+        });
+
+        socket.on("chat:group:member:removed", (event) => {
+          if (event.userId === currentUserId) {
+            setConversations((old) =>
+              old.filter(
+                (conversation) => conversation.id !== event.conversationId,
+              ),
+            );
+
+            if (selectedConversationIdRef.current === event.conversationId) {
+              setMessages([]);
+              setGroupMembers([]);
+              setMyGroupRole(null);
+
+              setSelectedConversationId(null);
+
+              selectedConversationIdRef.current = null;
+
+              setIsGroupInfoOpen(false);
+
+              navigate(chatBasePath);
+            }
+
+            return;
+          }
+
+          refreshRealtimeGroup(event.conversationId);
+        });
+
+        socket.on("chat:group:member:role-changed", (event) => {
+          refreshRealtimeGroup(event.conversationId);
+        });
+
+        socket.on("chat:group:owner:transferred", (event) => {
+          refreshRealtimeGroup(event.conversationId);
+        });
+
         socket.on("connect_error", (connectionError) => {
           if (disposed) {
             return;
@@ -658,6 +834,14 @@ export default function ChatPage() {
       });
     });
   }, [messages, nearEnd]);
+
+  function refreshRealtimeGroup(conversationId: string): void {
+    void loadConversations(true);
+
+    if (conversationId === selectedConversationIdRef.current) {
+      void loadGroupDetail(conversationId);
+    }
+  }
 
   function closeMenus(): void {
     setMessageMenu(null);
@@ -1135,20 +1319,13 @@ export default function ChatPage() {
     }
   }
 
-  const [groupMembers, setGroupMembers] = useState<
-    {
-      usuario_id: string;
-      rol: "admin" | "miembro";
-      nombre: string;
-      correo: string;
-      foto_perfil?: string | null;
-    }[]
-  >([]);
+  const [groupMembers, setGroupMembers] = useState<GroupMember[]>([]);
 
   const [loadingGroupMembers, setLoadingGroupMembers] = useState(false);
-  const [myGroupRole, setMyGroupRole] = useState<"admin" | "miembro">(
-    "miembro",
-  );
+
+  const [myGroupRole, setMyGroupRole] = useState<GroupRole | null>(null);
+
+  const [savingGroupMetadata, setSavingGroupMetadata] = useState(false);
 
   async function searchPeople(value: string): Promise<void> {
     setPeopleSearch(value);
@@ -1222,16 +1399,40 @@ export default function ChatPage() {
     }
   }
 
-  function createGroup(name: string, memberIds: string[]): void {
+  async function createGroup(name: string, memberIds: string[]): Promise<void> {
+    const title = name.trim();
+
+    if (!title || memberIds.length === 0) {
+      return;
+    }
+
     setCreatingGroup(true);
+    setError("");
 
-    futureAction(
-      "Grupo listo para conectar",
-      `El formulario validó “${name}” con ${memberIds.length} miembro(s). Crea POST /chat/groups en PHP y luego sustituye esta acción visual por api.post(API_ROUTES.createGroup, { nombre: name, miembros: memberIds }).`,
-    );
+    try {
+      const response = await api.post(API_ROUTES.createGroup, {
+        title,
+        memberUserIds: memberIds,
+      });
 
-    setCreatingGroup(false);
-    setIsCreateGroupOpen(false);
+      const groupId = response.data?.data?.conversacion?.id;
+
+      if (typeof groupId !== "string" || !groupId) {
+        throw new Error("El servidor no devolvió el ID del grupo.");
+      }
+
+      setIsCreateGroupOpen(false);
+
+      await loadConversations(true);
+
+      selectConversation(groupId);
+
+      setToast("Grupo creado correctamente.");
+    } catch (requestError) {
+      setError(getErrorMessage(requestError, "No se pudo crear el grupo."));
+    } finally {
+      setCreatingGroup(false);
+    }
   }
 
   async function addMembersToGroup(memberIds: string[]): Promise<void> {
@@ -1239,65 +1440,221 @@ export default function ChatPage() {
       return;
     }
 
+    const conversationId = selectedConversation.id;
+
     setAddingMembers(true);
     setError("");
 
     try {
-      for (const usuarioId of memberIds) {
+      for (const userId of memberIds) {
         const response = await api.post(
-          API_ROUTES.addGroupMember(selectedConversation.id),
+          API_ROUTES.addGroupMember(conversationId),
           {
-            usuario_id: usuarioId,
+            userId,
           },
         );
 
         if (!response.data?.success) {
           throw new Error(
-            response.data?.message ||
+            response.data?.message ??
               "No se pudo agregar una persona al grupo.",
           );
         }
       }
+
+      await Promise.all([
+        loadGroupDetail(conversationId),
+        loadConversations(true),
+      ]);
+
+      setIsAddMembersOpen(false);
 
       setToast(
         memberIds.length === 1
           ? "Persona agregada correctamente al grupo."
           : `${memberIds.length} personas agregadas correctamente al grupo.`,
       );
-
-      setIsAddMembersOpen(false);
-    } catch (error) {
+    } catch (requestError) {
       setError(
-        getErrorMessage(error, "No se pudieron agregar las personas al grupo."),
+        getErrorMessage(
+          requestError,
+          "No se pudieron agregar las personas al grupo.",
+        ),
       );
     } finally {
       setAddingMembers(false);
     }
   }
 
+  function askDeleteSelectedGroup(): void {
+    if (!selectedConversation || myGroupRole !== "owner") {
+      return;
+    }
+
+    const conversationId = selectedConversation.id;
+
+    const groupName = selectedConversation.titulo?.trim() || "este grupo";
+
+    setConfirmAction({
+      title: "Eliminar grupo",
+      description:
+        `Se eliminará “${groupName}” para todos los miembros. ` +
+        "Esta acción no se puede deshacer.",
+
+      confirmLabel: "Eliminar grupo",
+      tone: "danger",
+
+      onConfirm: async () => {
+        await api.delete(API_ROUTES.deleteGroup(conversationId));
+
+        setConversations((old) =>
+          old.filter((conversation) => conversation.id !== conversationId),
+        );
+
+        setMessages([]);
+        setGroupMembers([]);
+        setMyGroupRole(null);
+
+        setIsGroupInfoOpen(false);
+        setIsChatInfoOpen(false);
+
+        setSelectedConversationId(null);
+        selectedConversationIdRef.current = null;
+
+        navigate(chatBasePath);
+
+        setToast("Grupo eliminado correctamente.");
+      },
+    });
+  }
+
   async function loadGroupDetail(groupId: string): Promise<void> {
     setLoadingGroupMembers(true);
 
     try {
-      const response = await api.get(`/chat/groups/${groupId}`);
+      const response = await api.get(API_ROUTES.groupMembers(groupId));
 
       if (!response.data?.success) {
         throw new Error(
-          response.data?.message ||
+          response.data?.message ??
             "No se pudo cargar la información del grupo.",
         );
       }
 
-      setGroupMembers(response.data.data?.miembros ?? []);
+      const data = response.data.data;
+
+      const members: GroupMember[] = Array.isArray(data?.miembros)
+        ? data.miembros
+        : [];
+
+      const role: unknown = data?.mi_rol;
+
+      setGroupMembers(members);
+
       setMyGroupRole(
-        response.data.data?.mi_rol === "admin" ? "admin" : "miembro",
+        role === "owner" || role === "admin" || role === "member" ? role : null,
       );
-    } catch (error) {
+    } catch (requestError) {
+      setGroupMembers([]);
+      setMyGroupRole(null);
+
       setError(
-        getErrorMessage(error, "No se pudo cargar la información del grupo."),
+        getErrorMessage(
+          requestError,
+          "No se pudo cargar la información del grupo.",
+        ),
       );
     } finally {
       setLoadingGroupMembers(false);
+    }
+  }
+
+  async function updateSelectedGroupMetadata(changes: {
+    title?: string;
+    avatarUrl?: string | null;
+  }): Promise<void> {
+    if (!selectedConversation) {
+      return;
+    }
+
+    const conversationId = selectedConversation.id;
+
+    const payload: {
+      title?: string;
+      avatarUrl?: string | null;
+    } = {};
+
+    if (changes.title !== undefined) {
+      const title = changes.title.trim();
+
+      if (!title) {
+        setError("El nombre del grupo no puede estar vacío.");
+
+        return;
+      }
+
+      payload.title = title;
+    }
+
+    if (changes.avatarUrl !== undefined) {
+      payload.avatarUrl =
+        changes.avatarUrl === null ? null : changes.avatarUrl.trim();
+    }
+
+    if (payload.title === undefined && payload.avatarUrl === undefined) {
+      return;
+    }
+
+    setSavingGroupMetadata(true);
+    setError("");
+
+    try {
+      const response = await api.put(
+        API_ROUTES.updateGroup(conversationId),
+        payload,
+      );
+
+      if (!response.data?.success) {
+        throw new Error(
+          response.data?.message ?? "No se pudo actualizar el grupo.",
+        );
+      }
+
+      const updated = response.data.data?.conversacion;
+
+      if (updated) {
+        setConversations((old) =>
+          old.map((conversation) =>
+            conversation.id === conversationId
+              ? {
+                  ...conversation,
+
+                  titulo: updated.titulo ?? conversation.titulo,
+
+                  avatar_url: updated.avatar_url ?? null,
+
+                  actualizado_en:
+                    response.data.data?.modificado_en ??
+                    conversation.actualizado_en,
+                }
+              : conversation,
+          ),
+        );
+      }
+
+      await loadConversations(true);
+
+      setToast(
+        response.data?.data?.modificado === false
+          ? "El grupo ya estaba actualizado."
+          : "Grupo actualizado correctamente.",
+      );
+    } catch (requestError) {
+      setError(
+        getErrorMessage(requestError, "No se pudo actualizar el grupo."),
+      );
+    } finally {
+      setSavingGroupMetadata(false);
     }
   }
 
@@ -1306,25 +1663,122 @@ export default function ChatPage() {
       return;
     }
 
+    const conversationId = selectedConversation.id;
+
     setError("");
 
     try {
-      const response = await api.delete(
-        API_ROUTES.removeGroupMember(selectedConversation.id, userId),
-      );
+      await api.delete(API_ROUTES.removeGroupMember(conversationId, userId));
 
-      if (!response.data?.success) {
-        throw new Error(
-          response.data?.message || "No se pudo quitar a la persona del grupo.",
-        );
-      }
+      await Promise.all([
+        loadGroupDetail(conversationId),
+        loadConversations(true),
+      ]);
 
       setToast("Persona eliminada correctamente del grupo.");
-      await loadGroupDetail(selectedConversation.id);
-    } catch (error) {
+    } catch (requestError) {
       setError(
-        getErrorMessage(error, "No se pudo quitar a la persona del grupo."),
+        getErrorMessage(
+          requestError,
+          "No se pudo quitar a la persona del grupo.",
+        ),
       );
+    }
+  }
+
+  async function changeGroupMemberRole(
+    userId: string,
+    role: "ADMIN" | "MEMBER",
+  ): Promise<void> {
+    if (!selectedConversation) {
+      return;
+    }
+
+    const conversationId = selectedConversation.id;
+
+    setError("");
+
+    try {
+      await api.put(API_ROUTES.updateGroupMemberRole(conversationId, userId), {
+        role,
+      });
+
+      await Promise.all([
+        loadGroupDetail(conversationId),
+        loadConversations(true),
+      ]);
+
+      setToast(
+        role === "ADMIN"
+          ? "Miembro promovido a administrador."
+          : "Administrador cambiado a miembro.",
+      );
+    } catch (requestError) {
+      setError(
+        getErrorMessage(requestError, "No se pudo cambiar el rol del miembro."),
+      );
+    }
+  }
+
+  async function transferGroupOwnership(userId: string): Promise<void> {
+    if (!selectedConversation) {
+      return;
+    }
+
+    const conversationId = selectedConversation.id;
+
+    setError("");
+
+    try {
+      await api.put(API_ROUTES.transferGroupOwner(conversationId), {
+        userId,
+      });
+
+      await Promise.all([
+        loadGroupDetail(conversationId),
+        loadConversations(true),
+      ]);
+
+      setToast("Propiedad del grupo transferida correctamente.");
+    } catch (requestError) {
+      setError(
+        getErrorMessage(
+          requestError,
+          "No se pudo transferir la propiedad del grupo.",
+        ),
+      );
+    }
+  }
+
+  async function leaveSelectedGroup(): Promise<void> {
+    if (!selectedConversation) {
+      return;
+    }
+
+    const conversationId = selectedConversation.id;
+
+    setError("");
+
+    try {
+      await api.delete(API_ROUTES.leaveGroup(conversationId));
+
+      setIsGroupInfoOpen(false);
+      setIsChatInfoOpen(false);
+
+      setGroupMembers([]);
+      setMyGroupRole(null);
+      setMessages([]);
+
+      setSelectedConversationId(null);
+      selectedConversationIdRef.current = null;
+
+      await loadConversations(true);
+
+      navigate(chatBasePath);
+
+      setToast("Saliste del grupo.");
+    } catch (requestError) {
+      setError(getErrorMessage(requestError, "No se pudo salir del grupo."));
     }
   }
 
@@ -1646,12 +2100,9 @@ export default function ChatPage() {
             "Crea DELETE /chat/conversations/{id}/local para ocultarla sin borrar mensajes del otro usuario.",
           )
         }
-        onLeaveGroup={() =>
-          futureAction(
-            "Salir del grupo",
-            "Crea POST /chat/groups/{id}/leave y actualiza la lista de conversaciones.",
-          )
-        }
+        onLeaveGroup={() => {
+          void leaveSelectedGroup();
+        }}
       />
 
       <ChatInfoDrawer
@@ -1677,13 +2128,34 @@ export default function ChatPage() {
         conversation={selectedConversation}
         members={groupMembers}
         loading={loadingGroupMembers}
-        isAdmin={myGroupRole === "admin"}
+        myRole={myGroupRole}
         onClose={() => setIsGroupInfoOpen(false)}
         onAddMember={() => {
           setIsGroupInfoOpen(false);
           setIsAddMembersOpen(true);
         }}
-        onRemoveMember={removeMemberFromGroup}
+        onRemoveMember={(userId) => {
+          void removeMemberFromGroup(userId);
+        }}
+        onPromoteMember={(userId) => {
+          void changeGroupMemberRole(userId, "ADMIN");
+        }}
+        onDemoteMember={(userId) => {
+          void changeGroupMemberRole(userId, "MEMBER");
+        }}
+        onTransferOwnership={(userId) => {
+          void transferGroupOwnership(userId);
+        }}
+        onLeaveGroup={() => {
+          void leaveSelectedGroup();
+        }}
+        savingMetadata={savingGroupMetadata}
+
+        onUpdateMetadata={(changes) => {
+          void updateSelectedGroupMetadata(changes);
+        }}
+
+        onDeleteGroup={askDeleteSelectedGroup}
       />
 
       <CreateGroupModal
@@ -1697,7 +2169,7 @@ export default function ChatPage() {
       <AddGroupMembersModal
         open={isAddMembersOpen}
         friends={friends}
-        existingMemberIds={[]}
+        existingMemberIds={groupMembers.map((member) => member.usuario.id)}
         saving={addingMembers}
         onClose={() => setIsAddMembersOpen(false)}
         onAdd={addMembersToGroup}

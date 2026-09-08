@@ -81,7 +81,9 @@ export function ChatHeader({
       >
         <Avatar
           name={title}
-          src={isGroup ? null : conversation.otro_usuario_avatar}
+          src={
+            isGroup ? conversation.avatar_url : conversation.otro_usuario_avatar
+          }
           group={isGroup}
           online={!isGroup && presenceOnline}
         />
