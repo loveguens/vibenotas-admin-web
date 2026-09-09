@@ -140,16 +140,16 @@ export function ChatComposer({
     <>
       <form
         onSubmit={onSubmit}
-        className="border-t border-slate-800 bg-slate-950/85 p-3 backdrop-blur-xl sm:p-4 sm:px-6"
+        className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/85 p-3 backdrop-blur-xl sm:p-4 sm:px-6"
       >
         {replyTo && (
-          <div className="mb-3 flex items-center gap-3 rounded-2xl border border-slate-800 border-l-2 border-l-violet-400 bg-slate-900/80 px-3 py-2.5 shadow-lg shadow-black/10">
+          <div className="mb-3 flex items-center gap-3 rounded-2xl border border-slate-200 dark:border-slate-800 border-l-2 border-l-violet-400 bg-white/95 dark:bg-slate-900/80 px-3 py-2.5 shadow-lg shadow-black/10">
             <div className="min-w-0 flex-1">
               <p className="text-xs font-bold text-violet-300">
                 Respondiendo a {replyTo.emisor_nombre}
               </p>
 
-              <p className="mt-0.5 truncate text-xs text-slate-400">
+              <p className="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">
                 {replyTo.contenido}
               </p>
             </div>
@@ -157,7 +157,7 @@ export function ChatComposer({
             <button
               type="button"
               onClick={onCancelReply}
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-800 hover:text-white"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white"
               title="Cancelar respuesta"
               aria-label="Cancelar respuesta"
             >
@@ -169,7 +169,7 @@ export function ChatComposer({
         <div className="flex items-end gap-2 sm:gap-3">
           <button
             type="button"
-            className="mb-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-800 hover:text-violet-300"
+            className="mb-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-slate-500 dark:text-slate-400 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-violet-300"
             title="Adjuntar archivo próximamente"
             aria-label="Adjuntar archivo"
           >
@@ -180,7 +180,7 @@ export function ChatComposer({
             type="button"
             disabled={sending}
             onClick={openScheduleModal}
-            className="mb-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-800 hover:text-violet-300 disabled:cursor-not-allowed disabled:opacity-50"
+            className="mb-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-slate-500 dark:text-slate-400 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-violet-300 disabled:cursor-not-allowed disabled:opacity-50"
             title="Programar mensaje"
             aria-label="Programar mensaje"
           >
@@ -197,7 +197,7 @@ export function ChatComposer({
               onChange={(event) => onChange(event.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Escribe un mensaje..."
-              className="max-h-32 min-h-11 w-full resize-none rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 pr-12 text-sm leading-5 text-white outline-none transition placeholder:text-slate-500 focus:border-violet-400 focus:ring-2 focus:ring-violet-500/10 disabled:cursor-not-allowed disabled:opacity-60"
+              className="max-h-32 min-h-11 w-full resize-none rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 pr-12 text-sm leading-5 text-slate-950 dark:text-white outline-none transition placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-violet-400 focus:ring-2 focus:ring-violet-500/10 disabled:cursor-not-allowed disabled:opacity-60"
             />
 
             <span className="pointer-events-none absolute bottom-2.5 right-3 text-[10px] text-slate-600">
@@ -222,7 +222,7 @@ export function ChatComposer({
       </form>
 
       {isScheduleOpen && (
-        <div className="fixed inset-0 z-[10120] flex items-end bg-slate-950/75 p-0 backdrop-blur-sm sm:items-center sm:justify-center sm:p-6">
+        <div className="fixed inset-0 z-[10120] flex items-end bg-slate-950/35 dark:bg-slate-950/75 p-0 backdrop-blur-sm sm:items-center sm:justify-center sm:p-6">
           <button
             type="button"
             onClick={closeScheduleModal}
@@ -230,18 +230,18 @@ export function ChatComposer({
             aria-label="Cerrar programación"
           />
 
-          <section className="relative w-full rounded-t-[30px] border border-slate-700 bg-[#111827] p-6 shadow-2xl sm:max-w-md sm:rounded-[30px]">
+          <section className="relative w-full rounded-t-[30px] border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#111827] p-6 shadow-2xl sm:max-w-md sm:rounded-[30px]">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-500/15 text-violet-300">
                   <CalendarClock size={21} />
                 </div>
 
-                <h2 className="mt-4 text-xl font-bold text-white">
+                <h2 className="mt-4 text-xl font-bold text-slate-950 dark:text-white">
                   Programar mensaje
                 </h2>
 
-                <p className="mt-1 text-sm leading-6 text-slate-400">
+                <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
                   El mensaje se enviará automáticamente en la fecha elegida.
                 </p>
               </div>
@@ -250,7 +250,7 @@ export function ChatComposer({
                 type="button"
                 onClick={closeScheduleModal}
                 disabled={scheduling}
-                className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-800 hover:text-white disabled:opacity-50"
+                className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-500 dark:text-slate-400 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white disabled:opacity-50"
                 aria-label="Cerrar"
               >
                 <X size={19} />
@@ -258,7 +258,7 @@ export function ChatComposer({
             </div>
 
             <form onSubmit={handleSchedule} className="mt-6">
-              <label className="block text-sm font-semibold text-slate-200">
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200">
                 Fecha y hora de envío
               </label>
 
@@ -271,15 +271,15 @@ export function ChatComposer({
                   setScheduledFor(event.target.value);
                   setScheduleError("");
                 }}
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white outline-none transition focus:border-violet-400 focus:ring-2 focus:ring-violet-500/10 disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-2 w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm text-slate-950 dark:text-white outline-none transition focus:border-violet-400 focus:ring-2 focus:ring-violet-500/10 disabled:cursor-not-allowed disabled:opacity-60"
               />
 
-              <div className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/70 p-3">
+              <div className="mt-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/70 p-3">
                 <p className="text-xs font-bold text-violet-300">
                   Mensaje a programar
                 </p>
 
-                <p className="mt-1 line-clamp-3 text-sm text-slate-300">
+                <p className="mt-1 line-clamp-3 text-sm text-slate-700 dark:text-slate-300">
                   {value || "Aún no escribiste un mensaje."}
                 </p>
               </div>
@@ -293,7 +293,7 @@ export function ChatComposer({
                   type="button"
                   onClick={closeScheduleModal}
                   disabled={scheduling}
-                  className="rounded-xl border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-xl border border-slate-300 dark:border-slate-700 px-4 py-3 text-sm font-bold text-slate-700 dark:text-slate-300 transition hover:bg-slate-100 dark:hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Cancelar
                 </button>

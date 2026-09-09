@@ -68,11 +68,11 @@ export function ChatSidebar({
   return (
     <>
       {/* Navegación de escritorio */}
-      <aside className="hidden w-[82px] shrink-0 flex-col items-center border-r border-slate-800 bg-slate-950/55 py-5 lg:flex">
+      <aside className="hidden w-[82px] shrink-0 flex-col items-center border-r border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-slate-950/55 py-5 lg:flex">
         <button
           type="button"
           onClick={onBack}
-          className="mb-7 flex h-11 w-11 items-center justify-center rounded-2xl text-slate-400 transition hover:bg-slate-800 hover:text-white focus-visible:ring-2 focus-visible:ring-violet-400/50"
+          className="mb-7 flex h-11 w-11 items-center justify-center rounded-2xl text-slate-500 dark:text-slate-400 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white focus-visible:ring-2 focus-visible:ring-violet-400/50"
           aria-label="Volver"
           title="Volver"
         >
@@ -92,7 +92,7 @@ export function ChatSidebar({
               className={`relative mb-3 flex h-11 w-11 items-center justify-center rounded-2xl transition focus-visible:ring-2 focus-visible:ring-violet-400/50 ${
                 isActive
                   ? "bg-violet-500 text-white shadow-lg shadow-violet-500/25"
-                  : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                  : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white"
               }`}
               title={label}
               aria-label={label}
@@ -124,7 +124,7 @@ export function ChatSidebar({
       </aside>
 
       {/* Navegación móvil */}
-      <nav className="flex border-b border-slate-800 bg-slate-950/50 p-2 lg:hidden">
+      <nav className="flex border-b border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-slate-950/50 p-2 lg:hidden">
         {items.slice(0, 3).map(({ id, label, icon: Icon }) => {
           const badge = getBadgeValue(id, unreadChats, requestCount);
           const isActive = activeTab === id;
@@ -137,7 +137,7 @@ export function ChatSidebar({
               className={`relative flex flex-1 items-center justify-center gap-1 rounded-xl px-2 py-2.5 text-[11px] font-bold transition ${
                 isActive
                   ? "bg-violet-500 text-white"
-                  : "text-slate-400 hover:bg-slate-800/70 hover:text-white"
+                  : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/70 hover:text-slate-950 dark:hover:text-white"
               }`}
             >
               <Icon size={16} />

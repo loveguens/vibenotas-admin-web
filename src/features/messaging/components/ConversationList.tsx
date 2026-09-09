@@ -19,11 +19,11 @@ type ConversationListProps = {
 function ConversationSkeleton() {
   return (
     <div className="flex animate-pulse gap-3 rounded-2xl p-3">
-      <div className="h-11 w-11 shrink-0 rounded-2xl bg-slate-800" />
+      <div className="h-11 w-11 shrink-0 rounded-2xl bg-slate-100 dark:bg-slate-800" />
 
       <div className="min-w-0 flex-1 space-y-2">
-        <div className="h-3 w-2/3 rounded bg-slate-800" />
-        <div className="h-2 w-full rounded bg-slate-800" />
+        <div className="h-3 w-2/3 rounded bg-slate-100 dark:bg-slate-800" />
+        <div className="h-2 w-full rounded bg-slate-100 dark:bg-slate-800" />
       </div>
     </div>
   );
@@ -77,7 +77,7 @@ export function ConversationList({
           <MessageCircle size={25} />
         </div>
 
-        <p className="font-semibold text-slate-200">
+        <p className="font-semibold text-slate-700 dark:text-slate-200">
           {search.trim()
             ? "No encontramos conversaciones"
             : "Aún no tienes chats"}
@@ -105,23 +105,25 @@ export function ConversationList({
     <aside
       className={`${
         selectedConversationId ? "hidden lg:flex" : "flex"
-      } w-full shrink-0 flex-col border-r border-slate-800 bg-slate-950/30 sm:max-w-[390px]`}
+      } w-full shrink-0 flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/30 sm:max-w-[390px]`}
     >
-      <div className="border-b border-slate-800 px-5 pb-4 pt-5">
+      <div className="border-b border-slate-200 dark:border-slate-800 px-5 pb-4 pt-5">
         <div className="mb-5 flex items-center justify-between">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-violet-400">
               VibeNotas
             </p>
 
-            <h1 className="mt-1 text-2xl font-bold text-white">Mensajes</h1>
+            <h1 className="mt-1 text-2xl font-bold text-slate-950 dark:text-white">
+              Mensajes
+            </h1>
           </div>
 
           <div className="flex gap-2">
             <button
               type="button"
               onClick={onCreateGroup}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-700 bg-slate-900 text-slate-300 transition hover:border-sky-400/50 hover:bg-sky-500/10 hover:text-sky-300"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 transition hover:border-sky-400/50 hover:bg-sky-500/10 hover:text-sky-300"
               title="Crear grupo"
             >
               <Users size={18} />
@@ -139,14 +141,14 @@ export function ConversationList({
         </div>
 
         {/* Tabs superiores */}
-        <div className="mb-4 grid grid-cols-3 gap-2 rounded-2xl border border-slate-800 bg-slate-950/70 p-1.5">
+        <div className="mb-4 grid grid-cols-3 gap-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/70 p-1.5">
           <button
             type="button"
             onClick={() => onTabChange("chats")}
             className={`flex items-center justify-center gap-1.5 rounded-xl px-2 py-2 text-xs font-bold transition ${
               activeTab === "chats"
                 ? "bg-violet-500 text-white shadow-md shadow-violet-500/25"
-                : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white"
             }`}
           >
             <MessageCircle size={15} />
@@ -159,7 +161,7 @@ export function ConversationList({
             className={`flex items-center justify-center gap-1.5 rounded-xl px-2 py-2 text-xs font-bold transition ${
               activeTab === "amigos"
                 ? "bg-violet-500 text-white shadow-md shadow-violet-500/25"
-                : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white"
             }`}
           >
             <Users size={15} />
@@ -172,7 +174,7 @@ export function ConversationList({
             className={`relative flex items-center justify-center gap-1.5 rounded-xl px-2 py-2 text-xs font-bold transition ${
               activeTab === "solicitudes"
                 ? "bg-violet-500 text-white shadow-md shadow-violet-500/25"
-                : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white"
             }`}
           >
             <Bell size={15} />
@@ -195,7 +197,7 @@ export function ConversationList({
             value={search}
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder="Buscar conversación..."
-            className="w-full rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 pl-10 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-violet-400"
+            className="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 pl-10 text-sm text-slate-950 dark:text-white outline-none transition placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-violet-400"
           />
         </div>
       </div>
@@ -213,7 +215,7 @@ export function ConversationList({
               <MessageCircle size={25} />
             </div>
 
-            <p className="font-semibold text-slate-200">
+            <p className="font-semibold text-slate-700 dark:text-slate-200">
               {search.trim()
                 ? "No encontramos conversaciones"
                 : "Aún no tienes chats"}

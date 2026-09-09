@@ -79,7 +79,8 @@ function getStatusClass(status: ScheduledMessageStatus): string {
   const classes: Record<ScheduledMessageStatus, string> = {
     pendiente: "border-amber-400/20 bg-amber-400/10 text-amber-200",
     enviado: "border-emerald-400/20 bg-emerald-400/10 text-emerald-200",
-    cancelado: "border-slate-500/20 bg-slate-500/10 text-slate-300",
+    cancelado:
+      "border-slate-500/20 bg-slate-500/10 text-slate-700 dark:text-slate-300",
     fallido: "border-red-400/20 bg-red-400/10 text-red-200",
   };
 
@@ -269,7 +270,7 @@ export function ScheduledMessagesModal({
   }
 
   return (
-    <div className="fixed inset-0 z-[10130] flex items-end bg-slate-950/75 p-0 backdrop-blur-sm sm:items-center sm:justify-center sm:p-6">
+    <div className="fixed inset-0 z-[10130] flex items-end bg-slate-950/35 dark:bg-slate-950/75 p-0 backdrop-blur-sm sm:items-center sm:justify-center sm:p-6">
       <button
         type="button"
         className="absolute inset-0 cursor-default"
@@ -277,18 +278,18 @@ export function ScheduledMessagesModal({
         aria-label="Cerrar mensajes programados"
       />
 
-      <section className="relative flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[30px] border border-slate-700 bg-[#111827] shadow-2xl sm:rounded-[30px]">
-        <header className="flex items-start justify-between gap-4 border-b border-slate-800 p-5 sm:p-6">
+      <section className="relative flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[30px] border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#111827] shadow-2xl sm:rounded-[30px]">
+        <header className="flex items-start justify-between gap-4 border-b border-slate-200 dark:border-slate-800 p-5 sm:p-6">
           <div>
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-500/15 text-violet-300">
               <CalendarClock size={21} />
             </div>
 
-            <h2 className="mt-3 text-xl font-bold text-white">
+            <h2 className="mt-3 text-xl font-bold text-slate-950 dark:text-white">
               Mensajes programados
             </h2>
 
-            <p className="mt-1 text-sm text-slate-400">
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               Administra los mensajes pendientes de esta conversación.
             </p>
           </div>
@@ -298,7 +299,7 @@ export function ScheduledMessagesModal({
               type="button"
               onClick={() => void loadScheduledMessages()}
               disabled={loading || busyId !== null}
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-800 hover:text-violet-300 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-500 dark:text-slate-400 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-violet-300 disabled:cursor-not-allowed disabled:opacity-50"
               title="Actualizar"
               aria-label="Actualizar mensajes programados"
             >
@@ -309,7 +310,7 @@ export function ScheduledMessagesModal({
               type="button"
               onClick={closeModal}
               disabled={busyId !== null}
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-800 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-500 dark:text-slate-400 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
               aria-label="Cerrar"
             >
               <X size={20} />
@@ -319,7 +320,7 @@ export function ScheduledMessagesModal({
 
         <div className="min-h-0 flex-1 overflow-y-auto p-5 sm:p-6">
           {loading ? (
-            <div className="flex min-h-48 items-center justify-center gap-3 text-sm text-slate-400">
+            <div className="flex min-h-48 items-center justify-center gap-3 text-sm text-slate-500 dark:text-slate-400">
               <LoaderCircle
                 size={19}
                 className="animate-spin text-violet-300"
@@ -327,10 +328,10 @@ export function ScheduledMessagesModal({
               Cargando mensajes programados...
             </div>
           ) : filteredMessages.length === 0 ? (
-            <div className="flex min-h-48 flex-col items-center justify-center rounded-3xl border border-dashed border-slate-700 px-6 text-center">
+            <div className="flex min-h-48 flex-col items-center justify-center rounded-3xl border border-dashed border-slate-300 dark:border-slate-700 px-6 text-center">
               <Clock3 size={29} className="text-slate-600" />
 
-              <p className="mt-4 font-bold text-slate-200">
+              <p className="mt-4 font-bold text-slate-700 dark:text-slate-200">
                 No hay mensajes programados
               </p>
 
@@ -348,7 +349,7 @@ export function ScheduledMessagesModal({
                 return (
                   <article
                     key={message.id}
-                    className="rounded-3xl border border-slate-800 bg-slate-900/55 p-4"
+                    className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/55 p-4"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
@@ -391,7 +392,7 @@ export function ScheduledMessagesModal({
                           onChange={(event) =>
                             setEditingContent(event.target.value)
                           }
-                          className="min-h-24 w-full resize-none rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none transition focus:border-violet-400"
+                          className="min-h-24 w-full resize-none rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-3 text-sm text-slate-950 dark:text-white outline-none transition focus:border-violet-400"
                         />
 
                         <input
@@ -401,7 +402,7 @@ export function ScheduledMessagesModal({
                           onChange={(event) =>
                             setEditingDateTime(event.target.value)
                           }
-                          className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none transition focus:border-violet-400"
+                          className="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-3 text-sm text-slate-950 dark:text-white outline-none transition focus:border-violet-400"
                         />
 
                         <div className="grid grid-cols-2 gap-3">
@@ -409,7 +410,7 @@ export function ScheduledMessagesModal({
                             type="button"
                             disabled={isBusy}
                             onClick={cancelEdit}
-                            className="rounded-xl border border-slate-700 px-4 py-2.5 text-sm font-bold text-slate-300 transition hover:bg-slate-800 disabled:opacity-50"
+                            className="rounded-xl border border-slate-300 dark:border-slate-700 px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 transition hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-50"
                           >
                             Cancelar
                           </button>
@@ -426,7 +427,7 @@ export function ScheduledMessagesModal({
                       </div>
                     ) : (
                       <>
-                        <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-slate-200">
+                        <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-slate-700 dark:text-slate-200">
                           {message.contenido}
                         </p>
 
@@ -436,7 +437,7 @@ export function ScheduledMessagesModal({
                               type="button"
                               disabled={isBusy}
                               onClick={() => startEdit(message)}
-                              className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-700 px-3 py-2.5 text-xs font-bold text-slate-300 transition hover:bg-slate-800 disabled:opacity-50"
+                              className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-300 dark:border-slate-700 px-3 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 transition hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-50"
                             >
                               <Edit3 size={14} />
                               Editar
@@ -487,12 +488,12 @@ export function ScheduledMessagesModal({
           )}
         </div>
 
-        <footer className="border-t border-slate-800 p-4 sm:px-6">
+        <footer className="border-t border-slate-200 dark:border-slate-800 p-4 sm:px-6">
           <button
             type="button"
             onClick={closeModal}
             disabled={busyId !== null}
-            className="w-full rounded-xl border border-slate-700 px-4 py-3 text-sm font-bold text-slate-300 transition hover:bg-slate-800 disabled:opacity-50"
+            className="w-full rounded-xl border border-slate-300 dark:border-slate-700 px-4 py-3 text-sm font-bold text-slate-700 dark:text-slate-300 transition hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-50"
           >
             Cerrar
           </button>

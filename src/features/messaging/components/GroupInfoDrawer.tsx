@@ -101,7 +101,7 @@ export function GroupInfoDrawer({
   }
 
   return (
-    <div className="fixed inset-0 z-[10021] bg-slate-950/75 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[10021] bg-slate-950/35 dark:bg-slate-950/75 backdrop-blur-sm">
       <button
         type="button"
         className="absolute inset-0 cursor-default"
@@ -109,13 +109,13 @@ export function GroupInfoDrawer({
         aria-label="Cerrar información del grupo"
       />
 
-      <aside className="absolute bottom-0 right-0 flex h-[min(92vh,820px)] w-full max-w-md flex-col rounded-t-[32px] border border-slate-700 bg-[#111827] shadow-2xl shadow-black/60 sm:bottom-auto sm:top-0 sm:h-full sm:rounded-none">
-        <header className="border-b border-slate-800 bg-[radial-gradient(circle_at_top,#0ea5e930,transparent_62%)] p-6">
+      <aside className="absolute bottom-0 right-0 flex h-[min(92vh,820px)] w-full max-w-md flex-col rounded-t-[32px] border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#111827] shadow-2xl shadow-black/60 sm:bottom-auto sm:top-0 sm:h-full sm:rounded-none">
+        <header className="border-b border-slate-200 dark:border-slate-800 bg-[radial-gradient(circle_at_top,#0ea5e930,transparent_62%)] p-6">
           <div className="flex justify-end">
             <button
               type="button"
               onClick={onClose}
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-800 hover:text-white"
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-500 dark:text-slate-400 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white"
               aria-label="Cerrar"
               title="Cerrar"
             >
@@ -127,9 +127,11 @@ export function GroupInfoDrawer({
             <Avatar name={title} size="lg" group />
 
             <div className="min-w-0 flex-1">
-              <h3 className="truncate text-lg font-bold text-white">{title}</h3>
+              <h3 className="truncate text-lg font-bold text-slate-950 dark:text-white">
+                {title}
+              </h3>
 
-              <p className="mt-1 text-sm text-slate-400">
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 Administración y miembros del grupo
               </p>
 
@@ -143,14 +145,14 @@ export function GroupInfoDrawer({
         </header>
 
         <div className="flex-1 overflow-y-auto p-5">
-          <section className="mb-5 rounded-2xl border border-slate-800 bg-slate-900/50 p-4">
+          <section className="mb-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/50 p-4">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
                   Miembros
                 </p>
 
-                <p className="mt-1 text-2xl font-bold text-white">
+                <p className="mt-1 text-2xl font-bold text-slate-950 dark:text-white">
                   {members.length} total
                 </p>
 
@@ -175,16 +177,18 @@ export function GroupInfoDrawer({
 
           <section>
             <div className="mb-3 flex items-center justify-between">
-              <h4 className="text-sm font-bold text-white">Participantes</h4>
+              <h4 className="text-sm font-bold text-slate-950 dark:text-white">
+                Participantes
+              </h4>
 
-              <span className="rounded-lg bg-slate-900 px-2 py-1 text-[10px] font-bold text-slate-400">
+              <span className="rounded-lg bg-white dark:bg-slate-900 px-2 py-1 text-[10px] font-bold text-slate-500 dark:text-slate-400">
                 {members.length}
               </span>
             </div>
 
             <div className="space-y-2">
               {loading ? (
-                <div className="rounded-2xl border border-slate-800 bg-slate-900/35 p-5 text-center text-sm text-slate-500">
+                <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/35 p-5 text-center text-sm text-slate-500">
                   Cargando integrantes del grupo...
                 </div>
               ) : (
@@ -217,7 +221,7 @@ export function GroupInfoDrawer({
                           ? "border-amber-400/25 bg-amber-500/10"
                           : memberIsAdmin
                             ? "border-violet-400/20 bg-violet-500/10"
-                            : "border-slate-800 bg-slate-900/35"
+                            : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/35"
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -228,7 +232,7 @@ export function GroupInfoDrawer({
                         />
 
                         <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm font-bold text-white">
+                          <p className="truncate text-sm font-bold text-slate-950 dark:text-white">
                             {member.usuario.nombre}
 
                             {isCurrentMember && (
@@ -244,12 +248,12 @@ export function GroupInfoDrawer({
                         </div>
 
                         {canManageMembers && onUpdateMetadata && (
-                          <section className="mb-5 rounded-2xl border border-slate-800 bg-slate-900/50 p-4">
+                          <section className="mb-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/50 p-4">
                             <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
                               Información del grupo
                             </p>
 
-                            <label className="mt-4 block text-xs font-bold text-slate-300">
+                            <label className="mt-4 block text-xs font-bold text-slate-700 dark:text-slate-300">
                               Nombre
                               <input
                                 value={editedTitle}
@@ -258,11 +262,11 @@ export function GroupInfoDrawer({
                                 onChange={(event) =>
                                   setEditedTitle(event.target.value)
                                 }
-                                className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-sm text-white outline-none focus:border-violet-400"
+                                className="mt-2 w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2.5 text-sm text-slate-950 dark:text-white outline-none focus:border-violet-400"
                               />
                             </label>
 
-                            <label className="mt-4 block text-xs font-bold text-slate-300">
+                            <label className="mt-4 block text-xs font-bold text-slate-700 dark:text-slate-300">
                               URL de la foto
                               <input
                                 type="url"
@@ -272,7 +276,7 @@ export function GroupInfoDrawer({
                                   setAvatarUrl(event.target.value)
                                 }
                                 placeholder="https://..."
-                                className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-sm text-white outline-none focus:border-violet-400"
+                                className="mt-2 w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2.5 text-sm text-slate-950 dark:text-white outline-none focus:border-violet-400"
                               />
                             </label>
 
@@ -327,7 +331,7 @@ export function GroupInfoDrawer({
                             Admin
                           </span>
                         ) : (
-                          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-800/70 text-slate-500">
+                          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800/70 text-slate-500">
                             <Users size={16} />
                           </span>
                         )}
@@ -337,7 +341,7 @@ export function GroupInfoDrawer({
                         canPromote ||
                         canDemote ||
                         canTransfer) && (
-                        <div className="mt-3 flex flex-wrap gap-2 border-t border-slate-800/70 pt-3">
+                        <div className="mt-3 flex flex-wrap gap-2 border-t border-slate-200 dark:border-slate-800/70 pt-3">
                           {canPromote && onPromoteMember && (
                             <button
                               type="button"
@@ -353,7 +357,7 @@ export function GroupInfoDrawer({
                             <button
                               type="button"
                               onClick={() => onDemoteMember(member.usuario.id)}
-                              className="flex items-center gap-1.5 rounded-lg bg-slate-700/40 px-2.5 py-1.5 text-xs font-semibold text-slate-300 transition hover:bg-slate-700/70"
+                              className="flex items-center gap-1.5 rounded-lg bg-slate-700/40 px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 transition hover:bg-slate-200 dark:hover:bg-slate-700/70"
                             >
                               <ChevronDown size={14} />
                               Quitar admin
@@ -392,12 +396,12 @@ export function GroupInfoDrawer({
             </div>
           </section>
 
-          <section className="mt-5 rounded-2xl border border-slate-800 bg-slate-900/35 p-4">
+          <section className="mt-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/35 p-4">
             <div className="flex items-start gap-3">
               <ShieldCheck size={19} className="mt-0.5 shrink-0 text-sky-300" />
 
               <div>
-                <p className="text-sm font-bold text-white">
+                <p className="text-sm font-bold text-slate-950 dark:text-white">
                   Permisos del grupo
                 </p>
 

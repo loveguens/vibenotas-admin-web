@@ -36,7 +36,7 @@ export function ConversationItem({
       className={`mb-1 flex w-full items-center gap-3 rounded-2xl p-3 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/50 ${
         selected
           ? "bg-violet-500/15 ring-1 ring-violet-400/25"
-          : "hover:bg-slate-800/75"
+          : "hover:bg-slate-100 dark:hover:bg-slate-800/75"
       }`}
       aria-current={selected ? "page" : undefined}
       title={`Abrir conversación con ${title}`}
@@ -50,7 +50,9 @@ export function ConversationItem({
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-1.5">
-            <p className="truncate text-sm font-bold text-white">{title}</p>
+            <p className="truncate text-sm font-bold text-slate-950 dark:text-white">
+              {title}
+            </p>
 
             {conversation.isPinned && (
               <span title="Conversación fijada">
@@ -80,7 +82,9 @@ export function ConversationItem({
         <div className="mt-1 flex items-center gap-2">
           <p
             className={`min-w-0 flex-1 truncate text-xs ${
-              unreadCount > 0 ? "font-medium text-slate-200" : "text-slate-400"
+              unreadCount > 0
+                ? "font-medium text-slate-700 dark:text-slate-200"
+                : "text-slate-500 dark:text-slate-400"
             }`}
           >
             {previewText}
