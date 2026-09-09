@@ -11,6 +11,9 @@ import {
 import type {
   BackendChatMessage,
   BackendConversation,
+  BackendFriend,
+  BackendFriendRequest,
+  BackendFriendSearchResult,
 } from "../features/messaging/types/backend.types";
 import { ChatComposer } from "../features/messaging/components/ChatComposer";
 import { ChatHeader } from "../features/messaging/components/ChatHeader";
@@ -81,6 +84,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [friends, setFriends] = useState<Friend[]>([]);
   const [requests, setRequests] = useState<FriendRequest[]>([]);
+  const [sentRequests, setSentRequests] = useState<FriendRequest[]>([]);
   const [blockedUsers, setBlockedUsers] = useState<BlockedUser[]>([]);
   const [searchUsers, setSearchUsers] = useState<SearchUser[]>([]);
 
@@ -277,10 +281,27 @@ export default function ChatPage() {
     try {
       setLoadingFriends(true);
 
-      const response = await api.get(API_ROUTES.friends);
+      const response = await api.get<{
+        success: boolean;
+        data: {
+          amigos: BackendFriend[];
+        };
+      }>(API_ROUTES.friends);
+
       const payload = response.data?.data ?? response.data;
 
-      setFriends(payload?.amigos ?? []);
+      const incoming = payload?.amigos ?? [];
+
+      setFriends(
+        incoming.map((item) => ({
+          amistad_id: item.amistad_id,
+          usuario_id: item.usuario.id,
+          nombre: item.usuario.nombre,
+          username: item.usuario.username,
+          avatar: item.usuario.avatar_url,
+          amigos_desde: item.amigos_desde,
+        })),
+      );
     } catch (requestError) {
       setError(
         getErrorMessage(requestError, "No se pudo cargar la lista de amigos."),
@@ -294,16 +315,68 @@ export default function ChatPage() {
     try {
       setLoadingRequests(true);
 
-      const response = await api.get(API_ROUTES.requests);
+      const response = await api.get<{
+        success: boolean;
+        data: {
+          solicitudes: BackendFriendRequest[];
+        };
+      }>(API_ROUTES.receivedRequests);
+
       const payload = response.data?.data ?? response.data;
 
-      setRequests(payload?.solicitudes ?? []);
+      const incoming = payload?.solicitudes ?? [];
+
+      setRequests(
+        incoming.map((item) => ({
+          amistad_id: item.id,
+          usuario_id: item.usuario.id,
+          nombre: item.usuario.nombre,
+          username: item.usuario.username,
+          avatar: item.usuario.avatar_url,
+          creado_en: item.creado_en,
+          solicitado_por_mi: item.solicitado_por_mi,
+        })),
+      );
     } catch (requestError) {
       setError(
         getErrorMessage(requestError, "No se pudieron cargar las solicitudes."),
       );
     } finally {
       setLoadingRequests(false);
+    }
+  }, []);
+
+  const loadSentRequests = useCallback(async () => {
+    try {
+      const response = await api.get<{
+        success: boolean;
+        data: {
+          solicitudes: BackendFriendRequest[];
+        };
+      }>(API_ROUTES.sentRequests);
+
+      const payload = response.data?.data ?? response.data;
+
+      const incoming = payload?.solicitudes ?? [];
+
+      setSentRequests(
+        incoming.map((item) => ({
+          amistad_id: item.id,
+          usuario_id: item.usuario.id,
+          nombre: item.usuario.nombre,
+          username: item.usuario.username,
+          avatar: item.usuario.avatar_url,
+          creado_en: item.creado_en,
+          solicitado_por_mi: item.solicitado_por_mi,
+        })),
+      );
+    } catch (requestError) {
+      setError(
+        getErrorMessage(
+          requestError,
+          "No se pudieron cargar las solicitudes enviadas.",
+        ),
+      );
     }
   }, []);
 
@@ -869,7 +942,7 @@ export default function ChatPage() {
     }
 
     if (tab === "solicitudes") {
-      void loadRequests();
+      void Promise.all([loadRequests(), loadSentRequests()]);
     }
 
     if (tab === "bloqueados") {
@@ -1330,17 +1403,35 @@ export default function ChatPage() {
   async function searchPeople(value: string): Promise<void> {
     setPeopleSearch(value);
 
-    if (value.trim().length < 2) {
+    const query = value.trim();
+
+    if (query.length < 2) {
       setSearchUsers([]);
       return;
     }
 
     try {
-      const response = await api.get(API_ROUTES.searchUsers(value));
+      const response = await api.get<{
+        success: boolean;
+        data: {
+          resultados: BackendFriendSearchResult[];
+        };
+      }>(API_ROUTES.searchUsers(query));
 
       const payload = response.data?.data ?? response.data;
 
-      setSearchUsers(payload?.usuarios ?? []);
+      const incoming = payload?.resultados ?? [];
+
+      setSearchUsers(
+        incoming.map((item) => ({
+          id: item.usuario.id,
+          nombre: item.usuario.nombre,
+          username: item.usuario.username,
+          avatar: item.usuario.avatar_url,
+          amistad_id: item.amistad.id,
+          amistad_estado: item.amistad.estado,
+        })),
+      );
     } catch {
       setSearchUsers([]);
     }
@@ -1349,11 +1440,14 @@ export default function ChatPage() {
   async function sendFriendRequest(userId: string): Promise<void> {
     try {
       await api.post(API_ROUTES.requestFriendship, {
-        amigo_id: userId,
+        userId,
       });
 
-      await searchPeople(peopleSearch);
-
+      await Promise.all([
+        searchPeople(peopleSearch),
+        loadRequests(),
+        loadSentRequests(),
+      ]);
       setToast("Solicitud enviada.");
     } catch (requestError) {
       setError(
@@ -1381,6 +1475,24 @@ export default function ChatPage() {
     } catch (requestError) {
       setError(
         getErrorMessage(requestError, "No se pudo rechazar la solicitud."),
+      );
+    }
+  }
+
+  async function removeFriendship(friendshipId: string): Promise<void> {
+    try {
+      await api.delete(API_ROUTES.removeFriendship(friendshipId));
+
+      await loadFriends();
+
+      if (peopleSearch.trim().length >= 2) {
+        await searchPeople(peopleSearch);
+      }
+
+      setToast("Amistad eliminada.");
+    } catch (requestError) {
+      setError(
+        getErrorMessage(requestError, "No se pudo eliminar la amistad."),
       );
     }
   }
@@ -1974,12 +2086,14 @@ export default function ChatPage() {
               onSearch={searchPeople}
               onAdd={sendFriendRequest}
               onChat={createOrOpenPrivateChat}
+              onRemove={removeFriendship}
             />
           )}
 
           {activeTab === "solicitudes" && (
             <RequestsPanel
               requests={requests}
+              sentRequests={sentRequests}
               loading={loadingRequests}
               onAccept={acceptRequest}
               onReject={rejectRequest}
@@ -2233,6 +2347,7 @@ function FriendsPanel({
   onSearch,
   onAdd,
   onChat,
+  onRemove,
 }: {
   friends: Friend[];
   search: string;
@@ -2241,6 +2356,7 @@ function FriendsPanel({
   onSearch: (value: string) => Promise<void>;
   onAdd: (id: string) => Promise<void>;
   onChat: (id: string) => Promise<void>;
+  onRemove: (friendshipId: string) => Promise<void>;
 }) {
   return (
     <section className="flex min-h-0 flex-1 flex-col">
@@ -2258,7 +2374,7 @@ function FriendsPanel({
         <input
           value={search}
           onChange={(event) => void onSearch(event.target.value)}
-          placeholder="Buscar por nombre o correo..."
+          placeholder="Buscar por nombre, usuario o correo completo..."
           className="mt-5 w-full max-w-2xl rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white outline-none focus:border-violet-400"
         />
       </header>
@@ -2281,15 +2397,13 @@ function FriendsPanel({
                   </p>
 
                   <p className="truncate text-xs text-slate-500">
-                    {user.correo}
+                    {user.username
+                      ? `@${user.username}`
+                      : "Sin nombre de usuario"}
                   </p>
                 </div>
 
-                {user.amistad_estado ? (
-                  <span className="text-xs text-slate-400">
-                    {user.amistad_estado}
-                  </span>
-                ) : (
+                {user.amistad_estado === "NONE" ? (
                   <button
                     type="button"
                     onClick={() => void onAdd(user.id)}
@@ -2297,6 +2411,14 @@ function FriendsPanel({
                   >
                     Agregar
                   </button>
+                ) : (
+                  <span className="text-xs font-semibold text-slate-400">
+                    {user.amistad_estado === "PENDING_SENT"
+                      ? "Solicitud enviada"
+                      : user.amistad_estado === "PENDING_RECEIVED"
+                        ? "Solicitud recibida"
+                        : "Ya son amigos"}
+                  </span>
                 )}
               </article>
             ))}
@@ -2323,7 +2445,9 @@ function FriendsPanel({
                 <p className="font-bold text-white">{friend.nombre}</p>
 
                 <p className="mt-1 truncate text-xs text-slate-500">
-                  {friend.correo}
+                  {friend.username
+                    ? `@${friend.username}`
+                    : "Sin nombre de usuario"}
                 </p>
 
                 <button
@@ -2332,6 +2456,14 @@ function FriendsPanel({
                   className="mt-5 w-full rounded-xl bg-violet-500/15 px-4 py-2.5 text-sm font-bold text-violet-300 hover:bg-violet-500 hover:text-white"
                 >
                   Abrir chat
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => void onRemove(friend.amistad_id)}
+                  className="mt-2 w-full rounded-xl border border-rose-500/30 px-4 py-2.5 text-sm font-bold text-rose-300 transition hover:bg-rose-500/10"
+                >
+                  Eliminar amigo
                 </button>
               </article>
             ))}
@@ -2344,60 +2476,146 @@ function FriendsPanel({
 
 function RequestsPanel({
   requests,
+  sentRequests,
   loading,
   onAccept,
   onReject,
 }: {
   requests: FriendRequest[];
+  sentRequests: FriendRequest[];
   loading: boolean;
   onAccept: (id: string) => Promise<void>;
   onReject: (id: string) => Promise<void>;
 }) {
   return (
-    <section className="flex-1 overflow-y-auto p-5 sm:p-8">
-      <h1 className="text-2xl font-bold text-white">Solicitudes de amistad</h1>
+    <section className="flex min-h-0 flex-1 flex-col">
+      <header className="border-b border-slate-800 px-5 py-5 sm:px-8">
+        <h1 className="text-xl font-black text-white">
+          Solicitudes de amistad
+        </h1>
 
-      <p className="mt-1 text-sm text-slate-400">
-        Decide quién puede entrar a tu red de contactos.
-      </p>
+        <p className="mt-1 text-sm text-slate-500">
+          Revisa las solicitudes que recibiste y las que todavía están
+          pendientes.
+        </p>
+      </header>
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {loading ? (
-          <p className="text-slate-500">Cargando solicitudes...</p>
-        ) : requests.length === 0 ? (
-          <p className="rounded-3xl border border-dashed border-slate-700 p-10 text-center text-slate-500">
-            No tienes solicitudes pendientes.
-          </p>
-        ) : (
-          requests.map((request) => (
-            <article
-              key={request.amistad_id}
-              className="rounded-3xl border border-slate-800 bg-slate-900/45 p-5"
-            >
-              <p className="font-bold text-white">{request.nombre}</p>
+      <div className="flex-1 space-y-10 overflow-y-auto p-5 sm:p-8">
+        <section>
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <h2 className="text-sm font-bold text-white">Recibidas</h2>
 
-              <p className="text-xs text-slate-500">{request.correo}</p>
+            {requests.length > 0 && (
+              <span className="rounded-full bg-amber-400/10 px-2.5 py-1 text-xs font-bold text-amber-300">
+                {requests.length}
+              </span>
+            )}
+          </div>
 
-              <div className="mt-5 grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => void onAccept(request.amistad_id)}
-                  className="rounded-xl bg-violet-500 px-4 py-2.5 text-sm font-bold text-white"
+          {loading ? (
+            <p className="text-slate-500">Cargando solicitudes...</p>
+          ) : requests.length === 0 ? (
+            <p className="rounded-3xl border border-dashed border-slate-700 p-8 text-center text-slate-500">
+              No tienes solicitudes recibidas pendientes.
+            </p>
+          ) : (
+            <div className="grid gap-4 lg:grid-cols-2">
+              {requests.map((request) => (
+                <article
+                  key={request.amistad_id}
+                  className="rounded-3xl border border-slate-800 bg-slate-900/45 p-5"
                 >
-                  Aceptar
-                </button>
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-violet-500/15 font-bold text-violet-300">
+                      {request.nombre.slice(0, 1)}
+                    </span>
 
-                <button
-                  type="button"
-                  onClick={() => void onReject(request.amistad_id)}
-                  className="rounded-xl border border-slate-700 px-4 py-2.5 text-sm font-bold text-slate-300"
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-bold text-white">
+                        {request.nombre}
+                      </p>
+
+                      <p className="truncate text-xs text-slate-500">
+                        {request.username
+                          ? `@${request.username}`
+                          : "Sin nombre de usuario"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => void onAccept(request.amistad_id)}
+                      className="rounded-xl bg-violet-500 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-violet-400"
+                    >
+                      Aceptar
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => void onReject(request.amistad_id)}
+                      className="rounded-xl border border-slate-700 px-4 py-2.5 text-sm font-bold text-slate-300 transition hover:bg-slate-800"
+                    >
+                      Rechazar
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section>
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <h2 className="text-sm font-bold text-white">Enviadas</h2>
+
+            {sentRequests.length > 0 && (
+              <span className="rounded-full bg-violet-500/10 px-2.5 py-1 text-xs font-bold text-violet-300">
+                {sentRequests.length}
+              </span>
+            )}
+          </div>
+
+          {loading ? (
+            <p className="text-slate-500">Cargando solicitudes...</p>
+          ) : sentRequests.length === 0 ? (
+            <p className="rounded-3xl border border-dashed border-slate-700 p-8 text-center text-slate-500">
+              No tienes solicitudes enviadas pendientes.
+            </p>
+          ) : (
+            <div className="grid gap-4 lg:grid-cols-2">
+              {sentRequests.map((request) => (
+                <article
+                  key={request.amistad_id}
+                  className="rounded-3xl border border-slate-800 bg-slate-900/45 p-5"
                 >
-                  Rechazar
-                </button>
-              </div>
-            </article>
-          ))
-        )}
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-slate-800 font-bold text-slate-300">
+                      {request.nombre.slice(0, 1)}
+                    </span>
+
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-bold text-white">
+                        {request.nombre}
+                      </p>
+
+                      <p className="truncate text-xs text-slate-500">
+                        {request.username
+                          ? `@${request.username}`
+                          : "Sin nombre de usuario"}
+                      </p>
+                    </div>
+
+                    <span className="shrink-0 rounded-full bg-violet-500/10 px-3 py-1.5 text-xs font-bold text-violet-300">
+                      Pendiente
+                    </span>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
       </div>
     </section>
   );

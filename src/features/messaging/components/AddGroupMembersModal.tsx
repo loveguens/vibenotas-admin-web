@@ -44,7 +44,7 @@ export function AddGroupMembersModal({
         return true;
       }
 
-      return `${friend.nombre} ${friend.correo}`
+      return `${friend.nombre} ${friend.username ?? ""}`
         .toLowerCase()
         .includes(normalizedQuery);
     });
@@ -177,7 +177,9 @@ export function AddGroupMembersModal({
                       </strong>
 
                       <small className="mt-0.5 block truncate text-xs text-slate-500">
-                        {friend.correo}
+                        {friend.username
+                          ? `@${friend.username}`
+                          : "Sin nombre de usuario"}
                       </small>
                     </span>
 

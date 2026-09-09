@@ -8,15 +8,30 @@ export const API_ROUTES = {
   updateMessage: (id: string) => `/chat/messages/${id}`,
   deleteMessage: (id: string) => `/chat/messages/${id}`,
 
-  friends: "/friends",
-  requests: "/friends/requests",
-  blocked: "/friends/blocked",
-  requestFriendship: "/friends/request",
-  acceptRequest: (id: string) => `/friends/${id}/accept`,
-  rejectRequest: (id: string) => `/friends/${id}/reject`,
-  unblockUser: (id: string) => `/friends/${id}/unblock`,
+  friends: "/friendships",
+
+  receivedRequests: "/friendships/requests/received",
+
+  sentRequests: "/friendships/requests/sent",
+
+  requestFriendship: "/friendships/requests",
+
+  acceptRequest: (id: string) => `/friendships/${id}/accept`,
+
+  rejectRequest: (id: string) => `/friendships/${id}/reject`,
+
+  removeFriendship: (id: string) => `/friendships/${id}`,
+
   searchUsers: (query: string) =>
-    `/friends/search?q=${encodeURIComponent(query)}`,
+    `/friendships/search?q=${encodeURIComponent(query)}`,
+
+  /*
+   * Bloqueos todavía no forman parte
+   * del backend de amistades nuevo.
+   */
+  blocked: "/friends/blocked",
+
+  unblockUser: (id: string) => `/friends/${id}/unblock`,
 
   createGroup: "/chat/conversations/group",
 

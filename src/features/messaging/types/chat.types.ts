@@ -115,30 +115,37 @@ export type Friend = {
   amistad_id: string;
   usuario_id: string;
   nombre: string;
-  correo: string;
+  username: string | null;
   avatar?: string | null;
-  usuario_estado: string;
+  amigos_desde: string;
 };
 
 export type FriendRequest = {
   amistad_id: string;
   usuario_id: string;
   nombre: string;
-  correo: string;
+  username: string | null;
   avatar?: string | null;
   creado_en: string;
+  solicitado_por_mi: boolean;
 };
 
-export type BlockedUser = Friend;
+export type BlockedUser = {
+  amistad_id: string;
+  usuario_id: string;
+  nombre: string;
+  correo: string;
+  avatar?: string | null;
+  usuario_estado: string;
+};
 
 export type SearchUser = {
   id: string;
   nombre: string;
-  correo: string;
+  username: string | null;
   avatar?: string | null;
-  estado: string;
-  rol_nombre?: string | null;
-  amistad_estado?: string | null;
+  amistad_id: string | null;
+  amistad_estado: "NONE" | "PENDING_SENT" | "PENDING_RECEIVED" | "FRIENDS";
 };
 
 export type FixedMenuPosition = {

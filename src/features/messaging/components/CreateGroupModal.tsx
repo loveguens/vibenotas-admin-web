@@ -38,7 +38,8 @@ export function CreateGroupModal({
     }
 
     return friends.filter((friend) => {
-      const searchableText = `${friend.nombre} ${friend.correo}`.toLowerCase();
+      const searchableText =
+        `${friend.nombre} ${friend.username ?? ""}`.toLowerCase();
 
       return searchableText.includes(normalizedQuery);
     });
@@ -193,7 +194,9 @@ export function CreateGroupModal({
                       </strong>
 
                       <small className="mt-0.5 block truncate text-xs text-slate-500">
-                        {friend.correo}
+                        {friend.username
+                          ? `@${friend.username}`
+                          : "Sin nombre de usuario"}
                       </small>
                     </span>
 
