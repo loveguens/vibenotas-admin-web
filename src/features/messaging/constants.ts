@@ -8,31 +8,71 @@ export const API_ROUTES = {
   updateMessage: (id: string) => `/chat/messages/${id}`,
   deleteMessage: (id: string) => `/chat/messages/${id}`,
 
-  friends: "/friends",
-  requests: "/friends/requests",
-  blocked: "/friends/blocked",
-  requestFriendship: "/friends/request",
-  acceptRequest: (id: string) => `/friends/${id}/accept`,
-  rejectRequest: (id: string) => `/friends/${id}/reject`,
-  unblockUser: (id: string) => `/friends/${id}/unblock`,
-  searchUsers: (query: string) =>
-    `/friends/search?q=${encodeURIComponent(query)}`,
+  friends: "/friendships",
 
-  // FUTURE PHP ROUTES: do not call these until their controllers exist.
-  createGroup: "/chat/groups",
+  receivedRequests: "/friendships/requests/received",
+
+  sentRequests: "/friendships/requests/sent",
+
+  requestFriendship: "/friendships/requests",
+
+  acceptRequest: (id: string) => `/friendships/${id}/accept`,
+
+  rejectRequest: (id: string) => `/friendships/${id}/reject`,
+
+  removeFriendship: (id: string) => `/friendships/${id}`,
+
+  searchUsers: (query: string) =>
+    `/friendships/search?q=${encodeURIComponent(query)}`,
+
+  /*
+   * Bloqueos todavía no forman parte
+   * del backend de amistades nuevo.
+   */
+  blocked: "/friends/blocked",
+
+  unblockUser: (id: string) => `/friends/${id}/unblock`,
+
+  createGroup: "/chat/conversations/group",
+
+  updateGroup: (conversationId: string) =>
+    `/chat/conversations/${conversationId}/group`,
+
+  deleteGroup: (conversationId: string) =>
+    `/chat/conversations/${conversationId}/group`,
+
+  groupMembers: (conversationId: string) =>
+    `/chat/conversations/${conversationId}/members`,
+
+  addGroupMember: (conversationId: string) =>
+    `/chat/conversations/${conversationId}/members`,
+
+  leaveGroup: (conversationId: string) =>
+    `/chat/conversations/${conversationId}/members/me`,
+
+  removeGroupMember: (conversationId: string, userId: string) =>
+    `/chat/conversations/${conversationId}/members/${userId}`,
+
+  updateGroupMemberRole: (conversationId: string, userId: string) =>
+    `/chat/conversations/${conversationId}/members/${userId}/role`,
+
+  transferGroupOwner: (conversationId: string) =>
+    `/chat/conversations/${conversationId}/owner`,
+
+  // Funcionalidades que todavía no existen en el backend actual.
   updateConversationSettings: (id: string) =>
     `/chat/conversations/${id}/settings`,
+
   updateConversationTheme: (id: string) => `/chat/conversations/${id}/theme`,
+
   temporaryMessages: (id: string) =>
     `/chat/conversations/${id}/temporary-messages`,
+
   archiveConversation: (id: string) => `/chat/conversations/${id}/archive`,
+
   removeConversationLocally: (id: string) => `/chat/conversations/${id}/local`,
+
   blockConversationUser: (id: string) => `/chat/conversations/${id}/block`,
-
-  addGroupMember: (groupId: string) => `/chat/groups/${groupId}/members`,
-
-  removeGroupMember: (groupId: string, userId: string) =>
-    `/chat/groups/${groupId}/members/${userId}`,
 } as const;
 
 export const CHAT_THEMES: Array<{

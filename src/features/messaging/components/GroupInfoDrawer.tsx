@@ -1,32 +1,52 @@
 import {
+  ChevronDown,
+  ChevronUp,
   Crown,
+  LogOut,
   ShieldCheck,
   UserMinus,
   UserPlus,
   Users,
   X,
 } from "lucide-react";
-import type { Conversation } from "../types/chat.types";
-import { Avatar } from "./Avatar";
 
-type GroupMember = {
-  usuario_id: string;
-  rol: "admin" | "miembro";
-  nombre: string;
-  correo: string;
-  foto_perfil?: string | null;
-};
+import { useEffect, useState } from "react";
+
+import type { Conversation, GroupMember, GroupRole } from "../types/chat.types";
+
+import { Avatar } from "./Avatar";
 
 type GroupInfoDrawerProps = {
   open: boolean;
   conversation: Conversation | null;
+
   members: GroupMember[];
   loading: boolean;
-  isAdmin?: boolean;
+
+  myRole: GroupRole | null;
+
+  savingMetadata?: boolean;
+
   onClose: () => void;
+
   onAddMember?: () => void;
+
   onRemoveMember?: (userId: string) => void;
-  onMakeAdmin?: (userId: string) => void;
+
+  onPromoteMember?: (userId: string) => void;
+
+  onDemoteMember?: (userId: string) => void;
+
+  onTransferOwnership?: (userId: string) => void;
+
+  onLeaveGroup?: () => void;
+
+  onUpdateMetadata?: (changes: {
+    title?: string;
+    avatarUrl?: string | null;
+  }) => void;
+
+  onDeleteGroup?: () => void;
 };
 
 export function GroupInfoDrawer({
@@ -34,10 +54,17 @@ export function GroupInfoDrawer({
   conversation,
   members,
   loading,
-  isAdmin = true,
+  myRole,
+  savingMetadata = false,
   onClose,
   onAddMember,
   onRemoveMember,
+  onPromoteMember,
+  onDemoteMember,
+  onTransferOwnership,
+  onLeaveGroup,
+  onUpdateMetadata,
+  onDeleteGroup,
 }: GroupInfoDrawerProps) {
   if (!open || !conversation) {
     return null;
@@ -45,13 +72,41 @@ export function GroupInfoDrawer({
 
   const title = conversation.titulo?.trim() || "Grupo sin nombre";
 
+  const [editedTitle, setEditedTitle] = useState(title);
+
+  const [avatarUrl, setAvatarUrl] = useState(conversation.avatar_url ?? "");
+
+  useEffect(() => {
+    setEditedTitle(conversation.titulo?.trim() || "Grupo sin nombre");
+
+    setAvatarUrl(conversation.avatar_url ?? "");
+  }, [conversation.id, conversation.titulo, conversation.avatar_url]);
+
+  const isOwner = myRole === "owner";
+
+  const isAdmin = myRole === "admin";
+
+  const canManageMembers = isOwner || isAdmin;
+
+  function getRoleLabel(role: GroupRole): string {
+    if (role === "owner") {
+      return "Propietario";
+    }
+
+    if (role === "admin") {
+      return "Admin";
+    }
+
+    return "Miembro";
+  }
+
   return (
     <div className="fixed inset-0 z-[10021] bg-slate-950/75 backdrop-blur-sm">
       <button
         type="button"
         className="absolute inset-0 cursor-default"
         onClick={onClose}
-        aria-label="Cerrar informaciÃƒÂ³n del grupo"
+        aria-label="Cerrar información del grupo"
       />
 
       <aside className="absolute bottom-0 right-0 flex h-[min(92vh,820px)] w-full max-w-md flex-col rounded-t-[32px] border border-slate-700 bg-[#111827] shadow-2xl shadow-black/60 sm:bottom-auto sm:top-0 sm:h-full sm:rounded-none">
@@ -75,8 +130,14 @@ export function GroupInfoDrawer({
               <h3 className="truncate text-lg font-bold text-white">{title}</h3>
 
               <p className="mt-1 text-sm text-slate-400">
-                AdministraciÃƒÂ³n y miembros del grupo
+                Administración y miembros del grupo
               </p>
+
+              {myRole && (
+                <p className="mt-2 text-xs font-semibold text-sky-300">
+                  Tu rol: {getRoleLabel(myRole)}
+                </p>
+              )}
             </div>
           </div>
         </header>
@@ -94,17 +155,17 @@ export function GroupInfoDrawer({
                 </p>
 
                 <p className="mt-1 text-xs leading-5 text-slate-500">
-                  Lista actualizada de participantes del grupo.
+                  Participantes activos del grupo.
                 </p>
               </div>
 
-              {isAdmin && onAddMember && (
+              {canManageMembers && onAddMember && (
                 <button
                   type="button"
                   onClick={onAddMember}
                   className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-500/10 text-sky-300 transition hover:bg-sky-500/20"
-                  title="AÃƒÂ±adir miembro"
-                  aria-label="AÃƒÂ±adir miembro"
+                  title="Añadir miembro"
+                  aria-label="Añadir miembro"
                 >
                   <UserPlus size={18} />
                 </button>
@@ -117,7 +178,7 @@ export function GroupInfoDrawer({
               <h4 className="text-sm font-bold text-white">Participantes</h4>
 
               <span className="rounded-lg bg-slate-900 px-2 py-1 text-[10px] font-bold text-slate-400">
-                {members.length + 1} total
+                {members.length}
               </span>
             </div>
 
@@ -128,52 +189,201 @@ export function GroupInfoDrawer({
                 </div>
               ) : (
                 members.map((member) => {
+                  const memberIsOwner = member.rol === "owner";
+
                   const memberIsAdmin = member.rol === "admin";
+
+                  const isCurrentMember = member.es_miembro_actual;
+
+                  const canRemove =
+                    !isCurrentMember &&
+                    !memberIsOwner &&
+                    (isOwner || (isAdmin && member.rol === "member"));
+
+                  const canPromote =
+                    isOwner && !isCurrentMember && member.rol === "member";
+
+                  const canDemote =
+                    isOwner && !isCurrentMember && member.rol === "admin";
+
+                  const canTransfer =
+                    isOwner && !isCurrentMember && !memberIsOwner;
 
                   return (
                     <article
-                      key={member.usuario_id}
-                      className={`flex items-center gap-3 rounded-2xl border p-3 ${
-                        memberIsAdmin
-                          ? "border-violet-400/20 bg-violet-500/10"
-                          : "border-slate-800 bg-slate-900/35"
+                      key={member.id}
+                      className={`rounded-2xl border p-3 ${
+                        memberIsOwner
+                          ? "border-amber-400/25 bg-amber-500/10"
+                          : memberIsAdmin
+                            ? "border-violet-400/20 bg-violet-500/10"
+                            : "border-slate-800 bg-slate-900/35"
                       }`}
                     >
-                      <Avatar
-                        name={member.nombre}
-                        src={member.foto_perfil}
-                        size="sm"
-                      />
+                      <div className="flex items-center gap-3">
+                        <Avatar
+                          name={member.usuario.nombre}
+                          src={member.usuario.avatar_url}
+                          size="sm"
+                        />
 
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-bold text-white">
-                          {member.nombre}
-                        </p>
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-bold text-white">
+                            {member.usuario.nombre}
 
-                        <p className="mt-0.5 truncate text-xs text-slate-500">
-                          {member.correo}
-                        </p>
+                            {isCurrentMember && (
+                              <span className="ml-2 text-xs font-medium text-sky-300">
+                                Tú
+                              </span>
+                            )}
+                          </p>
+
+                          <p className="mt-0.5 text-xs text-slate-500">
+                            {getRoleLabel(member.rol)}
+                          </p>
+                        </div>
+
+                        {canManageMembers && onUpdateMetadata && (
+                          <section className="mb-5 rounded-2xl border border-slate-800 bg-slate-900/50 p-4">
+                            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
+                              Información del grupo
+                            </p>
+
+                            <label className="mt-4 block text-xs font-bold text-slate-300">
+                              Nombre
+                              <input
+                                value={editedTitle}
+                                maxLength={120}
+                                disabled={savingMetadata}
+                                onChange={(event) =>
+                                  setEditedTitle(event.target.value)
+                                }
+                                className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-sm text-white outline-none focus:border-violet-400"
+                              />
+                            </label>
+
+                            <label className="mt-4 block text-xs font-bold text-slate-300">
+                              URL de la foto
+                              <input
+                                type="url"
+                                value={avatarUrl}
+                                disabled={savingMetadata}
+                                onChange={(event) =>
+                                  setAvatarUrl(event.target.value)
+                                }
+                                placeholder="https://..."
+                                className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-sm text-white outline-none focus:border-violet-400"
+                              />
+                            </label>
+
+                            <div className="mt-4 flex flex-wrap gap-2">
+                              <button
+                                type="button"
+                                disabled={savingMetadata || !editedTitle.trim()}
+                                onClick={() =>
+                                  onUpdateMetadata({
+                                    title: editedTitle.trim(),
+
+                                    avatarUrl: avatarUrl.trim()
+                                      ? avatarUrl.trim()
+                                      : null,
+                                  })
+                                }
+                                className="rounded-xl bg-violet-500 px-3 py-2 text-xs font-bold text-white transition hover:bg-violet-400 disabled:opacity-40"
+                              >
+                                {savingMetadata
+                                  ? "Guardando..."
+                                  : "Guardar cambios"}
+                              </button>
+
+                              {conversation.avatar_url && (
+                                <button
+                                  type="button"
+                                  disabled={savingMetadata}
+                                  onClick={() => {
+                                    setAvatarUrl("");
+
+                                    onUpdateMetadata({
+                                      avatarUrl: null,
+                                    });
+                                  }}
+                                  className="rounded-xl border border-red-500/20 bg-red-500/5 px-3 py-2 text-xs font-bold text-red-300 transition hover:bg-red-500/10 disabled:opacity-40"
+                                >
+                                  Quitar foto
+                                </button>
+                              )}
+                            </div>
+                          </section>
+                        )}
+
+                        {memberIsOwner ? (
+                          <span className="flex items-center gap-1 rounded-lg bg-amber-400/10 px-2 py-1 text-[10px] font-bold text-amber-300">
+                            <Crown size={13} />
+                            Owner
+                          </span>
+                        ) : memberIsAdmin ? (
+                          <span className="flex items-center gap-1 rounded-lg bg-violet-400/10 px-2 py-1 text-[10px] font-bold text-violet-300">
+                            <ShieldCheck size={13} />
+                            Admin
+                          </span>
+                        ) : (
+                          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-800/70 text-slate-500">
+                            <Users size={16} />
+                          </span>
+                        )}
                       </div>
 
-                      {memberIsAdmin ? (
-                        <span className="flex items-center gap-1 rounded-lg bg-amber-400/10 px-2 py-1 text-[10px] font-bold text-amber-300">
-                          <Crown size={13} />
-                          Admin
-                        </span>
-                      ) : isAdmin && onRemoveMember ? (
-                        <button
-                          type="button"
-                          onClick={() => onRemoveMember(member.usuario_id)}
-                          className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-500 transition hover:bg-red-500/10 hover:text-red-300"
-                          title={`Eliminar a ${member.nombre}`}
-                          aria-label={`Eliminar a ${member.nombre}`}
-                        >
-                          <UserMinus size={16} />
-                        </button>
-                      ) : (
-                        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-800/70 text-slate-500">
-                          <Users size={16} />
-                        </span>
+                      {(canRemove ||
+                        canPromote ||
+                        canDemote ||
+                        canTransfer) && (
+                        <div className="mt-3 flex flex-wrap gap-2 border-t border-slate-800/70 pt-3">
+                          {canPromote && onPromoteMember && (
+                            <button
+                              type="button"
+                              onClick={() => onPromoteMember(member.usuario.id)}
+                              className="flex items-center gap-1.5 rounded-lg bg-violet-500/10 px-2.5 py-1.5 text-xs font-semibold text-violet-300 transition hover:bg-violet-500/20"
+                            >
+                              <ChevronUp size={14} />
+                              Hacer admin
+                            </button>
+                          )}
+
+                          {canDemote && onDemoteMember && (
+                            <button
+                              type="button"
+                              onClick={() => onDemoteMember(member.usuario.id)}
+                              className="flex items-center gap-1.5 rounded-lg bg-slate-700/40 px-2.5 py-1.5 text-xs font-semibold text-slate-300 transition hover:bg-slate-700/70"
+                            >
+                              <ChevronDown size={14} />
+                              Quitar admin
+                            </button>
+                          )}
+
+                          {canTransfer && onTransferOwnership && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                onTransferOwnership(member.usuario.id)
+                              }
+                              className="flex items-center gap-1.5 rounded-lg bg-amber-500/10 px-2.5 py-1.5 text-xs font-semibold text-amber-300 transition hover:bg-amber-500/20"
+                            >
+                              <Crown size={14} />
+                              Transferir propiedad
+                            </button>
+                          )}
+
+                          {canRemove && onRemoveMember && (
+                            <button
+                              type="button"
+                              onClick={() => onRemoveMember(member.usuario.id)}
+                              className="flex items-center gap-1.5 rounded-lg bg-red-500/10 px-2.5 py-1.5 text-xs font-semibold text-red-300 transition hover:bg-red-500/20"
+                            >
+                              <UserMinus size={14} />
+                              Quitar
+                            </button>
+                          )}
+                        </div>
                       )}
                     </article>
                   );
@@ -192,13 +402,42 @@ export function GroupInfoDrawer({
                 </p>
 
                 <p className="mt-1 text-xs leading-5 text-slate-500">
-                  Los administradores podrÃƒÂ¡n aÃƒÂ±adir miembros, quitar
-                  miembros, cambiar el nombre y administrar la configuraciÃƒÂ³n
-                  del grupo.
+                  El propietario administra roles y propiedad. Los
+                  administradores pueden gestionar miembros.
                 </p>
               </div>
             </div>
           </section>
+
+          {isOwner ? (
+            <section className="mt-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4">
+              <p className="text-xs leading-5 text-amber-200/80">
+                Como propietario no puedes salir del grupo hasta transferir
+                primero la propiedad a otro miembro.
+              </p>
+            </section>
+          ) : (
+            onLeaveGroup && (
+              <button
+                type="button"
+                onClick={onLeaveGroup}
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-red-500/20 bg-red-500/5 px-4 py-3 text-sm font-bold text-red-300 transition hover:bg-red-500/10"
+              >
+                <LogOut size={17} />
+                Salir del grupo
+              </button>
+            )
+          )}
+
+          {isOwner && onDeleteGroup && (
+            <button
+              type="button"
+              onClick={onDeleteGroup}
+              className="mt-4 flex w-full items-center justify-center rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-bold text-red-300 transition hover:bg-red-500/20"
+            >
+              Eliminar grupo
+            </button>
+          )}
         </div>
       </aside>
     </div>

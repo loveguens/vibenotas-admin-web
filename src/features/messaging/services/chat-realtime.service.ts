@@ -3,7 +3,15 @@ import { io, type Socket } from "socket.io-client";
 import { getAccessToken, refreshAccessToken } from "../../../services/api";
 
 import type {
+  ChatGroupDeletedEvent,
+  ChatGroupMemberAddedEvent,
+  ChatGroupMemberRemovedEvent,
+  ChatGroupMemberRoleChangedEvent,
+  ChatGroupOwnerTransferredEvent,
+  ChatGroupUpdatedEvent,
   ChatMessageNewEvent,
+  ChatMessageDeletedEvent,
+  ChatMessageEditedEvent,
   ChatPresenceUpdatedEvent,
   ChatReadUpdatedEvent,
   ChatTypingUpdatedEvent,
@@ -14,11 +22,31 @@ import type {
 type ServerToClientEvents = {
   "chat:message:new": (event: ChatMessageNewEvent) => void;
 
+  "chat:message:edited": (event: ChatMessageEditedEvent) => void;
+
+  "chat:message:deleted": (event: ChatMessageDeletedEvent) => void;
+
   "chat:typing:updated": (event: ChatTypingUpdatedEvent) => void;
 
   "chat:read:updated": (event: ChatReadUpdatedEvent) => void;
 
   "chat:presence:updated": (event: ChatPresenceUpdatedEvent) => void;
+
+  "chat:group:member:added": (event: ChatGroupMemberAddedEvent) => void;
+
+  "chat:group:member:removed": (event: ChatGroupMemberRemovedEvent) => void;
+
+  "chat:group:member:role-changed": (
+    event: ChatGroupMemberRoleChangedEvent,
+  ) => void;
+
+  "chat:group:owner:transferred": (
+    event: ChatGroupOwnerTransferredEvent,
+  ) => void;
+
+  "chat:group:updated": (event: ChatGroupUpdatedEvent) => void;
+
+  "chat:group:deleted": (event: ChatGroupDeletedEvent) => void;
 };
 
 type ClientToServerEvents = {

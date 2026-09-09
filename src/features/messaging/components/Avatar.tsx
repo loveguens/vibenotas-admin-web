@@ -37,6 +37,19 @@ export function Avatar({
   const sizeClass = sizeClasses[size];
 
   if (group) {
+    if (src) {
+      return (
+        <img
+          src={src}
+          alt={name ?? "Grupo"}
+          className={`${sizeClass} ${className} shrink-0 border border-slate-700 object-cover`}
+          onError={(event) => {
+            event.currentTarget.style.display = "none";
+          }}
+        />
+      );
+    }
+
     return (
       <div
         className={`${sizeClass} ${className} flex shrink-0 items-center justify-center bg-sky-500/15 text-sky-300 ring-1 ring-sky-400/20`}

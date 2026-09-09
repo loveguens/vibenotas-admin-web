@@ -85,6 +85,8 @@ export function adaptConversation(
 
     titulo: conversation.titulo ?? null,
 
+    avatar_url: conversation.avatar_url ?? null,
+
     creado_en: conversation.creado_en,
 
     actualizado_en: conversation.ultima_actividad_en,
@@ -93,8 +95,7 @@ export function adaptConversation(
 
     otro_usuario_nombre: otherMember?.usuario.nombre ?? null,
 
-    otro_usuario_avatar:
-      otherMember?.usuario.avatar_url ?? conversation.avatar_url ?? null,
+    otro_usuario_avatar: otherMember?.usuario.avatar_url ?? null,
 
     ultimo_mensaje: lastMessage?.contenido ?? null,
 

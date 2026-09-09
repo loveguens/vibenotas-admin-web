@@ -4,6 +4,26 @@ export type ConversationType = "privado" | "grupo" | "soporte";
 
 export type MessageType = "texto" | "imagen" | "archivo" | "audio" | "sistema";
 
+export type GroupRole = "owner" | "admin" | "member";
+
+export type GroupMember = {
+  id: string;
+
+  usuario: {
+    id: string;
+    nombre: string;
+    avatar_url: string | null;
+  };
+
+  rol: GroupRole;
+
+  es_propietario: boolean;
+  es_miembro_actual: boolean;
+
+  unido_en: string;
+  leido_hasta: string | null;
+};
+
 export type CurrentUser = {
   id: string;
   nombre: string;
@@ -25,6 +45,7 @@ export type Conversation = {
   id: string;
   tipo: ConversationType;
   titulo: string | null;
+  avatar_url?: string | null;
   creado_en: string;
   actualizado_en: string;
 
@@ -94,30 +115,37 @@ export type Friend = {
   amistad_id: string;
   usuario_id: string;
   nombre: string;
-  correo: string;
+  username: string | null;
   avatar?: string | null;
-  usuario_estado: string;
+  amigos_desde: string;
 };
 
 export type FriendRequest = {
   amistad_id: string;
   usuario_id: string;
   nombre: string;
-  correo: string;
+  username: string | null;
   avatar?: string | null;
   creado_en: string;
+  solicitado_por_mi: boolean;
 };
 
-export type BlockedUser = Friend;
+export type BlockedUser = {
+  amistad_id: string;
+  usuario_id: string;
+  nombre: string;
+  correo: string;
+  avatar?: string | null;
+  usuario_estado: string;
+};
 
 export type SearchUser = {
   id: string;
   nombre: string;
-  correo: string;
+  username: string | null;
   avatar?: string | null;
-  estado: string;
-  rol_nombre?: string | null;
-  amistad_estado?: string | null;
+  amistad_id: string | null;
+  amistad_estado: "NONE" | "PENDING_SENT" | "PENDING_RECEIVED" | "FRIENDS";
 };
 
 export type FixedMenuPosition = {

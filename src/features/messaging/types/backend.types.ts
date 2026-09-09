@@ -67,3 +67,34 @@ export type SendMessageResponse = {
   mensaje: BackendChatMessage;
   ya_existente: boolean;
 };
+
+export type BackendFriendshipUser = {
+  id: string;
+  username: string | null;
+  nombre: string;
+  avatar_url: string | null;
+};
+
+export type BackendFriendshipState =
+  "NONE" | "PENDING_SENT" | "PENDING_RECEIVED" | "FRIENDS";
+
+export type BackendFriend = {
+  amistad_id: string;
+  usuario: BackendFriendshipUser;
+  amigos_desde: string;
+};
+
+export type BackendFriendRequest = {
+  id: string;
+  usuario: BackendFriendshipUser;
+  solicitado_por_mi: boolean;
+  creado_en: string;
+};
+
+export type BackendFriendSearchResult = {
+  usuario: BackendFriendshipUser;
+  amistad: {
+    id: string | null;
+    estado: BackendFriendshipState;
+  };
+};

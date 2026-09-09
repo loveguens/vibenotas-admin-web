@@ -37,7 +37,7 @@ type ScheduledMessagesModalProps = {
 };
 
 function toDateTimeLocal(value: string): string {
-  if (!value) return "";
+  if (!value) return "—";
 
   const normalized = value.replace(" ", "T");
   return normalized.slice(0, 16);
@@ -48,7 +48,7 @@ function toMySqlDateTime(value: string): string {
 }
 
 function formatDateTime(value: string | null): string {
-  if (!value) return "â€”";
+  if (!value) return "—";
 
   const normalized = value.includes("T") ? value : value.replace(" ", "T");
 
@@ -157,7 +157,7 @@ export function ScheduledMessagesModal({
     const contenido = editingContent.trim();
 
     if (!contenido) {
-      onError("El mensaje no puede estar vacÃ­o.");
+      onError("El mensaje no puede estar vacío.");
       return;
     }
 
@@ -289,7 +289,7 @@ export function ScheduledMessagesModal({
             </h2>
 
             <p className="mt-1 text-sm text-slate-400">
-              Administra los mensajes pendientes de esta conversaciÃ³n.
+              Administra los mensajes pendientes de esta conversación.
             </p>
           </div>
 
@@ -335,7 +335,7 @@ export function ScheduledMessagesModal({
               </p>
 
               <p className="mt-1 max-w-sm text-sm leading-6 text-slate-500">
-                Escribe un mensaje y usa el Ã­cono de reloj para programarlo.
+                Escribe un mensaje y usa el ícono de reloj para programarlo.
               </p>
             </div>
           ) : (
@@ -362,7 +362,7 @@ export function ScheduledMessagesModal({
 
                         <p className="mt-3 text-xs font-semibold text-violet-300">
                           {isPending
-                            ? "Se enviarÃ¡"
+                            ? "Se enviará"
                             : message.estado === "enviado"
                               ? "Enviado"
                               : "Programado para"}{" "}
