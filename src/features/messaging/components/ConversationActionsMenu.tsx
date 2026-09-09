@@ -65,13 +65,13 @@ function MenuItem({
           ? "cursor-not-allowed text-slate-600"
           : danger
             ? "text-red-300 hover:bg-red-500/10 hover:text-red-200"
-            : "text-slate-200 hover:bg-violet-500/10 hover:text-white"
+            : "text-slate-700 dark:text-slate-200 hover:bg-violet-500/10 hover:text-violet-700 dark:hover:text-violet-200"
       }`}
     >
       <span
         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
           muted
-            ? "bg-slate-800 text-slate-600"
+            ? "bg-slate-100 dark:bg-slate-800 text-slate-600"
             : danger
               ? "bg-red-500/10 text-red-300"
               : "bg-violet-500/10 text-violet-300"
@@ -117,7 +117,7 @@ export function ConversationActionsMenu({
 
   return (
     <div
-      className="fixed z-[9998] w-64 overflow-hidden rounded-2xl border border-slate-700/70 bg-[#080f20]/95 p-1.5 shadow-2xl shadow-black/80 backdrop-blur-xl"
+      className="fixed z-[9998] w-64 overflow-hidden rounded-2xl border border-slate-300 dark:border-slate-700/70 bg-white/95 dark:bg-[#080f20]/95 p-1.5 shadow-2xl shadow-black/80 backdrop-blur-xl"
       style={{
         left: menu.position.x,
         top: menu.position.y,
@@ -177,7 +177,7 @@ export function ConversationActionsMenu({
         Crear grupo
       </MenuItem>
 
-      <div className="mx-2 my-1 border-t border-slate-800" />
+      <div className="mx-2 my-1 border-t border-slate-200 dark:border-slate-800" />
 
       <MenuItem icon={Archive} onClick={() => handleAction(onArchive)}>
         Archivar conversación

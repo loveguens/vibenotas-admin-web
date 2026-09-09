@@ -25,7 +25,7 @@ export function TemporaryMessagesModal({
   }
 
   return (
-    <div className="fixed inset-0 z-[10020] flex items-end bg-slate-950/75 p-0 backdrop-blur-sm sm:items-center sm:justify-center sm:p-6">
+    <div className="fixed inset-0 z-[10020] flex items-end bg-slate-950/35 dark:bg-slate-950/75 p-0 backdrop-blur-sm sm:items-center sm:justify-center sm:p-6">
       <button
         type="button"
         className="absolute inset-0 cursor-default"
@@ -33,18 +33,18 @@ export function TemporaryMessagesModal({
         aria-label="Cerrar mensajes temporales"
       />
 
-      <section className="relative w-full rounded-t-[32px] border border-slate-700 bg-[#111827] p-6 shadow-2xl shadow-black/60 sm:max-w-lg sm:rounded-[32px]">
+      <section className="relative w-full rounded-t-[32px] border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#111827] p-6 shadow-2xl shadow-black/60 sm:max-w-lg sm:rounded-[32px]">
         <header className="mb-5 flex items-start justify-between gap-4">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-violet-400">
               Privacidad
             </p>
 
-            <h3 className="mt-1 text-xl font-bold text-white">
+            <h3 className="mt-1 text-xl font-bold text-slate-950 dark:text-white">
               Mensajes temporales
             </h3>
 
-            <p className="mt-1 text-sm leading-6 text-slate-400">
+            <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
               La eliminación automática se activará cuando conectemos la
               configuración con el backend.
             </p>
@@ -53,7 +53,7 @@ export function TemporaryMessagesModal({
           <button
             type="button"
             onClick={onClose}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-800 hover:text-white"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-slate-500 dark:text-slate-400 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white"
             aria-label="Cerrar"
           >
             <X size={18} />
@@ -72,7 +72,7 @@ export function TemporaryMessagesModal({
                 className={`flex w-full items-center gap-3 rounded-2xl border p-4 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/50 ${
                   selected
                     ? "border-violet-400/55 bg-violet-500/10"
-                    : "border-slate-800 bg-slate-900/50 hover:border-slate-600 hover:bg-slate-800/70"
+                    : "border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/50 hover:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800/70"
                 }`}
                 aria-pressed={selected}
               >
@@ -81,7 +81,7 @@ export function TemporaryMessagesModal({
                 </span>
 
                 <span className="min-w-0 flex-1">
-                  <strong className="block text-sm text-white">
+                  <strong className="block text-sm text-slate-950 dark:text-white">
                     {option.label}
                   </strong>
 

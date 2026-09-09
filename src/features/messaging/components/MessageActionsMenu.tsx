@@ -47,7 +47,7 @@ function MenuButton({
       className={`flex w-full items-center gap-3 px-4 py-3 text-left text-xs font-medium transition ${
         danger
           ? "text-red-300 hover:bg-red-500/10 hover:text-red-200"
-          : "text-slate-300 hover:bg-slate-800 hover:text-white"
+          : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white"
       }`}
     >
       <span
@@ -93,7 +93,7 @@ export function MessageActionsMenu({
 
   return (
     <div
-      className="fixed z-[9999] w-56 overflow-hidden rounded-2xl border border-slate-700 bg-[#080f20]/95 py-1.5 shadow-2xl shadow-black/80 backdrop-blur-xl"
+      className="fixed z-[9999] w-56 overflow-hidden rounded-2xl border border-slate-300 dark:border-slate-700 bg-white/95 dark:bg-[#080f20]/95 py-1.5 shadow-2xl shadow-black/80 backdrop-blur-xl"
       style={{
         left: menu.position.x,
         top: menu.position.y,
@@ -142,7 +142,7 @@ export function MessageActionsMenu({
         Información del mensaje
       </MenuButton>
 
-      <div className="my-1 border-t border-slate-800" />
+      <div className="my-1 border-t border-slate-200 dark:border-slate-800" />
 
       {mine ? (
         <>

@@ -1936,10 +1936,10 @@ export default function ChatPage() {
 
   return (
     <div
-      className="min-h-[calc(100vh-72px)] bg-[#0B1120] text-slate-100 md:p-5"
+      className="vn-chat-page min-h-[calc(100vh-72px)] transition-colors duration-300 md:p-5"
       onClick={closeMenus}
     >
-      <main className="mx-auto flex h-[calc(100vh-72px)] max-w-[1650px] overflow-hidden bg-[#111827] md:h-[calc(100vh-112px)] md:rounded-[30px] md:border md:border-slate-800 md:shadow-2xl md:shadow-black/30">
+      <main className="vn-chat-shell mx-auto flex h-[calc(100vh-72px)] max-w-[1650px] overflow-hidden transition-colors duration-300 md:h-[calc(100vh-112px)] md:rounded-[32px]">
         <ChatSidebar
           activeTab={activeTab}
           unreadChats={unreadChats}
@@ -1973,15 +1973,15 @@ export default function ChatPage() {
               >
                 {!selectedConversation ? (
                   <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
-                    <div className="mb-5 flex h-24 w-24 items-center justify-center rounded-[30px] bg-violet-500/10 text-violet-300 ring-1 ring-violet-400/15">
+                    <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-[32px] bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 text-violet-600 shadow-xl shadow-violet-500/10 ring-1 ring-violet-500/15 dark:text-violet-300">
                       <MessageCircle size={38} />
                     </div>
 
-                    <h2 className="text-2xl font-bold text-white">
+                    <h2 className="text-2xl font-black tracking-tight text-slate-950 dark:text-white">
                       Tus conversaciones, en un lugar
                     </h2>
 
-                    <p className="mt-3 max-w-md text-sm leading-7 text-slate-400">
+                    <p className="mt-3 max-w-md text-sm leading-7 text-slate-500 dark:text-slate-400">
                       Selecciona un chat para ver los mensajes o busca un amigo
                       para iniciar una nueva conversación.
                     </p>
@@ -2360,14 +2360,16 @@ function FriendsPanel({
 }) {
   return (
     <section className="flex min-h-0 flex-1 flex-col">
-      <header className="border-b border-slate-800 bg-slate-950/20 px-5 py-5 sm:px-8">
+      <header className="vn-chat-divider border-b bg-white/70 px-5 py-6 backdrop-blur-xl dark:bg-slate-950/25 sm:px-8">
         <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-violet-400">
           Comunidad
         </p>
 
-        <h1 className="mt-2 text-2xl font-bold text-white">Amigos</h1>
+        <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-950 dark:text-white">
+          Amigos
+        </h1>
 
-        <p className="mt-1 text-sm text-slate-400">
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           Busca personas, envía solicitudes e inicia conversaciones.
         </p>
 
@@ -2375,7 +2377,7 @@ function FriendsPanel({
           value={search}
           onChange={(event) => void onSearch(event.target.value)}
           placeholder="Buscar por nombre, usuario o correo completo..."
-          className="mt-5 w-full max-w-2xl rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white outline-none focus:border-violet-400"
+          className="vn-chat-input mt-5 w-full max-w-2xl rounded-2xl px-4 py-3 text-sm transition"
         />
       </header>
 
@@ -2385,14 +2387,14 @@ function FriendsPanel({
             {results.map((user) => (
               <article
                 key={user.id}
-                className="flex items-center gap-3 rounded-2xl border border-slate-800 bg-slate-900/45 p-4"
+                className="vn-chat-card flex items-center gap-3 rounded-2xl p-4"
               >
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/15 font-bold text-violet-300">
                   {user.nombre.slice(0, 1)}
                 </span>
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-bold text-white">
+                  <p className="truncate text-sm font-bold text-slate-950 dark:text-white">
                     {user.nombre}
                   </p>
 
@@ -2432,7 +2434,7 @@ function FriendsPanel({
         {loading ? (
           <p className="text-sm text-slate-500">Cargando amigos...</p>
         ) : friends.length === 0 ? (
-          <p className="rounded-3xl border border-dashed border-slate-700 p-10 text-center text-slate-500">
+          <p className="vn-chat-empty rounded-3xl p-10 text-center">
             Tu lista está vacía.
           </p>
         ) : (
@@ -2440,9 +2442,11 @@ function FriendsPanel({
             {friends.map((friend) => (
               <article
                 key={friend.amistad_id}
-                className="rounded-3xl border border-slate-800 bg-slate-900/45 p-4"
+                className="vn-chat-card rounded-3xl p-5"
               >
-                <p className="font-bold text-white">{friend.nombre}</p>
+                <p className="font-bold text-slate-950 dark:text-white">
+                  {friend.nombre}
+                </p>
 
                 <p className="mt-1 truncate text-xs text-slate-500">
                   {friend.username
@@ -2489,8 +2493,8 @@ function RequestsPanel({
 }) {
   return (
     <section className="flex min-h-0 flex-1 flex-col">
-      <header className="border-b border-slate-800 px-5 py-5 sm:px-8">
-        <h1 className="text-xl font-black text-white">
+      <header className="vn-chat-divider border-b bg-white/70 px-5 py-6 backdrop-blur-xl dark:bg-slate-950/25 sm:px-8">
+        <h1 className="text-2xl font-black tracking-tight text-slate-950 dark:text-white">
           Solicitudes de amistad
         </h1>
 
@@ -2515,7 +2519,7 @@ function RequestsPanel({
           {loading ? (
             <p className="text-slate-500">Cargando solicitudes...</p>
           ) : requests.length === 0 ? (
-            <p className="rounded-3xl border border-dashed border-slate-700 p-8 text-center text-slate-500">
+            <p className="vn-chat-empty rounded-3xl p-8 text-center">
               No tienes solicitudes recibidas pendientes.
             </p>
           ) : (
@@ -2523,7 +2527,7 @@ function RequestsPanel({
               {requests.map((request) => (
                 <article
                   key={request.amistad_id}
-                  className="rounded-3xl border border-slate-800 bg-slate-900/45 p-5"
+                  className="vn-chat-card rounded-3xl p-5"
                 >
                   <div className="flex items-center gap-3">
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-violet-500/15 font-bold text-violet-300">
@@ -2531,7 +2535,7 @@ function RequestsPanel({
                     </span>
 
                     <div className="min-w-0 flex-1">
-                      <p className="truncate font-bold text-white">
+                      <p className="truncate font-bold text-slate-950 dark:text-white">
                         {request.nombre}
                       </p>
 
@@ -2580,7 +2584,7 @@ function RequestsPanel({
           {loading ? (
             <p className="text-slate-500">Cargando solicitudes...</p>
           ) : sentRequests.length === 0 ? (
-            <p className="rounded-3xl border border-dashed border-slate-700 p-8 text-center text-slate-500">
+            <p className="vn-chat-empty rounded-3xl p-8 text-center">
               No tienes solicitudes enviadas pendientes.
             </p>
           ) : (
@@ -2588,7 +2592,7 @@ function RequestsPanel({
               {sentRequests.map((request) => (
                 <article
                   key={request.amistad_id}
-                  className="rounded-3xl border border-slate-800 bg-slate-900/45 p-5"
+                  className="vn-chat-card rounded-3xl p-5"
                 >
                   <div className="flex items-center gap-3">
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-slate-800 font-bold text-slate-300">
@@ -2596,7 +2600,7 @@ function RequestsPanel({
                     </span>
 
                     <div className="min-w-0 flex-1">
-                      <p className="truncate font-bold text-white">
+                      <p className="truncate font-bold text-slate-950 dark:text-white">
                         {request.nombre}
                       </p>
 
@@ -2632,9 +2636,11 @@ function BlockedPanel({
 }) {
   return (
     <section className="flex-1 overflow-y-auto p-5 sm:p-8">
-      <h1 className="text-2xl font-bold text-white">Usuarios bloqueados</h1>
+      <h1 className="text-2xl font-black tracking-tight text-slate-950 dark:text-white">
+        Usuarios bloqueados
+      </h1>
 
-      <p className="mt-1 text-sm text-slate-400">
+      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
         Estas personas no pueden iniciar conversaciones contigo.
       </p>
 
@@ -2642,23 +2648,25 @@ function BlockedPanel({
         {loading ? (
           <p className="text-slate-500">Cargando usuarios bloqueados...</p>
         ) : users.length === 0 ? (
-          <p className="rounded-3xl border border-dashed border-slate-700 p-10 text-center text-slate-500">
+          <p className="vn-chat-empty rounded-3xl p-10 text-center">
             No tienes usuarios bloqueados.
           </p>
         ) : (
           users.map((user) => (
             <article
               key={user.amistad_id}
-              className="rounded-3xl border border-slate-800 bg-slate-900/45 p-5"
+              className="vn-chat-card rounded-3xl p-5"
             >
-              <p className="font-bold text-white">{user.nombre}</p>
+              <p className="font-bold text-slate-950 dark:text-white">
+                {user.nombre}
+              </p>
 
               <p className="text-xs text-slate-500">{user.correo}</p>
 
               <button
                 type="button"
                 onClick={() => void onUnblock(user.usuario_id)}
-                className="mt-5 w-full rounded-xl border border-slate-700 px-4 py-2.5 text-sm font-bold text-slate-300 hover:bg-slate-800"
+                className="mt-5 w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
               >
                 Desbloquear
               </button>

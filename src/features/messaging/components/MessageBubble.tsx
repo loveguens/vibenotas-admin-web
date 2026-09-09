@@ -43,8 +43,8 @@ export function MessageBubble({
   if (isSystem) {
     return (
       <div className="flex justify-center py-1">
-        <div className="max-w-[90%] rounded-full border border-slate-700/70 bg-slate-900/70 px-4 py-2 text-center shadow-sm">
-          <p className="text-xs leading-5 text-slate-400">
+        <div className="max-w-[90%] rounded-full border border-slate-300 dark:border-slate-700/70 bg-white/90 dark:bg-slate-900/70 px-4 py-2 text-center shadow-sm">
+          <p className="text-xs leading-5 text-slate-500 dark:text-slate-400">
             {message.contenido}
           </p>
 
@@ -87,7 +87,7 @@ export function MessageBubble({
             className={`relative rounded-2xl px-4 py-3 pr-12 shadow-lg ${
               isMine
                 ? `rounded-br-md ${mineBubbleClass} text-white`
-                : "rounded-bl-md border border-slate-700 bg-slate-800 text-slate-100"
+                : "rounded-bl-md border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100"
             }`}
           >
             {!isMine && isGroup && (
@@ -106,7 +106,7 @@ export function MessageBubble({
                 className={`absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-lg transition ${
                   isMine
                     ? "text-white/80 hover:bg-white/15 hover:text-white"
-                    : "text-slate-400 hover:bg-slate-700 hover:text-white"
+                    : "text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-white"
                 }`}
                 aria-label="Opciones del mensaje"
               >
@@ -122,7 +122,7 @@ export function MessageBubble({
                   onKeyDown={handleEditKeyDown}
                   autoFocus
                   maxLength={3000}
-                  className="min-h-24 w-full resize-none rounded-xl border border-violet-300 bg-slate-900 p-3 text-sm text-white outline-none transition focus:ring-2 focus:ring-violet-500/20"
+                  className="min-h-24 w-full resize-none rounded-xl border border-violet-300 bg-white dark:bg-slate-900 p-3 text-sm text-slate-950 dark:text-white outline-none transition focus:ring-2 focus:ring-violet-500/20"
                 />
 
                 <div className="mt-3 flex items-center justify-between gap-3">
@@ -157,7 +157,7 @@ export function MessageBubble({
                     className={`mb-2 rounded-xl border-l-2 px-3 py-2 text-xs ${
                       isMine
                         ? "border-white/60 bg-white/10 text-violet-50"
-                        : "border-violet-400 bg-slate-700/70 text-slate-300"
+                        : "border-violet-400 bg-slate-700/70 text-slate-700 dark:text-slate-300"
                     }`}
                   >
                     <p className="font-bold">
@@ -171,7 +171,7 @@ export function MessageBubble({
                 )}
 
                 {isDeleted ? (
-                  <p className="italic text-sm text-slate-300">
+                  <p className="italic text-sm text-slate-700 dark:text-slate-300">
                     Este mensaje fue eliminado.
                   </p>
                 ) : hasAttachment ? (
@@ -242,7 +242,7 @@ export function MessageBubble({
                     {message.reacciones.map((reaction) => (
                       <span
                         key={reaction.emoji}
-                        className="rounded-full border border-slate-700 bg-slate-900 px-1.5 py-0.5 text-[10px] shadow"
+                        className="rounded-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-1.5 py-0.5 text-[10px] shadow"
                       >
                         {reaction.emoji} {reaction.total}
                       </span>

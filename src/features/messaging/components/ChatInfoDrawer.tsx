@@ -53,9 +53,9 @@ function DrawerRow({
       type="button"
       onClick={onClick}
       disabled={!isClickable}
-      className={`flex w-full items-center gap-4 rounded-2xl border border-slate-800 bg-slate-900/60 px-4 py-4 text-left transition ${
+      className={`flex w-full items-center gap-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-slate-900/60 px-4 py-4 text-left transition ${
         isClickable
-          ? "hover:border-violet-400/35 hover:bg-slate-800"
+          ? "hover:border-violet-400/35 hover:bg-slate-100 dark:hover:bg-slate-800"
           : "cursor-default opacity-75"
       }`}
     >
@@ -64,7 +64,9 @@ function DrawerRow({
       </span>
 
       <span className="min-w-0 flex-1">
-        <span className="block text-sm font-bold text-white">{title}</span>
+        <span className="block text-sm font-bold text-slate-950 dark:text-white">
+          {title}
+        </span>
         <span className="mt-1 block text-xs leading-5 text-slate-500">
           {text}
         </span>
@@ -117,7 +119,7 @@ export function ChatInfoDrawer({
     : conversation.otro_usuario_correo || "Chat privado";
 
   return (
-    <div className="fixed inset-0 z-[10010] bg-slate-950/75 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[10010] bg-slate-950/35 dark:bg-slate-950/75 backdrop-blur-sm">
       <button
         type="button"
         onClick={onClose}
@@ -125,13 +127,13 @@ export function ChatInfoDrawer({
         aria-label="Cerrar información del chat"
       />
 
-      <aside className="absolute bottom-0 right-0 flex h-[min(92vh,820px)] w-full max-w-md flex-col rounded-t-[32px] border border-slate-700 bg-[#111827] shadow-2xl sm:bottom-auto sm:top-0 sm:h-full sm:rounded-none">
-        <header className="border-b border-slate-800 bg-[radial-gradient(circle_at_top,#7c3aed35,transparent_62%)] px-6 pb-6 pt-6">
+      <aside className="absolute bottom-0 right-0 flex h-[min(92vh,820px)] w-full max-w-md flex-col rounded-t-[32px] border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#111827] shadow-2xl sm:bottom-auto sm:top-0 sm:h-full sm:rounded-none">
+        <header className="border-b border-slate-200 dark:border-slate-800 bg-[radial-gradient(circle_at_top,#7c3aed35,transparent_62%)] px-6 pb-6 pt-6">
           <div className="flex justify-end">
             <button
               type="button"
               onClick={onClose}
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-800 hover:text-white"
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-500 dark:text-slate-400 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white"
               title="Cerrar"
               aria-label="Cerrar"
             >
@@ -161,9 +163,13 @@ export function ChatInfoDrawer({
               online={!isGroup && !muted}
             />
 
-            <h3 className="mt-4 text-xl font-bold text-white">{chatName}</h3>
+            <h3 className="mt-4 text-xl font-bold text-slate-950 dark:text-white">
+              {chatName}
+            </h3>
 
-            <p className="mt-1 text-sm text-slate-400">{chatSubtitle}</p>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              {chatSubtitle}
+            </p>
 
             {!isGroup && (
               <span className="mt-2 text-[11px] font-medium text-violet-300">

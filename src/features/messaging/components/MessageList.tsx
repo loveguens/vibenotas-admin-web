@@ -79,9 +79,9 @@ export function MessageList({
     >
       {loading ? (
         <div className="space-y-4">
-          <div className="h-14 w-2/5 animate-pulse rounded-2xl bg-slate-800" />
-          <div className="ml-auto h-20 w-1/2 animate-pulse rounded-2xl bg-slate-800" />
-          <div className="h-16 w-1/3 animate-pulse rounded-2xl bg-slate-800" />
+          <div className="h-14 w-2/5 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800" />
+          <div className="ml-auto h-20 w-1/2 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800" />
+          <div className="h-16 w-1/3 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800" />
         </div>
       ) : messages.length === 0 ? (
         <div className="flex h-full items-center justify-center text-center">
@@ -90,7 +90,7 @@ export function MessageList({
               <MessageCircle size={24} />
             </div>
 
-            <p className="font-semibold text-slate-200">
+            <p className="font-semibold text-slate-700 dark:text-slate-200">
               Este chat está listo.
             </p>
 
@@ -109,7 +109,7 @@ export function MessageList({
               <div key={message.id}>
                 {isDifferentDay(previousMessage, message) && (
                   <div className="my-1 flex justify-center">
-                    <span className="rounded-full border border-slate-700 bg-slate-900/90 px-3 py-1 text-[10px] font-bold text-slate-400">
+                    <span className="rounded-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900/90 px-3 py-1 text-[10px] font-bold text-slate-500 dark:text-slate-400">
                       {getDateDivider(message.creado_en)}
                     </span>
                   </div>
