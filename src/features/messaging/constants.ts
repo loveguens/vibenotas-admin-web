@@ -1,4 +1,4 @@
-import type { ChatThemeId, TemporaryDuration } from "./types/chat.types";
+﻿import type { ChatThemeId, TemporaryDuration } from "./types/chat.types";
 
 export const API_ROUTES = {
   conversations: "/chat/conversations",
@@ -26,12 +26,14 @@ export const API_ROUTES = {
     `/friendships/search?q=${encodeURIComponent(query)}`,
 
   /*
-   * Bloqueos todavía no forman parte
+   * Bloqueos todavÃ­a no forman parte
    * del backend de amistades nuevo.
    */
-  blocked: "/friends/blocked",
+  blocked: "/user-blocks",
 
-  unblockUser: (id: string) => `/friends/${id}/unblock`,
+  blockUser: "/user-blocks",
+
+  unblockUser: (id: string) => `/user-blocks/${id}`,
 
   createGroup: "/chat/conversations/group",
 
@@ -59,7 +61,7 @@ export const API_ROUTES = {
   transferGroupOwner: (conversationId: string) =>
     `/chat/conversations/${conversationId}/owner`,
 
-  // Funcionalidades que todavía no existen en el backend actual.
+  // Funcionalidades que todavÃ­a no existen en el backend actual.
   updateConversationSettings: (id: string) =>
     `/chat/conversations/${id}/settings`,
 
@@ -71,8 +73,6 @@ export const API_ROUTES = {
   archiveConversation: (id: string) => `/chat/conversations/${id}/archive`,
 
   removeConversationLocally: (id: string) => `/chat/conversations/${id}/local`,
-
-  blockConversationUser: (id: string) => `/chat/conversations/${id}/block`,
 } as const;
 
 export const CHAT_THEMES: Array<{
@@ -121,7 +121,7 @@ export const CHAT_THEMES: Array<{
   {
     id: "rose",
     label: "Rosa suave",
-    description: "Cálido y moderno",
+    description: "CÃ¡lido y moderno",
     mineBubble: "bg-rose-600",
     sendButton: "bg-rose-600 hover:bg-rose-500",
     active: "bg-rose-500/15 ring-rose-400/30",
@@ -131,7 +131,7 @@ export const CHAT_THEMES: Array<{
   },
   {
     id: "amber",
-    label: "Ámbar",
+    label: "Ãmbar",
     description: "Brillante y elegante",
     mineBubble: "bg-amber-500",
     sendButton: "bg-amber-500 hover:bg-amber-400",
@@ -176,21 +176,21 @@ export const TEMPORARY_OPTIONS: Array<{
   {
     value: "24h",
     label: "24 horas",
-    description: "Preparado para eliminar mensajes tras un día.",
+    description: "Preparado para eliminar mensajes tras un dÃ­a.",
   },
   {
     value: "7d",
-    label: "7 días",
+    label: "7 dÃ­as",
     description: "Preparado para eliminar mensajes tras una semana.",
   },
   {
     value: "30d",
-    label: "30 días",
+    label: "30 dÃ­as",
     description: "Preparado para eliminar mensajes tras un mes.",
   },
   {
     value: "custom",
     label: "Personalizado",
-    description: "Requiere configuración futura del backend.",
+    description: "Requiere configuraciÃ³n futura del backend.",
   },
 ];

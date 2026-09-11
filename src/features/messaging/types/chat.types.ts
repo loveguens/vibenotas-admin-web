@@ -131,12 +131,16 @@ export type FriendRequest = {
 };
 
 export type BlockedUser = {
-  amistad_id: string;
-  usuario_id: string;
-  nombre: string;
-  correo: string;
-  avatar?: string | null;
-  usuario_estado: string;
+  bloqueo_id: string;
+
+  usuario: {
+    id: string;
+    username: string | null;
+    nombre: string;
+    avatar_url: string | null;
+  };
+
+  bloqueado_en: string;
 };
 
 export type SearchUser = {
