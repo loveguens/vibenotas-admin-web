@@ -7,6 +7,7 @@ import {
   Star,
   Volume2,
 } from "lucide-react";
+import type { KeyboardEvent } from "react";
 import type { Message } from "../types/chat.types";
 import { formatChatDate } from "../utils";
 import { Avatar } from "./Avatar";
@@ -37,19 +38,14 @@ export function MessageBubble({
   onOpenActions,
 }: MessageBubbleProps) {
   const isDeleted = Number(message.eliminado ?? 0) === 1;
-
   const isSystem = message.tipo === "sistema";
 
   if (isSystem) {
     return (
-      <div className="flex justify-center py-1">
-        <div className="max-w-[90%] rounded-full border border-slate-300 dark:border-slate-700/70 bg-white/90 dark:bg-slate-900/70 px-4 py-2 text-center shadow-sm">
+      <div className="flex justify-center py-2">
+        <div className="max-w-[90%] rounded-full border border-slate-200 bg-white/80 px-4 py-2 text-center shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5">
           <p className="text-xs leading-5 text-slate-500 dark:text-slate-400">
             {message.contenido}
-          </p>
-
-          <p className="mt-0.5 text-[9px] text-slate-600">
-            {formatChatDate(message.creado_en)}
           </p>
         </div>
       </div>
@@ -58,7 +54,7 @@ export function MessageBubble({
 
   const hasAttachment = message.tipo === "archivo" || message.tipo === "imagen";
 
-  function handleEditKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+  function handleEditKeyDown(event: KeyboardEvent<HTMLTextAreaElement>): void {
     if (event.key === "Escape") {
       event.preventDefault();
       onCancelEdit();
@@ -72,8 +68,8 @@ export function MessageBubble({
   }
 
   return (
-    <div className={`flex ${isMine ? "justify-end" : "justify-start"}`}>
-      <div className="flex max-w-[92%] items-end gap-2 sm:max-w-[76%]">
+    <div className={`group flex ${isMine ? "justify-end" : "justify-start"}`}>
+      <div className="flex max-w-[92%] items-end gap-2 sm:max-w-[78%]">
         {!isMine && (
           <Avatar
             name={message.emisor_nombre}
@@ -84,14 +80,14 @@ export function MessageBubble({
 
         <div className="relative min-w-0">
           <div
-            className={`relative rounded-2xl px-4 py-3 pr-12 shadow-lg ${
+            className={`relative px-4 py-2.5 shadow-sm ${
               isMine
-                ? `rounded-br-md ${mineBubbleClass} text-white`
-                : "rounded-bl-md border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100"
+                ? `rounded-[22px] rounded-br-md ${mineBubbleClass} text-white`
+                : "rounded-[22px] rounded-bl-md border border-slate-200 bg-white/95 text-slate-900 dark:border-white/10 dark:bg-[#172033] dark:text-slate-100"
             }`}
           >
             {!isMine && isGroup && (
-              <p className="mb-1 text-xs font-bold text-violet-300">
+              <p className="mb-1 text-[11px] font-black text-violet-600 dark:text-violet-300">
                 {message.emisor_nombre}
               </p>
             )}
@@ -103,14 +99,14 @@ export function MessageBubble({
                   event.stopPropagation();
                   onOpenActions(event.currentTarget, message);
                 }}
-                className={`absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-lg transition ${
+                className={`absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-lg opacity-70 transition sm:opacity-0 sm:group-hover:opacity-100 ${
                   isMine
                     ? "text-white/80 hover:bg-white/15 hover:text-white"
-                    : "text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-white"
+                    : "text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-white/10 dark:hover:text-white"
                 }`}
                 aria-label="Opciones del mensaje"
               >
-                <MoreVertical size={17} />
+                <MoreVertical size={15} />
               </button>
             )}
 
@@ -122,32 +118,26 @@ export function MessageBubble({
                   onKeyDown={handleEditKeyDown}
                   autoFocus
                   maxLength={3000}
-                  className="min-h-24 w-full resize-none rounded-xl border border-violet-300 bg-white dark:bg-slate-900 p-3 text-sm text-slate-950 dark:text-white outline-none transition focus:ring-2 focus:ring-violet-500/20"
+                  className="min-h-24 w-full resize-none rounded-xl border border-violet-300 bg-white p-3 text-sm text-slate-950 outline-none focus:ring-2 focus:ring-violet-500/20 dark:bg-slate-900 dark:text-white"
                 />
 
-                <div className="mt-3 flex items-center justify-between gap-3">
-                  <span className="text-[10px] text-violet-100/70">
-                    Ctrl + Enter para guardar
-                  </span>
+                <div className="mt-3 flex justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={onCancelEdit}
+                    className="rounded-lg px-3 py-1.5 text-xs font-semibold text-white/80 transition hover:bg-white/10"
+                  >
+                    Cancelar
+                  </button>
 
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={onCancelEdit}
-                      className="rounded-lg px-3 py-1.5 text-xs font-semibold text-violet-100 transition hover:bg-violet-400/20"
-                    >
-                      Cancelar
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={onSaveEdit}
-                      disabled={!editingText.trim()}
-                      className="rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-violet-600 transition hover:bg-violet-50 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      Guardar
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={onSaveEdit}
+                    disabled={!editingText.trim()}
+                    className="rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-violet-700 transition disabled:opacity-50"
+                  >
+                    Guardar
+                  </button>
                 </div>
               </>
             ) : (
@@ -156,22 +146,28 @@ export function MessageBubble({
                   <div
                     className={`mb-2 rounded-xl border-l-2 px-3 py-2 text-xs ${
                       isMine
-                        ? "border-white/60 bg-white/10 text-violet-50"
-                        : "border-violet-400 bg-slate-700/70 text-slate-700 dark:text-slate-300"
+                        ? "border-white/60 bg-white/10 text-white/90"
+                        : "border-violet-500 bg-violet-50 text-slate-700 dark:bg-black/15 dark:text-slate-300"
                     }`}
                   >
                     <p className="font-bold">
                       {message.reply_to.emisor_nombre}
                     </p>
 
-                    <p className="mt-0.5 truncate opacity-80">
+                    <p className="mt-0.5 truncate opacity-75">
                       {message.reply_to.contenido}
                     </p>
                   </div>
                 )}
 
                 {isDeleted ? (
-                  <p className="italic text-sm text-slate-700 dark:text-slate-300">
+                  <p
+                    className={`text-sm italic ${
+                      isMine
+                        ? "text-white/70"
+                        : "text-slate-500 dark:text-slate-400"
+                    }`}
+                  >
                     Este mensaje fue eliminado.
                   </p>
                 ) : hasAttachment ? (
@@ -180,33 +176,34 @@ export function MessageBubble({
                       href={message.archivo_url}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center gap-3 rounded-xl bg-black/10 p-2 text-sm underline-offset-4 transition hover:bg-black/20 hover:underline"
+                      className="flex items-center gap-3 rounded-xl bg-black/5 p-2 pr-8 text-sm transition hover:bg-black/10 dark:bg-black/15"
                     >
-                      <FileText size={22} />
+                      <FileText size={21} />
 
                       <span className="truncate">
                         {message.archivo_nombre ?? "Archivo adjunto"}
                       </span>
                     </a>
                   ) : (
-                    <div className="flex items-center gap-3 rounded-xl bg-black/10 p-2 text-sm opacity-70">
-                      <FileText size={22} />
-
-                      <span className="truncate">
-                        {message.archivo_nombre ?? "Archivo no disponible"}
-                      </span>
+                    <div className="flex items-center gap-3 rounded-xl bg-black/5 p-2 pr-8 text-sm opacity-70">
+                      <FileText size={21} />
+                      <span>Archivo no disponible</span>
                     </div>
                   )
                 ) : message.tipo === "audio" ? (
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 pr-8">
                     <Volume2 size={18} />
-                    <div className="h-1 w-36 rounded-full bg-white/35" />
+                    <div
+                      className={`h-1 w-36 rounded-full ${
+                        isMine ? "bg-white/35" : "bg-slate-300 dark:bg-white/20"
+                      }`}
+                    />
                   </div>
                 ) : (
-                  <p className="whitespace-pre-wrap break-words text-sm leading-6">
+                  <p className="whitespace-pre-wrap break-words pr-6 text-sm leading-6">
                     {message.reenviado && (
-                      <span className="mr-1 text-xs opacity-80">
-                        Reenviado ·
+                      <span className="mr-1 text-xs opacity-70">
+                        Reenviado ?
                       </span>
                     )}
 
@@ -215,25 +212,27 @@ export function MessageBubble({
                 )}
 
                 <div
-                  className={`mt-1.5 flex items-center justify-end gap-1 text-[10px] ${
-                    isMine ? "text-white/80" : "text-slate-500"
+                  className={`mt-1 flex items-center justify-end gap-1 text-[9px] ${
+                    isMine
+                      ? "text-white/75"
+                      : "text-slate-400 dark:text-slate-500"
                   }`}
                 >
                   <span>{formatChatDate(message.creado_en)}</span>
 
-                  {Number(message.editado ?? 0) === 1 && <span>· editado</span>}
+                  {Number(message.editado ?? 0) === 1 && <span>? editado</span>}
 
-                  {message.fijado && <Pin size={11} />}
+                  {message.fijado && <Pin size={10} />}
 
                   {message.favorito && (
-                    <Star size={11} className="fill-current" />
+                    <Star size={10} className="fill-current" />
                   )}
 
                   {isMine &&
                     (Number(message.leido ?? 0) === 1 ? (
-                      <CheckCheck size={13} />
+                      <CheckCheck size={12} />
                     ) : (
-                      <Check size={13} />
+                      <Check size={12} />
                     ))}
                 </div>
 
@@ -242,7 +241,7 @@ export function MessageBubble({
                     {message.reacciones.map((reaction) => (
                       <span
                         key={reaction.emoji}
-                        className="rounded-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-1.5 py-0.5 text-[10px] shadow"
+                        className="rounded-full border border-slate-200 bg-white px-1.5 py-0.5 text-[10px] shadow-sm dark:border-white/10 dark:bg-[#111a2c]"
                       >
                         {reaction.emoji} {reaction.total}
                       </span>

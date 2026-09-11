@@ -1,7 +1,13 @@
-import { ArrowLeft, LockKeyhole, MoreVertical, Pin, Users } from "lucide-react";
+import {
+  ArrowLeft,
+  BellOff,
+  LockKeyhole,
+  MoreVertical,
+  Pin,
+  Users,
+} from "lucide-react";
 
 import type { Conversation } from "../types/chat.types";
-
 import { Avatar } from "./Avatar";
 
 type ChatHeaderProps = {
@@ -27,7 +33,7 @@ function formatLastSeen(value?: string | null): string {
     return "Desconectado";
   }
 
-  return `Última vez ${date.toLocaleString()}`;
+  return `?ltima vez ${date.toLocaleString()}`;
 }
 
 export function ChatHeader({
@@ -52,23 +58,22 @@ export function ChatHeader({
   if (typingLabel) {
     subtitle = typingLabel;
   } else if (isGroup) {
-    subtitle = "Grupo de conversación";
+    subtitle = "Grupo de conversaci?n";
   } else if (isMuted) {
     subtitle = "Notificaciones silenciadas";
   } else if (presenceOnline) {
-    subtitle = "En línea · Conversación protegida";
+    subtitle = "En l?nea";
   } else {
-    subtitle = `${formatLastSeen(lastSeenAt)} · Conversación protegida`;
+    subtitle = formatLastSeen(lastSeenAt);
   }
 
   return (
-    <header className="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-white via-slate-50 to-violet-50/70 dark:from-slate-950/95 dark:via-slate-950/75 dark:to-violet-950/20 px-4 py-3.5 backdrop-blur-xl sm:px-6">
+    <header className="flex min-h-[72px] shrink-0 items-center gap-3 border-b border-slate-200 bg-white/95 px-3 backdrop-blur-xl dark:border-white/10 dark:bg-[#0d1526]/95 sm:px-5">
       <button
         type="button"
         onClick={onBack}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-slate-500 dark:text-slate-400 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white lg:hidden"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white lg:hidden"
         aria-label="Volver a conversaciones"
-        title="Volver a conversaciones"
       >
         <ArrowLeft size={19} />
       </button>
@@ -76,8 +81,7 @@ export function ChatHeader({
       <button
         type="button"
         onClick={onOpenInfo}
-        className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl text-left outline-none transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-violet-400/50"
-        title="Ver información del chat"
+        className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl text-left outline-none"
       >
         <Avatar
           name={title}
@@ -90,28 +94,41 @@ export function ChatHeader({
 
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <h2 className="truncate text-sm font-bold text-slate-950 dark:text-white sm:text-base">
+            <h2 className="truncate text-sm font-black text-slate-950 dark:text-white sm:text-base">
               {title}
             </h2>
 
             {isPinned && (
               <Pin
-                size={13}
-                className="shrink-0 fill-violet-300 text-violet-300"
-                aria-label="Conversación fijada"
+                size={12}
+                className="shrink-0 fill-violet-500 text-violet-500"
               />
+            )}
+
+            {isMuted && (
+              <BellOff size={12} className="shrink-0 text-slate-400" />
             )}
           </div>
 
-          <p className="mt-0.5 flex items-center gap-1.5 truncate text-xs text-slate-500 dark:text-slate-400">
+          <div className="mt-0.5 flex min-w-0 items-center gap-1.5">
             {isGroup ? (
-              <Users size={12} className="shrink-0 text-sky-300" />
+              <Users size={11} className="shrink-0 text-sky-500" />
+            ) : presenceOnline ? (
+              <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-500" />
             ) : (
-              <LockKeyhole size={11} className="shrink-0 text-emerald-300" />
+              <LockKeyhole size={10} className="shrink-0 text-emerald-500" />
             )}
 
-            <span>{subtitle}</span>
-          </p>
+            <p
+              className={`truncate text-[11px] ${
+                typingLabel
+                  ? "font-semibold text-violet-600 dark:text-violet-300"
+                  : "text-slate-500 dark:text-slate-400"
+              }`}
+            >
+              {subtitle}
+            </p>
+          </div>
         </div>
       </button>
 
@@ -119,12 +136,10 @@ export function ChatHeader({
         type="button"
         onClick={(event) => {
           event.stopPropagation();
-
           onOpenMenu(event.currentTarget);
         }}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-slate-500 dark:text-slate-400 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white focus-visible:ring-2 focus-visible:ring-violet-400/50"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white"
         aria-label="Opciones del chat"
-        title="Opciones del chat"
       >
         <MoreVertical size={20} />
       </button>

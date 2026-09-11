@@ -1,7 +1,16 @@
-import { MessageCircle } from "lucide-react";
+import {
+  Check,
+  Clock3,
+  MessageCircle,
+  Search,
+  ShieldOff,
+  UserMinus,
+  UserPlus,
+  X,
+} from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
 import {
   adaptConversation,
@@ -61,18 +70,19 @@ import {
   persistConversationTheme,
 } from "../features/messaging/utils";
 import { ScheduledMessagesModal } from "../features/messaging/components/ScheduledMessagesModal";
+import { Avatar } from "../features/messaging/components/Avatar";
 
 export default function ChatPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { conversacionId } = useParams();
   const currentUser = getCurrentUser();
 
   const selectedConversationIdRef = useRef<string | null>(null);
 
-  const chatBasePath =
-    currentUser?.rol === "super_admin" || currentUser?.rol === "superadmin"
-      ? "/superadmin/chat"
-      : "/admin/chat";
+  const chatBasePath = location.pathname.startsWith("/superadmin/")
+    ? "/superadmin/chat"
+    : "/admin/chat";
 
   const [activeTab, setActiveTab] = useState<ChatTab>("chats");
 
@@ -240,6 +250,10 @@ export default function ChatPage() {
     [currentUser?.id],
   );
 
+  useEffect(() => {
+    void loadConversations();
+  }, [loadConversations]);
+
   const loadMessages = useCallback(async (id: string, keepPosition = false) => {
     try {
       setLoadingMessages(!keepPosition);
@@ -269,9 +283,18 @@ export default function ChatPage() {
         return incoming;
       });
     } catch (requestError) {
-      setError(
-        getErrorMessage(requestError, "No se pudieron cargar los mensajes."),
-      );
+      /*
+       * La petici?n puede terminar despu?s de que
+       * el usuario haya cambiado/cerrado el chat.
+       *
+       * En ese caso el error pertenece a una
+       * selecci?n antigua y no debe mostrarse.
+       */
+      if (selectedConversationIdRef.current === id) {
+        setError(
+          getErrorMessage(requestError, "No se pudieron cargar los mensajes."),
+        );
+      }
     } finally {
       setLoadingMessages(false);
     }
@@ -426,7 +449,11 @@ export default function ChatPage() {
           conversationId,
         },
         (response) => {
-          if (disposed || response.ok) {
+          if (
+            disposed ||
+            response.ok ||
+            selectedConversationIdRef.current !== conversationId
+          ) {
             return;
           }
 
@@ -836,6 +863,29 @@ export default function ChatPage() {
   }, [currentUser?.id, loadConversations]);
 
   useEffect(() => {
+    if (
+      loadingConversations ||
+      !selectedConversationId ||
+      selectedConversation
+    ) {
+      return;
+    }
+
+    setSelectedConversationId(null);
+    selectedConversationIdRef.current = null;
+
+    navigate(chatBasePath, {
+      replace: true,
+    });
+  }, [
+    chatBasePath,
+    loadingConversations,
+    navigate,
+    selectedConversation,
+    selectedConversationId,
+  ]);
+
+  useEffect(() => {
     if (!selectedConversationId) {
       return;
     }
@@ -852,7 +902,10 @@ export default function ChatPage() {
         conversationId: selectedConversationId,
       },
       (response) => {
-        if (response.ok) {
+        if (
+          response.ok ||
+          selectedConversationIdRef.current !== selectedConversationId
+        ) {
           return;
         }
 
@@ -863,7 +916,7 @@ export default function ChatPage() {
   useEffect(() => {
     const id = conversacionId ?? null;
 
-    if (id && id !== selectedConversationId) {
+    if (id !== selectedConversationId) {
       setSelectedConversationId(id);
     }
   }, [conversacionId, selectedConversationId]);
@@ -1497,9 +1550,57 @@ export default function ChatPage() {
     }
   }
 
+  async function blockConversationUser(): Promise<void> {
+    const targetUserId = selectedConversation?.otro_usuario_id;
+
+    if (
+      !selectedConversation ||
+      selectedConversation.tipo === "grupo" ||
+      !targetUserId
+    ) {
+      setError("No se pudo identificar al usuario que quieres bloquear.");
+      return;
+    }
+
+    try {
+      setError("");
+
+      await api.post(API_ROUTES.blockUser, {
+        userId: targetUserId,
+      });
+
+      stopLocalTyping();
+
+      setConversationMenu(null);
+
+      /*
+       * Quitamos primero el ID de la URL.
+       *
+       * As? el efecto que sincroniza conversacionId
+       * no puede volver a seleccionar el chat que
+       * acabamos de bloquear.
+       */
+      navigate(chatBasePath, {
+        replace: true,
+      });
+
+      setSelectedConversationId(null);
+      selectedConversationIdRef.current = null;
+      setMessages([]);
+
+      await Promise.all([loadConversations(), loadFriends(), loadBlocked()]);
+
+      setToast("Usuario bloqueado.");
+    } catch (requestError) {
+      setError(
+        getErrorMessage(requestError, "No se pudo bloquear al usuario."),
+      );
+    }
+  }
+
   async function unblockUser(id: string): Promise<void> {
     try {
-      await api.post(API_ROUTES.unblockUser(id));
+      await api.delete(API_ROUTES.unblockUser(id));
 
       await loadBlocked();
 
@@ -1936,10 +2037,10 @@ export default function ChatPage() {
 
   return (
     <div
-      className="vn-chat-page min-h-[calc(100vh-72px)] transition-colors duration-300 md:p-5"
+      className="vn-chat-page min-h-0 transition-colors duration-300"
       onClick={closeMenus}
     >
-      <main className="vn-chat-shell mx-auto flex h-[calc(100vh-72px)] max-w-[1650px] overflow-hidden transition-colors duration-300 md:h-[calc(100vh-112px)] md:rounded-[32px]">
+      <main className="vn-chat-shell mx-auto flex h-[calc(100dvh-150px)] min-h-[480px] max-w-[1650px] flex-col overflow-hidden rounded-[28px] transition-colors duration-300">
         <ChatSidebar
           activeTab={activeTab}
           unreadChats={unreadChats}
@@ -1954,7 +2055,7 @@ export default function ChatPage() {
             <div className="flex min-h-0 flex-1 overflow-hidden">
               <ConversationList
                 conversations={filteredConversations}
-                selectedConversationId={selectedConversationId}
+                selectedConversationId={selectedConversation?.id ?? null}
                 search={chatSearch}
                 loading={loadingConversations}
                 activeTab={activeTab}
@@ -1968,20 +2069,20 @@ export default function ChatPage() {
 
               <section
                 className={`${
-                  selectedConversationId ? "flex" : "hidden lg:flex"
-                } min-h-0 min-w-0 flex-1 flex-col overflow-hidden ${theme.background}`}
+                  selectedConversation ? "flex" : "hidden lg:flex"
+                } min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-white dark:bg-[#0b1220]`}
               >
                 {!selectedConversation ? (
-                  <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
-                    <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-[32px] bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 text-violet-600 shadow-xl shadow-violet-500/10 ring-1 ring-violet-500/15 dark:text-violet-300">
+                  <div className="vn-message-surface flex flex-1 items-center justify-center px-6 text-center">
+                    <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-[22px] bg-violet-100 text-violet-600 dark:bg-violet-500/10 dark:text-violet-300">
                       <MessageCircle size={38} />
                     </div>
 
-                    <h2 className="text-2xl font-black tracking-tight text-slate-950 dark:text-white">
-                      Tus conversaciones, en un lugar
+                    <h2 className="text-xl font-black tracking-tight text-slate-950 dark:text-white">
+                      Elige una conversaci?n
                     </h2>
 
-                    <p className="mt-3 max-w-md text-sm leading-7 text-slate-500 dark:text-slate-400">
+                    <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-slate-500 dark:text-slate-400">
                       Selecciona un chat para ver los mensajes o busca un amigo
                       para iniciar una nueva conversación.
                     </p>
@@ -1989,7 +2090,7 @@ export default function ChatPage() {
                     <button
                       type="button"
                       onClick={() => changeTab("amigos")}
-                      className="mt-6 rounded-xl bg-violet-500 px-5 py-3 text-sm font-bold text-white hover:bg-violet-400"
+                      className="mt-5 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-violet-500/20 transition hover:bg-violet-500"
                     >
                       Buscar amigos
                     </button>
@@ -2196,12 +2297,7 @@ export default function ChatPage() {
             "Archivada localmente; conecta PUT /chat/conversations/{id}/archive para persistir.",
           );
         }}
-        onBlock={() =>
-          futureAction(
-            "Bloquear usuario",
-            "Crea POST /chat/conversations/{id}/block y valida que no se pueda iniciar un chat privado con usuarios bloqueados.",
-          )
-        }
+        onBlock={() => void blockConversationUser()}
         onReport={() =>
           futureAction(
             "Reportar usuario",
@@ -2358,121 +2454,219 @@ function FriendsPanel({
   onChat: (id: string) => Promise<void>;
   onRemove: (friendshipId: string) => Promise<void>;
 }) {
+  const hasQuery = search.trim().length >= 2;
+
   return (
-    <section className="flex min-h-0 flex-1 flex-col">
-      <header className="vn-chat-divider border-b bg-white/70 px-5 py-6 backdrop-blur-xl dark:bg-slate-950/25 sm:px-8">
-        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-violet-400">
-          Comunidad
-        </p>
+    <section className="flex min-h-0 flex-1 flex-col bg-slate-50/60 dark:bg-[#0b1220]">
+      <header className="shrink-0 border-b border-slate-200 bg-white px-4 py-5 dark:border-white/10 dark:bg-[#0d1526] sm:px-6">
+        <div className="mx-auto max-w-5xl">
+          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-violet-500">
+            Comunidad
+          </p>
 
-        <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-950 dark:text-white">
-          Amigos
-        </h1>
+          <div className="mt-1 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h1 className="text-2xl font-black tracking-tight text-slate-950 dark:text-white">
+                Amigos
+              </h1>
 
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          Busca personas, envía solicitudes e inicia conversaciones.
-        </p>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                Encuentra personas e inicia conversaciones privadas.
+              </p>
+            </div>
 
-        <input
-          value={search}
-          onChange={(event) => void onSearch(event.target.value)}
-          placeholder="Buscar por nombre, usuario o correo completo..."
-          className="vn-chat-input mt-5 w-full max-w-2xl rounded-2xl px-4 py-3 text-sm transition"
-        />
+            <span className="rounded-full bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">
+              {friends.length} {friends.length === 1 ? "amigo" : "amigos"}
+            </span>
+          </div>
+
+          <div className="relative mt-5 max-w-2xl">
+            <Search
+              size={17}
+              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+            />
+
+            <input
+              value={search}
+              onChange={(event) => void onSearch(event.target.value)}
+              placeholder="Buscar por nombre, usuario o correo..."
+              className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-300 focus:bg-white focus:ring-4 focus:ring-violet-500/5 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-violet-400/30 dark:focus:bg-white/[0.07]"
+            />
+          </div>
+        </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-5 sm:p-8">
-        {search.trim().length >= 2 && (
-          <div className="mb-8 grid gap-3 lg:grid-cols-2">
-            {results.map((user) => (
-              <article
-                key={user.id}
-                className="vn-chat-card flex items-center gap-3 rounded-2xl p-4"
-              >
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/15 font-bold text-violet-300">
-                  {user.nombre.slice(0, 1)}
-                </span>
+      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6">
+        <div className="mx-auto max-w-5xl space-y-8">
+          {hasQuery && (
+            <section>
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <h2 className="text-sm font-black text-slate-900 dark:text-white">
+                  Resultados
+                </h2>
 
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-bold text-slate-950 dark:text-white">
-                    {user.nombre}
+                <span className="text-xs text-slate-400">
+                  {results.length} encontrados
+                </span>
+              </div>
+
+              {results.length === 0 ? (
+                <div className="rounded-[24px] border border-dashed border-slate-200 bg-white/70 px-6 py-8 text-center dark:border-white/10 dark:bg-white/[0.03]">
+                  <Search
+                    size={22}
+                    className="mx-auto text-slate-300 dark:text-slate-600"
+                  />
+
+                  <p className="mt-3 text-sm font-bold text-slate-700 dark:text-slate-300">
+                    No encontramos personas
                   </p>
 
-                  <p className="truncate text-xs text-slate-500">
-                    {user.username
-                      ? `@${user.username}`
-                      : "Sin nombre de usuario"}
+                  <p className="mt-1 text-xs text-slate-500">
+                    Prueba con otro nombre, usuario o correo completo.
                   </p>
                 </div>
+              ) : (
+                <div className="grid gap-3 lg:grid-cols-2">
+                  {results.map((user) => (
+                    <article
+                      key={user.id}
+                      className="flex items-center gap-3 rounded-[22px] border border-slate-200 bg-white p-3.5 shadow-sm transition hover:border-violet-200 hover:shadow-md dark:border-white/10 dark:bg-white/[0.035] dark:hover:border-violet-400/20"
+                    >
+                      <Avatar name={user.nombre} src={user.avatar} size="md" />
 
-                {user.amistad_estado === "NONE" ? (
-                  <button
-                    type="button"
-                    onClick={() => void onAdd(user.id)}
-                    className="rounded-xl bg-violet-500 px-3 py-2 text-xs font-bold text-white"
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-black text-slate-900 dark:text-white">
+                          {user.nombre}
+                        </p>
+
+                        <p className="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">
+                          {user.username
+                            ? `@${user.username}`
+                            : "Sin nombre de usuario"}
+                        </p>
+                      </div>
+
+                      {user.amistad_estado === "NONE" ? (
+                        <button
+                          type="button"
+                          onClick={() => void onAdd(user.id)}
+                          className="flex shrink-0 items-center gap-1.5 rounded-xl bg-violet-600 px-3 py-2 text-xs font-bold text-white transition hover:bg-violet-500"
+                        >
+                          <UserPlus size={14} />
+                          Agregar
+                        </button>
+                      ) : (
+                        <span
+                          className={`shrink-0 rounded-full px-3 py-1.5 text-[10px] font-black ${
+                            user.amistad_estado === "FRIENDS"
+                              ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300"
+                              : "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300"
+                          }`}
+                        >
+                          {user.amistad_estado === "PENDING_SENT"
+                            ? "Enviada"
+                            : user.amistad_estado === "PENDING_RECEIVED"
+                              ? "Recibida"
+                              : "Amigos"}
+                        </span>
+                      )}
+                    </article>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
+
+          <section>
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h2 className="text-sm font-black text-slate-900 dark:text-white">
+                Tu lista de amigos
+              </h2>
+
+              {friends.length > 0 && (
+                <span className="text-xs text-slate-400">{friends.length}</span>
+              )}
+            </div>
+
+            {loading ? (
+              <div className="grid gap-3 lg:grid-cols-2">
+                {[1, 2, 3, 4].map((item) => (
+                  <div
+                    key={item}
+                    className="flex animate-pulse items-center gap-3 rounded-[22px] border border-slate-200 bg-white p-4 dark:border-white/10 dark:bg-white/[0.03]"
                   >
-                    Agregar
-                  </button>
-                ) : (
-                  <span className="text-xs font-semibold text-slate-400">
-                    {user.amistad_estado === "PENDING_SENT"
-                      ? "Solicitud enviada"
-                      : user.amistad_estado === "PENDING_RECEIVED"
-                        ? "Solicitud recibida"
-                        : "Ya son amigos"}
-                  </span>
-                )}
-              </article>
-            ))}
-          </div>
-        )}
+                    <div className="h-11 w-11 rounded-full bg-slate-100 dark:bg-white/5" />
 
-        <h2 className="mb-4 text-sm font-bold text-white">
-          Tu lista de amigos
-        </h2>
+                    <div className="flex-1 space-y-2">
+                      <div className="h-3 w-1/3 rounded-full bg-slate-100 dark:bg-white/5" />
+                      <div className="h-2.5 w-1/2 rounded-full bg-slate-100 dark:bg-white/5" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : friends.length === 0 ? (
+              <div className="rounded-[28px] border border-dashed border-slate-200 bg-white/70 px-6 py-12 text-center dark:border-white/10 dark:bg-white/[0.03]">
+                <UserPlus size={25} className="mx-auto text-violet-400" />
 
-        {loading ? (
-          <p className="text-sm text-slate-500">Cargando amigos...</p>
-        ) : friends.length === 0 ? (
-          <p className="vn-chat-empty rounded-3xl p-10 text-center">
-            Tu lista está vacía.
-          </p>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {friends.map((friend) => (
-              <article
-                key={friend.amistad_id}
-                className="vn-chat-card rounded-3xl p-5"
-              >
-                <p className="font-bold text-slate-950 dark:text-white">
-                  {friend.nombre}
+                <p className="mt-3 font-black text-slate-800 dark:text-slate-200">
+                  Tu lista est? vac?a
                 </p>
 
-                <p className="mt-1 truncate text-xs text-slate-500">
-                  {friend.username
-                    ? `@${friend.username}`
-                    : "Sin nombre de usuario"}
+                <p className="mx-auto mt-1 max-w-sm text-sm text-slate-500">
+                  Busca personas arriba y env?ales una solicitud de amistad.
                 </p>
+              </div>
+            ) : (
+              <div className="grid gap-3 lg:grid-cols-2">
+                {friends.map((friend) => (
+                  <article
+                    key={friend.amistad_id}
+                    className="flex items-center gap-3 rounded-[22px] border border-slate-200 bg-white p-4 shadow-sm transition hover:border-violet-200 hover:shadow-md dark:border-white/10 dark:bg-white/[0.035] dark:hover:border-violet-400/20"
+                  >
+                    <Avatar
+                      name={friend.nombre}
+                      src={friend.avatar}
+                      size="md"
+                    />
 
-                <button
-                  type="button"
-                  onClick={() => void onChat(friend.usuario_id)}
-                  className="mt-5 w-full rounded-xl bg-violet-500/15 px-4 py-2.5 text-sm font-bold text-violet-300 hover:bg-violet-500 hover:text-white"
-                >
-                  Abrir chat
-                </button>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-black text-slate-900 dark:text-white">
+                        {friend.nombre}
+                      </p>
 
-                <button
-                  type="button"
-                  onClick={() => void onRemove(friend.amistad_id)}
-                  className="mt-2 w-full rounded-xl border border-rose-500/30 px-4 py-2.5 text-sm font-bold text-rose-300 transition hover:bg-rose-500/10"
-                >
-                  Eliminar amigo
-                </button>
-              </article>
-            ))}
-          </div>
-        )}
+                      <p className="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">
+                        {friend.username
+                          ? `@${friend.username}`
+                          : "Sin nombre de usuario"}
+                      </p>
+                    </div>
+
+                    <div className="flex shrink-0 items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => void onChat(friend.usuario_id)}
+                        className="flex h-9 items-center gap-1.5 rounded-xl bg-violet-600 px-3 text-xs font-bold text-white transition hover:bg-violet-500"
+                      >
+                        <MessageCircle size={14} />
+                        Chat
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => void onRemove(friend.amistad_id)}
+                        className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-400 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 dark:border-white/10 dark:hover:border-rose-400/20 dark:hover:bg-rose-500/10 dark:hover:text-rose-300"
+                        title="Eliminar amistad"
+                        aria-label="Eliminar amistad"
+                      >
+                        <UserMinus size={15} />
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
       </div>
     </section>
   );
@@ -2492,134 +2686,176 @@ function RequestsPanel({
   onReject: (id: string) => Promise<void>;
 }) {
   return (
-    <section className="flex min-h-0 flex-1 flex-col">
-      <header className="vn-chat-divider border-b bg-white/70 px-5 py-6 backdrop-blur-xl dark:bg-slate-950/25 sm:px-8">
-        <h1 className="text-2xl font-black tracking-tight text-slate-950 dark:text-white">
-          Solicitudes de amistad
-        </h1>
+    <section className="flex min-h-0 flex-1 flex-col bg-slate-50/60 dark:bg-[#0b1220]">
+      <header className="shrink-0 border-b border-slate-200 bg-white px-4 py-5 dark:border-white/10 dark:bg-[#0d1526] sm:px-6">
+        <div className="mx-auto max-w-5xl">
+          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-violet-500">
+            Comunidad
+          </p>
 
-        <p className="mt-1 text-sm text-slate-500">
-          Revisa las solicitudes que recibiste y las que todavía están
-          pendientes.
-        </p>
+          <h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 dark:text-white">
+            Solicitudes
+          </h1>
+
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            Gestiona las solicitudes recibidas y las que siguen pendientes.
+          </p>
+        </div>
       </header>
 
-      <div className="flex-1 space-y-10 overflow-y-auto p-5 sm:p-8">
-        <section>
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <h2 className="text-sm font-bold text-white">Recibidas</h2>
+      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6">
+        <div className="mx-auto max-w-5xl space-y-8">
+          <section>
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <h2 className="text-sm font-black text-slate-900 dark:text-white">
+                  Recibidas
+                </h2>
 
-            {requests.length > 0 && (
-              <span className="rounded-full bg-amber-400/10 px-2.5 py-1 text-xs font-bold text-amber-300">
-                {requests.length}
-              </span>
-            )}
-          </div>
-
-          {loading ? (
-            <p className="text-slate-500">Cargando solicitudes...</p>
-          ) : requests.length === 0 ? (
-            <p className="vn-chat-empty rounded-3xl p-8 text-center">
-              No tienes solicitudes recibidas pendientes.
-            </p>
-          ) : (
-            <div className="grid gap-4 lg:grid-cols-2">
-              {requests.map((request) => (
-                <article
-                  key={request.amistad_id}
-                  className="vn-chat-card rounded-3xl p-5"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-violet-500/15 font-bold text-violet-300">
-                      {request.nombre.slice(0, 1)}
-                    </span>
-
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate font-bold text-slate-950 dark:text-white">
-                        {request.nombre}
-                      </p>
-
-                      <p className="truncate text-xs text-slate-500">
-                        {request.username
-                          ? `@${request.username}`
-                          : "Sin nombre de usuario"}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-5 grid grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => void onAccept(request.amistad_id)}
-                      className="rounded-xl bg-violet-500 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-violet-400"
-                    >
-                      Aceptar
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => void onReject(request.amistad_id)}
-                      className="rounded-xl border border-slate-700 px-4 py-2.5 text-sm font-bold text-slate-300 transition hover:bg-slate-800"
-                    >
-                      Rechazar
-                    </button>
-                  </div>
-                </article>
-              ))}
+                {requests.length > 0 && (
+                  <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-black text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
+                    {requests.length}
+                  </span>
+                )}
+              </div>
             </div>
-          )}
-        </section>
 
-        <section>
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <h2 className="text-sm font-bold text-white">Enviadas</h2>
+            {loading ? (
+              <div className="grid gap-3 lg:grid-cols-2">
+                {[1, 2].map((item) => (
+                  <div
+                    key={item}
+                    className="h-20 animate-pulse rounded-[22px] border border-slate-200 bg-white dark:border-white/10 dark:bg-white/[0.03]"
+                  />
+                ))}
+              </div>
+            ) : requests.length === 0 ? (
+              <div className="rounded-[24px] border border-dashed border-slate-200 bg-white/70 px-6 py-9 text-center dark:border-white/10 dark:bg-white/[0.03]">
+                <Check size={22} className="mx-auto text-emerald-500" />
 
-            {sentRequests.length > 0 && (
-              <span className="rounded-full bg-violet-500/10 px-2.5 py-1 text-xs font-bold text-violet-300">
-                {sentRequests.length}
-              </span>
-            )}
-          </div>
+                <p className="mt-3 text-sm font-bold text-slate-700 dark:text-slate-300">
+                  Todo al d?a
+                </p>
 
-          {loading ? (
-            <p className="text-slate-500">Cargando solicitudes...</p>
-          ) : sentRequests.length === 0 ? (
-            <p className="vn-chat-empty rounded-3xl p-8 text-center">
-              No tienes solicitudes enviadas pendientes.
-            </p>
-          ) : (
-            <div className="grid gap-4 lg:grid-cols-2">
-              {sentRequests.map((request) => (
-                <article
-                  key={request.amistad_id}
-                  className="vn-chat-card rounded-3xl p-5"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-slate-800 font-bold text-slate-300">
-                      {request.nombre.slice(0, 1)}
-                    </span>
+                <p className="mt-1 text-xs text-slate-500">
+                  No tienes solicitudes recibidas pendientes.
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-3 lg:grid-cols-2">
+                {requests.map((request) => (
+                  <article
+                    key={request.amistad_id}
+                    className="flex items-center gap-3 rounded-[22px] border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.035]"
+                  >
+                    <Avatar
+                      name={request.nombre}
+                      src={request.avatar}
+                      size="md"
+                    />
 
                     <div className="min-w-0 flex-1">
-                      <p className="truncate font-bold text-slate-950 dark:text-white">
+                      <p className="truncate text-sm font-black text-slate-900 dark:text-white">
                         {request.nombre}
                       </p>
 
-                      <p className="truncate text-xs text-slate-500">
+                      <p className="truncate text-xs text-slate-500 dark:text-slate-400">
                         {request.username
                           ? `@${request.username}`
                           : "Sin nombre de usuario"}
                       </p>
                     </div>
 
-                    <span className="shrink-0 rounded-full bg-violet-500/10 px-3 py-1.5 text-xs font-bold text-violet-300">
+                    <div className="flex shrink-0 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => void onAccept(request.amistad_id)}
+                        className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-600 text-white transition hover:bg-violet-500"
+                        title="Aceptar"
+                      >
+                        <Check size={16} />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => void onReject(request.amistad_id)}
+                        className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-400 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 dark:border-white/10 dark:hover:border-rose-400/20 dark:hover:bg-rose-500/10 dark:hover:text-rose-300"
+                        title="Rechazar"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+
+          <section>
+            <div className="mb-3 flex items-center gap-2">
+              <h2 className="text-sm font-black text-slate-900 dark:text-white">
+                Enviadas
+              </h2>
+
+              {sentRequests.length > 0 && (
+                <span className="rounded-full bg-violet-100 px-2 py-0.5 text-[10px] font-black text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">
+                  {sentRequests.length}
+                </span>
+              )}
+            </div>
+
+            {loading ? (
+              <div className="grid gap-3 lg:grid-cols-2">
+                {[1, 2].map((item) => (
+                  <div
+                    key={item}
+                    className="h-20 animate-pulse rounded-[22px] border border-slate-200 bg-white dark:border-white/10 dark:bg-white/[0.03]"
+                  />
+                ))}
+              </div>
+            ) : sentRequests.length === 0 ? (
+              <div className="rounded-[24px] border border-dashed border-slate-200 bg-white/70 px-6 py-9 text-center dark:border-white/10 dark:bg-white/[0.03]">
+                <Clock3 size={22} className="mx-auto text-slate-400" />
+
+                <p className="mt-3 text-sm font-bold text-slate-700 dark:text-slate-300">
+                  Sin solicitudes pendientes
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-3 lg:grid-cols-2">
+                {sentRequests.map((request) => (
+                  <article
+                    key={request.amistad_id}
+                    className="flex items-center gap-3 rounded-[22px] border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.035]"
+                  >
+                    <Avatar
+                      name={request.nombre}
+                      src={request.avatar}
+                      size="md"
+                    />
+
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-black text-slate-900 dark:text-white">
+                        {request.nombre}
+                      </p>
+
+                      <p className="truncate text-xs text-slate-500 dark:text-slate-400">
+                        {request.username
+                          ? `@${request.username}`
+                          : "Sin nombre de usuario"}
+                      </p>
+                    </div>
+
+                    <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-[10px] font-black text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
+                      <Clock3 size={12} />
                       Pendiente
                     </span>
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
-        </section>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
       </div>
     </section>
   );
@@ -2635,44 +2871,97 @@ function BlockedPanel({
   onUnblock: (id: string) => Promise<void>;
 }) {
   return (
-    <section className="flex-1 overflow-y-auto p-5 sm:p-8">
-      <h1 className="text-2xl font-black tracking-tight text-slate-950 dark:text-white">
-        Usuarios bloqueados
-      </h1>
-
-      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-        Estas personas no pueden iniciar conversaciones contigo.
-      </p>
-
-      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {loading ? (
-          <p className="text-slate-500">Cargando usuarios bloqueados...</p>
-        ) : users.length === 0 ? (
-          <p className="vn-chat-empty rounded-3xl p-10 text-center">
-            No tienes usuarios bloqueados.
+    <section className="flex min-h-0 flex-1 flex-col bg-slate-50/60 dark:bg-[#0b1220]">
+      <header className="shrink-0 border-b border-slate-200 bg-white px-4 py-5 dark:border-white/10 dark:bg-[#0d1526] sm:px-6">
+        <div className="mx-auto max-w-5xl">
+          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-violet-500">
+            Privacidad
           </p>
-        ) : (
-          users.map((user) => (
-            <article
-              key={user.amistad_id}
-              className="vn-chat-card rounded-3xl p-5"
-            >
-              <p className="font-bold text-slate-950 dark:text-white">
-                {user.nombre}
+
+          <div className="mt-1 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h1 className="text-2xl font-black tracking-tight text-slate-950 dark:text-white">
+                Usuarios bloqueados
+              </h1>
+
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                Administra las personas que no pueden enviarte solicitudes ni
+                iniciar conversaciones privadas contigo.
               </p>
+            </div>
 
-              <p className="text-xs text-slate-500">{user.correo}</p>
+            {!loading && (
+              <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-500 dark:border-white/10 dark:bg-white/5 dark:text-slate-300">
+                {users.length} {users.length === 1 ? "bloqueado" : "bloqueados"}
+              </span>
+            )}
+          </div>
+        </div>
+      </header>
 
-              <button
-                type="button"
-                onClick={() => void onUnblock(user.usuario_id)}
-                className="mt-5 w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
-              >
-                Desbloquear
-              </button>
-            </article>
-          ))
-        )}
+      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6">
+        <div className="mx-auto max-w-5xl">
+          {loading ? (
+            <div className="space-y-3">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="h-[74px] animate-pulse rounded-2xl border border-slate-200 bg-white dark:border-white/10 dark:bg-[#0d1526]"
+                />
+              ))}
+            </div>
+          ) : users.length === 0 ? (
+            <div className="flex min-h-[300px] flex-col items-center justify-center rounded-3xl border border-dashed border-slate-200 bg-white px-6 text-center dark:border-white/10 dark:bg-[#0d1526]">
+              <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-50 text-violet-500 dark:bg-violet-500/10 dark:text-violet-300">
+                <ShieldOff size={24} />
+              </span>
+
+              <h2 className="mt-4 text-base font-black text-slate-950 dark:text-white">
+                No tienes usuarios bloqueados
+              </h2>
+
+              <p className="mt-1 max-w-md text-sm leading-6 text-slate-500 dark:text-slate-400">
+                Cuando bloquees a alguien aparecer? aqu? y podr?s desbloquearlo
+                cuando quieras.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {users.map((user) => (
+                <article
+                  key={user.bloqueo_id}
+                  className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm shadow-slate-200/30 dark:border-white/10 dark:bg-[#0d1526] dark:shadow-none"
+                >
+                  <Avatar
+                    name={user.usuario.nombre}
+                    src={user.usuario.avatar_url}
+                    size="md"
+                  />
+
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-black text-slate-950 dark:text-white">
+                      {user.usuario.nombre}
+                    </p>
+
+                    <p className="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">
+                      {user.usuario.username
+                        ? `@${user.usuario.username}`
+                        : "Usuario bloqueado"}
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => void onUnblock(user.usuario.id)}
+                    className="shrink-0 rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-600 transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700 dark:border-white/10 dark:text-slate-300 dark:hover:border-violet-400/20 dark:hover:bg-violet-500/10 dark:hover:text-violet-300"
+                  >
+                    Desbloquear
+                  </button>
+                </article>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
