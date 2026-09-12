@@ -84,7 +84,19 @@ export default function ChatPage() {
     ? "/superadmin/chat"
     : "/admin/chat";
 
-  const [activeTab, setActiveTab] = useState<ChatTab>("chats");
+  const [activeTab, setActiveTab] = useState<ChatTab>(() => {
+    const requestedTab = new URLSearchParams(location.search).get("tab");
+
+    if (
+      requestedTab === "amigos" ||
+      requestedTab === "solicitudes" ||
+      requestedTab === "bloqueados"
+    ) {
+      return requestedTab;
+    }
+
+    return "chats";
+  });
 
   const [selectedConversationId, setSelectedConversationId] = useState<
     string | null
@@ -95,6 +107,9 @@ export default function ChatPage() {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [requests, setRequests] = useState<FriendRequest[]>([]);
   const [sentRequests, setSentRequests] = useState<FriendRequest[]>([]);
+  const [cancelingRequestId, setCancelingRequestId] = useState<string | null>(
+    null,
+  );
   const [blockedUsers, setBlockedUsers] = useState<BlockedUser[]>([]);
   const [searchUsers, setSearchUsers] = useState<SearchUser[]>([]);
 
@@ -449,6 +464,11 @@ export default function ChatPage() {
           conversationId,
         },
         (response) => {
+          console.info("[REALTIME] join response", {
+            conversationId,
+            response,
+          });
+
           if (
             disposed ||
             response.ok ||
@@ -474,10 +494,21 @@ export default function ChatPage() {
         chatSocketRef.current = socket;
 
         socket.on("connect", () => {
+          console.info("[REALTIME] conectado", {
+            socketId: socket?.id,
+            conversationId: selectedConversationIdRef.current,
+          });
+
           joinSelectedConversation();
         });
 
         socket.on("chat:message:new", (event) => {
+          console.info("[REALTIME] chat:message:new", {
+            eventConversationId: event.conversationId,
+            selectedConversationId: selectedConversationIdRef.current,
+            messageId: event.message.id,
+          });
+
           if (event.conversationId !== event.message.conversationId) {
             return;
           }
@@ -510,6 +541,65 @@ export default function ChatPage() {
           }
 
           void loadConversations(true);
+        });
+
+        /*
+         * Respaldo realtime por room privado del usuario.
+         *
+         * chat:message:new sigue siendo la vía principal.
+         * notification:new garantiza que, aunque el cliente
+         * todavía no haya entrado al room de conversación,
+         * podamos sincronizar inmediatamente el chat.
+         */
+        socket.on("friendship:request:cancelled", (event) => {
+          /*
+           * Quitamos la tarjeta inmediatamente para que
+           * la UI del receptor responda sin esperar otra
+           * consulta de red.
+           */
+          setRequests((current) =>
+            current.filter(
+              (request) => request.amistad_id !== event.friendshipId,
+            ),
+          );
+
+          /*
+           * Después sincronizamos contra el backend,
+           * que sigue siendo la fuente de verdad.
+           */
+          void loadRequests();
+        });
+
+        socket.on("notification:new", (event) => {
+          if (event.notificationType !== "chat_message") {
+            return;
+          }
+
+          const rawConversationId =
+            event.data.conversationId ?? event.data.conversacion_id;
+
+          if (typeof rawConversationId !== "string") {
+            return;
+          }
+
+          const conversationId = rawConversationId.trim();
+
+          if (!conversationId) {
+            return;
+          }
+
+          console.log("[REALTIME] CHAT NOTIFICATION", {
+            conversationId,
+            selectedConversationId: selectedConversationIdRef.current,
+          });
+
+          void loadConversations(true);
+
+          if (conversationId === selectedConversationIdRef.current) {
+            void loadMessages(conversationId, true);
+
+            void markConversationRead(conversationId);
+          }
         });
 
         socket.on("chat:message:edited", (event) => {
@@ -886,6 +976,23 @@ export default function ChatPage() {
   ]);
 
   useEffect(() => {
+    const id = conversacionId ?? null;
+
+    if (id !== selectedConversationId) {
+      setSelectedConversationId(id);
+    }
+  }, [conversacionId, selectedConversationId]);
+
+  /*
+   * El socket puede haberse conectado antes de que
+   * el usuario seleccione una conversaci?n.
+   *
+   * Por eso debemos entrar al room tambi?n cada vez
+   * que cambia la conversaci?n seleccionada.
+   */
+  useEffect(() => {
+    selectedConversationIdRef.current = selectedConversationId;
+
     if (!selectedConversationId) {
       return;
     }
@@ -896,15 +1003,27 @@ export default function ChatPage() {
       return;
     }
 
+    const conversationId = selectedConversationId;
+
+    console.info("[REALTIME] solicitando join", {
+      socketId: socket.id,
+      conversationId,
+    });
+
     socket.emit(
       "chat:conversation:join",
       {
-        conversationId: selectedConversationId,
+        conversationId,
       },
       (response) => {
+        console.info("[REALTIME] join response", {
+          conversationId,
+          response,
+        });
+
         if (
           response.ok ||
-          selectedConversationIdRef.current !== selectedConversationId
+          selectedConversationIdRef.current !== conversationId
         ) {
           return;
         }
@@ -913,13 +1032,6 @@ export default function ChatPage() {
       },
     );
   }, [selectedConversationId]);
-  useEffect(() => {
-    const id = conversacionId ?? null;
-
-    if (id !== selectedConversationId) {
-      setSelectedConversationId(id);
-    }
-  }, [conversacionId, selectedConversationId]);
 
   useEffect(() => {
     if (!selectedConversationId) return;
@@ -982,6 +1094,34 @@ export default function ChatPage() {
 
     navigate(`${chatBasePath}/${id}`);
   }
+
+  /* NOTIFICATION_DEEP_LINK_TABS */
+  useEffect(() => {
+    const requestedTab = new URLSearchParams(location.search).get("tab");
+
+    if (requestedTab === "solicitudes") {
+      setActiveTab("solicitudes");
+      setSelectedConversationId(null);
+      selectedConversationIdRef.current = null;
+      void Promise.all([loadRequests(), loadSentRequests()]);
+      return;
+    }
+
+    if (requestedTab === "amigos") {
+      setActiveTab("amigos");
+      setSelectedConversationId(null);
+      selectedConversationIdRef.current = null;
+      void loadFriends();
+      return;
+    }
+
+    if (requestedTab === "bloqueados") {
+      setActiveTab("bloqueados");
+      setSelectedConversationId(null);
+      selectedConversationIdRef.current = null;
+      void loadBlocked();
+    }
+  }, [location.search]);
 
   function changeTab(tab: ChatTab): void {
     closeMenus();
@@ -1529,6 +1669,47 @@ export default function ChatPage() {
       setError(
         getErrorMessage(requestError, "No se pudo rechazar la solicitud."),
       );
+    }
+  }
+
+  async function cancelRequest(friendshipId: string): Promise<void> {
+    if (cancelingRequestId !== null) {
+      return;
+    }
+
+    try {
+      setCancelingRequestId(friendshipId);
+      setError("");
+
+      await api.delete(API_ROUTES.cancelRequest(friendshipId));
+
+      /*
+       * Quitamos inmediatamente la tarjeta
+       * antes de completar los refresh secundarios.
+       */
+      setSentRequests((current) =>
+        current.filter((request) => request.amistad_id !== friendshipId),
+      );
+
+      await Promise.all([loadSentRequests(), loadRequests()]);
+
+      if (peopleSearch.trim().length >= 2) {
+        await searchPeople(peopleSearch);
+      }
+
+      setToast("Solicitud cancelada.");
+    } catch (requestError) {
+      setError(
+        getErrorMessage(requestError, "No se pudo cancelar la solicitud."),
+      );
+
+      /*
+       * Si falló, recuperamos la lista canónica
+       * desde el backend.
+       */
+      await loadSentRequests();
+    } finally {
+      setCancelingRequestId(null);
     }
   }
 
@@ -2196,8 +2377,10 @@ export default function ChatPage() {
               requests={requests}
               sentRequests={sentRequests}
               loading={loadingRequests}
+              cancelingRequestId={cancelingRequestId}
               onAccept={acceptRequest}
               onReject={rejectRequest}
+              onCancel={cancelRequest}
             />
           )}
 
@@ -2427,7 +2610,7 @@ export default function ChatPage() {
             }}
             className="text-slate-400 hover:text-white"
           >
-            ×
+            <X size={16} />
           </button>
         </div>
       )}
@@ -2676,14 +2859,18 @@ function RequestsPanel({
   requests,
   sentRequests,
   loading,
+  cancelingRequestId,
   onAccept,
   onReject,
+  onCancel,
 }: {
   requests: FriendRequest[];
   sentRequests: FriendRequest[];
   loading: boolean;
+  cancelingRequestId: string | null;
   onAccept: (id: string) => Promise<void>;
   onReject: (id: string) => Promise<void>;
+  onCancel: (id: string) => Promise<void>;
 }) {
   return (
     <section className="flex min-h-0 flex-1 flex-col bg-slate-50/60 dark:bg-[#0b1220]">
@@ -2734,7 +2921,7 @@ function RequestsPanel({
                 <Check size={22} className="mx-auto text-emerald-500" />
 
                 <p className="mt-3 text-sm font-bold text-slate-700 dark:text-slate-300">
-                  Todo al d?a
+                  Todo al día
                 </p>
 
                 <p className="mt-1 text-xs text-slate-500">
@@ -2846,10 +3033,26 @@ function RequestsPanel({
                       </p>
                     </div>
 
-                    <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-[10px] font-black text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
-                      <Clock3 size={12} />
-                      Pendiente
-                    </span>
+                    <div className="flex shrink-0 items-center gap-2">
+                      <span className="flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-[10px] font-black text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
+                        <Clock3 size={12} />
+                        Pendiente
+                      </span>
+
+                      <button
+                        type="button"
+                        disabled={cancelingRequestId !== null}
+                        onClick={() => void onCancel(request.amistad_id)}
+                        className="flex h-9 items-center justify-center gap-1.5 rounded-xl border border-slate-200 px-3 text-xs font-bold text-slate-500 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:text-slate-300 dark:hover:border-rose-400/20 dark:hover:bg-rose-500/10 dark:hover:text-rose-300"
+                        title="Cancelar solicitud"
+                      >
+                        <X size={14} />
+
+                        {cancelingRequestId === request.amistad_id
+                          ? "Cancelando..."
+                          : "Cancelar"}
+                      </button>
+                    </div>
                   </article>
                 ))}
               </div>

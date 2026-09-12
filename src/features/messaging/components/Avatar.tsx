@@ -35,26 +35,21 @@ function resolveAvatarUrl(value?: string | null): string | null {
     return null;
   }
 
-  if (
-    normalized.startsWith("http://") ||
-    normalized.startsWith("https://") ||
-    normalized.startsWith("data:") ||
-    normalized.startsWith("blob:")
-  ) {
+  if (/^(https?:\/\/|data:|blob:)/i.test(normalized)) {
     return normalized;
   }
 
   const apiBase = String(
     import.meta.env.VITE_API_URL ?? "http://localhost:3000",
-  )
-    .trim()
-    .replace(/\/+$/, "");
+  ).trim();
 
-  const relativePath = normalized.startsWith("/")
-    ? normalized
-    : `/${normalized}`;
+  try {
+    const apiOrigin = new URL(apiBase, window.location.origin).origin;
 
-  return `${apiBase}${relativePath}`;
+    return new URL(normalized, `${apiOrigin}/`).toString();
+  } catch {
+    return normalized;
+  }
 }
 
 export function Avatar({

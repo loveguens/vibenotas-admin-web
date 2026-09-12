@@ -22,6 +22,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import api from "../services/api";
+import {
+  createChatRealtimeSocket,
+  type ChatRealtimeSocket,
+} from "../features/messaging/services/chat-realtime.service";
 
 type TopbarProps = {
   role: "admin" | "superadmin";
@@ -65,24 +69,16 @@ type NotificationVisual = {
   glowClassName: string;
 };
 
-function getPhotoUrl(
-  path?: string | null,
-): string {
+function getPhotoUrl(path?: string | null): string {
   if (!path) {
     return "";
   }
 
-  if (
-    /^(https?:\/\/|blob:|data:)/i.test(
-      path,
-    )
-  ) {
+  if (/^(https?:\/\/|blob:|data:)/i.test(path)) {
     return path;
   }
 
-  const baseURL = String(
-    api.defaults.baseURL ?? "",
-  ).trim();
+  const baseURL = String(api.defaults.baseURL ?? "").trim();
 
   try {
     const apiOrigin = new URL(
@@ -90,10 +86,7 @@ function getPhotoUrl(
       window.location.origin,
     ).origin;
 
-    return new URL(
-      path,
-      `${apiOrigin}/`,
-    ).toString();
+    return new URL(path, `${apiOrigin}/`).toString();
   } catch {
     return path;
   }
@@ -299,8 +292,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
 
     async function cargarPerfilActual(): Promise<void> {
       try {
-        const response =
-          await api.get<CurrentProfileResponse>("/profile");
+        const response = await api.get<CurrentProfileResponse>("/profile");
 
         const profile = response.data?.profile;
 
@@ -313,24 +305,15 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
           nombre:
             profile.displayName?.trim() ||
             actual.nombre ||
-            (role === "superadmin"
-              ? "Super Admin"
-              : "Administrador"),
-          correo:
-            profile.email?.trim() ||
-            actual.correo,
-          avatarUrl:
-            profile.avatarUrl ?? null,
-          foto_perfil:
-            profile.avatarUrl ?? null,
+            (role === "superadmin" ? "Super Admin" : "Administrador"),
+          correo: profile.email?.trim() || actual.correo,
+          avatarUrl: profile.avatarUrl ?? null,
+          foto_perfil: profile.avatarUrl ?? null,
         }));
 
         setProfilePhotoError(false);
       } catch (error) {
-        console.error(
-          "ERROR CARGANDO PERFIL EN TOPBAR:",
-          error,
-        );
+        console.error("ERROR CARGANDO PERFIL EN TOPBAR:", error);
       }
     }
 
@@ -345,15 +328,10 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
     const root = document.documentElement;
 
     root.classList.toggle("dark", darkMode);
-    root.dataset.theme =
-      darkMode ? "dark" : "light";
-    root.style.colorScheme =
-      darkMode ? "dark" : "light";
+    root.dataset.theme = darkMode ? "dark" : "light";
+    root.style.colorScheme = darkMode ? "dark" : "light";
 
-    localStorage.setItem(
-      "tema",
-      darkMode ? "dark" : "light",
-    );
+    localStorage.setItem("tema", darkMode ? "dark" : "light");
   }, [darkMode]);
 
   useEffect(() => {
@@ -419,6 +397,60 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
 
     return () => {
       window.clearInterval(interval);
+    };
+  }, []);
+
+  useEffect(() => {
+    let disposed = false;
+    let socket: ChatRealtimeSocket | null = null;
+
+    async function connectNotificationRealtime(): Promise<void> {
+      try {
+        const realtimeSocket = await createChatRealtimeSocket();
+
+        if (disposed) {
+          realtimeSocket.disconnect();
+          return;
+        }
+
+        socket = realtimeSocket;
+
+        realtimeSocket.on("notification:new", () => {
+          /*
+           * El evento realtime funciona como invalidación.
+           * Volvemos a consultar el endpoint para conservar
+           * una única fuente de verdad para la campana.
+           */
+          void loadNotifications();
+        });
+
+        realtimeSocket.on("friendship:request:cancelled", () => {
+          /*
+           * La notificación friend_request se elimina
+           * en la misma transacción que cancela la
+           * solicitud, así que recargamos la fuente
+           * canónica inmediatamente.
+           */
+          void loadNotifications();
+        });
+
+        realtimeSocket.connect();
+      } catch (error) {
+        /*
+         * El polling de 30 segundos permanece activo
+         * como respaldo si realtime no est? disponible.
+         */
+        console.error("ERROR CONECTANDO NOTIFICACIONES REALTIME:", error);
+      }
+    }
+
+    void connectNotificationRealtime();
+
+    return () => {
+      disposed = true;
+
+      socket?.removeAllListeners();
+      socket?.disconnect();
     };
   }, []);
 
@@ -497,37 +529,56 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
   }
 
   async function openNotification(notification: NotificationItem) {
-    setSelectedNotification(notification);
     setNotificationsOpen(false);
 
     const wasUnread = !Number(notification.leida);
 
-    if (!wasUnread) {
-      return;
-    }
-
-    try {
-      await api.put(`/notifications/${notification.id}/read`);
-
+    if (wasUnread) {
       setNotifications((current) =>
         current.map((item) =>
-          item.id === notification.id ? { ...item, leida: 1 } : item,
+          item.id === notification.id
+            ? {
+                ...item,
+                leida: 1,
+              }
+            : item,
         ),
       );
 
-      setSelectedNotification((current) =>
-        current?.id === notification.id ? { ...current, leida: 1 } : current,
-      );
-
       setUnreadCount((current) => Math.max(0, current - 1));
-    } catch (error) {
-      console.error("ERROR MARCANDO NOTIFICACIÓN:", error);
+
+      void api
+        .put(`/notifications/${notification.id}/read`)
+        .catch(async (error) => {
+          console.error("ERROR MARCANDO NOTIFICACI?N:", error);
+
+          await loadNotifications();
+        });
     }
+
+    const actionable =
+      notification.tipo === "chat_message" ||
+      notification.tipo === "group_added" ||
+      notification.tipo === "friend_request" ||
+      notification.tipo === "friend_accepted";
+
+    if (actionable) {
+      goToNotificationAction(notification);
+      return;
+    }
+
+    setSelectedNotification({
+      ...notification,
+      leida: 1,
+    });
   }
 
   function goToNotificationAction(notification: NotificationItem) {
     const data = parseNotificationData(notification);
+
     const basePath = role === "superadmin" ? "/superadmin" : "/admin";
+
+    const conversationId = data.conversationId ?? data.conversacion_id;
 
     setSelectedNotification(null);
     setNotificationsOpen(false);
@@ -535,17 +586,19 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
     if (
       (notification.tipo === "chat_message" ||
         notification.tipo === "group_added") &&
-      data?.conversacion_id
+      conversationId
     ) {
-      navigate(`${basePath}/chat/${data.conversacion_id}`);
+      navigate(`${basePath}/chat/${String(conversationId)}`);
       return;
     }
 
-    if (
-      notification.tipo === "friend_request" ||
-      notification.tipo === "friend_accepted"
-    ) {
-      navigate(`${basePath}/chat`);
+    if (notification.tipo === "friend_request") {
+      navigate(`${basePath}/chat?tab=solicitudes`);
+      return;
+    }
+
+    if (notification.tipo === "friend_accepted") {
+      navigate(`${basePath}/chat?tab=amigos`);
       return;
     }
 
@@ -561,11 +614,6 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
 
     if (notification.tipo === "new_admin") {
       navigate("/superadmin/administrators");
-      return;
-    }
-
-    if (notification.tipo === "system") {
-      navigate("/my-notifications");
       return;
     }
 

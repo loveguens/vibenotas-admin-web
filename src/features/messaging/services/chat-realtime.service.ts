@@ -10,16 +10,24 @@ import type {
   ChatGroupOwnerTransferredEvent,
   ChatGroupUpdatedEvent,
   ChatMessageNewEvent,
+  FriendshipRequestCancelledEvent,
   ChatMessageDeletedEvent,
   ChatMessageEditedEvent,
   ChatPresenceUpdatedEvent,
   ChatReadUpdatedEvent,
   ChatTypingUpdatedEvent,
+  NotificationNewEvent,
   JoinConversationResponse,
   TypingResponse,
 } from "../types/realtime.types";
 
 type ServerToClientEvents = {
+  "notification:new": (event: NotificationNewEvent) => void;
+
+  "friendship:request:cancelled": (
+    event: FriendshipRequestCancelledEvent,
+  ) => void;
+
   "chat:message:new": (event: ChatMessageNewEvent) => void;
 
   "chat:message:edited": (event: ChatMessageEditedEvent) => void;

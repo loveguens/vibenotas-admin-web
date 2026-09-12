@@ -1,4 +1,4 @@
-﻿import type { ChatThemeId, TemporaryDuration } from "./types/chat.types";
+import type { ChatThemeId, TemporaryDuration } from "./types/chat.types";
 
 export const API_ROUTES = {
   conversations: "/chat/conversations",
@@ -19,6 +19,8 @@ export const API_ROUTES = {
   acceptRequest: (id: string) => `/friendships/${id}/accept`,
 
   rejectRequest: (id: string) => `/friendships/${id}/reject`,
+
+  cancelRequest: (id: string) => `/friendships/requests/${id}`,
 
   removeFriendship: (id: string) => `/friendships/${id}`,
 
