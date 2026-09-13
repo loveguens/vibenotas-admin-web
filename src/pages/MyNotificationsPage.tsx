@@ -940,11 +940,23 @@ export default function MyNotificationsPage() {
       data.conversationId;
 
     if (
+      notification.tipo ===
+      "friend_request"
+    ) {
+      return `/${userRole}/chat?tab=solicitudes`;
+    }
+
+    if (
+      notification.tipo ===
+      "friend_accepted"
+    ) {
+      return `/${userRole}/chat?tab=amigos`;
+    }
+
+    if (
       [
         "chat_message",
         "group_added",
-        "friend_accepted",
-        "friend_request",
       ].includes(notification.tipo) &&
       conversationId
     ) {

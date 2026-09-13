@@ -39,6 +39,10 @@ export function MessageList({
 }: MessageListProps) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
+  const previousMessageCountRef = useRef(0);
+
+  const previousConversationIdRef = useRef<string | null>(null);
+
   useEffect(() => {
     function handleScroll() {
       const element = scrollRef.current;
@@ -69,6 +73,58 @@ export function MessageList({
       element.removeEventListener("scroll", handleScroll);
     };
   }, [onNearEndChange]);
+
+  useEffect(() => {
+    if (loading) {
+      return;
+    }
+
+    const element = scrollRef.current;
+
+    if (!element) {
+      return;
+    }
+
+    const conversationId = messages[0]?.conversacion_id ?? null;
+
+    const conversationChanged =
+      previousConversationIdRef.current !== conversationId;
+
+    const previousCount = previousMessageCountRef.current;
+
+    const appended = messages.length > previousCount;
+
+    const distanceFromBottom =
+      element.scrollHeight - element.scrollTop - element.clientHeight;
+
+    const nearBottom = distanceFromBottom < 220;
+
+    /*
+     * Al abrir/cambiar conversaci?n siempre
+     * mostramos el mensaje m?s reciente.
+     *
+     * Para mensajes nuevos solo bajamos
+     * autom?ticamente si el usuario ya estaba
+     * cerca del final.
+     */
+    if (conversationChanged || (appended && nearBottom)) {
+      requestAnimationFrame(() => {
+        const current = scrollRef.current;
+
+        if (!current) {
+          return;
+        }
+
+        current.scrollTop = current.scrollHeight;
+
+        onNearEndChange(true);
+      });
+    }
+
+    previousMessageCountRef.current = messages.length;
+
+    previousConversationIdRef.current = conversationId;
+  }, [loading, messages, onNearEndChange]);
 
   return (
     <div
@@ -134,7 +190,20 @@ export function MessageList({
       {showJump && (
         <button
           type="button"
-          onClick={onJumpToBottom}
+          onClick={() => {
+            const element = scrollRef.current;
+
+            if (element) {
+              element.scrollTo({
+                top: element.scrollHeight,
+                behavior: "smooth",
+              });
+
+              onNearEndChange(true);
+            }
+
+            onJumpToBottom();
+          }}
           className="sticky bottom-4 ml-auto mr-2 flex h-10 w-10 items-center justify-center rounded-full border border-violet-400/20 bg-violet-600 text-white shadow-lg shadow-violet-500/20 transition hover:bg-violet-500"
           aria-label="Ir al ?ltimo mensaje"
         >

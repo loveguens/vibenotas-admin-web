@@ -199,3 +199,24 @@ export type ChatGroupDeletedEvent = {
   deletedAt: string;
   deletedByUserId: string;
 };
+
+export type FriendshipRequestCancelledEvent = {
+  eventId: string;
+  eventType: "friendship.request.cancelled";
+  occurredAt: string;
+  schemaVersion: 1;
+  friendshipId: string;
+  requesterUserId: string;
+  cancelledAt: string;
+};
+
+export type NotificationNewEvent = {
+  eventId: string;
+  eventType: "notification.created";
+  occurredAt: string;
+  schemaVersion: 1;
+  notificationType: string;
+  sourceType: string;
+  sourceId: string;
+  data: Record<string, unknown>;
+};
