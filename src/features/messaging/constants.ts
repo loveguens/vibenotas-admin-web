@@ -28,7 +28,7 @@ export const API_ROUTES = {
     `/friendships/search?q=${encodeURIComponent(query)}`,
 
   /*
-   * Bloqueos todavÃ­a no forman parte
+   * Bloqueos todavía no forman parte
    * del backend de amistades nuevo.
    */
   blocked: "/user-blocks",
@@ -63,7 +63,7 @@ export const API_ROUTES = {
   transferGroupOwner: (conversationId: string) =>
     `/chat/conversations/${conversationId}/owner`,
 
-  // Funcionalidades que todavÃ­a no existen en el backend actual.
+  // Funcionalidades que todavía no existen en el backend actual.
   updateConversationSettings: (id: string) =>
     `/chat/conversations/${id}/settings`,
 
@@ -123,7 +123,7 @@ export const CHAT_THEMES: Array<{
   {
     id: "rose",
     label: "Rosa suave",
-    description: "CÃ¡lido y moderno",
+    description: "Cálido y moderno",
     mineBubble: "bg-rose-600",
     sendButton: "bg-rose-600 hover:bg-rose-500",
     active: "bg-rose-500/15 ring-rose-400/30",
@@ -133,7 +133,7 @@ export const CHAT_THEMES: Array<{
   },
   {
     id: "amber",
-    label: "Ãmbar",
+    label: "Ámbar",
     description: "Brillante y elegante",
     mineBubble: "bg-amber-500",
     sendButton: "bg-amber-500 hover:bg-amber-400",
@@ -178,21 +178,21 @@ export const TEMPORARY_OPTIONS: Array<{
   {
     value: "24h",
     label: "24 horas",
-    description: "Preparado para eliminar mensajes tras un dÃ­a.",
+    description: "Preparado para eliminar mensajes tras un día.",
   },
   {
     value: "7d",
-    label: "7 dÃ­as",
+    label: "7 días",
     description: "Preparado para eliminar mensajes tras una semana.",
   },
   {
     value: "30d",
-    label: "30 dÃ­as",
+    label: "30 días",
     description: "Preparado para eliminar mensajes tras un mes.",
   },
   {
     value: "custom",
     label: "Personalizado",
-    description: "Requiere configuraciÃ³n futura del backend.",
+    description: "Requiere configuración futura del backend.",
   },
 ];

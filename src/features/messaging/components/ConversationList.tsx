@@ -139,7 +139,7 @@ export function ConversationList({
             <p className="font-bold text-slate-800 dark:text-slate-200">
               {search.trim()
                 ? "No encontramos conversaciones"
-                : "Todav?a no tienes chats"}
+                : "Todavía no tienes chats"}
             </p>
 
             <p className="mt-2 max-w-56 text-sm leading-6 text-slate-500">

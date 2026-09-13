@@ -26,7 +26,7 @@ export function ConversationItem({
     conversation.ultimo_mensaje_fecha ?? conversation.actualizado_en,
   );
 
-  const preview = conversation.ultimo_mensaje?.trim() || "Sin mensajes todav?a";
+  const preview = conversation.ultimo_mensaje?.trim() || "Sin mensajes todavía";
 
   const online =
     !isGroup &&
@@ -45,7 +45,7 @@ export function ConversationItem({
           : "hover:bg-slate-50 dark:hover:bg-white/[0.04]"
       }`}
       aria-current={selected ? "page" : undefined}
-      title={`Abrir conversaci?n con ${title}`}
+      title={`Abrir conversación con ${title}`}
     >
       <Avatar
         name={title}

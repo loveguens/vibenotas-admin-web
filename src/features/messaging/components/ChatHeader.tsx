@@ -22,6 +22,30 @@ type ChatHeaderProps = {
   onOpenMenu: (button: HTMLButtonElement) => void;
 };
 
+function isSameLocalDay(first: Date, second: Date): boolean {
+  return (
+    first.getFullYear() === second.getFullYear() &&
+    first.getMonth() === second.getMonth() &&
+    first.getDate() === second.getDate()
+  );
+}
+
+function formatTime(date: Date): string {
+  return date.toLocaleTimeString("es-CL", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+}
+
+function formatDate(date: Date): string {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+
+  return `${day}-${month}-${year}`;
+}
+
 function formatLastSeen(value?: string | null): string {
   if (!value) {
     return "Desconectado";
@@ -33,7 +57,20 @@ function formatLastSeen(value?: string | null): string {
     return "Desconectado";
   }
 
-  return `?ltima vez ${date.toLocaleString()}`;
+  const now = new Date();
+
+  if (isSameLocalDay(date, now)) {
+    return `Última vez hoy a las ${formatTime(date)}`;
+  }
+
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+
+  if (isSameLocalDay(date, yesterday)) {
+    return `Última vez ayer a las ${formatTime(date)}`;
+  }
+
+  return `Última vez ${formatDate(date)} a las ${formatTime(date)}`;
 }
 
 export function ChatHeader({
@@ -58,11 +95,11 @@ export function ChatHeader({
   if (typingLabel) {
     subtitle = typingLabel;
   } else if (isGroup) {
-    subtitle = "Grupo de conversaci?n";
+    subtitle = "Grupo de conversación";
+  } else if (presenceOnline) {
+    subtitle = "En línea";
   } else if (isMuted) {
     subtitle = "Notificaciones silenciadas";
-  } else if (presenceOnline) {
-    subtitle = "En l?nea";
   } else {
     subtitle = formatLastSeen(lastSeenAt);
   }
