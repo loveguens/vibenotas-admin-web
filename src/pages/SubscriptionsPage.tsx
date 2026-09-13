@@ -109,11 +109,11 @@ function formatMoney(value: number | string, currency = "CLP") {
 }
 
 function formatDate(value?: string | null, withTime = false) {
-  if (!value) return "â€”";
+  if (!value) return "—";
 
   const date = new Date(value.replace(" ", "T"));
 
-  if (Number.isNaN(date.getTime())) return "â€”";
+  if (Number.isNaN(date.getTime())) return "—";
 
   return date.toLocaleDateString("es-CL", {
     day: "2-digit",
@@ -398,12 +398,12 @@ async function renewPaidSubscription() {
 
     if (!response.data?.success) {
       throw new Error(
-        response.data?.message || "No se pudo renovar la suscripciÃ³n."
+        response.data?.message || "No se pudo renovar la suscripción."
       );
     }
 
     setSuccess(
-      `SuscripciÃ³n ${getPlanLabel(
+      `Suscripción ${getPlanLabel(
         renewSubscription.plan
       )} renovada para ${renewSubscription.usuario_nombre}.`
     );
@@ -414,7 +414,7 @@ async function renewPaidSubscription() {
     setError(
       err instanceof Error
         ? err.message
-        : "No se pudo renovar la suscripciÃ³n."
+        : "No se pudo renovar la suscripción."
     );
   } finally {
     setSaving(false);
@@ -426,7 +426,7 @@ async function renewPaidSubscription() {
       <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
-            MonetizaciÃ³n y control
+            Monetización y control
           </p>
 
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-white">
@@ -452,14 +452,14 @@ async function renewPaidSubscription() {
 
       {error && (
         <div className="rounded-2xl border border-red-500/25 bg-red-500/10 px-5 py-4 text-sm text-red-200">
-          <p className="font-bold">OcurriÃ³ un problema</p>
+          <p className="font-bold">Ocurrió un problema</p>
           <p className="mt-1 text-red-200/80">{error}</p>
         </div>
       )}
 
       {success && (
         <div className="rounded-2xl border border-emerald-500/25 bg-emerald-500/10 px-5 py-4 text-sm text-emerald-200">
-          <p className="font-bold">OperaciÃ³n completada</p>
+          <p className="font-bold">Operación completada</p>
           <p className="mt-1 text-emerald-200/80">{success}</p>
         </div>
       )}
@@ -485,7 +485,7 @@ async function renewPaidSubscription() {
         <article className="rounded-3xl border border-violet-400/15 bg-violet-500/[0.07] p-5">
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium text-slate-400">
-              Ingresos histÃ³ricos
+              Ingresos históricos
             </p>
             <CreditCard size={19} className="text-violet-300" />
           </div>
@@ -512,7 +512,7 @@ async function renewPaidSubscription() {
           </p>
 
           <p className="mt-2 text-xs text-slate-500">
-            Requieren confirmaciÃ³n o revisiÃ³n.
+            Requieren confirmación o revisión.
           </p>
         </article>
 
@@ -569,7 +569,7 @@ async function renewPaidSubscription() {
                 type="button"
                 onClick={() => setSearch("")}
                 className="rounded-lg p-1 text-slate-500 transition hover:bg-white/10 hover:text-white"
-                aria-label="Limpiar bÃºsqueda"
+                aria-label="Limpiar búsqueda"
               >
                 <X size={16} />
               </button>
@@ -642,7 +642,7 @@ async function renewPaidSubscription() {
                   <th className="px-6 py-4 font-semibold">Fecha</th>
                   <th className="px-6 py-4 font-semibold">Estado</th>
                   <th className="px-6 py-4 text-right font-semibold">
-                    AcciÃ³n
+                    Acción
                   </th>
                 </tr>
               </thead>
@@ -695,7 +695,7 @@ async function renewPaidSubscription() {
                       </td>
 
                       <td className="px-6 py-4 font-mono text-xs text-slate-400">
-                        {payment.referencia_pago || "â€”"}
+                        {payment.referencia_pago || "—"}
                       </td>
 
                       <td className="px-6 py-4 text-slate-400">
@@ -730,7 +730,7 @@ async function renewPaidSubscription() {
                             Confirmar pago
                           </button>
                         ) : (
-                          <span className="text-xs text-slate-600">Sin acciÃ³n</span>
+                          <span className="text-xs text-slate-600">Sin acción</span>
                         )}
                       </td>
                     </tr>
@@ -762,7 +762,7 @@ async function renewPaidSubscription() {
             </p>
 
             <h2 className="mt-1 text-xl font-bold text-white">
-              RenovaciÃ³n de planes Premium y Pro
+              Renovación de planes Premium y Pro
             </h2>
           </div>
 
@@ -779,7 +779,7 @@ async function renewPaidSubscription() {
                 <th className="px-6 py-4 font-semibold">Plan</th>
                 <th className="px-6 py-4 font-semibold">Estado</th>
                 <th className="px-6 py-4 font-semibold">Vencimiento</th>
-                <th className="px-6 py-4 text-right font-semibold">AcciÃ³n</th>
+                <th className="px-6 py-4 text-right font-semibold">Acción</th>
               </tr>
             </thead>
 
@@ -891,7 +891,7 @@ async function renewPaidSubscription() {
             type="button"
             className="absolute inset-0"
             onClick={() => setPaymentToConfirm(null)}
-            aria-label="Cerrar confirmaciÃ³n"
+            aria-label="Cerrar confirmación"
           />
 
           <div className="relative z-10 w-full max-w-md rounded-3xl border border-white/10 bg-[#1E293B] p-6 shadow-2xl shadow-black/60">
@@ -924,7 +924,7 @@ async function renewPaidSubscription() {
             </div>
 
             <div className="mt-6 rounded-2xl border border-amber-400/20 bg-amber-500/10 p-4 text-sm text-amber-100">
-              Al confirmar, este pago contarÃ¡ como ingreso real y quedarÃ¡
+              Al confirmar, este pago contará como ingreso real y quedará
               registrado con la fecha actual.
             </div>
 
@@ -947,7 +947,7 @@ async function renewPaidSubscription() {
       type="button"
       className="absolute inset-0"
       onClick={() => setPaymentToConfirm(null)}
-      aria-label="Cerrar confirmaciÃ³n"
+      aria-label="Cerrar confirmación"
     />
 
     <div className="relative z-10 w-full max-w-md rounded-3xl border border-white/10 bg-[#1E293B] p-6 shadow-2xl shadow-black/60">
@@ -962,7 +962,7 @@ async function renewPaidSubscription() {
           </h2>
 
           <p className="mt-1 text-sm text-slate-400">
-            {getPlanLabel(paymentToConfirm.plan)} Â·{" "}
+            {getPlanLabel(paymentToConfirm.plan)} ·{" "}
             {formatMoney(
               paymentToConfirm.monto,
               paymentToConfirm.moneda
@@ -981,7 +981,7 @@ async function renewPaidSubscription() {
       </div>
 
       <div className="mt-6 rounded-2xl border border-amber-400/20 bg-amber-500/10 p-4 text-sm text-amber-100">
-        Al confirmar, este pago contarÃ¡ como ingreso real y quedarÃ¡ registrado
+        Al confirmar, este pago contará como ingreso real y quedará registrado
         con la fecha actual.
       </div>
 
@@ -1004,7 +1004,7 @@ async function renewPaidSubscription() {
       type="button"
       className="absolute inset-0"
       onClick={() => setRenewSubscription(null)}
-      aria-label="Cerrar renovaciÃ³n"
+      aria-label="Cerrar renovación"
     />
 
     <div className="relative z-10 w-full max-w-lg rounded-3xl border border-white/10 bg-[#1E293B] p-6 shadow-2xl shadow-black/60">
@@ -1017,7 +1017,7 @@ async function renewPaidSubscription() {
                 : "text-amber-300"
             }`}
           >
-            RenovaciÃ³n {getPlanLabel(renewSubscription.plan)}
+            Renovación {getPlanLabel(renewSubscription.plan)}
           </p>
 
           <h2 className="mt-1 text-xl font-bold text-white">
@@ -1062,7 +1062,7 @@ async function renewPaidSubscription() {
             </p>
 
             <p className="mt-1 text-xs text-slate-400">
-              El pago quedarÃ¡ asociado a este plan.
+              El pago quedará asociado a este plan.
             </p>
           </div>
         </div>
@@ -1081,7 +1081,7 @@ async function renewPaidSubscription() {
         </label>
 
         <label className="text-sm font-semibold text-slate-300">
-          DuraciÃ³n
+          Duración
           <select
             value={renewMonths}
             onChange={(event) => setRenewMonths(event.target.value)}
@@ -1113,13 +1113,13 @@ async function renewPaidSubscription() {
         <input
           value={renewReference}
           onChange={(event) => setRenewReference(event.target.value)}
-          placeholder="Opcional: nÃºmero de operaciÃ³n o comprobante"
+          placeholder="Opcional: número de operación o comprobante"
           className="mt-2 w-full rounded-xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none transition focus:border-violet-400/60"
         />
       </label>
 
       <div className="mt-5 rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-4 text-sm text-emerald-100">
-        Se registrarÃ¡ un pago real confirmado y se extenderÃ¡ la suscripciÃ³n{" "}
+        Se registrará un pago real confirmado y se extenderá la suscripción{" "}
         <strong>{getPlanLabel(renewSubscription.plan)}</strong> del usuario.
       </div>
 
@@ -1131,7 +1131,7 @@ async function renewPaidSubscription() {
       >
         <Crown size={18} />
         {saving
-          ? "Registrando renovaciÃ³n..."
+          ? "Registrando renovación..."
           : `Registrar pago y renovar ${getPlanLabel(
               renewSubscription.plan
             )}`}

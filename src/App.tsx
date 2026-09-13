@@ -350,13 +350,13 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Inicio inteligente segÃºn sesiÃ³n y rol */}
+        {/* Inicio inteligente según sesión y rol */}
         <Route
           path="/"
           element={<DashboardRedirect />}
         />
 
-        {/* Rutas pÃºblicas */}
+        {/* Rutas públicas */}
         <Route
           path="/login"
           element={<LoginPage />}
