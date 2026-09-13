@@ -115,7 +115,7 @@ export function Avatar({
       {online && (
         <span
           className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-[3px] border-white bg-emerald-500 dark:border-[#0d1526]"
-          title="En l?nea"
+          title="En línea"
         />
       )}
     </div>

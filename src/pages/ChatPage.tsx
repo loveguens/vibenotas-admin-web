@@ -299,11 +299,11 @@ export default function ChatPage() {
       });
     } catch (requestError) {
       /*
-       * La petici?n puede terminar despu?s de que
+       * La petición puede terminar después de que
        * el usuario haya cambiado/cerrado el chat.
        *
        * En ese caso el error pertenece a una
-       * selecci?n antigua y no debe mostrarse.
+       * selección antigua y no debe mostrarse.
        */
       if (selectedConversationIdRef.current === id) {
         setError(
@@ -985,10 +985,10 @@ export default function ChatPage() {
 
   /*
    * El socket puede haberse conectado antes de que
-   * el usuario seleccione una conversaci?n.
+   * el usuario seleccione una conversación.
    *
-   * Por eso debemos entrar al room tambi?n cada vez
-   * que cambia la conversaci?n seleccionada.
+   * Por eso debemos entrar al room también cada vez
+   * que cambia la conversación seleccionada.
    */
   useEffect(() => {
     selectedConversationIdRef.current = selectedConversationId;
@@ -1757,7 +1757,7 @@ export default function ChatPage() {
       /*
        * Quitamos primero el ID de la URL.
        *
-       * As? el efecto que sincroniza conversacionId
+       * Así el efecto que sincroniza conversacionId
        * no puede volver a seleccionar el chat que
        * acabamos de bloquear.
        */
@@ -2260,7 +2260,7 @@ export default function ChatPage() {
                     </div>
 
                     <h2 className="text-xl font-black tracking-tight text-slate-950 dark:text-white">
-                      Elige una conversaci?n
+                      Elige una conversación
                     </h2>
 
                     <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-slate-500 dark:text-slate-400">
@@ -2792,11 +2792,11 @@ function FriendsPanel({
                 <UserPlus size={25} className="mx-auto text-violet-400" />
 
                 <p className="mt-3 font-black text-slate-800 dark:text-slate-200">
-                  Tu lista est? vac?a
+                  Tu lista está vacía
                 </p>
 
                 <p className="mx-auto mt-1 max-w-sm text-sm text-slate-500">
-                  Busca personas arriba y env?ales una solicitud de amistad.
+                  Busca personas arriba y envíales una solicitud de amistad.
                 </p>
               </div>
             ) : (
@@ -3124,7 +3124,7 @@ function BlockedPanel({
               </h2>
 
               <p className="mt-1 max-w-md text-sm leading-6 text-slate-500 dark:text-slate-400">
-                Cuando bloquees a alguien aparecer? aqu? y podr?s desbloquearlo
+                Cuando bloquees a alguien aparecerá aquí y podrás desbloquearlo
                 cuando quieras.
               </p>
             </div>

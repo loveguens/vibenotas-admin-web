@@ -550,7 +550,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
       void api
         .put(`/notifications/${notification.id}/read`)
         .catch(async (error) => {
-          console.error("ERROR MARCANDO NOTIFICACI?N:", error);
+          console.error("ERROR MARCANDO NOTIFICACIÓN:", error);
 
           await loadNotifications();
         });

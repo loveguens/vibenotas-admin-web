@@ -114,7 +114,7 @@ export function ChatComposer({
     const selectedDate = new Date(scheduledFor);
 
     if (Number.isNaN(selectedDate.getTime())) {
-      setScheduleError("Selecciona una fecha v?lida.");
+      setScheduleError("Selecciona una fecha válida.");
       return;
     }
 
@@ -212,7 +212,7 @@ export function ChatComposer({
 
         <div className="mx-auto mt-1.5 flex max-w-3xl items-center justify-between px-2">
           <p className="hidden text-[9px] text-slate-400 sm:block">
-            Enter para enviar ? Shift + Enter para nueva l?nea
+            Enter para enviar · Shift + Enter para nueva línea
           </p>
 
           <span className="ml-auto text-[9px] text-slate-400">
@@ -227,7 +227,7 @@ export function ChatComposer({
             type="button"
             onClick={closeScheduleModal}
             className="absolute inset-0 cursor-default"
-            aria-label="Cerrar programaci?n"
+            aria-label="Cerrar programación"
           />
 
           <section className="relative w-full rounded-t-[30px] border border-slate-200 bg-white p-6 shadow-2xl dark:border-white/10 dark:bg-[#111827] sm:max-w-md sm:rounded-[30px]">
@@ -242,7 +242,7 @@ export function ChatComposer({
                 </h2>
 
                 <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
-                  Se enviar? autom?ticamente en la fecha elegida.
+                  Se enviará automáticamente en la fecha elegida.
                 </p>
               </div>
 
@@ -258,7 +258,7 @@ export function ChatComposer({
 
             <form onSubmit={handleSchedule} className="mt-6">
               <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200">
-                Fecha y hora de env?o
+                Fecha y hora de envío
               </label>
 
               <input
@@ -279,7 +279,7 @@ export function ChatComposer({
                 </p>
 
                 <p className="mt-1 line-clamp-3 text-sm text-slate-600 dark:text-slate-300">
-                  {value || "A?n no escribiste un mensaje."}
+                  {value || "Aún no escribiste un mensaje."}
                 </p>
               </div>
 

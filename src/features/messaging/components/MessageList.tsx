@@ -100,11 +100,11 @@ export function MessageList({
     const nearBottom = distanceFromBottom < 220;
 
     /*
-     * Al abrir/cambiar conversaci?n siempre
-     * mostramos el mensaje m?s reciente.
+     * Al abrir/cambiar conversación siempre
+     * mostramos el mensaje más reciente.
      *
      * Para mensajes nuevos solo bajamos
-     * autom?ticamente si el usuario ya estaba
+     * automáticamente si el usuario ya estaba
      * cerca del final.
      */
     if (conversationChanged || (appended && nearBottom)) {
@@ -149,7 +149,7 @@ export function MessageList({
             </p>
 
             <p className="mt-2 text-sm text-slate-500">
-              Env?a el primer mensaje para comenzar.
+              Envía el primer mensaje para comenzar.
             </p>
           </div>
         </div>
@@ -205,7 +205,7 @@ export function MessageList({
             onJumpToBottom();
           }}
           className="sticky bottom-4 ml-auto mr-2 flex h-10 w-10 items-center justify-center rounded-full border border-violet-400/20 bg-violet-600 text-white shadow-lg shadow-violet-500/20 transition hover:bg-violet-500"
-          aria-label="Ir al ?ltimo mensaje"
+          aria-label="Ir al último mensaje"
         >
           <ArrowDown size={18} />
         </button>
