@@ -1,4 +1,5 @@
-import {
+﻿import {
+  Activity,
   BarChart3,
   Bell,
   BellRing,
@@ -18,27 +19,16 @@ import {
   Users,
   X,
 } from "lucide-react";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
-import {
-  useState,
-  type ElementType,
-  type ReactNode,
-} from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState, type ElementType, type ReactNode } from "react";
 
 type SidebarProps = {
-  role: "admin" | "superadmin";
+  role: "admin" | "superadmin" | "owner";
   isOpen: boolean;
   onClose: () => void;
 };
 
-type MenuSection =
-  | "principal"
-  | "gestion"
-  | "sistema";
+type MenuSection = "principal" | "gestion" | "sistema";
 
 type MenuItem = {
   label: string;
@@ -53,21 +43,18 @@ type SidebarSectionProps = {
   children: ReactNode;
 };
 
-export default function Sidebar({
-  role,
-  isOpen,
-  onClose,
-}: SidebarProps) {
+export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [collapsed, setCollapsed] =
-    useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   const basePath =
-    role === "superadmin"
-      ? "/superadmin"
-      : "/admin";
+    role === "owner"
+      ? "/owner"
+      : role === "superadmin"
+        ? "/superadmin"
+        : "/admin";
 
   const menuItems: MenuItem[] = [
     {
@@ -76,6 +63,22 @@ export default function Sidebar({
       path: `${basePath}/dashboard`,
       section: "principal",
     },
+    ...(role === "owner"
+      ? [
+          {
+            label: "Propietarios",
+            icon: Crown,
+            path: "/owner/owners",
+            section: "principal" as const,
+          },
+          {
+            label: "Supervisión",
+            icon: Activity,
+            path: "/owner/supervision",
+            section: "principal" as const,
+          },
+        ]
+      : []),
     {
       label: "Usuarios",
       icon: Users,
@@ -83,12 +86,12 @@ export default function Sidebar({
       section: "principal",
     },
 
-    ...(role === "superadmin"
+    ...(role !== "admin"
       ? [
           {
             label: "Administradores",
             icon: ShieldCheck,
-            path: "/superadmin/administrators",
+            path: `${basePath}/administrators`,
             section: "principal" as const,
           },
         ]
@@ -131,30 +134,30 @@ export default function Sidebar({
       section: "gestion",
     },
 
-    ...(role === "superadmin"
+    ...(role !== "admin"
       ? [
           {
             label: "Analíticas",
             icon: BarChart3,
-            path: "/superadmin/analytics",
+            path: `${basePath}/analytics`,
             section: "sistema" as const,
           },
           {
             label: "Logs de actividad",
             icon: ScrollText,
-            path: "/superadmin/logs",
+            path: `${basePath}/logs`,
             section: "sistema" as const,
           },
           {
             label: "Suscripciones",
             icon: Crown,
-            path: "/superadmin/subscriptions",
+            path: `${basePath}/subscriptions`,
             section: "sistema" as const,
           },
           {
             label: "Seguridad",
             icon: LockKeyhole,
-            path: "/superadmin/security",
+            path: `${basePath}/security`,
             section: "sistema" as const,
           },
         ]
@@ -169,45 +172,29 @@ export default function Sidebar({
     });
   }
 
-  function esRutaActiva(
-    path: string,
-  ): boolean {
+  function esRutaActiva(path: string): boolean {
     if (path.endsWith("/dashboard")) {
       return location.pathname === path;
     }
 
     if (path === "/my-notifications") {
-      return (
-        location.pathname ===
-        "/my-notifications"
-      );
+      return location.pathname === "/my-notifications";
     }
 
-    return location.pathname.startsWith(
-      path,
-    );
+    return location.pathname.startsWith(path);
   }
 
-  function renderMenuItem(
-    item: MenuItem,
-  ) {
+  function renderMenuItem(item: MenuItem) {
     const Icon = item.icon;
-    const active =
-      esRutaActiva(item.path);
+    const active = esRutaActiva(item.path);
 
     return (
       <Link
         key={item.path}
         to={item.path}
         onClick={onClose}
-        aria-current={
-          active ? "page" : undefined
-        }
-        title={
-          collapsed
-            ? item.label
-            : undefined
-        }
+        aria-current={active ? "page" : undefined}
+        title={collapsed ? item.label : undefined}
         className={`
           group relative flex min-h-12
           items-center gap-3 rounded-2xl
@@ -292,11 +279,7 @@ export default function Sidebar({
         <span
           className={`
             min-w-0 truncate
-            ${
-              collapsed
-                ? "lg:hidden"
-                : ""
-            }
+            ${collapsed ? "lg:hidden" : ""}
           `}
         >
           {item.label}
@@ -305,23 +288,11 @@ export default function Sidebar({
     );
   }
 
-  const principal =
-    menuItems.filter(
-      (item) =>
-        item.section === "principal",
-    );
+  const principal = menuItems.filter((item) => item.section === "principal");
 
-  const gestion =
-    menuItems.filter(
-      (item) =>
-        item.section === "gestion",
-    );
+  const gestion = menuItems.filter((item) => item.section === "gestion");
 
-  const sistema =
-    menuItems.filter(
-      (item) =>
-        item.section === "sistema",
-    );
+  const sistema = menuItems.filter((item) => item.section === "sistema");
 
   return (
     <>
@@ -363,17 +334,9 @@ export default function Sidebar({
           lg:top-3
           lg:h-[calc(100vh-24px)]
 
-          ${
-            collapsed
-              ? "lg:w-[86px]"
-              : "lg:w-[280px]"
-          }
+          ${collapsed ? "lg:w-[86px]" : "lg:w-[280px]"}
 
-          ${
-            isOpen
-              ? "translate-x-0"
-              : "-translate-x-[120%] lg:translate-x-0"
-          }
+          ${isOpen ? "translate-x-0" : "-translate-x-[120%] lg:translate-x-0"}
         `}
       >
         <div
@@ -415,11 +378,7 @@ export default function Sidebar({
             <div
               className={`
                 min-w-0
-                ${
-                  collapsed
-                    ? "lg:hidden"
-                    : ""
-                }
+                ${collapsed ? "lg:hidden" : ""}
               `}
             >
               <h1
@@ -446,20 +405,18 @@ export default function Sidebar({
                   dark:text-violet-300
                 "
               >
-                {role === "superadmin"
-                  ? "Super Admin"
-                  : "Administrador"}
+                {role === "owner"
+                  ? "Owner"
+                  : role === "superadmin"
+                    ? "Super Admin"
+                    : "Administrador"}
               </p>
             </div>
           </Link>
 
           <button
             type="button"
-            onClick={() =>
-              setCollapsed(
-                (value) => !value,
-              )
-            }
+            onClick={() => setCollapsed((value) => !value)}
             className="
               hidden h-9 w-9
               items-center justify-center
@@ -474,22 +431,10 @@ export default function Sidebar({
               dark:hover:text-white
               lg:flex
             "
-            aria-label={
-              collapsed
-                ? "Expandir menú"
-                : "Contraer menú"
-            }
-            title={
-              collapsed
-                ? "Expandir menú"
-                : "Contraer menú"
-            }
+            aria-label={collapsed ? "Expandir menú" : "Contraer menú"}
+            title={collapsed ? "Expandir menú" : "Contraer menú"}
           >
-            {collapsed ? (
-              <ChevronRight size={18} />
-            ) : (
-              <ChevronLeft size={18} />
-            )}
+            {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
           </button>
 
           <button
@@ -523,13 +468,8 @@ export default function Sidebar({
             px-3 py-4
           "
         >
-          <SidebarSection
-            label="Principal"
-            collapsed={collapsed}
-          >
-            {principal.map(
-              renderMenuItem,
-            )}
+          <SidebarSection label="Principal" collapsed={collapsed}>
+            {principal.map(renderMenuItem)}
           </SidebarSection>
 
           <div
@@ -540,13 +480,8 @@ export default function Sidebar({
             "
           />
 
-          <SidebarSection
-            label="Gestión"
-            collapsed={collapsed}
-          >
-            {gestion.map(
-              renderMenuItem,
-            )}
+          <SidebarSection label="Gestión" collapsed={collapsed}>
+            {gestion.map(renderMenuItem)}
           </SidebarSection>
 
           {sistema.length > 0 && (
@@ -559,13 +494,8 @@ export default function Sidebar({
                 "
               />
 
-              <SidebarSection
-                label="Sistema"
-                collapsed={collapsed}
-              >
-                {sistema.map(
-                  renderMenuItem,
-                )}
+              <SidebarSection label="Sistema" collapsed={collapsed}>
+                {sistema.map(renderMenuItem)}
               </SidebarSection>
             </>
           )}
@@ -581,11 +511,7 @@ export default function Sidebar({
           <Link
             to={`${basePath}/profile`}
             onClick={onClose}
-            title={
-              collapsed
-                ? "Mi perfil"
-                : undefined
-            }
+            title={collapsed ? "Mi perfil" : undefined}
             className={`
               group mb-1 flex
               min-h-12 items-center
@@ -594,9 +520,7 @@ export default function Sidebar({
               text-sm font-semibold
               transition
               ${
-                esRutaActiva(
-                  `${basePath}/profile`,
-                )
+                esRutaActiva(`${basePath}/profile`)
                   ? `
                     bg-violet-100
                     text-violet-800
@@ -634,25 +558,13 @@ export default function Sidebar({
               <UserCircle2 size={19} />
             </div>
 
-            <span
-              className={
-                collapsed
-                  ? "lg:hidden"
-                  : ""
-              }
-            >
-              Mi perfil
-            </span>
+            <span className={collapsed ? "lg:hidden" : ""}>Mi perfil</span>
           </Link>
 
           <Link
             to={`${basePath}/settings`}
             onClick={onClose}
-            title={
-              collapsed
-                ? "Configuración"
-                : undefined
-            }
+            title={collapsed ? "Configuración" : undefined}
             className={`
               group mb-1 flex
               min-h-12 items-center
@@ -661,9 +573,7 @@ export default function Sidebar({
               text-sm font-semibold
               transition
               ${
-                esRutaActiva(
-                  `${basePath}/settings`,
-                )
+                esRutaActiva(`${basePath}/settings`)
                   ? `
                     bg-violet-100
                     text-violet-800
@@ -701,15 +611,7 @@ export default function Sidebar({
               <Settings size={19} />
             </div>
 
-            <span
-              className={
-                collapsed
-                  ? "lg:hidden"
-                  : ""
-              }
-            >
-              Configuración
-            </span>
+            <span className={collapsed ? "lg:hidden" : ""}>Configuración</span>
           </Link>
 
           <div
@@ -723,11 +625,7 @@ export default function Sidebar({
           <button
             type="button"
             onClick={cerrarSesion}
-            title={
-              collapsed
-                ? "Cerrar sesión"
-                : undefined
-            }
+            title={collapsed ? "Cerrar sesión" : undefined}
             className="
               group flex min-h-12
               w-full items-center
@@ -759,15 +657,7 @@ export default function Sidebar({
               <LogOut size={19} />
             </div>
 
-            <span
-              className={
-                collapsed
-                  ? "lg:hidden"
-                  : ""
-              }
-            >
-              Cerrar sesión
-            </span>
+            <span className={collapsed ? "lg:hidden" : ""}>Cerrar sesión</span>
           </button>
         </div>
       </aside>
@@ -775,11 +665,7 @@ export default function Sidebar({
   );
 }
 
-function SidebarSection({
-  label,
-  collapsed,
-  children,
-}: SidebarSectionProps) {
+function SidebarSection({ label, collapsed, children }: SidebarSectionProps) {
   return (
     <section>
       <p
@@ -791,19 +677,13 @@ function SidebarSection({
           tracking-[0.18em]
           text-slate-500
           dark:text-slate-500
-          ${
-            collapsed
-              ? "lg:hidden"
-              : ""
-          }
+          ${collapsed ? "lg:hidden" : ""}
         `}
       >
         {label}
       </p>
 
-      <div className="space-y-1">
-        {children}
-      </div>
+      <div className="space-y-1">{children}</div>
     </section>
   );
 }

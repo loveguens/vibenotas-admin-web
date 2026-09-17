@@ -5,8 +5,19 @@ export const API_ROUTES = {
   conversationMessages: (id: string) => `/chat/conversations/${id}/messages`,
   markConversationRead: (id: string) => `/chat/conversations/${id}/read`,
   createDirectChat: "/chat/conversations/direct",
+
+  reportConversationUser: (id: string) =>
+    `/chat/conversations/${id}/report-user`,
   updateMessage: (id: string) => `/chat/messages/${id}`,
   deleteMessage: (id: string) => `/chat/messages/${id}`,
+
+  deleteMessageForMe: (id: string) => `/chat/messages/${id}/me`,
+
+  favoriteMessage: (id: string) => `/chat/messages/${id}/favorite`,
+
+  forwardMessage: (id: string) => `/chat/messages/${id}/forward`,
+
+  shareMessage: (id: string) => `/chat/messages/${id}/share`,
 
   friends: "/friendships",
 
@@ -178,21 +189,18 @@ export const TEMPORARY_OPTIONS: Array<{
   {
     value: "24h",
     label: "24 horas",
-    description: "Preparado para eliminar mensajes tras un día.",
+    description:
+      "Los nuevos mensajes se eliminan automáticamente tras 24 horas.",
   },
   {
     value: "7d",
     label: "7 días",
-    description: "Preparado para eliminar mensajes tras una semana.",
+    description: "Los nuevos mensajes se eliminan automáticamente tras 7 días.",
   },
   {
     value: "30d",
     label: "30 días",
-    description: "Preparado para eliminar mensajes tras un mes.",
-  },
-  {
-    value: "custom",
-    label: "Personalizado",
-    description: "Requiere configuración futura del backend.",
+    description:
+      "Los nuevos mensajes se eliminan automáticamente tras 30 días.",
   },
 ];

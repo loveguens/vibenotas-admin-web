@@ -20,6 +20,7 @@ type ConversationActionsMenuProps = {
   menu: ConversationMenuState | null;
   isMuted: boolean;
   isPinned: boolean;
+  isArchived: boolean;
   onClose: () => void;
   onInfo: () => void;
   onPin: () => void;
@@ -89,6 +90,7 @@ export function ConversationActionsMenu({
   menu,
   isMuted,
   isPinned,
+  isArchived,
   onClose,
   onInfo,
   onPin,
@@ -180,7 +182,7 @@ export function ConversationActionsMenu({
       <div className="mx-2 my-1 border-t border-slate-200 dark:border-slate-800" />
 
       <MenuItem icon={Archive} onClick={() => handleAction(onArchive)}>
-        Archivar conversación
+        {isArchived ? "Desarchivar conversación" : "Archivar conversación"}
       </MenuItem>
 
       {!isGroup && (

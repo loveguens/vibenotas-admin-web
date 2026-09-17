@@ -19,6 +19,11 @@ export type BackendPresence = {
   ultima_vez_en_linea?: string | null;
 } | null;
 
+export type BackendReplyMessagePreview = {
+  id: string;
+  contenido: string | null;
+  remitente: BackendChatUser | null;
+};
 export type BackendChatMessage = {
   id: string;
   conversacion_id: string;
@@ -27,6 +32,13 @@ export type BackendChatMessage = {
   tipo: string;
   contenido: string | null;
   client_message_id: string | null;
+
+  respuesta_a_mensaje_id: string | null;
+  respuesta_a: BackendReplyMessagePreview | null;
+  reenviado_de_mensaje_id: string | null;
+  tipo_copia: "forwarded" | "shared" | null;
+  favorito?: boolean;
+
   editado_en: string | null;
   eliminado_en: string | null;
   creado_en: string;
@@ -42,6 +54,22 @@ export type BackendConversation = {
   creado_en: string;
   mensajes_sin_leer: number;
   presencia?: BackendPresence;
+
+  mensajes_temporales_segundos?: number | null;
+
+  mi_membresia?: {
+    rol?: string;
+    unido_en?: string;
+    leido_hasta?: string | null;
+
+    ajustes?: {
+      fijada: boolean;
+      silenciada: boolean;
+      archivada: boolean;
+      tema: string;
+    };
+  };
+
   miembros: BackendChatMember[];
   ultimo_mensaje: BackendChatMessage | null;
 };

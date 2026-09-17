@@ -23,6 +23,20 @@ export type RealtimeChatMessage = {
   type: string;
   content: string;
   clientMessageId: string | null;
+  replyToMessageId?: string | null;
+
+  replyTo?: {
+    id: string;
+    content: string | null;
+
+    sender: {
+      id: string;
+      displayName: string;
+      avatarUrl: string | null;
+    } | null;
+  } | null;
+  forwardedFromMessageId?: string | null;
+  copyKind?: "FORWARDED" | "SHARED" | null;
   createdAt: string;
   updatedAt: string;
   editedAt: string | null;
@@ -67,7 +81,7 @@ export type ChatMessageDeletedEvent = {
   conversationId: string;
   messageId: string;
   deletedAt: string;
-  deletedByUserId: string;
+  deletedByUserId: string | null;
 };
 
 export type JoinConversationResponse =
@@ -197,7 +211,7 @@ export type ChatGroupDeletedEvent = {
 
   conversationId: string;
   deletedAt: string;
-  deletedByUserId: string;
+  deletedByUserId: string | null;
 };
 
 export type FriendshipRequestCancelledEvent = {

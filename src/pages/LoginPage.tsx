@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link, useNavigate, type NavigateFunction } from "react-router-dom";
 import { Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import axios from "axios";
@@ -114,6 +114,18 @@ function getRoleSlugs(user: Usuario): string[] {
 function redirectByRole(user: Usuario, navigate: NavigateFunction): void {
   const roles = getRoleSlugs(user);
 
+  /*
+   * OWNER tiene la jerarquía máxima.
+   * Debe evaluarse antes que super_admin,
+   * ya que una cuenta puede poseer ambos roles.
+   */
+  if (roles.includes("owner") || roles.includes("propietario")) {
+    navigate("/owner/dashboard", {
+      replace: true,
+    });
+
+    return;
+  }
   /*
    * super_admin debe evaluarse primero.
    *

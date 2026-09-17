@@ -2,15 +2,18 @@ import {
   Check,
   CheckCheck,
   FileText,
+  Forward,
   MoreVertical,
   Pin,
+  Share2,
   Star,
-  Volume2,
 } from "lucide-react";
 import type { KeyboardEvent } from "react";
 import type { Message } from "../types/chat.types";
 import { formatChatDate } from "../utils";
 import { Avatar } from "./Avatar";
+import { PrivateChatImage } from "./PrivateChatImage";
+import { PrivateChatAudio } from "./PrivateChatAudio";
 
 type MessageBubbleProps = {
   message: Message;
@@ -40,6 +43,9 @@ export function MessageBubble({
   const isDeleted = Number(message.eliminado ?? 0) === 1;
   const isSystem = message.tipo === "sistema";
 
+  const copyKind =
+    message.tipo_copia ?? (Boolean(message.reenviado) ? "forwarded" : null);
+
   if (isSystem) {
     return (
       <div className="flex justify-center py-2">
@@ -52,7 +58,7 @@ export function MessageBubble({
     );
   }
 
-  const hasAttachment = message.tipo === "archivo" || message.tipo === "imagen";
+  const hasFileAttachment = message.tipo === "archivo";
 
   function handleEditKeyDown(event: KeyboardEvent<HTMLTextAreaElement>): void {
     if (event.key === "Escape") {
@@ -170,7 +176,24 @@ export function MessageBubble({
                   >
                     Este mensaje fue eliminado.
                   </p>
-                ) : hasAttachment ? (
+                ) : message.tipo === "imagen" ? (
+                  <div className="space-y-2 pr-6">
+                    <PrivateChatImage
+                      messageId={message.id}
+                      alt={
+                        message.contenido
+                          ? `Imagen: ${message.contenido}`
+                          : "Imagen del chat"
+                      }
+                    />
+
+                    {message.contenido && (
+                      <p className="whitespace-pre-wrap break-words text-sm leading-6">
+                        {message.contenido}
+                      </p>
+                    )}
+                  </div>
+                ) : hasFileAttachment ? (
                   message.archivo_url ? (
                     <a
                       href={message.archivo_url}
@@ -191,24 +214,40 @@ export function MessageBubble({
                     </div>
                   )
                 ) : message.tipo === "audio" ? (
-                  <div className="flex items-center gap-3 pr-8">
-                    <Volume2 size={18} />
-                    <div
-                      className={`h-1 w-36 rounded-full ${
-                        isMine ? "bg-white/35" : "bg-slate-300 dark:bg-white/20"
-                      }`}
-                    />
+                  <div className="space-y-2 pr-6">
+                    <PrivateChatAudio messageId={message.id} />
+
+                    {message.contenido && (
+                      <p className="whitespace-pre-wrap break-words text-sm leading-6">
+                        {message.contenido}
+                      </p>
+                    )}
                   </div>
                 ) : (
-                  <p className="whitespace-pre-wrap break-words pr-6 text-sm leading-6">
-                    {message.reenviado && (
-                      <span className="mr-1 text-xs opacity-70">
-                        Reenviado ?
-                      </span>
+                  <div className="pr-6">
+                    {copyKind && (
+                      <div
+                        className={`mb-1 flex items-center gap-1 text-[11px] font-semibold ${
+                          isMine
+                            ? "text-white/70"
+                            : "text-slate-500 dark:text-slate-400"
+                        }`}
+                      >
+                        {copyKind === "shared" ? (
+                          <Share2 size={11} />
+                        ) : (
+                          <Forward size={11} />
+                        )}
+                        <span>
+                          {copyKind === "shared" ? "Compartido" : "Reenviado"}
+                        </span>
+                      </div>
                     )}
 
-                    {message.contenido}
-                  </p>
+                    <p className="whitespace-pre-wrap break-words text-sm leading-6">
+                      {message.contenido}
+                    </p>
+                  </div>
                 )}
 
                 <div
@@ -220,7 +259,7 @@ export function MessageBubble({
                 >
                   <span>{formatChatDate(message.creado_en)}</span>
 
-                  {Number(message.editado ?? 0) === 1 && <span>? editado</span>}
+                  {Number(message.editado ?? 0) === 1 && <span>· editado</span>}
 
                   {message.fijado && <Pin size={10} />}
 
