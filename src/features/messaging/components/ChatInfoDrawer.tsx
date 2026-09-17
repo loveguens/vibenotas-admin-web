@@ -1,4 +1,4 @@
-import {
+﻿import {
   Bell,
   Clock3,
   FolderOpen,
@@ -81,7 +81,6 @@ function getTemporaryDurationLabel(duration: TemporaryDuration): string {
     "24h": "24 horas",
     "7d": "7 días",
     "30d": "30 días",
-    custom: "Personalizado",
   };
 
   return labels[duration] ?? "Desactivados";

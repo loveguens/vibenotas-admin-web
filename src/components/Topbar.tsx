@@ -1,4 +1,4 @@
-import {
+﻿import {
   ArrowLeft,
   Bell,
   CheckCheck,
@@ -28,7 +28,7 @@ import {
 } from "../features/messaging/services/chat-realtime.service";
 
 type TopbarProps = {
-  role: "admin" | "superadmin";
+  role: "admin" | "superadmin" | "owner";
   onOpenSidebar?: () => void;
 };
 
@@ -240,10 +240,23 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
 
   const usuario = usuarioActual;
 
+  const basePath =
+    role === "owner"
+      ? "/owner"
+      : role === "superadmin"
+        ? "/superadmin"
+        : "/admin";
+
+  const roleLabel =
+    role === "owner"
+      ? "Owner"
+      : role === "superadmin"
+        ? "Super Admin"
+        : "Administrador";
+
   const fotoPerfil = usuario.foto_perfil ?? usuario.avatarUrl ?? null;
 
-  const nombreUsuario =
-    usuario.nombre || (role === "superadmin" ? "Super Admin" : "Administrador");
+  const nombreUsuario = usuario.nombre || roleLabel;
 
   const iniciales =
     nombreUsuario
@@ -259,9 +272,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
     year: "numeric",
   }).format(new Date());
 
-  const esDashboard =
-    location.pathname === "/superadmin/dashboard" ||
-    location.pathname === "/admin/dashboard";
+  const esDashboard = location.pathname === `${basePath}/dashboard`;
 
   const tituloPagina = (() => {
     const path = location.pathname;
@@ -302,10 +313,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
 
         setUsuarioActual((actual) => ({
           ...actual,
-          nombre:
-            profile.displayName?.trim() ||
-            actual.nombre ||
-            (role === "superadmin" ? "Super Admin" : "Administrador"),
+          nombre: profile.displayName?.trim() || actual.nombre || roleLabel,
           correo: profile.email?.trim() || actual.correo,
           avatarUrl: profile.avatarUrl ?? null,
           foto_perfil: profile.avatarUrl ?? null,
@@ -470,15 +478,13 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
   const abrirPerfil = () => {
     setProfileOpen(false);
 
-    navigate(role === "superadmin" ? "/superadmin/profile" : "/admin/profile");
+    navigate(`${basePath}/profile`);
   };
 
   const abrirConfiguracion = () => {
     setProfileOpen(false);
 
-    navigate(
-      role === "superadmin" ? "/superadmin/settings" : "/admin/settings",
-    );
+    navigate(`${basePath}/settings`);
   };
 
   const buscar = (event: FormEvent<HTMLFormElement>) => {
@@ -488,11 +494,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
 
     if (!texto) return;
 
-    navigate(
-      role === "superadmin"
-        ? `/superadmin/users?buscar=${encodeURIComponent(texto)}`
-        : `/admin/users?buscar=${encodeURIComponent(texto)}`,
-    );
+    navigate(`${basePath}/users?buscar=${encodeURIComponent(texto)}`);
   };
 
   const volverAtras = () => {
@@ -501,9 +503,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
       return;
     }
 
-    navigate(
-      role === "superadmin" ? "/superadmin/dashboard" : "/admin/dashboard",
-    );
+    navigate(`${basePath}/dashboard`);
   };
 
   async function markAllAsRead() {
@@ -669,7 +669,9 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                   darkMode ? "text-white" : "text-slate-900"
                 }`}
               >
-                {esDashboard ? `Bienvenido, ${nombreUsuario} 👋` : tituloPagina}
+                {esDashboard
+                  ? `Bienvenido, ${nombreUsuario} 👋`
+                  : tituloPagina}
               </h2>
 
               <p

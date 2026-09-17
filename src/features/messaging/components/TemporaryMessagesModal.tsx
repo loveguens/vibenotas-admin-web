@@ -45,8 +45,8 @@ export function TemporaryMessagesModal({
             </h3>
 
             <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
-              La eliminación automática se activará cuando conectemos la
-              configuración con el backend.
+              El tiempo seleccionado se aplicará únicamente a los mensajes
+              nuevos de esta conversación.
             </p>
           </div>
 

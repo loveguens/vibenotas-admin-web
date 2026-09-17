@@ -63,6 +63,8 @@ export type Conversation = {
   isMuted?: boolean;
   isArchived?: boolean;
 
+  chatTheme?: ChatThemeId;
+
   temporaryMessagesDuration?: TemporaryDuration;
 
   presencia?: ChatPresence | null;
@@ -98,6 +100,8 @@ export type Message = {
   reply_to?: ReplyPreview | null;
 
   reenviado?: number;
+
+  tipo_copia?: "forwarded" | "shared" | null;
   favorito?: boolean;
   fijado?: boolean;
 
@@ -170,7 +174,7 @@ export type ConversationMenuState = {
 export type ChatThemeId =
   "violet" | "blue" | "emerald" | "rose" | "amber" | "slate" | "midnight";
 
-export type TemporaryDuration = "off" | "24h" | "7d" | "30d" | "custom";
+export type TemporaryDuration = "off" | "24h" | "7d" | "30d";
 
 export type ConfirmAction = {
   title: string;

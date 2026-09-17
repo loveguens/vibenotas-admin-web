@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import api, {
@@ -9,7 +9,7 @@ import api, {
 
 import { useChatPresenceHeartbeat } from "../features/messaging/hooks/useChatPresenceHeartbeat";
 
-type ProtectedRole = "admin" | "super_admin";
+type ProtectedRole = "admin" | "super_admin" | "owner";
 
 type ProtectedRouteProps = {
   allowedRoles?: ProtectedRole[];
@@ -63,6 +63,9 @@ function normalizeRole(value: unknown): ProtectedRole | null {
     .replaceAll("-", "_")
     .replaceAll(" ", "_");
 
+  if (role === "owner" || role === "propietario") {
+    return "owner";
+  }
   if (
     role === "super_admin" ||
     role === "superadmin" ||
@@ -119,18 +122,34 @@ function resolveRole(user: Record<string, unknown>): ProtectedRole | null {
     candidates.push(...user.roles);
   }
 
+  let ownerDetected = false;
+  let superAdminDetected = false;
   let adminDetected = false;
 
   for (const candidate of candidates) {
     const role = normalizeRole(extractRoleSlug(candidate) ?? candidate);
 
+    if (role === "owner") {
+      ownerDetected = true;
+      continue;
+    }
+
     if (role === "super_admin") {
-      return "super_admin";
+      superAdminDetected = true;
+      continue;
     }
 
     if (role === "admin") {
       adminDetected = true;
     }
+  }
+
+  if (ownerDetected) {
+    return "owner";
+  }
+
+  if (superAdminDetected) {
+    return "super_admin";
   }
 
   return adminDetected ? "admin" : null;
@@ -271,7 +290,11 @@ export default function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
 
   if (allowedRoles?.length && !allowedRoles.includes(role)) {
     const dashboard =
-      role === "super_admin" ? "/superadmin/dashboard" : "/admin/dashboard";
+      role === "owner"
+        ? "/owner/dashboard"
+        : role === "super_admin"
+          ? "/superadmin/dashboard"
+          : "/admin/dashboard";
 
     return <Navigate to={dashboard} replace />;
   }

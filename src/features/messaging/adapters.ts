@@ -59,10 +59,62 @@ export function adaptMessage(message: BackendChatMessage): Message {
 
     client_message_id: message.client_message_id,
 
+    reply_to: message.respuesta_a
+      ? {
+          id: message.respuesta_a.id,
+          emisor_nombre: message.respuesta_a.remitente?.nombre ?? "Usuario",
+          contenido: message.respuesta_a.contenido ?? "Mensaje eliminado",
+        }
+      : null,
+
+    favorito: Boolean(message.favorito),
+
     es_mio: message.es_mio,
+    reenviado: message.reenviado_de_mensaje_id ? 1 : 0,
+
+    tipo_copia:
+      message.tipo_copia ??
+      (message.reenviado_de_mensaje_id ? "forwarded" : null),
   };
 }
 
+function mapConversationTheme(
+  value: string | null | undefined,
+): NonNullable<Conversation["chatTheme"]> {
+  switch (value) {
+    case "blue":
+    case "emerald":
+    case "rose":
+    case "amber":
+    case "slate":
+    case "midnight":
+    case "violet":
+      return value;
+
+    default:
+      return "violet";
+  }
+}
+function mapTemporaryMessagesDuration(
+  value: number | null | undefined,
+): NonNullable<Conversation["temporaryMessagesDuration"]> {
+  switch (value) {
+    case 86_400:
+      return "24h";
+
+    case 604_800:
+      return "7d";
+
+    case 2_592_000:
+      return "30d";
+
+    case null:
+    case undefined:
+    case 0:
+    default:
+      return "off";
+  }
+}
 export function adaptConversation(
   conversation: BackendConversation,
   currentUserId?: string | null,
@@ -77,6 +129,8 @@ export function adaptConversation(
   const lastMessage = conversation.ultimo_mensaje
     ? adaptMessage(conversation.ultimo_mensaje)
     : null;
+
+  const conversationSettings = conversation.mi_membresia?.ajustes;
 
   return {
     id: conversation.id,
@@ -107,11 +161,15 @@ export function adaptConversation(
 
     presencia: conversation.presencia ?? null,
 
-    isPinned: false,
-    isMuted: false,
-    isArchived: false,
+    isPinned: Boolean(conversationSettings?.fijada),
+    isMuted: Boolean(conversationSettings?.silenciada),
+    isArchived: Boolean(conversationSettings?.archivada),
 
-    temporaryMessagesDuration: "off",
+    chatTheme: mapConversationTheme(conversationSettings?.tema),
+
+    temporaryMessagesDuration: mapTemporaryMessagesDuration(
+      conversation.mensajes_temporales_segundos,
+    ),
   };
 }
 
@@ -146,6 +204,26 @@ export function adaptRealtimeMessage(
 
     client_message_id: message.clientMessageId,
 
+    reply_to: message.replyTo
+      ? {
+          id: message.replyTo.id,
+          emisor_nombre: message.replyTo.sender?.displayName ?? "Usuario",
+          contenido: message.replyTo.content ?? "Mensaje eliminado",
+        }
+      : null,
+
+    favorito: false,
+
     es_mio: message.senderUserId === currentUserId,
+    reenviado: message.forwardedFromMessageId ? 1 : 0,
+
+    tipo_copia:
+      message.copyKind === "SHARED"
+        ? "shared"
+        : message.copyKind === "FORWARDED"
+          ? "forwarded"
+          : message.forwardedFromMessageId
+            ? "forwarded"
+            : null,
   };
 }

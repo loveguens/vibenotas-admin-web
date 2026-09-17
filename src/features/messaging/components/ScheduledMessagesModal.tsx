@@ -15,7 +15,7 @@ import api from "../../../services/api";
 type ScheduledMessageStatus = "pendiente" | "enviado" | "cancelado" | "fallido";
 
 type ScheduledMessage = {
-  id: number;
+  id: string;
   conversacion_id: string;
   contenido: string;
   tipo: string;
@@ -37,16 +37,22 @@ type ScheduledMessagesModalProps = {
 };
 
 function toDateTimeLocal(value: string): string {
-  if (!value) return "—";
+  if (!value) return "";
 
-  const normalized = value.replace(" ", "T");
-  return normalized.slice(0, 16);
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
-
-function toMySqlDateTime(value: string): string {
-  return `${value.replace("T", " ")}:00`;
-}
-
 function formatDateTime(value: string | null): string {
   if (!value) return "—";
 
@@ -96,9 +102,9 @@ export function ScheduledMessagesModal({
 }: ScheduledMessagesModalProps) {
   const [messages, setMessages] = useState<ScheduledMessage[]>([]);
   const [loading, setLoading] = useState(false);
-  const [busyId, setBusyId] = useState<number | null>(null);
+  const [busyId, setBusyId] = useState<string | null>(null);
 
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [editingContent, setEditingContent] = useState("");
   const [editingDateTime, setEditingDateTime] = useState("");
 
@@ -154,7 +160,7 @@ export function ScheduledMessagesModal({
     setEditingDateTime("");
   }
 
-  async function saveEdit(id: number): Promise<void> {
+  async function saveEdit(id: string): Promise<void> {
     const contenido = editingContent.trim();
 
     if (!contenido) {
@@ -177,9 +183,11 @@ export function ScheduledMessagesModal({
     try {
       setBusyId(id);
 
+      const scheduledAt = selectedDate.toISOString();
+
       await api.put(`/chat/scheduled-messages/${id}`, {
         contenido,
-        programado_para: toMySqlDateTime(editingDateTime),
+        programado_para: scheduledAt,
       });
 
       setMessages((old) =>
@@ -188,7 +196,7 @@ export function ScheduledMessagesModal({
             ? {
                 ...message,
                 contenido,
-                programado_para: toMySqlDateTime(editingDateTime),
+                programado_para: scheduledAt,
               }
             : message,
         ),
@@ -214,7 +222,7 @@ export function ScheduledMessagesModal({
     }
   }
 
-  async function cancelScheduledMessage(id: number): Promise<void> {
+  async function cancelScheduledMessage(id: string): Promise<void> {
     try {
       setBusyId(id);
 
@@ -239,7 +247,7 @@ export function ScheduledMessagesModal({
     }
   }
 
-  async function sendNow(id: number): Promise<void> {
+  async function sendNow(id: string): Promise<void> {
     try {
       setBusyId(id);
 

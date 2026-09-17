@@ -31,6 +31,7 @@ import { ChatSidebar } from "../features/messaging/components/ChatSidebar";
 import { ChatThemeModal } from "../features/messaging/components/ChatThemeModal";
 import { ConfirmActionModal } from "../features/messaging/components/ConfirmActionModal";
 import { ConversationActionsMenu } from "../features/messaging/components/ConversationActionsMenu";
+import { ReportUserModal } from "../features/messaging/components/ReportUserModal";
 import { ConversationList } from "../features/messaging/components/ConversationList";
 import { CreateGroupModal } from "../features/messaging/components/CreateGroupModal";
 import { GroupInfoDrawer } from "../features/messaging/components/GroupInfoDrawer";
@@ -38,6 +39,8 @@ import { MessageActionsMenu } from "../features/messaging/components/MessageActi
 import { MessageList } from "../features/messaging/components/MessageList";
 import { TemporaryMessagesModal } from "../features/messaging/components/TemporaryMessagesModal";
 import { AddGroupMembersModal } from "../features/messaging/components/AddGroupMembersModal";
+import { ShareMessageModal } from "../features/messaging/components/ShareMessageModal";
+import { ForwardMessageModal } from "../features/messaging/components/ForwardMessageModal";
 import { API_ROUTES } from "../features/messaging/constants";
 import {
   createChatRealtimeSocket,
@@ -62,14 +65,13 @@ import type {
   TemporaryDuration,
 } from "../features/messaging/types/chat.types";
 import {
-  getConversationTheme,
   getCurrentUser,
   getErrorMessage,
   getFixedMenuPosition,
   getTheme,
-  persistConversationTheme,
 } from "../features/messaging/utils";
 import { ScheduledMessagesModal } from "../features/messaging/components/ScheduledMessagesModal";
+import { SearchMessagesModal } from "../features/messaging/components/SearchMessagesModal";
 import { Avatar } from "../features/messaging/components/Avatar";
 
 export default function ChatPage() {
@@ -114,6 +116,8 @@ export default function ChatPage() {
   const [searchUsers, setSearchUsers] = useState<SearchUser[]>([]);
 
   const [chatSearch, setChatSearch] = useState("");
+  const [showArchivedConversations, setShowArchivedConversations] =
+    useState(false);
   const [peopleSearch, setPeopleSearch] = useState("");
   const [messageText, setMessageText] = useState("");
 
@@ -134,10 +138,22 @@ export default function ChatPage() {
 
   const [messageMenu, setMessageMenu] = useState<MessageMenuState | null>(null);
 
+  const [shareMessageTarget, setShareMessageTarget] = useState<Message | null>(
+    null,
+  );
+
+  const [sharingMessage, setSharingMessage] = useState(false);
+
+  const [forwardMessageTarget, setForwardMessageTarget] =
+    useState<Message | null>(null);
+
+  const [forwardingMessage, setForwardingMessage] = useState(false);
+
   const [conversationMenu, setConversationMenu] =
     useState<ConversationMenuState | null>(null);
 
   const [isChatInfoOpen, setIsChatInfoOpen] = useState(false);
+  const [isReportUserModalOpen, setIsReportUserModalOpen] = useState(false);
   const [isGroupInfoOpen, setIsGroupInfoOpen] = useState(false);
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
   const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
@@ -171,6 +187,7 @@ export default function ChatPage() {
   const [creatingGroup, setCreatingGroup] = useState(false);
   const [addingMembers, setAddingMembers] = useState(false);
   const [isScheduledMessagesOpen, setIsScheduledMessagesOpen] = useState(false);
+  const [isSearchMessagesOpen, setIsSearchMessagesOpen] = useState(false);
 
   const [error, setError] = useState("");
   const [toast, setToast] = useState("");
@@ -198,6 +215,15 @@ export default function ChatPage() {
   const theme = getTheme(chatTheme);
 
   useEffect(() => {
+    setTemporaryMessagesDuration(
+      selectedConversation?.temporaryMessagesDuration ?? "off",
+    );
+  }, [
+    selectedConversation?.id,
+    selectedConversation?.temporaryMessagesDuration,
+  ]);
+
+  useEffect(() => {
     selectedConversationTypeRef.current = selectedConversation?.tipo ?? null;
 
     setTypingUserIds([]);
@@ -205,23 +231,32 @@ export default function ChatPage() {
   const filteredConversations = useMemo(() => {
     const query = chatSearch.trim().toLowerCase();
 
-    if (!query) {
-      return conversations.filter((item) => !item.isArchived);
-    }
-
     return conversations.filter((item) => {
+      if (Boolean(item.isArchived) !== showArchivedConversations) {
+        return false;
+      }
+
+      if (!query) {
+        return true;
+      }
+
       const title =
         item.tipo === "grupo"
           ? (item.titulo ?? "")
           : (item.otro_usuario_nombre ?? "");
 
-      return (
-        !item.isArchived &&
-        `${title} ${item.ultimo_mensaje ?? ""}`.toLowerCase().includes(query)
-      );
+      return `${title} ${item.ultimo_mensaje ?? ""}`
+        .toLowerCase()
+        .includes(query);
     });
-  }, [chatSearch, conversations]);
+  }, [chatSearch, conversations, showArchivedConversations]);
 
+  const archivedConversationsCount = useMemo(
+    () =>
+      conversations.filter((conversation) => Boolean(conversation.isArchived))
+        .length,
+    [conversations],
+  );
   const loadConversations = useCallback(
     async (silent = false) => {
       try {
@@ -244,9 +279,13 @@ export default function ChatPage() {
 
             return {
               ...incoming,
-              isPinned: previous?.isPinned ?? false,
-              isMuted: previous?.isMuted ?? false,
-              isArchived: previous?.isArchived ?? false,
+
+              /*
+               * Archivar todavía se mantiene local
+               * hasta agregar la vista de archivados.
+               */
+              isArchived: incoming.isArchived ?? false,
+
               temporaryMessagesDuration:
                 previous?.temporaryMessagesDuration ?? "off",
             };
@@ -909,7 +948,9 @@ export default function ChatPage() {
             })
             .catch(() => {
               if (!disposed) {
-                setError("La sesión realtime expiró y no pudo renovarse.");
+                setError(
+                  "La sesión realtime expiró y no pudo renovarse.",
+                );
               }
 
               socket?.disconnect();
@@ -1036,16 +1077,26 @@ export default function ChatPage() {
   useEffect(() => {
     if (!selectedConversationId) return;
 
-    setChatTheme(getConversationTheme(selectedConversationId));
-
-    setTemporaryMessagesDuration(
-      selectedConversation?.temporaryMessagesDuration ?? "off",
-    );
-
     void loadMessages(selectedConversationId);
 
     void markConversationRead(selectedConversationId);
   }, [selectedConversationId]);
+
+  useEffect(() => {
+    if (!selectedConversation) {
+      return;
+    }
+
+    setChatTheme(selectedConversation.chatTheme ?? "violet");
+
+    setTemporaryMessagesDuration(
+      selectedConversation.temporaryMessagesDuration ?? "off",
+    );
+  }, [
+    selectedConversation?.id,
+    selectedConversation?.chatTheme,
+    selectedConversation?.temporaryMessagesDuration,
+  ]);
 
   useEffect(() => {
     const close = (event: KeyboardEvent) => {
@@ -1289,20 +1340,6 @@ export default function ChatPage() {
       return;
     }
 
-    /*
-     * El backend V2 todavía no expone reply_to
-     * en SendChatMessageDto.
-     *
-     * No enviamos ni simulamos datos que el
-     * servidor no pueda persistir.
-     */
-    if (replyTo) {
-      setError(
-        "Las respuestas a mensajes todavía no están disponibles en el contrato actual del backend.",
-      );
-      return;
-    }
-
     setSendingMessage(true);
     setError("");
 
@@ -1321,6 +1358,7 @@ export default function ChatPage() {
         {
           clientMessageId,
           content: contenido,
+          replyToMessageId: replyTo?.id ?? undefined,
         },
       );
 
@@ -1369,6 +1407,171 @@ export default function ChatPage() {
       setSendingMessage(false);
     }
   }
+  async function sendImage(file: File): Promise<void> {
+    if (!selectedConversationId || sendingMessage) {
+      return;
+    }
+
+    const contenido = messageText.trim();
+
+    setSendingMessage(true);
+    setError("");
+
+    try {
+      const clientMessageId = crypto.randomUUID();
+
+      const formData = new FormData();
+
+      formData.append("clientMessageId", clientMessageId);
+
+      if (contenido) {
+        formData.append("content", contenido);
+      }
+
+      if (replyTo?.id) {
+        formData.append("replyToMessageId", replyTo.id);
+      }
+
+      formData.append("image", file);
+
+      const response = await api.post(
+        `/chat/conversations/${selectedConversationId}/images`,
+        formData,
+      );
+
+      const payload = response.data?.data ?? response.data;
+
+      const createdRaw = payload?.mensaje as BackendChatMessage | undefined;
+
+      const created = createdRaw ? adaptMessage(createdRaw) : null;
+
+      if (created) {
+        setMessages((old) => {
+          const alreadyExists = old.some(
+            (message) =>
+              message.id === created.id ||
+              (created.client_message_id &&
+                message.client_message_id === created.client_message_id),
+          );
+
+          if (alreadyExists) {
+            return old;
+          }
+
+          return [...old, created];
+        });
+
+        setNearEnd(true);
+      } else {
+        await loadMessages(selectedConversationId, true);
+      }
+
+      stopLocalTyping();
+
+      setMessageText("");
+      setReplyTo(null);
+
+      await loadConversations(true);
+    } catch (requestError) {
+      setError(getErrorMessage(requestError, "No se pudo enviar la imagen."));
+
+      throw requestError;
+    } finally {
+      setSendingMessage(false);
+    }
+  }
+  async function sendAudio(audio: Blob, durationMs: number): Promise<void> {
+    if (!selectedConversationId || sendingMessage) {
+      return;
+    }
+
+    const contenido = messageText.trim();
+
+    setSendingMessage(true);
+    setError("");
+
+    try {
+      const clientMessageId = crypto.randomUUID();
+
+      const formData = new FormData();
+
+      formData.append("clientMessageId", clientMessageId);
+
+      formData.append(
+        "durationMs",
+        String(Math.max(1, Math.round(durationMs))),
+      );
+
+      if (contenido) {
+        formData.append("content", contenido);
+      }
+
+      if (replyTo?.id) {
+        formData.append("replyToMessageId", replyTo.id);
+      }
+
+      const mimeType = audio.type || "audio/webm";
+
+      const extension = mimeType.includes("ogg")
+        ? "ogg"
+        : mimeType.includes("mp4")
+          ? "m4a"
+          : mimeType.includes("wav")
+            ? "wav"
+            : mimeType.includes("mpeg")
+              ? "mp3"
+              : "webm";
+
+      formData.append("audio", audio, `nota-de-voz.${extension}`);
+
+      const response = await api.post(
+        `/chat/conversations/${selectedConversationId}/audio`,
+        formData,
+      );
+
+      const payload = response.data?.data ?? response.data;
+
+      const createdRaw = payload?.mensaje as BackendChatMessage | undefined;
+
+      const created = createdRaw ? adaptMessage(createdRaw) : null;
+
+      if (created) {
+        setMessages((old) => {
+          const alreadyExists = old.some(
+            (message) =>
+              message.id === created.id ||
+              (created.client_message_id &&
+                message.client_message_id === created.client_message_id),
+          );
+
+          if (alreadyExists) {
+            return old;
+          }
+
+          return [...old, created];
+        });
+
+        setNearEnd(true);
+      } else {
+        await loadMessages(selectedConversationId, true);
+      }
+
+      stopLocalTyping();
+
+      setMessageText("");
+      setReplyTo(null);
+
+      await loadConversations(true);
+    } catch (requestError) {
+      setError(
+        getErrorMessage(requestError, "No se pudo enviar la nota de voz."),
+      );
+
+      throw requestError;
+    } finally {
+      setSendingMessage(false);
+    }
+  }
   async function saveEdit(messageId: string): Promise<void> {
     const contenido = editingText.trim();
 
@@ -1376,7 +1579,7 @@ export default function ChatPage() {
 
     try {
       await api.put(API_ROUTES.updateMessage(messageId), {
-        contenido,
+        content: contenido,
       });
 
       setMessages((old) =>
@@ -1400,27 +1603,65 @@ export default function ChatPage() {
     }
   }
 
+  async function toggleMessageFavorite(message: Message): Promise<void> {
+    const favorite = !Boolean(message.favorito);
+
+    try {
+      setError("");
+
+      await api.put(API_ROUTES.favoriteMessage(message.id), {
+        favorite,
+      });
+
+      setMessages((current) =>
+        current.map((item) =>
+          item.id === message.id
+            ? {
+                ...item,
+                favorito: favorite,
+              }
+            : item,
+        ),
+      );
+
+      setToast(
+        favorite
+          ? "Mensaje guardado en favoritos."
+          : "Mensaje quitado de favoritos.",
+      );
+    } catch (requestError) {
+      setError(
+        getErrorMessage(requestError, "No se pudo actualizar el favorito."),
+      );
+    }
+  }
   function askDelete(message: Message, everyone: boolean): void {
     setConfirmAction({
-      title: everyone ? "¿Eliminar para todos?" : "¿Eliminar de tu vista?",
+      title: everyone
+        ? "¿Eliminar para todos?"
+        : "¿Eliminar para ti?",
+
       description: everyone
-        ? "La acción necesita que el backend confirme que el mensaje puede borrarse para todos."
-        : "Esta acción eliminará el mensaje de tu vista. El endpoint actual elimina el mensaje; adapta el backend para diferenciar ambos casos.",
+        ? "El mensaje dejará de estar disponible para todos los participantes."
+        : "El mensaje desaparecerá solamente de tu vista.",
+
       confirmLabel: "Eliminar mensaje",
       tone: "danger",
+
       onConfirm: async () => {
         try {
           setConfirmBusy(true);
+          setError("");
 
-          await api.delete(API_ROUTES.deleteMessage(message.id), {
-            data: {
-              scope: everyone ? "everyone" : "mine",
-            },
-          });
+          if (everyone) {
+            await api.delete(API_ROUTES.deleteMessage(message.id));
+          } else {
+            await api.delete(API_ROUTES.deleteMessageForMe(message.id));
+          }
 
-          setMessages((old) =>
+          setMessages((current) =>
             everyone
-              ? old.map((item) =>
+              ? current.map((item) =>
                   item.id === message.id
                     ? {
                         ...item,
@@ -1429,10 +1670,20 @@ export default function ChatPage() {
                       }
                     : item,
                 )
-              : old.filter((item) => item.id !== message.id),
+              : current.filter((item) => item.id !== message.id),
           );
 
+          if (replyTo?.id === message.id) {
+            setReplyTo(null);
+          }
+
           setConfirmAction(null);
+
+          setToast(
+            everyone
+              ? "Mensaje eliminado para todos."
+              : "Mensaje eliminado para ti.",
+          );
         } catch (requestError) {
           setError(
             getErrorMessage(requestError, "No se pudo eliminar el mensaje."),
@@ -1443,7 +1694,6 @@ export default function ChatPage() {
       },
     });
   }
-
   async function copyMessage(message: Message): Promise<void> {
     try {
       await navigator.clipboard.writeText(message.contenido);
@@ -1454,21 +1704,159 @@ export default function ChatPage() {
   }
 
   async function shareMessage(message: Message): Promise<void> {
-    try {
-      const text = `${message.emisor_nombre}: ${message.contenido}`;
+    setError("");
+    setShareMessageTarget(message);
 
-      if (navigator.share) {
-        await navigator.share({
-          title: "Mensaje de VibeNotas",
-          text,
+    /*
+     * Compartir trabaja con la lista real de amigos.
+     * Abrimos el modal de inmediato y refrescamos
+     * los datos en paralelo.
+     */
+    await loadFriends();
+  }
+  async function forwardMessage(message: Message): Promise<void> {
+    setError("");
+    setForwardMessageTarget(message);
+
+    await loadFriends();
+  }
+
+  async function forwardMessageToTarget(
+    message: Message,
+    friendId: string | null,
+    conversationId: string | null,
+  ): Promise<void> {
+    if (forwardingMessage || (!friendId && !conversationId)) {
+      return;
+    }
+
+    setForwardingMessage(true);
+    setError("");
+
+    try {
+      let destinationConversationId = conversationId;
+
+      if (friendId) {
+        const response = await api.post(API_ROUTES.createDirectChat, {
+          userId: friendId,
         });
-      } else {
-        await navigator.clipboard.writeText(text);
+
+        const payload = response.data?.data ?? response.data;
+
+        const resolvedConversationId =
+          payload?.conversacion?.id ?? payload?.conversation?.id ?? payload?.id;
+
+        if (typeof resolvedConversationId !== "string") {
+          throw new Error("No se pudo resolver la conversación directa.");
+        }
+
+        destinationConversationId = resolvedConversationId;
       }
 
-      setToast("Mensaje preparado para compartir.");
-    } catch {
-      // El usuario cerró la ventana de compartir.
+      if (!destinationConversationId) {
+        throw new Error("No se seleccionó un destino.");
+      }
+
+      await api.post(API_ROUTES.forwardMessage(message.id), {
+        conversationId: destinationConversationId,
+        clientMessageId: crypto.randomUUID(),
+      });
+
+      setForwardMessageTarget(null);
+
+      setToast("Mensaje reenviado correctamente.");
+
+      await loadConversations(true);
+    } catch (requestError) {
+      setError(
+        getErrorMessage(requestError, "No se pudo reenviar el mensaje."),
+      );
+    } finally {
+      setForwardingMessage(false);
+    }
+  }
+
+  async function shareMessageToTargets(
+    message: Message,
+    friendIds: string[],
+    groupConversationIds: string[],
+  ): Promise<void> {
+    if (
+      sharingMessage ||
+      (friendIds.length === 0 && groupConversationIds.length === 0)
+    ) {
+      return;
+    }
+
+    setSharingMessage(true);
+    setError("");
+
+    try {
+      /*
+       * Set evita reenviar dos veces a la misma
+       * conversación si algún destino se repite.
+       */
+      const destinationConversationIds = new Set<string>(groupConversationIds);
+
+      /*
+       * Para cada amigo obtenemos o creamos su
+       * conversación directa usando el endpoint
+       * idempotente del backend.
+       */
+      for (const friendId of friendIds) {
+        const response = await api.post(API_ROUTES.createDirectChat, {
+          userId: friendId,
+        });
+
+        const payload = response.data?.data ?? response.data;
+
+        const conversationId = String(payload?.conversacion?.id ?? "");
+
+        if (!conversationId) {
+          throw new Error(
+            "El servidor no devolvió la conversación de uno de los amigos.",
+          );
+        }
+
+        destinationConversationIds.add(conversationId);
+      }
+
+      /*
+       * Cada destino utiliza un clientMessageId
+       * distinto. Así cada forward mantiene su
+       * propia idempotencia en el backend.
+       */
+      await Promise.all(
+        Array.from(destinationConversationIds).map((conversationId) =>
+          api.post(API_ROUTES.shareMessage(message.id), {
+            conversationId,
+            clientMessageId: crypto.randomUUID(),
+          }),
+        ),
+      );
+
+      const total = destinationConversationIds.size;
+
+      setShareMessageTarget(null);
+
+      setToast(
+        total === 1
+          ? "Mensaje compartido correctamente."
+          : `Mensaje compartido en ${total} conversaciones.`,
+      );
+
+      /*
+       * Refrescamos sidebar porque pueden haberse
+       * creado conversaciones directas nuevas y
+       * cambiaron las últimas actividades.
+       */
+      await loadConversations(true);
+    } catch (requestError) {
+      setError(
+        getErrorMessage(requestError, "No se pudo compartir el mensaje."),
+      );
+    } finally {
+      setSharingMessage(false);
     }
   }
 
@@ -1487,69 +1875,253 @@ export default function ChatPage() {
     );
   }
 
-  function togglePin(): void {
-    updateSelectedConversation({
-      isPinned: !selectedIsPinned,
-    });
+  async function toggleArchive(): Promise<void> {
+    if (!selectedConversationId || !selectedConversation) {
+      return;
+    }
 
-    setToast(
-      selectedIsPinned
-        ? "Conversación quitada de fijados."
-        : "Conversación fijada arriba.",
-    );
+    const conversationId = selectedConversationId;
+
+    const archived = !Boolean(selectedConversation.isArchived);
+
+    try {
+      setError("");
+
+      await api.put(API_ROUTES.updateConversationSettings(conversationId), {
+        archived,
+      });
+
+      setConversations((current) =>
+        current.map((conversation) =>
+          conversation.id === conversationId
+            ? {
+                ...conversation,
+                isArchived: archived,
+              }
+            : conversation,
+        ),
+      );
+
+      setConversationMenu(null);
+
+      if (archived) {
+        stopLocalTyping();
+
+        setSelectedConversationId(null);
+
+        selectedConversationIdRef.current = null;
+
+        setMessages([]);
+
+        navigate(chatBasePath);
+
+        setToast("Conversación archivada.");
+      } else {
+        setShowArchivedConversations(false);
+
+        setToast("Conversación desarchivada.");
+      }
+
+      await loadConversations(true);
+    } catch (requestError) {
+      setError(
+        getErrorMessage(
+          requestError,
+          archived
+            ? "No se pudo archivar la conversación."
+            : "No se pudo desarchivar la conversación.",
+        ),
+      );
+    }
+  }
+  async function togglePin(): Promise<void> {
+    if (!selectedConversationId) {
+      return;
+    }
+
+    const conversationId = selectedConversationId;
+
+    const pinned = !selectedIsPinned;
+
+    try {
+      setError("");
+
+      await api.put(API_ROUTES.updateConversationSettings(conversationId), {
+        pinned,
+      });
+
+      setConversations((current) =>
+        current.map((conversation) =>
+          conversation.id === conversationId
+            ? {
+                ...conversation,
+                isPinned: pinned,
+              }
+            : conversation,
+        ),
+      );
+
+      /*
+       * El backend ordena las conversaciones
+       * fijadas por encima de las demás.
+       */
+      await loadConversations(true);
+
+      setConversationMenu(null);
+
+      setToast(
+        pinned
+          ? "Conversación fijada arriba."
+          : "Conversación quitada de fijados.",
+      );
+    } catch (requestError) {
+      setError(
+        getErrorMessage(
+          requestError,
+          "No se pudo actualizar la conversación fijada.",
+        ),
+      );
+    }
   }
 
-  function toggleMute(): void {
-    updateSelectedConversation({
-      isMuted: !selectedIsMuted,
-    });
+  async function toggleMute(): Promise<void> {
+    if (!selectedConversationId) {
+      return;
+    }
 
-    setToast(
-      selectedIsMuted ? "Notificaciones activadas." : "Chat silenciado.",
-    );
+    const conversationId = selectedConversationId;
+
+    const muted = !selectedIsMuted;
+
+    try {
+      setError("");
+
+      await api.put(API_ROUTES.updateConversationSettings(conversationId), {
+        muted,
+      });
+
+      setConversations((current) =>
+        current.map((conversation) =>
+          conversation.id === conversationId
+            ? {
+                ...conversation,
+                isMuted: muted,
+              }
+            : conversation,
+        ),
+      );
+
+      setConversationMenu(null);
+
+      setToast(muted ? "Chat silenciado." : "Notificaciones activadas.");
+    } catch (requestError) {
+      setError(
+        getErrorMessage(
+          requestError,
+          "No se pudo cambiar el estado de las notificaciones.",
+        ),
+      );
+    }
   }
 
-  function selectTheme(id: ChatThemeId): void {
-    if (!selectedConversationId) return;
+  async function selectTheme(id: ChatThemeId): Promise<void> {
+    if (!selectedConversationId) {
+      return;
+    }
 
-    persistConversationTheme(selectedConversationId, id);
-    setChatTheme(id);
-    setIsThemeModalOpen(false);
+    const conversationId = selectedConversationId;
 
-    setToast("Tema guardado solo para esta conversación.");
+    try {
+      setError("");
+
+      await api.put(API_ROUTES.updateConversationSettings(conversationId), {
+        theme: id,
+      });
+
+      setConversations((current) =>
+        current.map((conversation) =>
+          conversation.id === conversationId
+            ? {
+                ...conversation,
+                chatTheme: id,
+              }
+            : conversation,
+        ),
+      );
+
+      setChatTheme(id);
+
+      setIsThemeModalOpen(false);
+
+      setConversationMenu(null);
+
+      setToast("Tema guardado para esta conversación.");
+    } catch (requestError) {
+      setError(
+        getErrorMessage(requestError, "No se pudo guardar el tema del chat."),
+      );
+    }
   }
+  async function selectTemporary(value: TemporaryDuration): Promise<void> {
+    if (!selectedConversationId) {
+      return;
+    }
 
-  function selectTemporary(value: TemporaryDuration): void {
-    updateSelectedConversation({
-      temporaryMessagesDuration: value,
-    });
+    let durationSeconds: number;
 
-    setTemporaryMessagesDuration(value);
-    setIsTemporaryMessagesModalOpen(false);
+    switch (value) {
+      case "24h":
+        durationSeconds = 86_400;
+        break;
 
-    setMessages((old) => [
-      ...old,
-      {
-        id: crypto.randomUUID(),
-        conversacion_id: selectedConversationId ?? "",
-        emisor_id: null,
-        emisor_nombre: "Sistema",
-        contenido: `Mensajes temporales configurados: ${
-          value === "off" ? "desactivados" : value
-        }.`,
-        tipo: "sistema",
-        leido: 1,
-        editado: 0,
-        creado_en: new Date().toISOString(),
-        actualizado_en: new Date().toISOString(),
-      },
-    ]);
+      case "7d":
+        durationSeconds = 604_800;
+        break;
 
-    setToast(
-      "Configuración guardada visualmente; falta confirmar el endpoint PHP.",
-    );
+      case "30d":
+        durationSeconds = 2_592_000;
+        break;
+
+      case "off":
+      default:
+        durationSeconds = 0;
+        break;
+    }
+
+    try {
+      setError("");
+
+      await api.put(API_ROUTES.temporaryMessages(selectedConversationId), {
+        durationSeconds,
+      });
+
+      updateSelectedConversation({
+        temporaryMessagesDuration: value,
+      });
+
+      setTemporaryMessagesDuration(value);
+      setIsTemporaryMessagesModalOpen(false);
+
+      setToast(
+        value === "off"
+          ? "Mensajes temporales desactivados."
+          : `Mensajes temporales activados: ${value}.`,
+      );
+
+      /*
+       * Recargamos desde el servidor para que el backend
+       * sea la fuente de verdad.
+       */
+      await loadConversations(true);
+    } catch (requestError) {
+      setError(
+        getErrorMessage(
+          requestError,
+          "No se pudo actualizar la duración de los mensajes temporales.",
+        ),
+      );
+    }
   }
-
   function futureAction(title: string, description: string): void {
     setConfirmAction({
       title,
@@ -2241,11 +2813,29 @@ export default function ChatPage() {
                 loading={loadingConversations}
                 activeTab={activeTab}
                 requestCount={requests.length}
+                archivedCount={archivedConversationsCount}
+                showArchived={showArchivedConversations}
                 onTabChange={changeTab}
                 onSearchChange={setChatSearch}
                 onSelect={selectConversation}
                 onCreateChat={() => changeTab("amigos")}
-                onCreateGroup={() => setIsCreateGroupOpen(true)}
+                onCreateGroup={() => {
+                  void loadFriends().then(() => {
+                    setIsCreateGroupOpen(true);
+                  });
+                }}
+                onToggleArchived={() => {
+                  setChatSearch("");
+
+                  setSelectedConversationId(null);
+                  selectedConversationIdRef.current = null;
+
+                  setMessages([]);
+
+                  setShowArchivedConversations((current) => !current);
+
+                  navigate(chatBasePath);
+                }}
               />
 
               <section
@@ -2351,6 +2941,8 @@ export default function ChatPage() {
                       onChange={handleMessageTextChange}
                       onCancelReply={() => setReplyTo(null)}
                       onSubmit={sendMessage}
+                      onSendImage={sendImage}
+                      onSendAudio={sendAudio}
                       onSchedule={scheduleMessage}
                     />
                   </>
@@ -2392,8 +2984,53 @@ export default function ChatPage() {
             />
           )}
         </section>
-      </main>
+      </main>{" "}
+      <ForwardMessageModal
+        message={forwardMessageTarget}
+        friends={friends}
+        conversations={conversations}
+        loadingFriends={loadingFriends}
+        busy={forwardingMessage}
+        onClose={() => {
+          if (!forwardingMessage) {
+            setForwardMessageTarget(null);
+          }
+        }}
+        onForward={(friendId, conversationId) => {
+          if (!forwardMessageTarget) {
+            return Promise.resolve();
+          }
 
+          return forwardMessageToTarget(
+            forwardMessageTarget,
+            friendId,
+            conversationId,
+          );
+        }}
+      />
+      <ShareMessageModal
+        message={shareMessageTarget}
+        friends={friends}
+        conversations={conversations}
+        loadingFriends={loadingFriends}
+        busy={sharingMessage}
+        onClose={() => {
+          if (!sharingMessage) {
+            setShareMessageTarget(null);
+          }
+        }}
+        onShare={(friendIds, conversationIds) => {
+          if (!shareMessageTarget) {
+            return Promise.resolve();
+          }
+
+          return shareMessageToTargets(
+            shareMessageTarget,
+            friendIds,
+            conversationIds,
+          );
+        }}
+      />
       <MessageActionsMenu
         menu={messageMenu}
         mine={messageMenu?.message.emisor_id === currentUser?.id}
@@ -2401,31 +3038,8 @@ export default function ChatPage() {
         onCopy={(message) => void copyMessage(message)}
         onShare={(message) => void shareMessage(message)}
         onReply={(message) => setReplyTo(message)}
-        onForward={(message) =>
-          futureAction(
-            "Reenviar mensaje",
-            `El mensaje “${message.contenido.slice(
-              0,
-              80,
-            )}” está listo para conectar con POST /chat/messages/${
-              message.id
-            }/forward.`,
-          )
-        }
-        onFavorite={(message) => {
-          setMessages((old) =>
-            old.map((item) =>
-              item.id === message.id
-                ? {
-                    ...item,
-                    favorito: !item.favorito,
-                  }
-                : item,
-            ),
-          );
-
-          setToast("Favorito actualizado localmente.");
-        }}
+        onForward={(message) => void forwardMessage(message)}
+        onFavorite={(message) => void toggleMessageFavorite(message)}
         onInfo={(message) =>
           futureAction(
             "Información del mensaje",
@@ -2447,7 +3061,6 @@ export default function ChatPage() {
           )
         }
       />
-
       <ScheduledMessagesModal
         open={isScheduledMessagesOpen}
         conversationId={selectedConversationId}
@@ -2455,11 +3068,16 @@ export default function ChatPage() {
         onToast={setToast}
         onError={setError}
       />
-
+      <SearchMessagesModal
+        open={isSearchMessagesOpen}
+        conversationId={selectedConversationId}
+        onClose={() => setIsSearchMessagesOpen(false)}
+      />
       <ConversationActionsMenu
         menu={conversationMenu}
         isMuted={selectedIsMuted}
         isPinned={selectedIsPinned}
+        isArchived={Boolean(selectedConversation?.isArchived)}
         onClose={() => setConversationMenu(null)}
         onInfo={() => setIsChatInfoOpen(true)}
         onPin={togglePin}
@@ -2467,26 +3085,17 @@ export default function ChatPage() {
         onTheme={() => setIsThemeModalOpen(true)}
         onScheduledMessages={() => setIsScheduledMessagesOpen(true)}
         onTemporary={() => setIsTemporaryMessagesModalOpen(true)}
-        onCreateGroup={() => setIsCreateGroupOpen(true)}
-        onArchive={() => {
-          updateSelectedConversation({
-            isArchived: true,
+        onSearchMessages={() => setIsSearchMessagesOpen(true)}
+        onCreateGroup={() => {
+          void loadFriends().then(() => {
+            setIsCreateGroupOpen(true);
           });
-
-          setSelectedConversationId(null);
-          navigate(chatBasePath);
-
-          setToast(
-            "Archivada localmente; conecta PUT /chat/conversations/{id}/archive para persistir.",
-          );
+        }}
+        onArchive={() => {
+          void toggleArchive();
         }}
         onBlock={() => void blockConversationUser()}
-        onReport={() =>
-          futureAction(
-            "Reportar usuario",
-            "Crea el controlador PHP de reportes de usuario antes de activar esta acción.",
-          )
-        }
+        onReport={() => setIsReportUserModalOpen(true)}
         onDeleteLocal={() =>
           futureAction(
             "Eliminar conversación de mi vista",
@@ -2497,7 +3106,6 @@ export default function ChatPage() {
           void leaveSelectedGroup();
         }}
       />
-
       <ChatInfoDrawer
         open={isChatInfoOpen}
         conversation={selectedConversation}
@@ -2515,7 +3123,6 @@ export default function ChatPage() {
           setIsGroupInfoOpen(true);
         }}
       />
-
       <GroupInfoDrawer
         open={isGroupInfoOpen}
         conversation={selectedConversation}
@@ -2550,7 +3157,6 @@ export default function ChatPage() {
 
         onDeleteGroup={askDeleteSelectedGroup}
       />
-
       <CreateGroupModal
         open={isCreateGroupOpen}
         friends={friends}
@@ -2558,7 +3164,6 @@ export default function ChatPage() {
         onClose={() => setIsCreateGroupOpen(false)}
         onCreate={createGroup}
       />
-
       <AddGroupMembersModal
         open={isAddMembersOpen}
         friends={friends}
@@ -2567,21 +3172,26 @@ export default function ChatPage() {
         onClose={() => setIsAddMembersOpen(false)}
         onAdd={addMembersToGroup}
       />
-
       <ChatThemeModal
         open={isThemeModalOpen}
         value={chatTheme}
         onClose={() => setIsThemeModalOpen(false)}
         onChange={selectTheme}
       />
-
       <TemporaryMessagesModal
         open={isTemporaryMessagesModalOpen}
         value={temporaryMessagesDuration}
         onClose={() => setIsTemporaryMessagesModalOpen(false)}
         onChange={selectTemporary}
       />
-
+      <ReportUserModal
+        open={isReportUserModalOpen}
+        conversationId={selectedConversationId}
+        userName={selectedConversation?.otro_usuario_nombre ?? "Usuario"}
+        onClose={() => setIsReportUserModalOpen(false)}
+        onToast={setToast}
+        onError={setError}
+      />
       <ConfirmActionModal
         action={confirmAction}
         busy={confirmBusy}
@@ -2591,7 +3201,6 @@ export default function ChatPage() {
           }
         }}
       />
-
       {(error || toast) && (
         <div
           className={`fixed bottom-5 right-5 z-[10100] flex max-w-sm items-center gap-3 rounded-2xl border px-4 py-3 text-sm shadow-2xl ${
@@ -2796,7 +3405,8 @@ function FriendsPanel({
                 </p>
 
                 <p className="mx-auto mt-1 max-w-sm text-sm text-slate-500">
-                  Busca personas arriba y envíales una solicitud de amistad.
+                  Busca personas arriba y envíales una solicitud de
+                  amistad.
                 </p>
               </div>
             ) : (
@@ -3124,8 +3734,8 @@ function BlockedPanel({
               </h2>
 
               <p className="mt-1 max-w-md text-sm leading-6 text-slate-500 dark:text-slate-400">
-                Cuando bloquees a alguien aparecerá aquí y podrás desbloquearlo
-                cuando quieras.
+                Cuando bloquees a alguien aparecerá aquí y
+                podrás desbloquearlo cuando quieras.
               </p>
             </div>
           ) : (
