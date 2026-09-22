@@ -95,6 +95,37 @@ type User = {
   mfa_habilitado: boolean;
 };
 
+type UserActivitySummary = {
+  generatedAt: string;
+  userId: string;
+  content: {
+    notes: number;
+    folders: number;
+    checklists: number;
+    documents: number;
+    reminders: number;
+  };
+  productivity: {
+    checklistItems: {
+      total: number;
+      completed: number;
+      pending: number;
+    };
+    reminders: {
+      total: number;
+      pending: number;
+    };
+  };
+  social: {
+    friends: number;
+    groups: number;
+    directConversations: number;
+  };
+  communication: {
+    messagesSent: number;
+  };
+};
+
 type UsersPageProps = {
   role: Role;
 };
@@ -346,6 +377,25 @@ function VerificationBadge({
   );
 }
 
+function ActivityMetric({
+  label,
+  value,
+}: {
+  label: string;
+  value: number;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-3 rounded-xl bg-white px-3 py-2.5 ring-1 ring-slate-200/80 dark:bg-white/[0.035] dark:ring-white/[0.06]">
+      <span className="text-xs font-medium text-slate-500">
+        {label}
+      </span>
+      <span className="text-sm font-bold tabular-nums text-slate-900 dark:text-white">
+        {value}
+      </span>
+    </div>
+  );
+}
+
 export default function UsersPage({
   role,
 }: UsersPageProps) {
@@ -360,6 +410,23 @@ export default function UsersPage({
     useState(false);
   const [exporting, setExporting] =
     useState(false);
+
+  const [
+    activitySummary,
+    setActivitySummary,
+  ] = useState<UserActivitySummary | null>(
+    null,
+  );
+
+  const [
+    activityLoading,
+    setActivityLoading,
+  ] = useState(false);
+
+  const [
+    activityError,
+    setActivityError,
+  ] = useState("");
 
   const [error, setError] =
     useState("");
@@ -476,6 +543,32 @@ export default function UsersPage({
       );
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function loadActivitySummary(
+    userId: string,
+  ) {
+    setActivityLoading(true);
+    setActivityError("");
+    setActivitySummary(null);
+
+    try {
+      const response =
+        await api.get<UserActivitySummary>(
+          `/users/${userId}/activity-summary`,
+        );
+
+      setActivitySummary(response.data);
+    } catch (err) {
+      setActivityError(
+        getAxiosErrorMessage(
+          err,
+          "No se pudo cargar la actividad del usuario.",
+        ),
+      );
+    } finally {
+      setActivityLoading(false);
     }
   }
 
@@ -669,6 +762,12 @@ export default function UsersPage({
   function openActions(user: User) {
     setUserForActions(user);
     setShowActionsModal(true);
+  }
+
+  function openUserDetails(user: User) {
+    setSelectedUser(user);
+    closeActions();
+    void loadActivitySummary(user.id);
   }
 
   function closeActions() {
@@ -1626,12 +1725,11 @@ export default function UsersPage({
               <div className="mt-6 grid gap-2.5">
                 <button
                   type="button"
-                  onClick={() => {
-                    setSelectedUser(
+                  onClick={() =>
+                    openUserDetails(
                       userForActions,
-                    );
-                    closeActions();
-                  }}
+                    )
+                  }
                   className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-left text-slate-800 transition hover:bg-slate-100 dark:border-white/10 dark:bg-white/[0.035] dark:text-slate-200 dark:hover:bg-white/[0.07]"
                 >
                   <UserRound
@@ -1856,6 +1954,217 @@ export default function UsersPage({
                   {selectedUser.id}
                 </p>
               </div>
+            </div>
+
+            <div className="mt-6 border-t border-slate-200 pt-6 dark:border-white/10">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-violet-700 dark:text-violet-300">
+                    Actividad en VibeNotas
+                  </p>
+
+                  <p className="mt-1 text-sm text-slate-500">
+                    Resumen real de uso de esta cuenta.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  disabled={activityLoading}
+                  onClick={() =>
+                    void loadActivitySummary(
+                      selectedUser.id,
+                    )
+                  }
+                  className="rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.035] dark:text-slate-400 dark:hover:bg-white/[0.07] dark:hover:text-white"
+                  aria-label="Actualizar actividad"
+                >
+                  <RefreshCw
+                    size={16}
+                    className={
+                      activityLoading
+                        ? "animate-spin"
+                        : ""
+                    }
+                  />
+                </button>
+              </div>
+
+              {activityLoading ? (
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  {[1, 2, 3, 4, 5, 6].map(
+                    (item) => (
+                      <div
+                        key={item}
+                        className="h-16 animate-pulse rounded-2xl bg-slate-100 dark:bg-white/[0.04]"
+                      />
+                    ),
+                  )}
+                </div>
+              ) : activityError ? (
+                <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-400/15 dark:bg-red-500/[0.07] dark:text-red-200">
+                  {activityError}
+                </div>
+              ) : activitySummary ? (
+                <div className="mt-4 space-y-4">
+
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                    <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Contenido
+                    </p>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <ActivityMetric
+                        label="Notas"
+                        value={
+                          activitySummary
+                            .content.notes
+                        }
+                      />
+
+                      <ActivityMetric
+                        label="Carpetas"
+                        value={
+                          activitySummary
+                            .content.folders
+                        }
+                      />
+
+                      <ActivityMetric
+                        label="Checklists"
+                        value={
+                          activitySummary
+                            .content.checklists
+                        }
+                      />
+
+                      <ActivityMetric
+                        label="Documentos"
+                        value={
+                          activitySummary
+                            .content.documents
+                        }
+                      />
+
+                      <ActivityMetric
+                        label="Recordatorios"
+                        value={
+                          activitySummary
+                            .content.reminders
+                        }
+                      />
+                    </div>
+                  </div>
+
+
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                    <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Productividad
+                    </p>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <ActivityMetric
+                        label="Tareas totales"
+                        value={
+                          activitySummary
+                            .productivity
+                            .checklistItems
+                            .total
+                        }
+                      />
+
+                      <ActivityMetric
+                        label="Completadas"
+                        value={
+                          activitySummary
+                            .productivity
+                            .checklistItems
+                            .completed
+                        }
+                      />
+
+                      <ActivityMetric
+                        label="Pendientes"
+                        value={
+                          activitySummary
+                            .productivity
+                            .checklistItems
+                            .pending
+                        }
+                      />
+
+                      <ActivityMetric
+                        label="Recordatorios pendientes"
+                        value={
+                          activitySummary
+                            .productivity
+                            .reminders.pending
+                        }
+                      />
+                    </div>
+                  </div>
+
+
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                    <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Social
+                    </p>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <ActivityMetric
+                        label="Amigos"
+                        value={
+                          activitySummary
+                            .social
+                            .friends
+                        }
+                      />
+
+                      <ActivityMetric
+                        label="Grupos"
+                        value={
+                          activitySummary
+                            .social
+                            .groups
+                        }
+                      />
+
+                      <ActivityMetric
+                        label="Chats directos"
+                        value={
+                          activitySummary
+                            .social
+                            .directConversations
+                        }
+                      />
+                    </div>
+                  </div>
+
+
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                    <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Comunicación
+                    </p>
+
+                    <ActivityMetric
+                      label="Mensajes enviados"
+                      value={
+                        activitySummary
+                          .communication
+                          .messagesSent
+                      }
+                    />
+                  </div>
+
+
+                  <p className="text-right text-[11px] text-slate-400">
+                    Actualizado{" "}
+                    {formatDateTime(
+                      activitySummary.generatedAt,
+                    )}
+                  </p>
+                </div>
+              ) : null}
             </div>
 
             <div className="mt-6 border-t border-slate-200 pt-5 dark:border-white/10">
