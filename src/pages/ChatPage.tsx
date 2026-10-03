@@ -948,9 +948,7 @@ export default function ChatPage() {
             })
             .catch(() => {
               if (!disposed) {
-                setError(
-                  "La sesión realtime expiró y no pudo renovarse.",
-                );
+                setError("La sesión realtime expiró y no pudo renovarse.");
               }
 
               socket?.disconnect();
@@ -1437,6 +1435,9 @@ export default function ChatPage() {
       const response = await api.post(
         `/chat/conversations/${selectedConversationId}/images`,
         formData,
+        {
+          timeout: 180_000,
+        },
       );
 
       const payload = response.data?.data ?? response.data;
@@ -1527,6 +1528,9 @@ export default function ChatPage() {
       const response = await api.post(
         `/chat/conversations/${selectedConversationId}/audio`,
         formData,
+        {
+          timeout: 180_000,
+        },
       );
 
       const payload = response.data?.data ?? response.data;
@@ -1572,6 +1576,161 @@ export default function ChatPage() {
       setSendingMessage(false);
     }
   }
+
+  async function sendVideo(file: File): Promise<void> {
+    if (!selectedConversationId || sendingMessage) {
+      return;
+    }
+
+    const contenido = messageText.trim();
+
+    setSendingMessage(true);
+    setError("");
+
+    try {
+      const clientMessageId = crypto.randomUUID();
+
+      const formData = new FormData();
+
+      formData.append("clientMessageId", clientMessageId);
+
+      if (contenido) {
+        formData.append("content", contenido);
+      }
+
+      if (replyTo?.id) {
+        formData.append("replyToMessageId", replyTo.id);
+      }
+
+      formData.append("video", file);
+
+      const response = await api.post(
+        `/chat/conversations/${selectedConversationId}/videos`,
+        formData,
+        {
+          timeout: 180_000,
+        },
+      );
+
+      const payload = response.data?.data ?? response.data;
+
+      const createdRaw = payload?.mensaje as BackendChatMessage | undefined;
+
+      const created = createdRaw ? adaptMessage(createdRaw) : null;
+
+      if (created) {
+        setMessages((old) => {
+          const alreadyExists = old.some(
+            (message) =>
+              message.id === created.id ||
+              (created.client_message_id &&
+                message.client_message_id === created.client_message_id),
+          );
+
+          if (alreadyExists) {
+            return old;
+          }
+
+          return [...old, created];
+        });
+
+        setNearEnd(true);
+      } else {
+        await loadMessages(selectedConversationId, true);
+      }
+
+      stopLocalTyping();
+
+      setMessageText("");
+      setReplyTo(null);
+
+      await loadConversations(true);
+    } catch (requestError) {
+      setError(getErrorMessage(requestError, "No se pudo enviar el video."));
+
+      throw requestError;
+    } finally {
+      setSendingMessage(false);
+    }
+  }
+
+  async function sendFile(file: File): Promise<void> {
+    if (!selectedConversationId || sendingMessage) {
+      return;
+    }
+
+    const contenido = messageText.trim();
+
+    setSendingMessage(true);
+    setError("");
+
+    try {
+      const clientMessageId = crypto.randomUUID();
+
+      const formData = new FormData();
+
+      formData.append("clientMessageId", clientMessageId);
+
+      if (contenido) {
+        formData.append("content", contenido);
+      }
+
+      if (replyTo?.id) {
+        formData.append("replyToMessageId", replyTo.id);
+      }
+
+      formData.append("file", file);
+
+      const response = await api.post(
+        `/chat/conversations/${selectedConversationId}/files`,
+        formData,
+        {
+          timeout: 180_000,
+        },
+      );
+
+      const payload = response.data?.data ?? response.data;
+
+      const createdRaw = payload?.mensaje as BackendChatMessage | undefined;
+
+      const created = createdRaw ? adaptMessage(createdRaw) : null;
+
+      if (created) {
+        setMessages((old) => {
+          const alreadyExists = old.some(
+            (message) =>
+              message.id === created.id ||
+              (created.client_message_id &&
+                message.client_message_id === created.client_message_id),
+          );
+
+          if (alreadyExists) {
+            return old;
+          }
+
+          return [...old, created];
+        });
+
+        setNearEnd(true);
+      } else {
+        await loadMessages(selectedConversationId, true);
+      }
+
+      stopLocalTyping();
+
+      setMessageText("");
+      setReplyTo(null);
+
+      await loadConversations(true);
+    } catch (requestError) {
+      setError(getErrorMessage(requestError, "No se pudo enviar el archivo."));
+
+      throw requestError;
+    } finally {
+      setSendingMessage(false);
+    }
+  }
+
   async function saveEdit(messageId: string): Promise<void> {
     const contenido = editingText.trim();
 
@@ -1637,9 +1796,7 @@ export default function ChatPage() {
   }
   function askDelete(message: Message, everyone: boolean): void {
     setConfirmAction({
-      title: everyone
-        ? "¿Eliminar para todos?"
-        : "¿Eliminar para ti?",
+      title: everyone ? "¿Eliminar para todos?" : "¿Eliminar para ti?",
 
       description: everyone
         ? "El mensaje dejará de estar disponible para todos los participantes."
@@ -2943,6 +3100,8 @@ export default function ChatPage() {
                       onSubmit={sendMessage}
                       onSendImage={sendImage}
                       onSendAudio={sendAudio}
+                      onSendVideo={sendVideo}
+                      onSendFile={sendFile}
                       onSchedule={scheduleMessage}
                     />
                   </>
@@ -3405,8 +3564,7 @@ function FriendsPanel({
                 </p>
 
                 <p className="mx-auto mt-1 max-w-sm text-sm text-slate-500">
-                  Busca personas arriba y envíales una solicitud de
-                  amistad.
+                  Busca personas arriba y envíales una solicitud de amistad.
                 </p>
               </div>
             ) : (
@@ -3734,8 +3892,8 @@ function BlockedPanel({
               </h2>
 
               <p className="mt-1 max-w-md text-sm leading-6 text-slate-500 dark:text-slate-400">
-                Cuando bloquees a alguien aparecerá aquí y
-                podrás desbloquearlo cuando quieras.
+                Cuando bloquees a alguien aparecerá aquí y podrás desbloquearlo
+                cuando quieras.
               </p>
             </div>
           ) : (

@@ -2,7 +2,8 @@ export type ChatTab = "chats" | "amigos" | "solicitudes" | "bloqueados";
 
 export type ConversationType = "privado" | "grupo" | "soporte";
 
-export type MessageType = "texto" | "imagen" | "archivo" | "audio" | "sistema";
+export type MessageType =
+  "texto" | "imagen" | "archivo" | "audio" | "video" | "sistema";
 
 export type GroupRole = "owner" | "admin" | "member";
 
