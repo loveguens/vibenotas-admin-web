@@ -1,6 +1,7 @@
 import {
   CalendarClock,
   Camera,
+  FileText,
   ImageIcon,
   Mic,
   Paperclip,
@@ -9,6 +10,7 @@ import {
   Send,
   Square,
   Trash2,
+  Video,
   X,
 } from "lucide-react";
 
@@ -38,6 +40,10 @@ type ChatComposerProps = {
 
   onSendAudio: (audio: Blob, durationMs: number) => Promise<void>;
 
+  onSendVideo: (file: File) => Promise<void>;
+
+  onSendFile: (file: File) => Promise<void>;
+
   onSchedule: (scheduledFor: string) => Promise<void>;
 };
 
@@ -47,7 +53,54 @@ const CHAT_AUDIO_MAX_BYTES = 20 * 1024 * 1024;
 
 const CHAT_AUDIO_MAX_DURATION_MS = 10 * 60 * 1000;
 
+const CHAT_VIDEO_MAX_BYTES = 50 * 1024 * 1024;
+
+const CHAT_FILE_MAX_BYTES = 25 * 1024 * 1024;
+
+const CHAT_VIDEO_TYPES = new Set([
+  "video/mp4",
+  "video/webm",
+  "video/quicktime",
+]);
+
+const CHAT_FILE_EXTENSIONS = new Set([
+  "pdf",
+  "zip",
+  "doc",
+  "docx",
+  "xls",
+  "xlsx",
+  "ppt",
+  "pptx",
+  "txt",
+  "csv",
+]);
+
 const CHAT_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) {
+    return `${bytes} B`;
+  }
+
+  if (bytes < 1024 * 1024) {
+    return `${(bytes / 1024).toFixed(1)} KB`;
+  }
+
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function getFileExtension(fileName: string): string {
+  const normalized = fileName.trim().toLowerCase();
+
+  const dot = normalized.lastIndexOf(".");
+
+  if (dot < 0 || dot === normalized.length - 1) {
+    return "";
+  }
+
+  return normalized.slice(dot + 1);
+}
 
 function getMinimumDateTime(): string {
   const now = new Date();
@@ -178,6 +231,8 @@ export function ChatComposer({
   onSubmit,
   onSendImage,
   onSendAudio,
+  onSendVideo,
+  onSendFile,
   onSchedule,
 }: ChatComposerProps) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -187,6 +242,10 @@ export function ChatComposer({
   const cameraInputRef = useRef<HTMLInputElement | null>(null);
 
   const audioInputRef = useRef<HTMLInputElement | null>(null);
+
+  const videoInputRef = useRef<HTMLInputElement | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const recorderRef = useRef<MediaRecorder | null>(null);
 
@@ -223,6 +282,16 @@ export function ChatComposer({
   const [audioPreviewUrl, setAudioPreviewUrl] = useState<string | null>(null);
 
   const [audioError, setAudioError] = useState("");
+
+  const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
+
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState<string | null>(null);
+
+  const [videoError, setVideoError] = useState("");
+
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const [fileError, setFileError] = useState("");
 
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
 
@@ -273,6 +342,21 @@ export function ChatComposer({
       URL.revokeObjectURL(url);
     };
   }, [recordedAudio]);
+
+  useEffect(() => {
+    if (!selectedVideo) {
+      setVideoPreviewUrl(null);
+      return;
+    }
+
+    const url = URL.createObjectURL(selectedVideo);
+
+    setVideoPreviewUrl(url);
+
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }, [selectedVideo]);
 
   useEffect(() => {
     if (!recording) {
@@ -353,6 +437,12 @@ export function ChatComposer({
 
     clearAudio();
 
+    setSelectedVideo(null);
+    setVideoError("");
+
+    setSelectedFile(null);
+    setFileError("");
+
     setSelectedImage(file);
     setAttachmentMenuOpen(false);
   }
@@ -372,6 +462,106 @@ export function ChatComposer({
 
     setSelectedImage(null);
     setImageError("");
+  }
+
+  function chooseVideo(file?: File): void {
+    if (!file) {
+      return;
+    }
+
+    setVideoError("");
+
+    if (!CHAT_VIDEO_TYPES.has(file.type)) {
+      setVideoError("Solo se permiten videos MP4, WebM o MOV.");
+
+      return;
+    }
+
+    if (file.size <= 0 || file.size > CHAT_VIDEO_MAX_BYTES) {
+      setVideoError("El video no puede superar los 50 MB.");
+
+      return;
+    }
+
+    setSelectedImage(null);
+    setImageError("");
+
+    clearAudio();
+
+    setSelectedFile(null);
+    setFileError("");
+
+    setSelectedVideo(file);
+    setAttachmentMenuOpen(false);
+  }
+
+  function handleVideoChange(event: ChangeEvent<HTMLInputElement>): void {
+    const file = event.target.files?.[0];
+
+    event.target.value = "";
+
+    chooseVideo(file);
+  }
+
+  function removeSelectedVideo(): void {
+    if (sending) {
+      return;
+    }
+
+    setSelectedVideo(null);
+    setVideoError("");
+  }
+
+  function chooseFile(file?: File): void {
+    if (!file) {
+      return;
+    }
+
+    setFileError("");
+
+    const extension = getFileExtension(file.name);
+
+    if (!CHAT_FILE_EXTENSIONS.has(extension)) {
+      setFileError(
+        "Formato no compatible. Usa PDF, ZIP, Word, Excel, PowerPoint, TXT o CSV.",
+      );
+
+      return;
+    }
+
+    if (file.size <= 0 || file.size > CHAT_FILE_MAX_BYTES) {
+      setFileError("El archivo no puede superar los 25 MB.");
+
+      return;
+    }
+
+    setSelectedImage(null);
+    setImageError("");
+
+    clearAudio();
+
+    setSelectedVideo(null);
+    setVideoError("");
+
+    setSelectedFile(file);
+    setAttachmentMenuOpen(false);
+  }
+
+  function handleFileChange(event: ChangeEvent<HTMLInputElement>): void {
+    const file = event.target.files?.[0];
+
+    event.target.value = "";
+
+    chooseFile(file);
+  }
+
+  function removeSelectedFile(): void {
+    if (sending) {
+      return;
+    }
+
+    setSelectedFile(null);
+    setFileError("");
   }
 
   async function startRecording(): Promise<void> {
@@ -411,6 +601,12 @@ export function ChatComposer({
         : new MediaRecorder(stream);
 
       setSelectedImage(null);
+
+      setSelectedVideo(null);
+      setVideoError("");
+
+      setSelectedFile(null);
+      setFileError("");
 
       clearAudio();
 
@@ -619,6 +815,12 @@ export function ChatComposer({
 
     setSelectedImage(null);
 
+    setSelectedVideo(null);
+    setVideoError("");
+
+    setSelectedFile(null);
+    setFileError("");
+
     setRecordedAudio(normalizedFile);
 
     setRecordedDuration(duration);
@@ -637,7 +839,13 @@ export function ChatComposer({
       return;
     }
 
-    if (!value.trim() && !selectedImage && !recordedAudio) {
+    if (
+      !value.trim() &&
+      !selectedImage &&
+      !recordedAudio &&
+      !selectedVideo &&
+      !selectedFile
+    ) {
       return;
     }
 
@@ -694,11 +902,59 @@ export function ChatComposer({
       return;
     }
 
+    if (selectedVideo) {
+      event.preventDefault();
+
+      if (sending) {
+        return;
+      }
+
+      try {
+        setVideoError("");
+
+        await onSendVideo(selectedVideo);
+
+        setSelectedVideo(null);
+        setAttachmentMenuOpen(false);
+      } catch {
+        setVideoError("No se pudo enviar el video.");
+      }
+
+      return;
+    }
+
+    if (selectedFile) {
+      event.preventDefault();
+
+      if (sending) {
+        return;
+      }
+
+      try {
+        setFileError("");
+
+        await onSendFile(selectedFile);
+
+        setSelectedFile(null);
+        setAttachmentMenuOpen(false);
+      } catch {
+        setFileError("No se pudo enviar el archivo.");
+      }
+
+      return;
+    }
+
     onSubmit(event);
   }
 
   function openScheduleModal(): void {
-    if (selectedImage || recordedAudio || recording) {
+    if (
+      selectedImage ||
+      recordedAudio ||
+      selectedVideo ||
+      selectedFile ||
+      recording
+    ) {
       return;
     }
 
@@ -830,6 +1086,65 @@ export function ChatComposer({
           </div>
         )}
 
+        {selectedVideo && videoPreviewUrl && (
+          <div className="mx-auto mb-2.5 max-w-3xl">
+            <div className="relative inline-block max-w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 p-1.5 dark:border-white/10">
+              <video
+                controls
+                preload="metadata"
+                src={videoPreviewUrl}
+                className="max-h-60 max-w-full rounded-xl"
+              />
+
+              <button
+                type="button"
+                onClick={removeSelectedVideo}
+                disabled={sending}
+                className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-slate-950/80 text-white backdrop-blur"
+                title="Eliminar video"
+              >
+                <X size={16} />
+              </button>
+
+              <p className="max-w-72 truncate px-2 pb-1 pt-2 text-xs text-slate-300">
+                {selectedVideo.name || "Video"}
+                {" ? "}
+                {formatFileSize(selectedVideo.size)}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {selectedFile && (
+          <div className="mx-auto mb-2.5 max-w-3xl">
+            <div className="flex max-w-lg items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-white/10 dark:bg-white/5">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300">
+                <FileText size={20} />
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">
+                  {selectedFile.name}
+                </p>
+
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  {formatFileSize(selectedFile.size)}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={removeSelectedFile}
+                disabled={sending}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-red-500 transition hover:bg-red-50 dark:hover:bg-red-500/10"
+                title="Eliminar archivo"
+              >
+                <Trash2 size={17} />
+              </button>
+            </div>
+          </div>
+        )}
+
         {recording && (
           <div className="mx-auto mb-2.5 flex max-w-3xl items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-500/20 dark:bg-red-500/10">
             <span className="h-2.5 w-2.5 shrink-0 animate-pulse rounded-full bg-red-500" />
@@ -905,9 +1220,9 @@ export function ChatComposer({
           </div>
         )}
 
-        {(imageError || audioError) && (
+        {(imageError || audioError || videoError || fileError) && (
           <p className="mx-auto mb-2 max-w-3xl px-2 text-sm text-red-500">
-            {imageError || audioError}
+            {imageError || audioError || videoError || fileError}
           </p>
         )}
 
@@ -942,6 +1257,24 @@ export function ChatComposer({
                   <Camera size={17} />
                   Cámara
                 </button>
+
+                <button
+                  type="button"
+                  onClick={() => videoInputRef.current?.click()}
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-700 dark:text-slate-200 dark:hover:bg-violet-500/10 dark:hover:text-violet-300"
+                >
+                  <Video size={17} />
+                  Video
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-700 dark:text-slate-200 dark:hover:bg-violet-500/10 dark:hover:text-violet-300"
+                >
+                  <FileText size={17} />
+                  Documento
+                </button>
               </div>
             )}
 
@@ -970,12 +1303,32 @@ export function ChatComposer({
               onChange={(event) => void handleAudioFile(event)}
               className="hidden"
             />
+
+            <input
+              ref={videoInputRef}
+              type="file"
+              accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov"
+              onChange={handleVideoChange}
+              className="hidden"
+            />
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf,.zip,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv"
+              onChange={handleFileChange}
+              className="hidden"
+            />
           </div>
 
           <button
             type="button"
             disabled={
-              sending || recording || Boolean(selectedImage || recordedAudio)
+              sending ||
+              recording ||
+              Boolean(
+                selectedImage || recordedAudio || selectedVideo || selectedFile,
+              )
             }
             onClick={openScheduleModal}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-white hover:text-violet-600 disabled:opacity-40 dark:hover:bg-white/10 dark:hover:text-violet-300"
@@ -996,17 +1349,19 @@ export function ChatComposer({
               }
               onKeyDown={handleKeyDown}
               placeholder={
-                recordedAudio
+                recordedAudio || selectedImage || selectedVideo || selectedFile
                   ? "Comentario opcional..."
-                  : selectedImage
-                    ? "Escribe un comentario..."
-                    : "Escribe un mensaje..."
+                  : "Escribe un mensaje..."
               }
               className="max-h-[120px] min-h-10 w-full resize-none bg-transparent px-2 py-2.5 text-sm leading-5 text-slate-900 outline-none placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-500"
             />
           </div>
 
-          {!value.trim() && !selectedImage && !recordedAudio ? (
+          {!value.trim() &&
+          !selectedImage &&
+          !recordedAudio &&
+          !selectedVideo &&
+          !selectedFile ? (
             <button
               type="button"
               disabled={sending}

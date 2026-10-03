@@ -1,7 +1,6 @@
 import {
   Check,
   CheckCheck,
-  FileText,
   Forward,
   MoreVertical,
   Pin,
@@ -14,6 +13,8 @@ import { formatChatDate } from "../utils";
 import { Avatar } from "./Avatar";
 import { PrivateChatImage } from "./PrivateChatImage";
 import { PrivateChatAudio } from "./PrivateChatAudio";
+import { PrivateChatFile } from "./PrivateChatFile";
+import { PrivateChatVideo } from "./PrivateChatVideo";
 
 type MessageBubbleProps = {
   message: Message;
@@ -193,26 +194,26 @@ export function MessageBubble({
                       </p>
                     )}
                   </div>
-                ) : hasFileAttachment ? (
-                  message.archivo_url ? (
-                    <a
-                      href={message.archivo_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex items-center gap-3 rounded-xl bg-black/5 p-2 pr-8 text-sm transition hover:bg-black/10 dark:bg-black/15"
-                    >
-                      <FileText size={21} />
+                ) : message.tipo === "video" ? (
+                  <div className="space-y-2 pr-6">
+                    <PrivateChatVideo messageId={message.id} />
 
-                      <span className="truncate">
-                        {message.archivo_nombre ?? "Archivo adjunto"}
-                      </span>
-                    </a>
-                  ) : (
-                    <div className="flex items-center gap-3 rounded-xl bg-black/5 p-2 pr-8 text-sm opacity-70">
-                      <FileText size={21} />
-                      <span>Archivo no disponible</span>
-                    </div>
-                  )
+                    {message.contenido && (
+                      <p className="whitespace-pre-wrap break-words text-sm leading-6">
+                        {message.contenido}
+                      </p>
+                    )}
+                  </div>
+                ) : hasFileAttachment ? (
+                  <div className="space-y-2 pr-6">
+                    <PrivateChatFile messageId={message.id} />
+
+                    {message.contenido && (
+                      <p className="whitespace-pre-wrap break-words text-sm leading-6">
+                        {message.contenido}
+                      </p>
+                    )}
+                  </div>
                 ) : message.tipo === "audio" ? (
                   <div className="space-y-2 pr-6">
                     <PrivateChatAudio messageId={message.id} />
