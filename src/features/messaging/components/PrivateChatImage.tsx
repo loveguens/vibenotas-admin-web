@@ -1,7 +1,10 @@
 import { ImageOff, LoaderCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import api from "../../../services/api";
+import {
+  resolveChatMedia,
+  type ResolvedChatMedia,
+} from "../services/chat-media-access.service";
 
 type PrivateChatImageProps = {
   messageId: string;
@@ -9,32 +12,31 @@ type PrivateChatImageProps = {
 };
 
 export function PrivateChatImage({ messageId, alt }: PrivateChatImageProps) {
-  const [objectUrl, setObjectUrl] = useState<string | null>(null);
+  const [media, setMedia] = useState<ResolvedChatMedia | null>(null);
+
   const [loading, setLoading] = useState(true);
+
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
 
-    let currentUrl: string | null = null;
+    let current: ResolvedChatMedia | null = null;
 
     setLoading(true);
     setFailed(false);
-    setObjectUrl(null);
+    setMedia(null);
 
-    void api
-      .get<Blob>(`/chat/messages/${messageId}/image`, {
-        responseType: "blob",
-        signal: controller.signal,
-      })
-      .then((response) => {
+    void resolveChatMedia(messageId, controller.signal)
+      .then((resolved) => {
         if (controller.signal.aborted) {
+          resolved.revoke?.();
           return;
         }
 
-        currentUrl = URL.createObjectURL(response.data);
+        current = resolved;
 
-        setObjectUrl(currentUrl);
+        setMedia(resolved);
         setLoading(false);
       })
       .catch(() => {
@@ -48,10 +50,7 @@ export function PrivateChatImage({ messageId, alt }: PrivateChatImageProps) {
 
     return () => {
       controller.abort();
-
-      if (currentUrl) {
-        URL.revokeObjectURL(currentUrl);
-      }
+      current?.revoke?.();
     };
   }, [messageId]);
 
@@ -63,7 +62,7 @@ export function PrivateChatImage({ messageId, alt }: PrivateChatImageProps) {
     );
   }
 
-  if (failed || !objectUrl) {
+  if (failed || !media) {
     return (
       <div className="flex h-32 w-64 max-w-full flex-col items-center justify-center gap-2 rounded-2xl bg-black/10 text-xs opacity-70 dark:bg-black/20">
         <ImageOff size={24} />
@@ -74,13 +73,13 @@ export function PrivateChatImage({ messageId, alt }: PrivateChatImageProps) {
 
   return (
     <a
-      href={objectUrl}
+      href={media.url}
       target="_blank"
       rel="noreferrer"
       className="block overflow-hidden rounded-2xl"
     >
       <img
-        src={objectUrl}
+        src={media.url}
         alt={alt}
         className="max-h-80 w-auto max-w-full rounded-2xl object-contain"
       />

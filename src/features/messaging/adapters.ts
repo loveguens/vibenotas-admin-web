@@ -27,6 +27,9 @@ function mapMessageType(type: string): MessageType {
     case "audio":
       return "audio";
 
+    case "video":
+      return "video";
+
     default:
       return "texto";
   }

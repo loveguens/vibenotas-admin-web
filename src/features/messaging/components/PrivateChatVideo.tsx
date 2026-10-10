@@ -1,4 +1,4 @@
-import { LoaderCircle, Volume2, VolumeX } from "lucide-react";
+import { LoaderCircle, VideoOff } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import {
@@ -6,11 +6,11 @@ import {
   type ResolvedChatMedia,
 } from "../services/chat-media-access.service";
 
-type PrivateChatAudioProps = {
+type PrivateChatVideoProps = {
   messageId: string;
 };
 
-export function PrivateChatAudio({ messageId }: PrivateChatAudioProps) {
+export function PrivateChatVideo({ messageId }: PrivateChatVideoProps) {
   const [media, setMedia] = useState<ResolvedChatMedia | null>(null);
 
   const [loading, setLoading] = useState(true);
@@ -55,31 +55,27 @@ export function PrivateChatAudio({ messageId }: PrivateChatAudioProps) {
 
   if (loading) {
     return (
-      <div className="flex min-h-12 min-w-56 items-center justify-center rounded-2xl bg-black/10 px-4 dark:bg-black/20">
-        <LoaderCircle size={20} className="animate-spin opacity-70" />
+      <div className="flex h-48 w-72 max-w-full items-center justify-center rounded-2xl bg-black/20">
+        <LoaderCircle size={24} className="animate-spin opacity-70" />
       </div>
     );
   }
 
   if (failed || !media) {
     return (
-      <div className="flex min-h-12 min-w-56 items-center gap-2 rounded-2xl bg-black/10 px-4 text-xs opacity-70 dark:bg-black/20">
-        <VolumeX size={18} />
-        <span>Audio no disponible</span>
+      <div className="flex h-32 w-72 max-w-full flex-col items-center justify-center gap-2 rounded-2xl bg-black/10 text-xs opacity-70 dark:bg-black/20">
+        <VideoOff size={24} />
+        <span>Video no disponible</span>
       </div>
     );
   }
 
   return (
-    <div className="flex min-w-56 items-center gap-2 rounded-2xl bg-black/5 p-2 dark:bg-black/15">
-      <Volume2 size={18} className="shrink-0" />
-
-      <audio
-        controls
-        preload="metadata"
-        src={media.url}
-        className="h-10 w-56 max-w-full"
-      />
-    </div>
+    <video
+      controls
+      preload="metadata"
+      src={media.url}
+      className="max-h-96 w-72 max-w-full rounded-2xl bg-black object-contain"
+    />
   );
 }
