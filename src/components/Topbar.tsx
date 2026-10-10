@@ -279,6 +279,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
 
     if (path.includes("/users")) return "Usuarios";
     if (path.includes("/administrators")) return "Administradores";
+    if (path.includes("/reports")) return "Reportes";
     if (path.includes("/profile")) return "Mi perfil";
     if (path.includes("/settings")) return "Configuración";
     if (path.includes("/notifications")) return "Notificaciones";
@@ -681,7 +682,9 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
               >
                 {esDashboard
                   ? currentDate
-                  : "Gestiona la información de VibeNotas"}
+                  : location.pathname.includes("/reports")
+                    ? "Gestiona y modera reportes de la comunidad"
+                    : "Gestiona la información de VibeNotas"}
               </p>
             </div>
           </div>
