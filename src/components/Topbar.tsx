@@ -629,7 +629,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
   return (
     <>
       <header
-        className={`sticky top-0 z-40 border-b px-4 py-4 backdrop-blur-xl md:px-8 ${
+        className={`vn-admin-topbar sticky top-0 z-40 border-b px-4 py-4 backdrop-blur-xl md:px-8 ${
           darkMode
             ? "border-white/10 bg-[#0F172A]/85"
             : "border-slate-200 bg-white/90"
@@ -640,7 +640,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
             <button
               type="button"
               onClick={onOpenSidebar}
-              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition lg:hidden ${claseBotonIcono}`}
+              className={`vn-admin-icon-button flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition lg:hidden ${claseBotonIcono}`}
               title="Abrir menú"
               aria-label="Abrir menú lateral"
             >
@@ -660,14 +660,14 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
             )}
 
             <div className="min-w-0">
-              <p className="truncate text-xs font-semibold uppercase tracking-[0.16em] text-violet-400">
+              <p className="truncate vn-admin-topbar-caption text-xs font-semibold uppercase tracking-[0.16em] text-violet-400">
                 {role === "superadmin"
                   ? "Panel Super Admin"
                   : "Panel Administrador"}
               </p>
 
               <h2
-                className={`mt-1 truncate text-lg font-bold md:text-2xl ${
+                className={`vn-admin-topbar-title mt-1 truncate text-lg font-bold md:text-2xl ${
                   darkMode ? "text-white" : "text-slate-900"
                 }`}
               >
@@ -677,7 +677,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
               </h2>
 
               <p
-                className={`mt-1 hidden text-sm md:block ${
+                className={`vn-admin-topbar-subtitle mt-1 hidden text-sm md:block ${
                   darkMode ? "text-slate-400" : "text-slate-500"
                 }`}
               >
@@ -695,7 +695,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
           <div className="flex shrink-0 items-center gap-2 md:gap-3">
             <form
               onSubmit={buscar}
-              className={`hidden min-w-[260px] items-center gap-3 rounded-2xl border px-4 py-3 lg:flex ${
+              className={`vn-admin-search hidden min-w-[260px] items-center gap-3 rounded-2xl border px-4 py-3 lg:flex ${
                 darkMode
                   ? "border-white/10 bg-white/5"
                   : "border-slate-200 bg-slate-50"
@@ -722,7 +722,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
             <button
               type="button"
               onClick={cambiarTema}
-              className={`flex h-11 w-11 items-center justify-center rounded-xl border transition ${claseBotonIcono}`}
+              className={`vn-admin-icon-button flex h-11 w-11 items-center justify-center rounded-xl border transition ${claseBotonIcono}`}
               title={
                 darkMode ? "Cambiar a tema claro" : "Cambiar a tema oscuro"
               }
@@ -738,7 +738,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                   setProfileOpen(false);
                   void loadNotifications();
                 }}
-                className={`relative flex h-11 w-11 items-center justify-center rounded-xl border transition ${
+                className={`vn-admin-icon-button relative flex h-11 w-11 items-center justify-center rounded-xl border transition ${
                   darkMode
                     ? "border-white/10 bg-white/5 text-slate-200 hover:bg-white/10"
                     : "border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
@@ -750,7 +750,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
 
                 {unreadCount > 0 && (
                   <>
-                    <span className="absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-violet-500 px-1 text-[10px] font-black text-white shadow-lg shadow-violet-500/40">
+                    <span className="vn-admin-notification-dot absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-violet-500 px-1 text-[10px] font-black text-white shadow-lg shadow-violet-500/40">
                       {unreadCount > 99 ? "99+" : unreadCount}
                     </span>
 
@@ -924,13 +924,13 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                   setProfileOpen((estado) => !estado);
                   setNotificationsOpen(false);
                 }}
-                className={`flex items-center gap-3 rounded-2xl border p-1.5 pr-2 transition md:px-3 md:py-2 ${
+                className={`vn-admin-profile-button flex items-center gap-3 rounded-2xl border p-1.5 pr-2 transition md:px-3 md:py-2 ${
                   darkMode
                     ? "border-white/10 bg-white/5 hover:bg-white/10"
                     : "border-slate-200 bg-white hover:bg-slate-100"
                 }`}
               >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-sm font-bold text-white shadow-lg shadow-violet-900/30 md:h-10 md:w-10">
+                <div className="vn-admin-topbar-avatar flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-sm font-bold text-white shadow-lg shadow-violet-900/30 md:h-10 md:w-10">
                   {fotoPerfil && !profilePhotoError ? (
                     <img
                       src={getPhotoUrl(fotoPerfil)}
@@ -952,7 +952,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                     {nombreUsuario}
                   </p>
 
-                  <p className="text-xs text-violet-400">
+                  <p className="vn-admin-topbar-profile-role text-xs text-violet-400">
                     {role === "superadmin" ? "Acceso total" : "Administrador"}
                   </p>
                 </div>
