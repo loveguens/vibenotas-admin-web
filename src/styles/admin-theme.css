@@ -1,0 +1,166 @@
+/* Identidad visual del área administrativa.
+   Aislada del login para que este permanezca siempre en modo claro. */
+.vn-admin {
+  --vn-bg: #f5f1e8;
+  --vn-sidebar: #fffdf8;
+  --vn-topbar: rgba(255, 253, 248, .94);
+  --vn-surface: #fffdf8;
+  --vn-surface-hover: #f5f1e8;
+  --vn-line: #e4e0d6;
+  --vn-ink: #17201d;
+  --vn-muted: #59645f;
+  --vn-coral: #f06449;
+  --vn-coral-strong: #bf4734;
+  --vn-coral-soft: #f9d8ce;
+  --vn-petroleum: #164e4a;
+  --vn-icon-bg: #f9d8ce;
+  --vn-elevation: 0 14px 38px rgba(23,32,29,.06);
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--vn-bg);
+  color: var(--vn-ink);
+}
+html.dark .vn-admin {
+  --vn-bg: #141a18;
+  --vn-sidebar: #202624;
+  --vn-topbar: rgba(32,38,36,.94);
+  --vn-surface: #222a26;
+  --vn-surface-hover: #2e3530;
+  --vn-line: #414944;
+  --vn-ink: #f5f1e8;
+  --vn-muted: #b0b9b2;
+  --vn-coral: #f4775f;
+  --vn-coral-strong: #ff9b86;
+  --vn-coral-soft: #402e2b;
+  --vn-petroleum: #a7cec1;
+  --vn-icon-bg: #402e2b;
+  --vn-elevation: 0 16px 40px rgba(0,0,0,.19);
+}
+.vn-admin .vn-admin-sidebar {
+  background: var(--vn-sidebar);
+  border-color: var(--vn-line);
+  box-shadow: var(--vn-elevation);
+}
+.vn-admin .vn-admin-sidebar-header,
+.vn-admin .vn-admin-sidebar-separator,
+.vn-admin .vn-admin-sidebar-footer {
+  border-color: var(--vn-line);
+}
+.vn-admin .vn-admin-brand-name {
+  color: var(--vn-ink);
+}
+.vn-admin .vn-admin-role-label {
+  color: var(--vn-coral-strong);
+}
+.vn-admin .vn-admin-section-label {
+  color: var(--vn-muted);
+}
+.vn-admin .vn-admin-nav-link,
+.vn-admin .vn-admin-bottom-link {
+  color: var(--vn-muted);
+  border: 1px solid transparent;
+}
+.vn-admin .vn-admin-nav-link:hover,
+.vn-admin .vn-admin-nav-link:focus-visible,
+.vn-admin .vn-admin-bottom-link:hover,
+.vn-admin .vn-admin-bottom-link:focus-visible {
+  color: var(--vn-ink);
+  background: var(--vn-surface-hover);
+  outline-offset: 2px;
+}
+.vn-admin .vn-admin-nav-link[data-active="true"],
+.vn-admin .vn-admin-bottom-link[data-active="true"] {
+  color: var(--vn-coral-strong);
+  background: var(--vn-coral-soft);
+  border-color: color-mix(in srgb, var(--vn-coral) 17%, transparent);
+  box-shadow: none;
+}
+.vn-admin .vn-admin-nav-icon {
+  color: inherit;
+}
+.vn-admin .vn-admin-nav-link[data-active="true"] .vn-admin-nav-icon,
+.vn-admin .vn-admin-bottom-link[data-active="true"] .vn-admin-nav-icon {
+  background: transparent;
+  color: var(--vn-coral-strong);
+}
+.vn-admin .vn-admin-active-indicator {
+  background: var(--vn-coral);
+  box-shadow: none;
+}
+.vn-admin .vn-admin-collapse {
+  color: var(--vn-muted);
+}
+.vn-admin .vn-admin-collapse:hover {
+  color: var(--vn-ink);
+  background: var(--vn-surface-hover);
+}
+.vn-admin .vn-admin-topbar {
+  border-color: var(--vn-line);
+  background: var(--vn-topbar);
+  color: var(--vn-ink);
+}
+.vn-admin .vn-admin-topbar-caption {
+  color: var(--vn-coral-strong);
+}
+.vn-admin .vn-admin-topbar-title {
+  color: var(--vn-ink);
+}
+.vn-admin .vn-admin-topbar-subtitle {
+  color: var(--vn-muted);
+}
+.vn-admin .vn-admin-icon-button,
+.vn-admin .vn-admin-profile-button,
+.vn-admin .vn-admin-search {
+  color: var(--vn-muted);
+  background: var(--vn-surface);
+  border-color: var(--vn-line);
+}
+.vn-admin .vn-admin-icon-button:hover,
+.vn-admin .vn-admin-profile-button:hover {
+  color: var(--vn-coral-strong);
+  background: var(--vn-surface-hover);
+}
+.vn-admin .vn-admin-search input {
+  color: var(--vn-ink);
+}
+.vn-admin .vn-admin-search input::placeholder {
+  color: var(--vn-muted);
+  opacity: .78;
+}
+.vn-admin .vn-admin-topbar-avatar {
+  background: var(--vn-coral);
+  color: white;
+  box-shadow: none;
+}
+.vn-admin .vn-admin-topbar-profile-role {
+  color: var(--vn-coral-strong);
+}
+.vn-admin .vn-admin-notification-dot {
+  background: var(--vn-coral);
+  box-shadow: none;
+}
+.vn-admin .vn-admin-stat-card {
+  background: var(--vn-surface);
+  color: var(--vn-ink);
+  border-color: var(--vn-line);
+  box-shadow: var(--vn-elevation);
+}
+.vn-admin .vn-admin-stat-card:hover {
+  border-color: var(--vn-coral);
+  box-shadow: 0 18px 40px rgba(240,100,73,.10);
+}
+.vn-admin .vn-admin-stat-card-title,
+.vn-admin .vn-admin-stat-card-description {
+  color: var(--vn-muted);
+}
+.vn-admin .vn-admin-stat-card-value {
+  color: var(--vn-ink);
+}
+.vn-admin .vn-admin-stat-card-icon {
+  background: var(--vn-icon-bg);
+  color: var(--vn-coral-strong);
+  border-color: transparent;
+}
+@media (prefers-reduced-motion: reduce) {
+  .vn-admin .vn-admin-stat-card { transition: none; }
+}
