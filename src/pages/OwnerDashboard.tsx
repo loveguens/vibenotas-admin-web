@@ -408,13 +408,6 @@ export default function OwnerDashboard() {
 
   const ownerCount = ownerRole?.totalUsers ?? 0;
 
-  const currentDate = new Intl.DateTimeFormat("es-CL", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date());
-
   const attentionItems = [
     {
       label: "Sesiones comprometidas",
@@ -483,9 +476,6 @@ export default function OwnerDashboard() {
               seguridad, contenido y actividad de la plataforma.
             </p>
 
-            <p className="vn-owner-muted mt-3 text-xs text-slate-500">
-              {currentDate}
-            </p>
           </div>
 
           <div className="vn-owner-hero-actions flex flex-wrap gap-3">
