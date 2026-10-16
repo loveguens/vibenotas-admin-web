@@ -631,3 +631,24 @@ html.dark .vn-admin .vn-admin-recent-role-admin { color: #f4c95d; }
   border-color: color-mix(in srgb, var(--vn-coral) 40%, var(--vn-line));
   box-shadow: var(--vn-elevation);
 }
+
+/* Admin: productividad, comunicación y actividad diaria sin violeta decorativo. */
+.vn-admin .vn-regular-dashboard .vn-admin-progress-card {
+  background: var(--vn-coral-soft);
+  border-color: color-mix(in srgb, var(--vn-coral) 26%, var(--vn-line));
+}
+.vn-admin .vn-regular-dashboard .vn-admin-progress-card p {
+  color: var(--vn-coral-strong);
+}
+.vn-admin .vn-regular-dashboard .vn-admin-reminder-row {
+  border-color: var(--vn-line);
+  background: var(--vn-surface);
+}
+.vn-admin .vn-regular-dashboard .vn-admin-reminder-row svg,
+.vn-admin .vn-regular-dashboard .vn-admin-reminder-row span {
+  color: var(--vn-coral-strong);
+}
+.vn-admin .vn-regular-dashboard .vn-admin-chat-count,
+.vn-admin .vn-regular-dashboard .vn-admin-today-icon {
+  color: var(--vn-coral-strong);
+}
