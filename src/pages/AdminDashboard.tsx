@@ -444,7 +444,7 @@ function MetricCard({
 }: MetricCardProps) {
   return (
     <article
-      className={`rounded-3xl border p-5 shadow-sm transition hover:-translate-y-0.5 ${
+      className={`vn-dashboard-metric rounded-3xl border p-5 shadow-sm transition hover:-translate-y-0.5 ${
         warning
           ? "border-amber-200 bg-amber-50/80 dark:border-amber-500/20 dark:bg-amber-500/[0.07]"
           : "border-slate-200 bg-white dark:border-white/10 dark:bg-slate-800/80"
@@ -663,17 +663,17 @@ export default function AdminDashboard() {
   }).format(new Date());
 
   return (
-    <section className="space-y-8 pb-8">
+    <section className="vn-dashboard vn-regular-dashboard space-y-8 pb-8">
       {/* CABECERA */}
 
-      <article className="relative overflow-hidden rounded-3xl border border-violet-200 bg-gradient-to-br from-violet-100 via-white to-slate-100 p-6 shadow-sm dark:border-violet-400/15 dark:from-violet-500/20 dark:via-[#1E293B] dark:to-[#0F172A] md:p-8">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-fuchsia-300/30 blur-3xl dark:bg-fuchsia-500/20" />
+      <article className="vn-dashboard-hero relative overflow-hidden rounded-3xl border border-violet-200 bg-gradient-to-br from-violet-100 via-white to-slate-100 p-6 shadow-sm dark:border-violet-400/15 dark:from-violet-500/20 dark:via-[#1E293B] dark:to-[#0F172A] md:p-8">
+        <div className="vn-dashboard-hero-decor pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-fuchsia-300/30 blur-3xl dark:bg-fuchsia-500/20" />
 
         <div className="pointer-events-none absolute bottom-0 left-1/3 h-36 w-36 rounded-full bg-violet-300/30 blur-3xl dark:bg-violet-500/20" />
 
-        <div className="relative flex flex-col gap-7 xl:flex-row xl:items-center xl:justify-between">
+        <div className="vn-dashboard-hero-layout relative grid items-center gap-6">
           <div className="max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-violet-700 dark:text-violet-300">
+            <p className="vn-dashboard-hero-kicker text-xs font-bold uppercase tracking-[0.2em] text-violet-700 dark:text-violet-300">
               Administración de VibeNotas
             </p>
 
@@ -695,11 +695,11 @@ export default function AdminDashboard() {
             </p>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 xl:w-[430px]">
+          <div className="vn-dashboard-hero-actions grid gap-3 sm:grid-cols-2 xl:w-[430px]">
             <button
               type="button"
               onClick={() => navigate("/admin/users")}
-              className="group flex items-center justify-between rounded-2xl border border-violet-200 bg-violet-50 p-4 text-left transition hover:-translate-y-1 hover:bg-violet-100 dark:border-violet-300/15 dark:bg-violet-500/15 dark:hover:bg-violet-500/25"
+              className="vn-dashboard-primary group flex items-center justify-between rounded-2xl border border-violet-200 bg-violet-50 p-4 text-left transition hover:-translate-y-1 hover:bg-violet-100 dark:border-violet-300/15 dark:bg-violet-500/15 dark:hover:bg-violet-500/25"
             >
               <div>
                 <p className="text-sm font-bold text-slate-950 dark:text-white">
@@ -720,7 +720,7 @@ export default function AdminDashboard() {
             <button
               type="button"
               onClick={() => void loadDashboard()}
-              className="group flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 p-4 text-left transition hover:-translate-y-1 hover:bg-white dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
+              className="vn-dashboard-secondary group flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 p-4 text-left transition hover:-translate-y-1 hover:bg-white dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
             >
               <div>
                 <p className="text-sm font-bold text-slate-950 dark:text-white">
@@ -881,7 +881,7 @@ export default function AdminDashboard() {
 
       {/* USUARIOS QUE REQUIEREN ATENCIÓN */}
 
-      <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
+      <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
         <div>
           <p className="text-sm font-semibold text-amber-700 dark:text-amber-300">
             Gestión de usuarios
@@ -973,7 +973,7 @@ export default function AdminDashboard() {
       {/* PRODUCTIVIDAD + COMUNICACIÓN */}
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
+        <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
           <div>
             <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
               Productividad
@@ -1053,7 +1053,7 @@ export default function AdminDashboard() {
           </div>
         </article>
 
-        <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
+        <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
           <div>
             <p className="text-sm font-semibold text-sky-700 dark:text-sky-300">
               Comunicación
@@ -1146,7 +1146,7 @@ export default function AdminDashboard() {
 
       {/* ACTIVIDAD DE HOY */}
 
-      <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
+      <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
         <div>
           <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">
             VibeNotas hoy
@@ -1226,7 +1226,7 @@ export default function AdminDashboard() {
 
       {/* USUARIOS RECIENTES */}
 
-      <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
+      <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="text-sm font-semibold text-sky-700 dark:text-sky-300">
