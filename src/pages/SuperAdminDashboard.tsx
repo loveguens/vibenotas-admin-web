@@ -734,15 +734,15 @@ export default function SuperAdminDashboard() {
   }).format(new Date());
 
   return (
-    <section className="space-y-8 pb-8 text-slate-900 dark:text-white">
+    <section className="vn-dashboard vn-superadmin-dashboard space-y-8 pb-8 text-slate-900 dark:text-white">
       {/* CABECERA */}
 
-      <article className="relative overflow-hidden rounded-3xl border border-violet-200 bg-gradient-to-br from-violet-100 via-white to-slate-50 p-6 shadow-xl shadow-slate-200/70 dark:border-violet-400/15 dark:from-violet-500/20 dark:via-[#1E293B] dark:to-[#0F172A] dark:shadow-violet-950/30 md:p-8">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-fuchsia-300/25 blur-3xl dark:bg-fuchsia-500/20" />
+      <article className="vn-dashboard-hero relative overflow-hidden rounded-3xl border border-violet-200 bg-gradient-to-br from-violet-100 via-white to-slate-50 p-6 shadow-xl shadow-slate-200/70 dark:border-violet-400/15 dark:from-violet-500/20 dark:via-[#1E293B] dark:to-[#0F172A] dark:shadow-violet-950/30 md:p-8">
+        <div className="vn-dashboard-hero-decor pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-fuchsia-300/25 blur-3xl dark:bg-fuchsia-500/20" />
 
-        <div className="relative flex flex-col gap-7 xl:flex-row xl:items-center xl:justify-between">
+        <div className="vn-dashboard-hero-layout relative grid items-center gap-6">
           <div className="max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-violet-700 dark:text-violet-300">
+            <p className="vn-dashboard-hero-kicker text-xs font-bold uppercase tracking-[0.2em] text-violet-700 dark:text-violet-300">
               Control global de VibeNotas
             </p>
 
@@ -765,11 +765,11 @@ export default function SuperAdminDashboard() {
             </p>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 xl:w-[430px]">
+          <div className="vn-dashboard-hero-actions grid gap-3 sm:grid-cols-2 xl:w-[430px]">
             <button
               type="button"
               onClick={() => navigate("/superadmin/administrators")}
-              className="group flex items-center justify-between rounded-2xl border border-violet-200 bg-violet-100/80 p-4 text-left transition hover:-translate-y-1 hover:bg-violet-200/80 dark:border-violet-300/15 dark:bg-violet-500/15 dark:hover:bg-violet-500/25"
+              className="vn-dashboard-primary group flex items-center justify-between rounded-2xl border border-violet-200 bg-violet-100/80 p-4 text-left transition hover:-translate-y-1 hover:bg-violet-200/80 dark:border-violet-300/15 dark:bg-violet-500/15 dark:hover:bg-violet-500/25"
             >
               <div>
                 <p className="text-sm font-bold">Administradores</p>
@@ -788,7 +788,7 @@ export default function SuperAdminDashboard() {
             <button
               type="button"
               onClick={() => navigate("/superadmin/security")}
-              className="group flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 p-4 text-left transition hover:-translate-y-1 hover:bg-slate-100 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
+              className="vn-dashboard-secondary group flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 p-4 text-left transition hover:-translate-y-1 hover:bg-slate-100 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
             >
               <div>
                 <p className="text-sm font-bold">Seguridad</p>
@@ -850,7 +850,7 @@ export default function SuperAdminDashboard() {
       {/* PLATAFORMA */}
 
       <div>
-        <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">
+        <p className="vn-dashboard-kicker text-sm font-semibold text-violet-700 dark:text-violet-300">
           Plataforma
         </p>
 
@@ -926,7 +926,7 @@ export default function SuperAdminDashboard() {
       {/* SEGURIDAD */}
 
       <div>
-        <p className="text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">
+        <p className="vn-dashboard-kicker text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">
           Seguridad y administración
         </p>
 
@@ -1012,8 +1012,8 @@ export default function SuperAdminDashboard() {
       {/* ROLES Y USUARIOS */}
 
       <div className="grid gap-6 xl:grid-cols-[1fr_1.15fr]">
-        <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
-          <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">
+        <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
+          <p className="vn-dashboard-kicker text-sm font-semibold text-violet-700 dark:text-violet-300">
             Distribución
           </p>
 
@@ -1053,7 +1053,7 @@ export default function SuperAdminDashboard() {
 
                   <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-500"
+                      className="vn-dashboard-progress h-full rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-500"
                       style={{
                         width: `${Math.min(percentage, 100)}%`,
                       }}
@@ -1065,10 +1065,10 @@ export default function SuperAdminDashboard() {
           </div>
         </article>
 
-        <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
+        <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-sky-700 dark:text-sky-300">
+              <p className="vn-dashboard-kicker text-sm font-semibold text-sky-700 dark:text-sky-300">
                 Identidad
               </p>
 
@@ -1139,10 +1139,10 @@ export default function SuperAdminDashboard() {
 
       {/* AUDITORÍA */}
 
-      <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
+      <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">
+            <p className="vn-dashboard-kicker text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">
               Seguridad
             </p>
 
@@ -1201,10 +1201,10 @@ export default function SuperAdminDashboard() {
 
       {/* ACCIONES */}
 
-      <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
+      <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">
+            <p className="vn-dashboard-kicker text-sm font-semibold text-violet-700 dark:text-violet-300">
               Acciones rápidas
             </p>
 
