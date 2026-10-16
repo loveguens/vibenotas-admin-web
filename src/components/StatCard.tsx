@@ -46,14 +46,14 @@ export default function StatCard({
           absolute -right-10 -top-10
           h-28 w-28
           rounded-full
-          bg-violet-200/50
+          bg-orange-100/40
           blur-2xl
           transition
 
-          group-hover:bg-violet-300/60
+          group-hover:bg-orange-100/60
 
-          dark:bg-violet-500/10
-          dark:group-hover:bg-violet-500/20
+          dark:bg-orange-500/5
+          dark:group-hover:bg-orange-500/10
         "
       />
 
@@ -146,7 +146,7 @@ export default function StatCard({
 
         <div
           className="
-            flex h-7
+            vn-admin-stat-card-bars flex h-7
             items-end gap-1
             opacity-80
             dark:opacity-100
