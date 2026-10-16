@@ -457,7 +457,7 @@ export default function OwnerDashboard() {
       <article className="vn-owner-hero relative overflow-hidden rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 via-white to-violet-50 p-6 shadow-lg shadow-slate-200/50 dark:border-amber-400/15 dark:from-amber-500/10 dark:via-[#172033] dark:to-violet-950/30 dark:shadow-black/20 md:p-8">
         <div className="vn-owner-hero-decor pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-amber-300/20 blur-3xl dark:bg-amber-500/10" />
 
-        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="vn-owner-hero-layout relative grid items-center gap-6">
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300 bg-amber-100 px-3 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
@@ -478,17 +478,17 @@ export default function OwnerDashboard() {
               Hola, {ownerName}
             </h1>
 
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">
+            <p className="vn-owner-muted mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">
               Control global de VibeNotas. Supervisa usuarios, administradores,
               seguridad, contenido y actividad de la plataforma.
             </p>
 
-            <p className="mt-3 text-xs capitalize text-slate-500">
+            <p className="vn-owner-muted mt-3 text-xs text-slate-500">
               {currentDate}
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="vn-owner-hero-actions flex flex-wrap gap-3">
             <button
               type="button"
               onClick={() => navigate("/owner/administrators")}
