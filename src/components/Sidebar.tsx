@@ -618,7 +618,7 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
             onClick={cerrarSesion}
             title={collapsed ? "Cerrar sesión" : undefined}
             className="
-              group flex min-h-12
+              vn-admin-logout group flex min-h-12
               w-full items-center
               gap-3 rounded-2xl
               px-3 py-2.5
