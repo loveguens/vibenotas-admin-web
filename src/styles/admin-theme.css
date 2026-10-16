@@ -362,3 +362,61 @@ html.dark .vn-admin .vn-dashboard-hero {
 @media (max-width: 480px) {
   .vn-admin .vn-dashboard-hero-actions { grid-template-columns: minmax(0,1fr); }
 }
+
+/* Super Admin: acciones con contraste correcto en ambos temas. */
+.vn-admin .vn-superadmin-quick-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 12px;
+  min-height: 112px;
+  color: var(--vn-ink);
+  background: var(--vn-coral-soft);
+  border-color: color-mix(in srgb, var(--vn-coral) 25%, var(--vn-line));
+}
+.vn-admin .vn-superadmin-quick-action:nth-child(2),
+.vn-admin .vn-superadmin-quick-action:nth-child(3),
+.vn-admin .vn-superadmin-quick-action:nth-child(4) {
+  background: var(--vn-surface-hover);
+  border-color: var(--vn-line);
+}
+.vn-admin .vn-superadmin-quick-action:hover {
+  border-color: var(--vn-coral);
+  background: color-mix(in srgb, var(--vn-coral-soft) 65%, var(--vn-surface));
+}
+.vn-admin .vn-superadmin-quick-action:focus-visible {
+  outline: 3px solid var(--vn-coral);
+  outline-offset: 3px;
+}
+.vn-admin .vn-superadmin-quick-action p {
+  color: var(--vn-ink);
+  margin-top: 0;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.vn-admin .vn-superadmin-quick-action svg,
+.vn-admin .vn-superadmin-quick-plus {
+  color: var(--vn-coral-strong);
+}
+.vn-admin .vn-superadmin-avatar {
+  background: var(--vn-coral);
+  color: #fff;
+}
+.vn-admin .vn-superadmin-role-count {
+  color: var(--vn-coral-strong);
+}
+.vn-admin .vn-superadmin-role-track {
+  background: var(--vn-surface-hover);
+}
+.vn-admin .vn-superadmin-recent-user {
+  transition: background .18s, border-color .18s;
+}
+.vn-admin .vn-superadmin-recent-user:hover {
+  border-color: color-mix(in srgb, var(--vn-coral) 30%, var(--vn-line));
+  background: var(--vn-surface-hover);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vn-admin .vn-superadmin-quick-action,
+  .vn-admin .vn-superadmin-recent-user { transition: none; }
+}
