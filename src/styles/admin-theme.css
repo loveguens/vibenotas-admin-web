@@ -420,3 +420,45 @@ html.dark .vn-admin .vn-dashboard-hero {
   .vn-admin .vn-superadmin-quick-action,
   .vn-admin .vn-superadmin-recent-user { transition: none; }
 }
+
+/* Super Admin: sesiones y jerarquía de usuarios recientes. */
+.vn-admin .vn-superadmin-sessions {
+  background: var(--vn-coral-soft);
+  border-color: color-mix(in srgb, var(--vn-coral) 22%, var(--vn-line));
+  color: var(--vn-ink);
+}
+.vn-admin .vn-superadmin-sessions svg,
+.vn-admin .vn-superadmin-session-count {
+  color: var(--vn-coral-strong);
+}
+.vn-admin .vn-superadmin-recent-identity { flex: 1; min-width: 0; }
+.vn-admin .vn-superadmin-recent-meta { flex-shrink: 0; }
+.vn-admin .vn-superadmin-recent-badges { flex-wrap: wrap; justify-content: end; }
+.vn-admin .vn-superadmin-badge-owner {
+  color: var(--vn-coral-strong);
+  background: var(--vn-coral-soft);
+  border-color: color-mix(in srgb, var(--vn-coral) 24%, var(--vn-line));
+}
+.vn-admin .vn-superadmin-badge-admin {
+  color: #b48025;
+  background: rgba(244,201,93,.12);
+  border-color: rgba(244,201,93,.28);
+}
+html.dark .vn-admin .vn-superadmin-badge-admin { color: #f4c95d; }
+.vn-admin .vn-superadmin-badge-user {
+  color: var(--vn-muted);
+  background: var(--vn-surface-hover);
+  border-color: var(--vn-line);
+}
+@media (max-width: 640px) {
+  .vn-admin .vn-superadmin-recent-user {
+    flex-wrap: wrap;
+  }
+  .vn-admin .vn-superadmin-recent-meta {
+    display: block;
+    width: 100%;
+    padding-left: 52px;
+    text-align: left;
+  }
+  .vn-admin .vn-superadmin-recent-badges { justify-content: start; }
+}
