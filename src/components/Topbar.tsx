@@ -661,9 +661,11 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
 
             <div className="min-w-0">
               <p className="truncate vn-admin-topbar-caption text-xs font-semibold uppercase tracking-[0.16em] text-violet-400">
-                {role === "superadmin"
-                  ? "Panel Super Admin"
-                  : "Panel Administrador"}
+                {role === "owner"
+                  ? "Panel Owner"
+                  : role === "superadmin"
+                    ? "Panel Super Admin"
+                    : "Panel Administrador"}
               </p>
 
               <h2
@@ -953,7 +955,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                   </p>
 
                   <p className="vn-admin-topbar-profile-role text-xs text-violet-400">
-                    {role === "superadmin" ? "Acceso total" : "Administrador"}
+                    {role === "owner" ? "Owner" : role === "superadmin" ? "Acceso total" : "Administrador"}
                   </p>
                 </div>
 
