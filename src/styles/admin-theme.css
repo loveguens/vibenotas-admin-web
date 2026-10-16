@@ -595,3 +595,39 @@ html.dark .vn-admin .vn-admin-recent-role-admin { color: #f4c95d; }
 @media (prefers-reduced-motion: reduce) {
   .vn-admin .vn-admin-recent-user { transition: none; }
 }
+
+/* Admin: métricas homogéneas y resúmenes sin acentos violetas. */
+.vn-admin .vn-regular-dashboard .vn-dashboard-metric {
+  border-color: var(--vn-line);
+  background: var(--vn-surface);
+}
+.vn-admin .vn-regular-dashboard .vn-admin-metric-icon,
+.vn-admin .vn-regular-dashboard .vn-admin-summary-no-reports-icon {
+  border-color: transparent;
+  background: var(--vn-icon-bg);
+  color: var(--vn-coral-strong);
+}
+.vn-admin .vn-regular-dashboard .vn-admin-metric-change,
+.vn-admin .vn-regular-dashboard .vn-admin-summary-no-reports-count {
+  color: var(--vn-coral-strong);
+}
+.vn-admin .vn-regular-dashboard .vn-admin-metric-title,
+.vn-admin .vn-regular-dashboard .vn-admin-metric-description {
+  color: var(--vn-muted);
+}
+.vn-admin .vn-regular-dashboard .vn-admin-summary-messages,
+.vn-admin .vn-regular-dashboard .vn-admin-summary-no-reports {
+  border-color: color-mix(in srgb, var(--vn-coral) 20%, var(--vn-line));
+  background: var(--vn-surface);
+}
+.vn-admin .vn-regular-dashboard .vn-admin-summary-messages-icon {
+  background: var(--vn-icon-bg);
+  color: var(--vn-coral-strong);
+}
+.vn-admin .vn-regular-dashboard .vn-admin-summary-messages-count {
+  color: var(--vn-coral-strong);
+}
+.vn-admin .vn-regular-dashboard .vn-dashboard-metric:hover {
+  border-color: color-mix(in srgb, var(--vn-coral) 40%, var(--vn-line));
+  box-shadow: var(--vn-elevation);
+}
