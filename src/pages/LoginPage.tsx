@@ -2,6 +2,7 @@
 import { Link, useNavigate, type NavigateFunction } from "react-router-dom";
 import { Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import axios from "axios";
+import "./LoginPage.css";
 
 import api, { clearClientSession, setAccessToken } from "../services/api";
 
@@ -288,108 +289,114 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-10">
-      <section className="w-full max-w-md rounded-3xl bg-white p-8 shadow-xl shadow-slate-200/60">
-        <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-600 text-xl font-bold text-white">
-            V
+    <main className="vn-login">
+      <div className="vn-login__shell">
+        <aside className="vn-login__feature" aria-label="Presentación VibeNotas">
+          <div className="vn-login__brand">
+            <img src="/vibenotas-logo.png" alt="" className="vn-login__logo" />
+            <div>
+              <p className="vn-login__brand-name">VibeNotas</p>
+              <p className="vn-login__brand-caption">ADMINISTRACIÓN</p>
+            </div>
           </div>
-
-          <h1 className="text-2xl font-bold text-slate-900">Panel VibeNotas</h1>
-
-          <p className="mt-2 text-sm text-slate-500">
-            Accede al panel administrativo.
+          <div className="vn-login__feature-copy">
+            <span className="vn-login__eyebrow">✦ TU ESPACIO DE CONTROL</span>
+            <h2>Las ideas merecen un <span>buen hogar.</span></h2>
+            <p>
+              Administra tu comunidad, organiza el contenido y acompaña el
+              crecimiento de VibeNotas.
+            </p>
+          </div>
+          <div className="vn-login__feature-footer">
+            <span className="vn-login__status-dot" aria-hidden="true" />
+            Acceso reservado al equipo administrativo
+          </div>
+        </aside>
+        <section className="vn-login__form-panel" aria-labelledby="vn-login-heading">
+          <div className="vn-login__mobile-brand">
+            <img src="/vibenotas-logo.png" alt="" className="vn-login__logo" />
+            <span>VibeNotas</span>
+          </div>
+          <p className="vn-login__form-eyebrow">PANEL ADMINISTRATIVO</p>
+          <h1 id="vn-login-heading">¡Bienvenido de nuevo!</h1>
+          <p className="vn-login__subtitle">
+            Ingresa tus credenciales para continuar.
           </p>
-        </div>
 
-        {error && (
-          <div
-            role="alert"
-            className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-          >
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700">
-              Correo o nombre de usuario
-            </span>
-
-            <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 transition focus-within:border-violet-500 focus-within:ring-4 focus-within:ring-violet-100">
-              <Mail size={18} className="shrink-0 text-slate-400" />
-
-              <input
-                type="text"
-                name="identifier"
-                value={identifier}
-                onChange={(event) => setIdentifier(event.target.value)}
-                placeholder="Correo o nombre de usuario"
-                autoComplete="username"
-                className="w-full bg-transparent text-slate-800 outline-none placeholder:text-slate-400"
-                disabled={loading}
-                maxLength={320}
-                required
-              />
+          {error && (
+            <div role="alert" className="vn-login__error">
+              {error}
             </div>
-          </label>
+          )}
 
-          <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700">
-              Contraseña
-            </span>
-
-            <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 transition focus-within:border-violet-500 focus-within:ring-4 focus-within:ring-violet-100">
-              <LockKeyhole size={18} className="shrink-0 text-slate-400" />
-
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                placeholder="Ingresa tu contraseña"
-                autoComplete="current-password"
-                className="w-full bg-transparent text-slate-800 outline-none placeholder:text-slate-400"
-                disabled={loading}
-                required
-              />
-
-              <button
-                type="button"
-                onClick={() => setShowPassword((currentValue) => !currentValue)}
-                disabled={loading}
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-slate-400 transition hover:bg-violet-50 hover:text-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
-                aria-label={
-                  showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
-                }
-                title={
-                  showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
-                }
-              >
-                {showPassword ? <EyeOff size={19} /> : <Eye size={19} />}
-              </button>
+          <form onSubmit={handleSubmit} className="vn-login__form">
+            <div>
+              <label htmlFor="vn-login-identifier" className="vn-login__field-label">
+                Correo electrónico o usuario
+              </label>
+              <div className="vn-login__input-wrap">
+                <Mail size={19} className="vn-login__field-icon" aria-hidden="true" />
+                <input
+                  id="vn-login-identifier"
+                  type="text"
+                  name="identifier"
+                  value={identifier}
+                  onChange={(event) => setIdentifier(event.target.value)}
+                  placeholder="ejemplo@correo.com o tu usuario"
+                  autoComplete="username"
+                  className="vn-login__input"
+                  disabled={loading}
+                  maxLength={320}
+                  required
+                />
+              </div>
             </div>
-          </label>
 
-          <div className="flex justify-end">
-            <Link
-              to="/forgot-password"
-              className="text-sm font-semibold text-violet-700 underline decoration-violet-300 underline-offset-4 transition hover:text-violet-900"
-            >
-              ¿Olvidaste tu contraseña?
-            </Link>
-          </div>
+            <div>
+              <label htmlFor="vn-login-password" className="vn-login__field-label">
+                Contraseña
+              </label>
+              <div className="vn-login__input-wrap">
+                <LockKeyhole size={19} className="vn-login__field-icon" aria-hidden="true" />
+                <input
+                  id="vn-login-password"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  placeholder="Escribe tu contraseña"
+                  autoComplete="current-password"
+                  className="vn-login__input"
+                  disabled={loading}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((currentValue) => !currentValue)}
+                  disabled={loading}
+                  className="vn-login__visibility"
+                  aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  aria-pressed={showPassword}
+                  aria-controls="vn-login-password"
+                >
+                  {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                </button>
+              </div>
+            </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-2xl bg-violet-600 px-4 py-4 font-bold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {loading ? "Ingresando..." : "Iniciar sesión"}
-          </button>
-        </form>
-      </section>
+            <div className="vn-login__actions">
+              <Link to="/forgot-password" className="vn-login__forgot">
+                ¿Olvidaste tu contraseña?
+              </Link>
+            </div>
+            <button type="submit" disabled={loading} className="vn-login__submit">
+              {loading ? "Ingresando..." : "Iniciar sesión"}
+            </button>
+          </form>
+          <p className="vn-login__legal">Acceso seguro · VibeNotas Admin</p>
+        </section>
+      </div>
     </main>
   );
 }
