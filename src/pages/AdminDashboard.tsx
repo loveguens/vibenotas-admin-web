@@ -466,7 +466,7 @@ function MetricCard({
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+          <p className="vn-admin-metric-title text-sm font-medium text-slate-500 dark:text-slate-400">
             {title}
           </p>
 
@@ -479,14 +479,14 @@ function MetricCard({
           className={`rounded-2xl border p-3 ${
             warning
               ? "border-amber-200 bg-amber-100 text-amber-700 dark:border-amber-400/20 dark:bg-amber-500/10 dark:text-amber-300"
-              : "border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-300"
+              : "vn-admin-metric-icon border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-300"
           }`}
         >
           {icon}
         </div>
       </div>
 
-      <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
+      <p className="vn-admin-metric-description mt-3 text-sm text-slate-500 dark:text-slate-400">
         {description}
       </p>
 
@@ -495,7 +495,7 @@ function MetricCard({
           className={`mt-4 text-xs font-semibold ${
             warning
               ? "text-amber-700 dark:text-amber-300"
-              : "text-violet-700 dark:text-violet-300"
+              : "vn-admin-metric-change text-violet-700 dark:text-violet-300"
           }`}
         >
           {change}
@@ -671,13 +671,6 @@ export default function AdminDashboard() {
         )
       : 0;
 
-  const currentDate = new Intl.DateTimeFormat("es-CL", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date());
-
   return (
     <section className="vn-dashboard vn-regular-dashboard space-y-8 pb-8">
       {/* CABECERA */}
@@ -702,13 +695,6 @@ export default function AdminDashboard() {
               VibeNotas desde un solo lugar.
             </p>
 
-            <p className="mt-4 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-              <Clock3
-                size={16}
-                className="text-violet-600 dark:text-violet-300"
-              />
-              {currentDate}
-            </p>
           </div>
 
           <div className="vn-dashboard-hero-actions grid gap-3 sm:grid-cols-2 xl:w-[430px]">
@@ -776,8 +762,8 @@ export default function AdminDashboard() {
           </div>
         </article>
 
-        <article className="flex items-center gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 dark:border-sky-500/15 dark:bg-sky-500/[0.07]">
-          <div className="rounded-xl bg-sky-100 p-2.5 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300">
+        <article className="vn-admin-summary-messages flex items-center gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 dark:border-sky-500/15 dark:bg-sky-500/[0.07]">
+          <div className="vn-admin-summary-messages-icon rounded-xl bg-sky-100 p-2.5 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300">
             <MessageCircle size={20} />
           </div>
 
@@ -786,7 +772,7 @@ export default function AdminDashboard() {
               Mensajes de hoy
             </p>
 
-            <p className="mt-0.5 text-xs text-sky-700 dark:text-sky-300">
+            <p className="vn-admin-summary-messages-count mt-0.5 text-xs text-sky-700 dark:text-sky-300">
               {communication.messagesToday} mensajes enviados
             </p>
           </div>
@@ -796,14 +782,14 @@ export default function AdminDashboard() {
           className={`flex items-center gap-3 rounded-2xl border p-4 ${
             communication.pendingReports > 0
               ? "border-amber-200 bg-amber-50 dark:border-amber-500/15 dark:bg-amber-500/[0.07]"
-              : "border-violet-200 bg-violet-50 dark:border-violet-500/15 dark:bg-violet-500/[0.07]"
+              : "vn-admin-summary-no-reports border-violet-200 bg-violet-50 dark:border-violet-500/15 dark:bg-violet-500/[0.07]"
           }`}
         >
           <div
             className={`rounded-xl p-2.5 ${
               communication.pendingReports > 0
                 ? "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300"
-                : "bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300"
+                : "vn-admin-summary-no-reports-icon bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300"
             }`}
           >
             <AlertTriangle size={20} />
@@ -818,7 +804,7 @@ export default function AdminDashboard() {
               className={`mt-0.5 text-xs ${
                 communication.pendingReports > 0
                   ? "text-amber-700 dark:text-amber-300"
-                  : "text-violet-700 dark:text-violet-300"
+                  : "vn-admin-summary-no-reports-count text-violet-700 dark:text-violet-300"
               }`}
             >
               {communication.pendingReports} requieren revisión
