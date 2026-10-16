@@ -462,3 +462,84 @@ html.dark .vn-admin .vn-superadmin-badge-admin { color: #f4c95d; }
   }
   .vn-admin .vn-superadmin-recent-badges { justify-content: start; }
 }
+
+/* Menú de navegación: mostrar más opciones sin comprometer los objetivos táctiles. */
+.vn-admin .vn-admin-sidebar-header {
+  min-height: 68px;
+}
+.vn-admin .vn-admin-sidebar nav {
+  min-height: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+.vn-admin .vn-admin-sidebar nav:hover,
+.vn-admin .vn-admin-sidebar nav:focus-within {
+  scrollbar-color: color-mix(in srgb, var(--vn-muted) 42%, transparent) transparent;
+}
+.vn-admin .vn-admin-sidebar nav::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+.vn-admin .vn-admin-sidebar nav:hover::-webkit-scrollbar-thumb,
+.vn-admin .vn-admin-sidebar nav:focus-within::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--vn-muted) 42%, transparent);
+}
+.vn-admin .vn-admin-sidebar nav .vn-admin-nav-link {
+  min-height: 44px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-radius: 13px;
+  gap: 9px;
+}
+.vn-admin .vn-admin-sidebar nav .vn-admin-nav-icon {
+  width: 34px;
+  height: 34px;
+}
+.vn-admin .vn-admin-sidebar .vn-admin-section-label {
+  margin-bottom: 5px;
+  padding-left: 10px;
+}
+.vn-admin .vn-admin-sidebar .vn-admin-sidebar-separator {
+  margin-top: 11px;
+  margin-bottom: 11px;
+}
+.vn-admin .vn-admin-sidebar-footer {
+  padding: 8px 10px;
+}
+.vn-admin .vn-admin-sidebar-footer .vn-admin-bottom-link,
+.vn-admin .vn-admin-sidebar-footer .vn-admin-logout {
+  min-height: 44px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-radius: 13px;
+}
+.vn-admin .vn-admin-sidebar-footer .vn-admin-logout:focus-visible {
+  outline: 2px solid var(--vn-coral);
+  outline-offset: 2px;
+}
+.vn-admin .vn-admin-sidebar .vn-admin-nav-link:hover .vn-admin-nav-icon,
+.vn-admin .vn-admin-sidebar .vn-admin-bottom-link:hover svg {
+  color: var(--vn-coral-strong);
+}
+/* Mantener centrados los iconos al contraer la barra de 86 px. */
+@media (min-width: 1024px) {
+  .vn-admin .vn-admin-sidebar[data-collapsed="true"] nav {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .vn-admin .vn-admin-sidebar[data-collapsed="true"] .vn-admin-sidebar-footer {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .vn-admin .vn-admin-sidebar[data-collapsed="true"] .vn-admin-sidebar-footer .vn-admin-logout {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+@media (max-height: 720px) {
+  .vn-admin .vn-admin-sidebar-header { min-height: 64px; }
+  .vn-admin .vn-admin-sidebar nav { padding-top: 7px; padding-bottom: 7px; }
+  .vn-admin .vn-admin-sidebar-footer { padding-top: 6px; padding-bottom: 6px; }
+}
