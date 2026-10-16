@@ -21,20 +21,21 @@
   color: var(--vn-ink);
 }
 html.dark .vn-admin {
-  --vn-bg: #141a18;
-  --vn-sidebar: #202624;
-  --vn-topbar: rgba(32,38,36,.94);
-  --vn-surface: #222a26;
-  --vn-surface-hover: #2e3530;
-  --vn-line: #414944;
-  --vn-ink: #f5f1e8;
-  --vn-muted: #b0b9b2;
+  /* Grafito neutro: sin tinte verde ni fondos azul marino. */
+  --vn-bg: #121416;
+  --vn-sidebar: #1b1e21;
+  --vn-topbar: rgba(25, 28, 31, .95);
+  --vn-surface: #202327;
+  --vn-surface-hover: #2a2d31;
+  --vn-line: #393d42;
+  --vn-ink: #f7f3ed;
+  --vn-muted: #bec1c4;
   --vn-coral: #f4775f;
-  --vn-coral-strong: #ff9b86;
-  --vn-coral-soft: #402e2b;
+  --vn-coral-strong: #ff927c;
+  --vn-coral-soft: #3c2928;
   --vn-petroleum: #a7cec1;
-  --vn-icon-bg: #402e2b;
-  --vn-elevation: 0 16px 40px rgba(0,0,0,.19);
+  --vn-icon-bg: #3c2928;
+  --vn-elevation: 0 16px 40px rgba(0,0,0,.24);
 }
 .vn-admin .vn-admin-sidebar {
   background: var(--vn-sidebar);
@@ -163,4 +164,53 @@ html.dark .vn-admin {
 }
 @media (prefers-reduced-motion: reduce) {
   .vn-admin .vn-admin-stat-card { transition: none; }
+}
+
+/* Pequeñas barras decorativas de las métricas, sin violeta. */
+.vn-admin .vn-admin-stat-card-bars span {
+  background: var(--vn-coral);
+}
+.vn-admin .vn-admin-stat-card-bars span:nth-child(odd) { opacity: .48; }
+
+/* Dashboard Owner: conservar contenido y operaciones, actualizar solo la piel. */
+.vn-admin .vn-owner-hero {
+  border-color: color-mix(in srgb, var(--vn-coral) 27%, var(--vn-line));
+  background: linear-gradient(115deg, #fffdf8 3%, #fff6ef 75%, #fae5db 100%);
+  box-shadow: var(--vn-elevation);
+  color: var(--vn-ink);
+}
+html.dark .vn-admin .vn-owner-hero {
+  background: linear-gradient(120deg, #25282c 0%, #222529 55%, #30272a 100%);
+  border-color: #4a3b3a;
+}
+.vn-admin .vn-owner-hero-decor {
+  background: radial-gradient(circle, rgba(240, 100, 73, .12), transparent 70%);
+}
+.vn-admin .vn-owner-primary-action {
+  background: #f06449;
+  color: #fff;
+  box-shadow: 0 10px 23px rgba(240, 100, 73, .14);
+}
+.vn-admin .vn-owner-primary-action:hover { background: #d95139; color: #fff; }
+.vn-admin .vn-owner-secondary-action {
+  background: var(--vn-surface);
+  color: var(--vn-ink);
+  border-color: var(--vn-line);
+}
+.vn-admin .vn-owner-secondary-action:hover { background: var(--vn-surface-hover); }
+.vn-admin .vn-owner-surface {
+  background: var(--vn-surface);
+  color: var(--vn-ink);
+  border-color: var(--vn-line);
+  box-shadow: var(--vn-elevation);
+}
+.vn-admin .vn-owner-section-accent { color: var(--vn-coral-strong); }
+.vn-admin .vn-owner-link {
+  color: var(--vn-coral-strong);
+}
+.vn-admin .vn-owner-link:hover { background: var(--vn-coral-soft); }
+.vn-admin .vn-owner-muted { color: var(--vn-muted); }
+html.dark .vn-admin .vn-owner-hero h1,
+html.dark .vn-admin .vn-owner-surface h2 {
+  color: var(--vn-ink);
 }
