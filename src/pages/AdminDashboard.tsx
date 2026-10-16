@@ -506,7 +506,7 @@ function MetricCard({
 }
 
 function UserAvatar({ user }: UserAvatarProps) {
-  const [imageFailed, setImageFailed] = useState(false);
+  const [failedAvatarUrl, setFailedAvatarUrl] = useState<string | null>(null);
 
   const displayName = getUserDisplayName(user);
 
@@ -515,19 +515,15 @@ function UserAvatar({ user }: UserAvatarProps) {
     [user.avatarUrl],
   );
 
-  useEffect(() => {
-    setImageFailed(false);
-  }, [avatarUrl]);
-
   return (
     <div className="vn-admin-recent-avatar flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-xs font-extrabold text-white">
-      {avatarUrl && !imageFailed ? (
+      {avatarUrl && failedAvatarUrl !== avatarUrl ? (
         <img
           src={avatarUrl}
           alt={`Foto de ${displayName}`}
           className="h-full w-full object-cover"
           loading="lazy"
-          onError={() => setImageFailed(true)}
+          onError={() => setFailedAvatarUrl(avatarUrl)}
         />
       ) : (
         getInitials(displayName)
@@ -605,7 +601,13 @@ export default function AdminDashboard() {
   }, [navigate]);
 
   useEffect(() => {
-    void loadDashboard();
+    // Ejecutar la consulta fuera del ciclo sincrónico del efecto.
+    // El estado inicial ya muestra la pantalla de carga.
+    const timeoutId = window.setTimeout(() => {
+      void loadDashboard();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [loadDashboard]);
 
   if (loading) {
