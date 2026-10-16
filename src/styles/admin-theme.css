@@ -214,3 +214,54 @@ html.dark .vn-admin .vn-owner-hero h1,
 html.dark .vn-admin .vn-owner-surface h2 {
   color: var(--vn-ink);
 }
+
+/* Cabecera Owner: acciones consistentes al expandir o contraer el menú. */
+.vn-admin .vn-owner-hero-layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+.vn-admin .vn-owner-hero-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, max-content));
+  gap: 12px;
+  align-items: center;
+  justify-content: start;
+}
+.vn-admin .vn-owner-hero-actions > button {
+  display: inline-flex;
+  min-width: 146px;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  gap: 9px;
+}
+@media (min-width: 1280px) {
+  .vn-admin .vn-owner-hero-layout {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 28px;
+  }
+}
+@media (max-width: 480px) {
+  .vn-admin .vn-owner-hero-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .vn-admin .vn-owner-hero-actions > button {
+    width: 100%;
+  }
+}
+
+/* Selección activa visible, sin contornos agresivos en las métricas. */
+.vn-admin .vn-admin-stat-card:hover {
+  border-color: color-mix(in srgb, var(--vn-coral) 36%, var(--vn-line));
+  box-shadow: var(--vn-elevation);
+}
+.vn-admin .vn-admin-sidebar nav {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--vn-muted) 46%, transparent) transparent;
+}
+.vn-admin .vn-admin-sidebar nav::-webkit-scrollbar { width: 5px; }
+.vn-admin .vn-admin-sidebar nav::-webkit-scrollbar-track { background: transparent; }
+.vn-admin .vn-admin-sidebar nav::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--vn-muted) 40%, transparent);
+  border-radius: 99px;
+}
