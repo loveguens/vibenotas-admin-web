@@ -977,7 +977,7 @@ export default function AdminDashboard() {
       <div className="grid gap-6 xl:grid-cols-2">
         <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
           <div>
-            <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+            <p className="vn-dashboard-kicker text-sm font-semibold text-emerald-700 dark:text-emerald-300">
               Productividad
             </p>
 
@@ -1017,7 +1017,7 @@ export default function AdminDashboard() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-violet-200 bg-violet-50 p-4 dark:border-violet-500/20 dark:bg-violet-500/[0.07]">
+            <div className="vn-admin-progress-card rounded-2xl border border-violet-200 bg-violet-50 p-4 dark:border-violet-500/20 dark:bg-violet-500/[0.07]">
               <p className="text-xs font-semibold uppercase tracking-wide text-violet-700 dark:text-violet-300">
                 Progreso global
               </p>
@@ -1028,7 +1028,7 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="mt-4 rounded-2xl border border-slate-200 p-4 dark:border-white/5">
+          <div className="vn-admin-reminder-row mt-4 rounded-2xl border border-slate-200 p-4 dark:border-white/5">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <BellRing
@@ -1057,7 +1057,7 @@ export default function AdminDashboard() {
 
         <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
           <div>
-            <p className="text-sm font-semibold text-sky-700 dark:text-sky-300">
+            <p className="vn-dashboard-kicker text-sm font-semibold text-sky-700 dark:text-sky-300">
               Comunicación
             </p>
 
@@ -1078,7 +1078,7 @@ export default function AdminDashboard() {
                 </p>
               </div>
 
-              <span className="text-xl font-extrabold text-sky-700 dark:text-sky-300">
+              <span className="vn-admin-chat-count text-xl font-extrabold text-sky-700 dark:text-sky-300">
                 {communication.directConversations}
               </span>
             </div>
@@ -1094,7 +1094,7 @@ export default function AdminDashboard() {
                 </p>
               </div>
 
-              <span className="text-xl font-extrabold text-violet-700 dark:text-violet-300">
+              <span className="vn-admin-chat-count text-xl font-extrabold text-violet-700 dark:text-violet-300">
                 {communication.groupConversations}
               </span>
             </div>
@@ -1150,7 +1150,7 @@ export default function AdminDashboard() {
 
       <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
         <div>
-          <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">
+          <p className="vn-dashboard-kicker text-sm font-semibold text-violet-700 dark:text-violet-300">
             VibeNotas hoy
           </p>
 
@@ -1165,7 +1165,7 @@ export default function AdminDashboard() {
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/5 dark:bg-white/[0.03]">
-            <StickyNote className="text-violet-600 dark:text-violet-300" />
+            <StickyNote className="vn-admin-today-icon text-violet-600 dark:text-violet-300" />
 
             <p className="mt-3 text-2xl font-extrabold text-slate-950 dark:text-white">
               {data.today.notesCreated}
@@ -1185,7 +1185,7 @@ export default function AdminDashboard() {
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/5 dark:bg-white/[0.03]">
-            <FileText className="text-sky-600 dark:text-sky-300" />
+            <FileText className="vn-admin-today-icon text-sky-600 dark:text-sky-300" />
 
             <p className="mt-3 text-2xl font-extrabold text-slate-950 dark:text-white">
               {data.today.documentsUploaded}
@@ -1215,7 +1215,7 @@ export default function AdminDashboard() {
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/5 dark:bg-white/[0.03]">
-            <MessageCircle className="text-fuchsia-600 dark:text-fuchsia-300" />
+            <MessageCircle className="vn-admin-today-icon text-fuchsia-600 dark:text-fuchsia-300" />
 
             <p className="mt-3 text-2xl font-extrabold text-slate-950 dark:text-white">
               {data.today.messagesSent}
