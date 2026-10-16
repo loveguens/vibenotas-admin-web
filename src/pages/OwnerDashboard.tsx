@@ -454,8 +454,8 @@ export default function OwnerDashboard() {
     <section className="space-y-7 pb-8 text-slate-900 dark:text-white">
       {/* CABECERA */}
 
-      <article className="relative overflow-hidden rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 via-white to-violet-50 p-6 shadow-lg shadow-slate-200/50 dark:border-amber-400/15 dark:from-amber-500/10 dark:via-[#172033] dark:to-violet-950/30 dark:shadow-black/20 md:p-8">
-        <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-amber-300/20 blur-3xl dark:bg-amber-500/10" />
+      <article className="vn-owner-hero relative overflow-hidden rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 via-white to-violet-50 p-6 shadow-lg shadow-slate-200/50 dark:border-amber-400/15 dark:from-amber-500/10 dark:via-[#172033] dark:to-violet-950/30 dark:shadow-black/20 md:p-8">
+        <div className="vn-owner-hero-decor pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-amber-300/20 blur-3xl dark:bg-amber-500/10" />
 
         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
@@ -492,7 +492,7 @@ export default function OwnerDashboard() {
             <button
               type="button"
               onClick={() => navigate("/owner/administrators")}
-              className="inline-flex items-center gap-2 rounded-xl bg-slate-950 px-4 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-white dark:text-slate-950"
+              className="vn-owner-primary-action inline-flex items-center gap-2 rounded-xl bg-slate-950 px-4 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-white dark:text-slate-950"
             >
               <UserCog size={17} />
               Administradores
@@ -501,7 +501,7 @@ export default function OwnerDashboard() {
             <button
               type="button"
               onClick={() => navigate("/owner/security")}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 transition hover:-translate-y-0.5 hover:bg-slate-50 dark:border-white/10 dark:bg-white/5 dark:text-white"
+              className="vn-owner-secondary-action inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 transition hover:-translate-y-0.5 hover:bg-slate-50 dark:border-white/10 dark:bg-white/5 dark:text-white"
             >
               <ShieldCheck size={17} />
               Seguridad
@@ -553,10 +553,10 @@ export default function OwnerDashboard() {
       {/* ACTIVIDAD + ATENCION */}
 
       <div className="grid gap-6 xl:grid-cols-[1.35fr_0.65fr]">
-        <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#172033]">
+        <article className="vn-owner-surface rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#172033]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-bold text-violet-700 dark:text-violet-300">
+              <p className="vn-owner-section-accent text-sm font-bold text-violet-700 dark:text-violet-300">
                 Supervisión
               </p>
 
@@ -572,7 +572,7 @@ export default function OwnerDashboard() {
             <button
               type="button"
               onClick={() => navigate("/owner/logs")}
-              className="rounded-xl p-2 text-violet-700 transition hover:bg-violet-50 dark:text-violet-300 dark:hover:bg-violet-500/10"
+              className="vn-owner-link rounded-xl p-2 text-violet-700 transition hover:bg-violet-50 dark:text-violet-300 dark:hover:bg-violet-500/10"
             >
               <ArrowRight size={20} />
             </button>
@@ -620,7 +620,7 @@ export default function OwnerDashboard() {
           </div>
         </article>
 
-        <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#172033]">
+        <article className="vn-owner-surface rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#172033]">
           <div>
             <p className="text-sm font-bold text-amber-700 dark:text-amber-300">
               Atención
@@ -669,7 +669,7 @@ export default function OwnerDashboard() {
       {/* USO DE VIBENOTAS */}
 
       <div>
-        <p className="text-sm font-bold text-sky-700 dark:text-sky-300">
+        <p className="vn-owner-section-accent text-sm font-bold text-sky-700 dark:text-sky-300">
           Plataforma
         </p>
 
@@ -720,7 +720,7 @@ export default function OwnerDashboard() {
           return (
             <div
               key={item.label}
-              className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#172033]"
+              className="vn-owner-surface rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-[#172033]"
             >
               <div className="flex items-center justify-between">
                 <div className="rounded-xl bg-slate-100 p-2 text-slate-600 dark:bg-white/5 dark:text-slate-300">
@@ -741,7 +741,7 @@ export default function OwnerDashboard() {
       {/* SEGURIDAD */}
 
       <div className="grid gap-4 md:grid-cols-4">
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-white/10 dark:bg-[#172033]">
+        <div className="vn-owner-surface rounded-2xl border border-slate-200 bg-white p-4 dark:border-white/10 dark:bg-[#172033]">
           <Activity className="text-violet-600 dark:text-violet-300" />
 
           <p className="mt-3 text-2xl font-black">{sessions.active}</p>
@@ -749,7 +749,7 @@ export default function OwnerDashboard() {
           <p className="text-sm font-bold">Sesiones activas</p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-white/10 dark:bg-[#172033]">
+        <div className="vn-owner-surface rounded-2xl border border-slate-200 bg-white p-4 dark:border-white/10 dark:bg-[#172033]">
           <ShieldAlert className="text-red-600 dark:text-red-300" />
 
           <p className="mt-3 text-2xl font-black">{sessions.compromised}</p>
@@ -757,7 +757,7 @@ export default function OwnerDashboard() {
           <p className="text-sm font-bold">Comprometidas</p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-white/10 dark:bg-[#172033]">
+        <div className="vn-owner-surface rounded-2xl border border-slate-200 bg-white p-4 dark:border-white/10 dark:bg-[#172033]">
           <ListChecks className="text-sky-600 dark:text-sky-300" />
 
           <p className="mt-3 text-2xl font-black">{audit.eventsToday}</p>
@@ -768,7 +768,7 @@ export default function OwnerDashboard() {
         <button
           type="button"
           onClick={() => navigate("/owner/settings")}
-          className="rounded-2xl border border-slate-200 bg-white p-4 text-left transition hover:-translate-y-1 dark:border-white/10 dark:bg-[#172033]"
+          className="vn-owner-surface rounded-2xl border border-slate-200 bg-white p-4 text-left transition hover:-translate-y-1 dark:border-white/10 dark:bg-[#172033]"
         >
           <Settings className="text-slate-600 dark:text-slate-300" />
 
