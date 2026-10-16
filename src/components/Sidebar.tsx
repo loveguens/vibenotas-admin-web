@@ -313,6 +313,7 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
 
       <aside
         aria-label="Navegación principal"
+        data-collapsed={collapsed}
         className={`
           vn-admin-sidebar fixed inset-y-3 left-3 z-[70]
           flex h-[calc(100vh-24px)]
