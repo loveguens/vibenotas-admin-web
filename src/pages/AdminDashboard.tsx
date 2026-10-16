@@ -351,6 +351,20 @@ function getRoleLabel(role: string): string {
   }
 }
 
+function getRoleBadgeTone(role: string): string {
+  const normalizedRole = role.trim().toLowerCase().replace(/[\\s-]+/g, "_");
+
+  if (normalizedRole === "super_admin" || normalizedRole === "superadmin" || normalizedRole === "owner") {
+    return "vn-admin-recent-role-super";
+  }
+
+  if (normalizedRole === "admin" || normalizedRole === "administrator" || normalizedRole === "administrador") {
+    return "vn-admin-recent-role-admin";
+  }
+
+  return "vn-admin-recent-role-user";
+}
+
 function getStatusLabel(status: UserStatus): string {
   switch (status) {
     case "ACTIVE":
@@ -506,7 +520,7 @@ function UserAvatar({ user }: UserAvatarProps) {
   }, [avatarUrl]);
 
   return (
-    <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-xs font-extrabold text-white">
+    <div className="vn-admin-recent-avatar flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-xs font-extrabold text-white">
       {avatarUrl && !imageFailed ? (
         <img
           src={avatarUrl}
@@ -1226,10 +1240,10 @@ export default function AdminDashboard() {
 
       {/* USUARIOS RECIENTES */}
 
-      <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
+      <article className="vn-dashboard-panel vn-admin-recent-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold text-sky-700 dark:text-sky-300">
+            <p className="vn-dashboard-kicker text-sm font-semibold text-sky-700 dark:text-sky-300">
               Usuarios
             </p>
 
@@ -1241,8 +1255,9 @@ export default function AdminDashboard() {
           <button
             type="button"
             onClick={() => navigate("/admin/users")}
-            className="rounded-xl p-2 text-violet-700 transition hover:bg-violet-50 dark:text-violet-300 dark:hover:bg-violet-500/10"
+            className="vn-admin-recent-see-all rounded-xl p-2 text-violet-700 transition hover:bg-violet-50 dark:text-violet-300 dark:hover:bg-violet-500/10"
             title="Ver todos los usuarios"
+            aria-label="Ver todos los usuarios"
           >
             <ArrowRight size={20} />
           </button>
@@ -1259,9 +1274,9 @@ export default function AdminDashboard() {
                   key={user.id}
                   type="button"
                   onClick={() => navigate("/admin/users")}
-                  className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-left transition hover:border-violet-200 hover:bg-violet-50 dark:border-white/5 dark:bg-white/[0.03] dark:hover:border-violet-500/20 dark:hover:bg-white/[0.07]"
+                  className="vn-admin-recent-user flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-left transition hover:border-violet-200 hover:bg-violet-50 dark:border-white/5 dark:bg-white/[0.03] dark:hover:border-violet-500/20 dark:hover:bg-white/[0.07]"
                 >
-                  <div className="flex min-w-0 items-center gap-3">
+                  <div className="vn-admin-recent-identity flex min-w-0 items-center gap-3">
                     <UserAvatar user={user} />
 
                     <div className="min-w-0">
@@ -1275,8 +1290,8 @@ export default function AdminDashboard() {
                     </div>
                   </div>
 
-                  <div className="hidden text-right sm:block">
-                    <div className="flex justify-end gap-1.5">
+                  <div className="vn-admin-recent-meta hidden text-right sm:block">
+                    <div className="vn-admin-recent-badges flex justify-end gap-1.5">
                       <span
                         className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold ${getStatusStyle(
                           user.status,
@@ -1286,7 +1301,7 @@ export default function AdminDashboard() {
                       </span>
 
                       {primaryRole && (
-                        <span className="inline-flex rounded-full border border-violet-200 bg-violet-50 px-2.5 py-1 text-[10px] font-bold text-violet-700 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-300">
+                        <span className={`vn-admin-recent-role inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold ${getRoleBadgeTone(primaryRole.slug)}`}>
                           {getRoleLabel(primaryRole.slug)}
                         </span>
                       )}
