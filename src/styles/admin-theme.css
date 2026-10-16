@@ -543,3 +543,55 @@ html.dark .vn-admin .vn-superadmin-badge-admin { color: #f4c95d; }
   .vn-admin .vn-admin-sidebar nav { padding-top: 7px; padding-bottom: 7px; }
   .vn-admin .vn-admin-sidebar-footer { padding-top: 6px; padding-bottom: 6px; }
 }
+
+/* Admin: usuarios recientes legibles en escritorio y pantallas estrechas. */
+.vn-admin .vn-admin-recent-avatar {
+  background: var(--vn-coral);
+  color: #fff;
+}
+.vn-admin .vn-admin-recent-see-all { color: var(--vn-coral-strong); }
+.vn-admin .vn-admin-recent-see-all:hover { background: var(--vn-coral-soft); }
+.vn-admin .vn-admin-recent-user { transition: background .18s, border-color .18s; }
+.vn-admin .vn-admin-recent-user:hover {
+  border-color: color-mix(in srgb, var(--vn-coral) 30%, var(--vn-line));
+  background: var(--vn-surface-hover);
+}
+.vn-admin .vn-admin-recent-identity { min-width: 0; flex: 1; }
+.vn-admin .vn-admin-recent-meta { flex-shrink: 0; }
+.vn-admin .vn-admin-recent-badges { flex-wrap: wrap; justify-content: end; }
+.vn-admin .vn-admin-recent-role-super {
+  color: var(--vn-coral-strong);
+  background: var(--vn-coral-soft);
+  border-color: color-mix(in srgb, var(--vn-coral) 25%, var(--vn-line));
+}
+.vn-admin .vn-admin-recent-role-admin {
+  color: #a47019;
+  background: rgba(244,201,93,.13);
+  border-color: rgba(244,201,93,.35);
+}
+html.dark .vn-admin .vn-admin-recent-role-admin { color: #f4c95d; }
+.vn-admin .vn-admin-recent-role-user {
+  color: var(--vn-muted);
+  background: var(--vn-surface-hover);
+  border-color: var(--vn-line);
+}
+@media (max-width: 780px) {
+  .vn-admin .vn-admin-recent-user {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+  .vn-admin .vn-admin-recent-meta {
+    display: block;
+    padding-left: 56px;
+    width: 100%;
+    text-align: left;
+  }
+  .vn-admin .vn-admin-recent-badges { justify-content: start; }
+}
+@media (max-width: 420px) {
+  .vn-admin .vn-admin-recent-panel { padding: 16px; }
+  .vn-admin .vn-admin-recent-meta { padding-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vn-admin .vn-admin-recent-user { transition: none; }
+}
