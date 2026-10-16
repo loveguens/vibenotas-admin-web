@@ -6,7 +6,6 @@ import {
   ArrowRight,
   BellRing,
   CheckCircle2,
-  Clock3,
   FileText,
   Folder,
   HardDrive,
@@ -378,14 +377,14 @@ function getRoleStyle(role: string): string {
     .replace(/[\s-]+/g, "_");
 
   if (normalizedRole === "super_admin" || normalizedRole === "superadmin") {
-    return "border-fuchsia-200 bg-fuchsia-50 text-fuchsia-700 dark:border-fuchsia-400/20 dark:bg-fuchsia-500/10 dark:text-fuchsia-300";
+    return "vn-superadmin-badge-owner border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-400/20 dark:bg-rose-500/10 dark:text-rose-300";
   }
 
   if (normalizedRole === "admin" || normalizedRole === "administrator") {
-    return "border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-300";
+    return "vn-superadmin-badge-admin border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-400/20 dark:bg-amber-500/10 dark:text-amber-300";
   }
 
-  return "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-400/20 dark:bg-sky-500/10 dark:text-sky-300";
+  return "vn-superadmin-badge-user border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-400/20 dark:bg-slate-500/10 dark:text-slate-300";
 }
 
 function getPrimaryRole(user: RecentUser): Role | null {
@@ -726,13 +725,6 @@ export default function SuperAdminDashboard() {
 
   const recentActivity = identityData.recentActivity ?? [];
 
-  const currentDate = new Intl.DateTimeFormat("es-CL", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date());
-
   return (
     <section className="vn-dashboard vn-superadmin-dashboard space-y-8 pb-8 text-slate-900 dark:text-white">
       {/* CABECERA */}
@@ -755,14 +747,6 @@ export default function SuperAdminDashboard() {
               roles, sesiones y seguridad.
             </p>
 
-            <p className="mt-4 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-              <Clock3
-                size={16}
-                className="text-violet-600 dark:text-violet-300"
-              />
-
-              {currentDate}
-            </p>
           </div>
 
           <div className="vn-dashboard-hero-actions grid gap-3 sm:grid-cols-2 xl:w-[430px]">
@@ -822,13 +806,13 @@ export default function SuperAdminDashboard() {
           </div>
         </article>
 
-        <article className="flex items-center gap-3 rounded-2xl border border-violet-200 bg-violet-50 p-4 dark:border-violet-500/15 dark:bg-violet-500/[0.07]">
+        <article className="vn-superadmin-sessions flex items-center gap-3 rounded-2xl border border-violet-200 bg-violet-50 p-4 dark:border-violet-500/15 dark:bg-violet-500/[0.07]">
           <Activity className="text-violet-700 dark:text-violet-300" />
 
           <div>
             <p className="text-sm font-bold">Sesiones activas</p>
 
-            <p className="text-xs text-violet-700 dark:text-violet-300">
+            <p className="vn-superadmin-session-count text-xs text-violet-700 dark:text-violet-300">
               {sessions.active} vigentes
             </p>
           </div>
@@ -1091,7 +1075,7 @@ export default function SuperAdminDashboard() {
                   onClick={() => navigate("/superadmin/users")}
                   className="vn-superadmin-recent-user flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-left dark:border-white/5 dark:bg-white/[0.03]"
                 >
-                  <div className="flex min-w-0 items-center gap-3">
+                  <div className="vn-superadmin-recent-identity flex min-w-0 items-center gap-3">
                     <UserAvatar user={user} />
 
                     <div className="min-w-0">
@@ -1105,8 +1089,8 @@ export default function SuperAdminDashboard() {
                     </div>
                   </div>
 
-                  <div className="hidden text-right sm:block">
-                    <div className="flex gap-1.5">
+                  <div className="vn-superadmin-recent-meta hidden text-right sm:block">
+                    <div className="vn-superadmin-recent-badges flex gap-1.5">
                       <span
                         className={`rounded-full border px-2.5 py-1 text-[10px] font-bold ${getStatusStyle(
                           user.status,
