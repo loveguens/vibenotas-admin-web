@@ -563,7 +563,7 @@ function UserAvatar({ user }: { user: RecentUser }) {
   }, [avatarUrl]);
 
   return (
-    <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-xs font-extrabold text-white">
+    <div className="vn-superadmin-avatar flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-xs font-extrabold text-white">
       {avatarUrl && !failed ? (
         <img
           src={avatarUrl}
@@ -1041,7 +1041,7 @@ export default function SuperAdminDashboard() {
                     </div>
 
                     <div className="text-right">
-                      <p className="text-lg font-extrabold text-violet-700 dark:text-violet-300">
+                      <p className="vn-superadmin-role-count text-lg font-extrabold text-violet-700 dark:text-violet-300">
                         {role.totalUsers}
                       </p>
 
@@ -1051,7 +1051,7 @@ export default function SuperAdminDashboard() {
                     </div>
                   </div>
 
-                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
+                  <div className="vn-superadmin-role-track mt-3 h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
                     <div
                       className="vn-dashboard-progress h-full rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-500"
                       style={{
@@ -1089,7 +1089,7 @@ export default function SuperAdminDashboard() {
                   key={user.id}
                   type="button"
                   onClick={() => navigate("/superadmin/users")}
-                  className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-left dark:border-white/5 dark:bg-white/[0.03]"
+                  className="vn-superadmin-recent-user flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-left dark:border-white/5 dark:bg-white/[0.03]"
                 >
                   <div className="flex min-w-0 items-center gap-3">
                     <UserAvatar user={user} />
@@ -1201,7 +1201,7 @@ export default function SuperAdminDashboard() {
 
       {/* ACCIONES */}
 
-      <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
+      <article className="vn-dashboard-panel vn-superadmin-quick-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
         <div className="flex items-center justify-between">
           <div>
             <p className="vn-dashboard-kicker text-sm font-semibold text-violet-700 dark:text-violet-300">
@@ -1211,14 +1211,14 @@ export default function SuperAdminDashboard() {
             <h2 className="mt-1 text-xl font-bold">Gestionar VibeNotas</h2>
           </div>
 
-          <Plus className="text-violet-600" />
+          <Plus className="vn-superadmin-quick-plus text-violet-600" />
         </div>
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <button
             type="button"
             onClick={() => navigate("/superadmin/administrators")}
-            className="rounded-2xl border border-violet-200 bg-violet-50 p-4 text-left"
+            className="vn-superadmin-quick-action rounded-2xl border border-violet-200 bg-violet-50 p-4 text-left transition-colors"
           >
             <UserPlus className="text-violet-600" />
 
@@ -1228,7 +1228,7 @@ export default function SuperAdminDashboard() {
           <button
             type="button"
             onClick={() => navigate("/superadmin/users")}
-            className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-left"
+            className="vn-superadmin-quick-action rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-left transition-colors"
           >
             <Users className="text-emerald-700" />
 
@@ -1238,7 +1238,7 @@ export default function SuperAdminDashboard() {
           <button
             type="button"
             onClick={() => navigate("/superadmin/notifications")}
-            className="rounded-2xl border border-sky-200 bg-sky-50 p-4 text-left"
+            className="vn-superadmin-quick-action rounded-2xl border border-sky-200 bg-sky-50 p-4 text-left transition-colors"
           >
             <BellRing className="text-sky-700" />
 
@@ -1248,7 +1248,7 @@ export default function SuperAdminDashboard() {
           <button
             type="button"
             onClick={() => navigate("/superadmin/security")}
-            className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-left"
+            className="vn-superadmin-quick-action rounded-2xl border border-amber-200 bg-amber-50 p-4 text-left transition-colors"
           >
             <ShieldAlert className="text-amber-700" />
 
