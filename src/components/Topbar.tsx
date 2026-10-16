@@ -673,9 +673,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                   darkMode ? "text-white" : "text-slate-900"
                 }`}
               >
-                {esDashboard
-                  ? `Bienvenido, ${nombreUsuario} 👋`
-                  : tituloPagina}
+                {esDashboard ? "Vista general" : tituloPagina}
               </h2>
 
               <p
