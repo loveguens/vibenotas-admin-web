@@ -12,6 +12,8 @@
   --login-feature: #164e4a;
   --login-feature-text: #fffdf8;
   --login-shadow: 0 30px 90px rgba(38, 52, 43, 0.12);
+  /* El login es siempre claro, sin depender del tema global del panel. */
+  color-scheme: light;
   min-height: 100vh;
   min-height: 100dvh;
   display: grid;
@@ -23,23 +25,6 @@
     var(--login-bg);
 }
 
-.dark .vn-login {
-  --login-bg: #141a18;
-  --login-card: #202624;
-  --login-input: #191f1c;
-  --login-text: #f5f1e8;
-  --login-muted: #b0b9b2;
-  --login-border: #414944;
-  --login-coral: #f4775f;
-  --login-coral-hover: #ff8c75;
-  --login-focus: rgba(244, 119, 95, .18);
-  --login-feature: #171f1c;
-  --login-feature-text: #f5f1e8;
-  --login-shadow: 0 32px 90px rgba(0, 0, 0, 0.35);
-  background: radial-gradient(circle at 11% 12%, rgba(240, 100, 73, .10), transparent 38%),
-    radial-gradient(circle at 90% 87%, rgba(22, 78, 74, .12), transparent 36%),
-    var(--login-bg);
-}
 
 .vn-login__shell {
   display: grid;
