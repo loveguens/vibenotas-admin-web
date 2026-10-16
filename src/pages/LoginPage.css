@@ -219,6 +219,18 @@
   color: var(--login-muted);
   opacity: .78;
 }
+/* Chrome/Edge pueden pintar el autocompletado de azul: respetar el tema activo. */
+.vn-login__input:-webkit-autofill,
+.vn-login__input:-webkit-autofill:hover,
+.vn-login__input:-webkit-autofill:focus,
+.vn-login__input:autofill {
+  -webkit-text-fill-color: var(--login-text);
+  caret-color: var(--login-text);
+  -webkit-box-shadow: 0 0 0 1000px var(--login-input) inset;
+  box-shadow: 0 0 0 1000px var(--login-input) inset;
+  transition: background-color 9999s ease-out 0s;
+}
+
 .vn-login__input:disabled { cursor: not-allowed; }
 .vn-login__visibility {
   flex-shrink: 0;
