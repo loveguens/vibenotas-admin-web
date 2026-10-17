@@ -231,6 +231,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
   const [loadingNotifications, setLoadingNotifications] = useState(false);
   const [markingAll, setMarkingAll] = useState(false);
   const [search, setSearch] = useState("");
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [usuarioActual, setUsuarioActual] =
     useState<UsuarioGuardado>(getStoredUser);
   const [profilePhotoError, setProfilePhotoError] = useState(false);
@@ -332,7 +333,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
     return () => {
       cancelled = true;
     };
-  }, [location.pathname, role]);
+  }, [location.pathname, role, roleLabel]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -399,13 +400,18 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
   }
 
   useEffect(() => {
-    void loadNotifications();
+    // Posponer la primera consulta evita actualizaciones síncronas de estado
+    // dentro del efecto sin alterar el polling de 30 segundos.
+    const initialFetch = window.setTimeout(() => {
+      void loadNotifications();
+    }, 0);
 
     const interval = window.setInterval(() => {
       void loadNotifications();
     }, 30000);
 
     return () => {
+      window.clearTimeout(initialFetch);
       window.clearInterval(interval);
     };
   }, []);
@@ -496,6 +502,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
 
     if (!texto) return;
 
+    setMobileSearchOpen(false);
     navigate(`${basePath}/users?buscar=${encodeURIComponent(texto)}`);
   };
 
@@ -629,18 +636,18 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
   return (
     <>
       <header
-        className={`sticky top-0 z-40 border-b px-4 py-4 backdrop-blur-xl md:px-8 ${
+        className={`vn-admin-topbar sticky top-0 z-40 border-b px-4 py-3 backdrop-blur-xl md:px-5 ${
           darkMode
             ? "border-white/10 bg-[#0F172A]/85"
             : "border-slate-200 bg-white/90"
         }`}
       >
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex min-w-0 items-center gap-3">
+        <div className="vn-admin-topbar-inner flex items-center justify-between gap-4">
+          <div className="vn-admin-topbar-heading flex min-w-0 items-center gap-3">
             <button
               type="button"
               onClick={onOpenSidebar}
-              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition lg:hidden ${claseBotonIcono}`}
+              className={`vn-admin-icon-button flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition lg:hidden ${claseBotonIcono}`}
               title="Abrir menú"
               aria-label="Abrir menú lateral"
             >
@@ -651,7 +658,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
               <button
                 type="button"
                 onClick={volverAtras}
-                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition ${claseBotonIcono}`}
+                className={`vn-admin-icon-button flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition ${claseBotonIcono}`}
                 title="Volver atrás"
                 aria-label="Volver atrás"
               >
@@ -660,24 +667,24 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
             )}
 
             <div className="min-w-0">
-              <p className="truncate text-xs font-semibold uppercase tracking-[0.16em] text-violet-400">
-                {role === "superadmin"
-                  ? "Panel Super Admin"
-                  : "Panel Administrador"}
+              <p className="truncate vn-admin-topbar-caption text-xs font-semibold uppercase tracking-[0.16em] text-violet-400">
+                {role === "owner"
+                  ? "Panel Owner"
+                  : role === "superadmin"
+                    ? "Panel Super Admin"
+                    : "Panel Administrador"}
               </p>
 
               <h2
-                className={`mt-1 truncate text-lg font-bold md:text-2xl ${
+                className={`vn-admin-topbar-title mt-1 truncate text-lg font-bold md:text-2xl ${
                   darkMode ? "text-white" : "text-slate-900"
                 }`}
               >
-                {esDashboard
-                  ? `Bienvenido, ${nombreUsuario} 👋`
-                  : tituloPagina}
+                {esDashboard ? "Vista general" : tituloPagina}
               </h2>
 
               <p
-                className={`mt-1 hidden text-sm md:block ${
+                className={`vn-admin-topbar-subtitle mt-1 hidden text-sm md:block ${
                   darkMode ? "text-slate-400" : "text-slate-500"
                 }`}
               >
@@ -692,10 +699,10 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
             </div>
           </div>
 
-          <div className="flex shrink-0 items-center gap-2 md:gap-3">
+          <div className="vn-admin-topbar-actions flex shrink-0 items-center gap-2 md:gap-3">
             <form
               onSubmit={buscar}
-              className={`hidden min-w-[260px] items-center gap-3 rounded-2xl border px-4 py-3 lg:flex ${
+              className={`vn-admin-search hidden min-w-0 items-center gap-3 rounded-xl border px-4 py-3 lg:flex ${
                 darkMode
                   ? "border-white/10 bg-white/5"
                   : "border-slate-200 bg-slate-50"
@@ -721,8 +728,24 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
 
             <button
               type="button"
+              onClick={() => {
+                setMobileSearchOpen((current) => !current);
+                setNotificationsOpen(false);
+                setProfileOpen(false);
+              }}
+              className={`vn-admin-icon-button flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition lg:hidden ${claseBotonIcono}`}
+              aria-label={mobileSearchOpen ? "Cerrar búsqueda de usuarios" : "Buscar usuarios"}
+              aria-expanded={mobileSearchOpen}
+              aria-controls="vn-mobile-user-search"
+              title="Buscar usuarios"
+            >
+              {mobileSearchOpen ? <X size={19} /> : <Search size={19} />}
+            </button>
+
+            <button
+              type="button"
               onClick={cambiarTema}
-              className={`flex h-11 w-11 items-center justify-center rounded-xl border transition ${claseBotonIcono}`}
+              className={`vn-admin-icon-button flex h-11 w-11 items-center justify-center rounded-xl border transition ${claseBotonIcono}`}
               title={
                 darkMode ? "Cambiar a tema claro" : "Cambiar a tema oscuro"
               }
@@ -738,7 +761,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                   setProfileOpen(false);
                   void loadNotifications();
                 }}
-                className={`relative flex h-11 w-11 items-center justify-center rounded-xl border transition ${
+                className={`vn-admin-icon-button relative flex h-11 w-11 items-center justify-center rounded-xl border transition ${
                   darkMode
                     ? "border-white/10 bg-white/5 text-slate-200 hover:bg-white/10"
                     : "border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
@@ -750,7 +773,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
 
                 {unreadCount > 0 && (
                   <>
-                    <span className="absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-violet-500 px-1 text-[10px] font-black text-white shadow-lg shadow-violet-500/40">
+                    <span className="vn-admin-notification-dot absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-violet-500 px-1 text-[10px] font-black text-white shadow-lg shadow-violet-500/40">
                       {unreadCount > 99 ? "99+" : unreadCount}
                     </span>
 
@@ -760,22 +783,24 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
               </button>
 
               {notificationsOpen && (
-                <div className="absolute right-0 top-[calc(100%+14px)] z-50 w-[380px] overflow-hidden rounded-[28px] border border-white/10 bg-[#0F172A] shadow-2xl shadow-black/50">
-                  <div className="relative overflow-hidden border-b border-white/10 px-5 py-4">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#8B5CF633,transparent_40%)]" />
+                <div role="region"
+                  aria-label="Notificaciones recientes"
+                  className="vn-admin-notifications-popover absolute right-0 top-[calc(100%+14px)] z-50 w-[380px] overflow-hidden rounded-[28px] border border-white/10 bg-[#0F172A] shadow-2xl shadow-black/50">
+                  <div className="vn-notifications-head relative overflow-hidden border-b border-white/10 px-5 py-4">
+                    <div className="vn-notifications-glow absolute inset-0 bg-[radial-gradient(circle_at_top_left,#8B5CF633,transparent_40%)]" />
 
                     <div className="relative flex items-center justify-between gap-4">
                       <div>
-                        <div className="inline-flex items-center gap-2 rounded-full border border-violet-400/20 bg-violet-500/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
+                        <div className="vn-notifications-label inline-flex items-center gap-2 rounded-full border border-violet-400/20 bg-violet-500/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
                           <Sparkles size={13} />
                           Actividad
                         </div>
 
-                        <p className="mt-2 text-base font-black text-white">
+                        <p className="vn-notifications-title mt-2 text-base font-black text-white">
                           Notificaciones
                         </p>
 
-                        <p className="mt-0.5 text-xs text-slate-400">
+                        <p className="vn-notifications-muted mt-0.5 text-xs text-slate-400">
                           {unreadCount > 0
                             ? `${unreadCount} sin leer`
                             : "Todo al día"}
@@ -786,7 +811,8 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                         type="button"
                         onClick={() => void loadNotifications()}
                         disabled={loadingNotifications}
-                        className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-slate-300 transition hover:bg-white/[0.08] hover:text-white disabled:opacity-50"
+                        className="vn-notifications-refresh flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-slate-300 transition hover:bg-white/[0.08] hover:text-white disabled:opacity-50"
+                        aria-label="Recargar notificaciones"
                         title="Recargar"
                       >
                         <RefreshCcw
@@ -801,7 +827,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                         type="button"
                         onClick={() => void markAllAsRead()}
                         disabled={markingAll}
-                        className="relative mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-violet-500 px-4 py-2.5 text-xs font-black text-white shadow-lg shadow-violet-500/25 transition hover:bg-violet-400 disabled:opacity-50"
+                        className="vn-notifications-mark-all relative mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-violet-500 px-4 py-2.5 text-xs font-black text-white shadow-lg shadow-violet-500/25 transition hover:bg-violet-400 disabled:opacity-50"
                       >
                         {markingAll ? (
                           <RefreshCcw size={15} className="animate-spin" />
@@ -813,23 +839,23 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                     )}
                   </div>
 
-                  <div className="max-h-[430px] overflow-y-auto p-2">
+                  <div className="vn-notifications-list min-h-0 overflow-y-auto p-2">
                     {loadingNotifications ? (
-                      <div className="flex items-center gap-3 rounded-2xl p-5 text-sm text-slate-400">
+                      <div className="vn-notifications-muted flex items-center gap-3 rounded-2xl p-5 text-sm text-slate-400">
                         <RefreshCcw size={18} className="animate-spin" />
                         Cargando notificaciones...
                       </div>
                     ) : latestNotifications.length === 0 ? (
                       <div className="flex flex-col items-center justify-center rounded-3xl p-8 text-center">
-                        <div className="rounded-2xl bg-violet-500/10 p-4 text-violet-300 ring-1 ring-violet-400/20">
+                        <div className="vn-notifications-empty-icon rounded-2xl bg-violet-500/10 p-4 text-violet-300 ring-1 ring-violet-400/20">
                           <Bell size={26} />
                         </div>
 
-                        <p className="mt-4 text-sm font-bold text-white">
+                        <p className="vn-notifications-title mt-4 text-sm font-bold text-white">
                           Sin notificaciones
                         </p>
 
-                        <p className="mt-1 text-xs leading-5 text-slate-500">
+                        <p className="vn-notifications-muted mt-1 text-xs leading-5 text-slate-500">
                           Cuando haya actividad importante, aparecerá aquí.
                         </p>
                       </div>
@@ -843,7 +869,8 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                             key={notification.id}
                             type="button"
                             onClick={() => void openNotification(notification)}
-                            className={`group relative w-full overflow-hidden rounded-2xl p-3 text-left transition hover:bg-white/[0.055] ${
+                            data-unread={isUnread}
+                            className={`vn-notifications-item group relative w-full overflow-hidden rounded-2xl p-3 text-left transition hover:bg-white/[0.055] ${
                               isUnread
                                 ? "bg-violet-500/[0.09]"
                                 : "bg-transparent"
@@ -854,39 +881,39 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                             />
 
                             {isUnread && (
-                              <div className="absolute inset-y-3 left-0 w-1 rounded-r-full bg-gradient-to-b from-violet-400 via-fuchsia-400 to-sky-400" />
+                              <div className="vn-notifications-unread-indicator absolute inset-y-3 left-0 w-1 rounded-r-full bg-gradient-to-b from-violet-400 via-fuchsia-400 to-sky-400" />
                             )}
 
                             <div className="relative flex items-start gap-3">
                               <div
-                                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${visual.iconClassName}`}
+                                className={`vn-notifications-type-icon flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${visual.iconClassName}`}
                               >
                                 {visual.icon}
                               </div>
 
                               <div className="min-w-0 flex-1">
                                 <div className="flex items-start justify-between gap-3">
-                                  <p className="truncate text-sm font-black text-white">
+                                  <p className="vn-notifications-item-title truncate text-sm font-black text-white">
                                     {notification.titulo}
                                   </p>
 
                                   {isUnread && (
-                                    <span className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-violet-400 shadow-lg shadow-violet-400/50" />
+                                    <span className="vn-notifications-unread-dot mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-violet-400 shadow-lg shadow-violet-400/50" />
                                   )}
                                 </div>
 
-                                <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-400">
+                                <p className="vn-notifications-muted mt-1 line-clamp-2 text-xs leading-5 text-slate-400">
                                   {notification.mensaje}
                                 </p>
 
                                 <div className="mt-3 flex items-center justify-between gap-3">
                                   <span
-                                    className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${visual.badgeClassName}`}
+                                    className={`vn-notifications-type-badge rounded-full border px-2 py-0.5 text-[10px] font-bold ${visual.badgeClassName}`}
                                   >
                                     {visual.label}
                                   </span>
 
-                                  <span className="flex items-center gap-1 text-[10px] text-slate-500">
+                                  <span className="vn-notifications-muted flex items-center gap-1 text-[10px] text-slate-500">
                                     <Clock3 size={12} />
                                     {formatNotificationDate(
                                       notification.creado_en,
@@ -901,14 +928,14 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                     )}
                   </div>
 
-                  <div className="border-t border-white/10 p-3">
+                  <div className="vn-notifications-footer border-t border-white/10 p-3">
                     <button
                       type="button"
                       onClick={() => {
                         setNotificationsOpen(false);
                         navigate("/my-notifications");
                       }}
-                      className="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-bold text-slate-200 transition hover:bg-white/[0.08] hover:text-white"
+                      className="vn-notifications-view-all w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-bold text-slate-200 transition hover:bg-white/[0.08] hover:text-white"
                     >
                       Ver centro de notificaciones
                     </button>
@@ -924,13 +951,13 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                   setProfileOpen((estado) => !estado);
                   setNotificationsOpen(false);
                 }}
-                className={`flex items-center gap-3 rounded-2xl border p-1.5 pr-2 transition md:px-3 md:py-2 ${
+                className={`vn-admin-profile-button flex items-center gap-3 rounded-2xl border p-1.5 pr-2 transition md:px-3 md:py-2 ${
                   darkMode
                     ? "border-white/10 bg-white/5 hover:bg-white/10"
                     : "border-slate-200 bg-white hover:bg-slate-100"
                 }`}
               >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-sm font-bold text-white shadow-lg shadow-violet-900/30 md:h-10 md:w-10">
+                <div className="vn-admin-topbar-avatar flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-sm font-bold text-white shadow-lg shadow-violet-900/30 md:h-10 md:w-10">
                   {fotoPerfil && !profilePhotoError ? (
                     <img
                       src={getPhotoUrl(fotoPerfil)}
@@ -943,7 +970,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                   )}
                 </div>
 
-                <div className="hidden text-left lg:block">
+                <div className="hidden text-left xl:block">
                   <p
                     className={`max-w-[140px] truncate text-sm font-semibold ${
                       darkMode ? "text-white" : "text-slate-900"
@@ -952,8 +979,8 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                     {nombreUsuario}
                   </p>
 
-                  <p className="text-xs text-violet-400">
-                    {role === "superadmin" ? "Acceso total" : "Administrador"}
+                  <p className="vn-admin-topbar-profile-role text-xs text-violet-400">
+                    {role === "owner" ? "Owner" : role === "superadmin" ? "Acceso total" : "Administrador"}
                   </p>
                 </div>
 
@@ -967,7 +994,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
 
               {profileOpen && (
                 <div
-                  className={`absolute right-0 top-[calc(100%+12px)] z-50 w-60 rounded-2xl border p-2 shadow-2xl ${
+                  className={`vn-admin-profile-popover absolute right-0 top-[calc(100%+12px)] z-50 w-60 rounded-2xl border p-2 shadow-2xl ${
                     darkMode
                       ? "border-white/10 bg-[#1E293B] shadow-black/40"
                       : "border-slate-200 bg-white shadow-slate-300/30"
@@ -1036,6 +1063,29 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
             </div>
           </div>
         </div>
+
+        {mobileSearchOpen && (
+          <form
+            id="vn-mobile-user-search"
+            onSubmit={buscar}
+            role="search"
+            className="vn-admin-mobile-search mt-3 flex items-center gap-3 rounded-xl border px-3 py-2.5 lg:hidden"
+          >
+            <Search size={18} aria-hidden="true" />
+            <input
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Buscar usuarios..."
+              aria-label="Buscar usuarios"
+              className="min-w-0 flex-1 bg-transparent text-sm outline-none"
+              autoFocus
+            />
+            <button type="submit" className="vn-admin-mobile-search-submit rounded-lg px-3 py-1.5 text-sm font-semibold">
+              Buscar
+            </button>
+          </form>
+        )}
       </header>
 
       {selectedNotification && selectedVisual && (
@@ -1047,7 +1097,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
             aria-label="Cerrar notificación"
           />
 
-          <section className="relative w-full overflow-hidden rounded-t-[34px] border border-white/10 bg-[#0F172A] shadow-2xl shadow-black/50 sm:max-w-xl sm:rounded-[34px]">
+          <section className="vn-notification-detail relative w-full overflow-hidden rounded-t-[34px] border border-white/10 bg-[#0F172A] shadow-2xl shadow-black/50 sm:max-w-xl sm:rounded-[34px]">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#8B5CF633,transparent_36%),radial-gradient(circle_at_bottom_right,#38BDF822,transparent_34%)]" />
             <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-violet-500/10 blur-3xl" />
 
@@ -1119,7 +1169,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
               <button
                 type="button"
                 onClick={() => goToNotificationAction(selectedNotification)}
-                className="rounded-2xl bg-violet-500 px-5 py-3 text-sm font-black text-white shadow-lg shadow-violet-500/25 transition hover:bg-violet-400"
+                className="vn-notification-detail-action rounded-2xl bg-violet-500 px-5 py-3 text-sm font-black text-white shadow-lg shadow-violet-500/25 transition hover:bg-violet-400"
               >
                 Ir a la acción
               </button>

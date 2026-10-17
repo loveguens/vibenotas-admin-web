@@ -351,6 +351,20 @@ function getRoleLabel(role: string): string {
   }
 }
 
+function getRoleBadgeTone(role: string): string {
+  const normalizedRole = role.trim().toLowerCase().replace(/[\\s-]+/g, "_");
+
+  if (normalizedRole === "super_admin" || normalizedRole === "superadmin" || normalizedRole === "owner") {
+    return "vn-admin-recent-role-super";
+  }
+
+  if (normalizedRole === "admin" || normalizedRole === "administrator" || normalizedRole === "administrador") {
+    return "vn-admin-recent-role-admin";
+  }
+
+  return "vn-admin-recent-role-user";
+}
+
 function getStatusLabel(status: UserStatus): string {
   switch (status) {
     case "ACTIVE":
@@ -444,7 +458,7 @@ function MetricCard({
 }: MetricCardProps) {
   return (
     <article
-      className={`rounded-3xl border p-5 shadow-sm transition hover:-translate-y-0.5 ${
+      className={`vn-dashboard-metric rounded-3xl border p-5 shadow-sm transition hover:-translate-y-0.5 ${
         warning
           ? "border-amber-200 bg-amber-50/80 dark:border-amber-500/20 dark:bg-amber-500/[0.07]"
           : "border-slate-200 bg-white dark:border-white/10 dark:bg-slate-800/80"
@@ -452,7 +466,7 @@ function MetricCard({
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+          <p className="vn-admin-metric-title text-sm font-medium text-slate-500 dark:text-slate-400">
             {title}
           </p>
 
@@ -465,14 +479,14 @@ function MetricCard({
           className={`rounded-2xl border p-3 ${
             warning
               ? "border-amber-200 bg-amber-100 text-amber-700 dark:border-amber-400/20 dark:bg-amber-500/10 dark:text-amber-300"
-              : "border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-300"
+              : "vn-admin-metric-icon border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-300"
           }`}
         >
           {icon}
         </div>
       </div>
 
-      <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
+      <p className="vn-admin-metric-description mt-3 text-sm text-slate-500 dark:text-slate-400">
         {description}
       </p>
 
@@ -481,7 +495,7 @@ function MetricCard({
           className={`mt-4 text-xs font-semibold ${
             warning
               ? "text-amber-700 dark:text-amber-300"
-              : "text-violet-700 dark:text-violet-300"
+              : "vn-admin-metric-change text-violet-700 dark:text-violet-300"
           }`}
         >
           {change}
@@ -492,7 +506,7 @@ function MetricCard({
 }
 
 function UserAvatar({ user }: UserAvatarProps) {
-  const [imageFailed, setImageFailed] = useState(false);
+  const [failedAvatarUrl, setFailedAvatarUrl] = useState<string | null>(null);
 
   const displayName = getUserDisplayName(user);
 
@@ -501,19 +515,15 @@ function UserAvatar({ user }: UserAvatarProps) {
     [user.avatarUrl],
   );
 
-  useEffect(() => {
-    setImageFailed(false);
-  }, [avatarUrl]);
-
   return (
-    <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-xs font-extrabold text-white">
-      {avatarUrl && !imageFailed ? (
+    <div className="vn-admin-recent-avatar flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-xs font-extrabold text-white">
+      {avatarUrl && failedAvatarUrl !== avatarUrl ? (
         <img
           src={avatarUrl}
           alt={`Foto de ${displayName}`}
           className="h-full w-full object-cover"
           loading="lazy"
-          onError={() => setImageFailed(true)}
+          onError={() => setFailedAvatarUrl(avatarUrl)}
         />
       ) : (
         getInitials(displayName)
@@ -591,7 +601,13 @@ export default function AdminDashboard() {
   }, [navigate]);
 
   useEffect(() => {
-    void loadDashboard();
+    // Ejecutar la consulta fuera del ciclo sincrónico del efecto.
+    // El estado inicial ya muestra la pantalla de carga.
+    const timeoutId = window.setTimeout(() => {
+      void loadDashboard();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [loadDashboard]);
 
   if (loading) {
@@ -655,25 +671,18 @@ export default function AdminDashboard() {
         )
       : 0;
 
-  const currentDate = new Intl.DateTimeFormat("es-CL", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date());
-
   return (
-    <section className="space-y-8 pb-8">
+    <section className="vn-dashboard vn-regular-dashboard space-y-8 pb-8">
       {/* CABECERA */}
 
-      <article className="relative overflow-hidden rounded-3xl border border-violet-200 bg-gradient-to-br from-violet-100 via-white to-slate-100 p-6 shadow-sm dark:border-violet-400/15 dark:from-violet-500/20 dark:via-[#1E293B] dark:to-[#0F172A] md:p-8">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-fuchsia-300/30 blur-3xl dark:bg-fuchsia-500/20" />
+      <article className="vn-dashboard-hero relative overflow-hidden rounded-3xl border border-violet-200 bg-gradient-to-br from-violet-100 via-white to-slate-100 p-6 shadow-sm dark:border-violet-400/15 dark:from-violet-500/20 dark:via-[#1E293B] dark:to-[#0F172A] md:p-8">
+        <div className="vn-dashboard-hero-decor pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-fuchsia-300/30 blur-3xl dark:bg-fuchsia-500/20" />
 
         <div className="pointer-events-none absolute bottom-0 left-1/3 h-36 w-36 rounded-full bg-violet-300/30 blur-3xl dark:bg-violet-500/20" />
 
-        <div className="relative flex flex-col gap-7 xl:flex-row xl:items-center xl:justify-between">
+        <div className="vn-dashboard-hero-layout relative grid items-center gap-6">
           <div className="max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-violet-700 dark:text-violet-300">
+            <p className="vn-dashboard-hero-kicker text-xs font-bold uppercase tracking-[0.2em] text-violet-700 dark:text-violet-300">
               Administración de VibeNotas
             </p>
 
@@ -686,20 +695,13 @@ export default function AdminDashboard() {
               VibeNotas desde un solo lugar.
             </p>
 
-            <p className="mt-4 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-              <Clock3
-                size={16}
-                className="text-violet-600 dark:text-violet-300"
-              />
-              {currentDate}
-            </p>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 xl:w-[430px]">
+          <div className="vn-dashboard-hero-actions grid gap-3 sm:grid-cols-2 xl:w-[430px]">
             <button
               type="button"
               onClick={() => navigate("/admin/users")}
-              className="group flex items-center justify-between rounded-2xl border border-violet-200 bg-violet-50 p-4 text-left transition hover:-translate-y-1 hover:bg-violet-100 dark:border-violet-300/15 dark:bg-violet-500/15 dark:hover:bg-violet-500/25"
+              className="vn-dashboard-primary group flex items-center justify-between rounded-2xl border border-violet-200 bg-violet-50 p-4 text-left transition hover:-translate-y-1 hover:bg-violet-100 dark:border-violet-300/15 dark:bg-violet-500/15 dark:hover:bg-violet-500/25"
             >
               <div>
                 <p className="text-sm font-bold text-slate-950 dark:text-white">
@@ -720,7 +722,7 @@ export default function AdminDashboard() {
             <button
               type="button"
               onClick={() => void loadDashboard()}
-              className="group flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 p-4 text-left transition hover:-translate-y-1 hover:bg-white dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
+              className="vn-dashboard-secondary group flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 p-4 text-left transition hover:-translate-y-1 hover:bg-white dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
             >
               <div>
                 <p className="text-sm font-bold text-slate-950 dark:text-white">
@@ -760,8 +762,8 @@ export default function AdminDashboard() {
           </div>
         </article>
 
-        <article className="flex items-center gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 dark:border-sky-500/15 dark:bg-sky-500/[0.07]">
-          <div className="rounded-xl bg-sky-100 p-2.5 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300">
+        <article className="vn-admin-summary-messages flex items-center gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 dark:border-sky-500/15 dark:bg-sky-500/[0.07]">
+          <div className="vn-admin-summary-messages-icon rounded-xl bg-sky-100 p-2.5 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300">
             <MessageCircle size={20} />
           </div>
 
@@ -770,7 +772,7 @@ export default function AdminDashboard() {
               Mensajes de hoy
             </p>
 
-            <p className="mt-0.5 text-xs text-sky-700 dark:text-sky-300">
+            <p className="vn-admin-summary-messages-count mt-0.5 text-xs text-sky-700 dark:text-sky-300">
               {communication.messagesToday} mensajes enviados
             </p>
           </div>
@@ -780,14 +782,14 @@ export default function AdminDashboard() {
           className={`flex items-center gap-3 rounded-2xl border p-4 ${
             communication.pendingReports > 0
               ? "border-amber-200 bg-amber-50 dark:border-amber-500/15 dark:bg-amber-500/[0.07]"
-              : "border-violet-200 bg-violet-50 dark:border-violet-500/15 dark:bg-violet-500/[0.07]"
+              : "vn-admin-summary-no-reports border-violet-200 bg-violet-50 dark:border-violet-500/15 dark:bg-violet-500/[0.07]"
           }`}
         >
           <div
             className={`rounded-xl p-2.5 ${
               communication.pendingReports > 0
                 ? "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300"
-                : "bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300"
+                : "vn-admin-summary-no-reports-icon bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300"
             }`}
           >
             <AlertTriangle size={20} />
@@ -802,7 +804,7 @@ export default function AdminDashboard() {
               className={`mt-0.5 text-xs ${
                 communication.pendingReports > 0
                   ? "text-amber-700 dark:text-amber-300"
-                  : "text-violet-700 dark:text-violet-300"
+                  : "vn-admin-summary-no-reports-count text-violet-700 dark:text-violet-300"
               }`}
             >
               {communication.pendingReports} requieren revisión
@@ -881,7 +883,7 @@ export default function AdminDashboard() {
 
       {/* USUARIOS QUE REQUIEREN ATENCIÓN */}
 
-      <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
+      <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
         <div>
           <p className="text-sm font-semibold text-amber-700 dark:text-amber-300">
             Gestión de usuarios
@@ -973,9 +975,9 @@ export default function AdminDashboard() {
       {/* PRODUCTIVIDAD + COMUNICACIÓN */}
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
+        <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
           <div>
-            <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+            <p className="vn-dashboard-kicker text-sm font-semibold text-emerald-700 dark:text-emerald-300">
               Productividad
             </p>
 
@@ -1015,7 +1017,7 @@ export default function AdminDashboard() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-violet-200 bg-violet-50 p-4 dark:border-violet-500/20 dark:bg-violet-500/[0.07]">
+            <div className="vn-admin-progress-card rounded-2xl border border-violet-200 bg-violet-50 p-4 dark:border-violet-500/20 dark:bg-violet-500/[0.07]">
               <p className="text-xs font-semibold uppercase tracking-wide text-violet-700 dark:text-violet-300">
                 Progreso global
               </p>
@@ -1026,7 +1028,7 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="mt-4 rounded-2xl border border-slate-200 p-4 dark:border-white/5">
+          <div className="vn-admin-reminder-row mt-4 rounded-2xl border border-slate-200 p-4 dark:border-white/5">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <BellRing
@@ -1053,9 +1055,9 @@ export default function AdminDashboard() {
           </div>
         </article>
 
-        <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
+        <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
           <div>
-            <p className="text-sm font-semibold text-sky-700 dark:text-sky-300">
+            <p className="vn-dashboard-kicker text-sm font-semibold text-sky-700 dark:text-sky-300">
               Comunicación
             </p>
 
@@ -1076,7 +1078,7 @@ export default function AdminDashboard() {
                 </p>
               </div>
 
-              <span className="text-xl font-extrabold text-sky-700 dark:text-sky-300">
+              <span className="vn-admin-chat-count text-xl font-extrabold text-sky-700 dark:text-sky-300">
                 {communication.directConversations}
               </span>
             </div>
@@ -1092,7 +1094,7 @@ export default function AdminDashboard() {
                 </p>
               </div>
 
-              <span className="text-xl font-extrabold text-violet-700 dark:text-violet-300">
+              <span className="vn-admin-chat-count text-xl font-extrabold text-violet-700 dark:text-violet-300">
                 {communication.groupConversations}
               </span>
             </div>
@@ -1146,9 +1148,9 @@ export default function AdminDashboard() {
 
       {/* ACTIVIDAD DE HOY */}
 
-      <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
+      <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
         <div>
-          <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">
+          <p className="vn-dashboard-kicker text-sm font-semibold text-violet-700 dark:text-violet-300">
             VibeNotas hoy
           </p>
 
@@ -1163,7 +1165,7 @@ export default function AdminDashboard() {
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/5 dark:bg-white/[0.03]">
-            <StickyNote className="text-violet-600 dark:text-violet-300" />
+            <StickyNote className="vn-admin-today-icon text-violet-600 dark:text-violet-300" />
 
             <p className="mt-3 text-2xl font-extrabold text-slate-950 dark:text-white">
               {data.today.notesCreated}
@@ -1183,7 +1185,7 @@ export default function AdminDashboard() {
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/5 dark:bg-white/[0.03]">
-            <FileText className="text-sky-600 dark:text-sky-300" />
+            <FileText className="vn-admin-today-icon text-sky-600 dark:text-sky-300" />
 
             <p className="mt-3 text-2xl font-extrabold text-slate-950 dark:text-white">
               {data.today.documentsUploaded}
@@ -1213,7 +1215,7 @@ export default function AdminDashboard() {
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/5 dark:bg-white/[0.03]">
-            <MessageCircle className="text-fuchsia-600 dark:text-fuchsia-300" />
+            <MessageCircle className="vn-admin-today-icon text-fuchsia-600 dark:text-fuchsia-300" />
 
             <p className="mt-3 text-2xl font-extrabold text-slate-950 dark:text-white">
               {data.today.messagesSent}
@@ -1226,10 +1228,10 @@ export default function AdminDashboard() {
 
       {/* USUARIOS RECIENTES */}
 
-      <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
+      <article className="vn-dashboard-panel vn-admin-recent-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-800/80">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold text-sky-700 dark:text-sky-300">
+            <p className="vn-dashboard-kicker text-sm font-semibold text-sky-700 dark:text-sky-300">
               Usuarios
             </p>
 
@@ -1241,8 +1243,9 @@ export default function AdminDashboard() {
           <button
             type="button"
             onClick={() => navigate("/admin/users")}
-            className="rounded-xl p-2 text-violet-700 transition hover:bg-violet-50 dark:text-violet-300 dark:hover:bg-violet-500/10"
+            className="vn-admin-recent-see-all rounded-xl p-2 text-violet-700 transition hover:bg-violet-50 dark:text-violet-300 dark:hover:bg-violet-500/10"
             title="Ver todos los usuarios"
+            aria-label="Ver todos los usuarios"
           >
             <ArrowRight size={20} />
           </button>
@@ -1259,9 +1262,9 @@ export default function AdminDashboard() {
                   key={user.id}
                   type="button"
                   onClick={() => navigate("/admin/users")}
-                  className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-left transition hover:border-violet-200 hover:bg-violet-50 dark:border-white/5 dark:bg-white/[0.03] dark:hover:border-violet-500/20 dark:hover:bg-white/[0.07]"
+                  className="vn-admin-recent-user flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-left transition hover:border-violet-200 hover:bg-violet-50 dark:border-white/5 dark:bg-white/[0.03] dark:hover:border-violet-500/20 dark:hover:bg-white/[0.07]"
                 >
-                  <div className="flex min-w-0 items-center gap-3">
+                  <div className="vn-admin-recent-identity flex min-w-0 items-center gap-3">
                     <UserAvatar user={user} />
 
                     <div className="min-w-0">
@@ -1275,8 +1278,8 @@ export default function AdminDashboard() {
                     </div>
                   </div>
 
-                  <div className="hidden text-right sm:block">
-                    <div className="flex justify-end gap-1.5">
+                  <div className="vn-admin-recent-meta hidden text-right sm:block">
+                    <div className="vn-admin-recent-badges flex justify-end gap-1.5">
                       <span
                         className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold ${getStatusStyle(
                           user.status,
@@ -1286,7 +1289,7 @@ export default function AdminDashboard() {
                       </span>
 
                       {primaryRole && (
-                        <span className="inline-flex rounded-full border border-violet-200 bg-violet-50 px-2.5 py-1 text-[10px] font-bold text-violet-700 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-300">
+                        <span className={`vn-admin-recent-role inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold ${getRoleBadgeTone(primaryRole.slug)}`}>
                           {getRoleLabel(primaryRole.slug)}
                         </span>
                       )}

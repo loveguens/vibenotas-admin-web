@@ -6,7 +6,6 @@ import {
   ArrowRight,
   BellRing,
   CheckCircle2,
-  Clock3,
   FileText,
   Folder,
   HardDrive,
@@ -378,14 +377,14 @@ function getRoleStyle(role: string): string {
     .replace(/[\s-]+/g, "_");
 
   if (normalizedRole === "super_admin" || normalizedRole === "superadmin") {
-    return "border-fuchsia-200 bg-fuchsia-50 text-fuchsia-700 dark:border-fuchsia-400/20 dark:bg-fuchsia-500/10 dark:text-fuchsia-300";
+    return "vn-superadmin-badge-owner border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-400/20 dark:bg-rose-500/10 dark:text-rose-300";
   }
 
   if (normalizedRole === "admin" || normalizedRole === "administrator") {
-    return "border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-300";
+    return "vn-superadmin-badge-admin border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-400/20 dark:bg-amber-500/10 dark:text-amber-300";
   }
 
-  return "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-400/20 dark:bg-sky-500/10 dark:text-sky-300";
+  return "vn-superadmin-badge-user border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-400/20 dark:bg-slate-500/10 dark:text-slate-300";
 }
 
 function getPrimaryRole(user: RecentUser): Role | null {
@@ -551,26 +550,22 @@ function getApiErrorMessage(error: unknown): string {
 }
 
 function UserAvatar({ user }: { user: RecentUser }) {
-  const [failed, setFailed] = useState(false);
+  const [failedAvatarUrl, setFailedAvatarUrl] = useState<string | null>(null);
 
   const avatarUrl = useMemo(
     () => resolveAvatarUrl(user.avatarUrl),
     [user.avatarUrl],
   );
 
-  useEffect(() => {
-    setFailed(false);
-  }, [avatarUrl]);
-
   return (
-    <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-xs font-extrabold text-white">
-      {avatarUrl && !failed ? (
+    <div className="vn-superadmin-avatar flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-xs font-extrabold text-white">
+      {avatarUrl && failedAvatarUrl !== avatarUrl ? (
         <img
           src={avatarUrl}
           alt={`Foto de ${user.displayName}`}
           className="h-full w-full object-cover"
           loading="lazy"
-          onError={() => setFailed(true)}
+          onError={() => setFailedAvatarUrl(avatarUrl)}
         />
       ) : (
         getInitials(user.displayName)
@@ -659,7 +654,11 @@ export default function SuperAdminDashboard() {
   }, [navigate]);
 
   useEffect(() => {
-    void loadDashboard();
+    const initialFetch = window.setTimeout(() => {
+      void loadDashboard();
+    }, 0);
+
+    return () => window.clearTimeout(initialFetch);
   }, [loadDashboard]);
 
   if (loading) {
@@ -726,23 +725,16 @@ export default function SuperAdminDashboard() {
 
   const recentActivity = identityData.recentActivity ?? [];
 
-  const currentDate = new Intl.DateTimeFormat("es-CL", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date());
-
   return (
-    <section className="space-y-8 pb-8 text-slate-900 dark:text-white">
+    <section className="vn-dashboard vn-superadmin-dashboard space-y-8 pb-8 text-slate-900 dark:text-white">
       {/* CABECERA */}
 
-      <article className="relative overflow-hidden rounded-3xl border border-violet-200 bg-gradient-to-br from-violet-100 via-white to-slate-50 p-6 shadow-xl shadow-slate-200/70 dark:border-violet-400/15 dark:from-violet-500/20 dark:via-[#1E293B] dark:to-[#0F172A] dark:shadow-violet-950/30 md:p-8">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-fuchsia-300/25 blur-3xl dark:bg-fuchsia-500/20" />
+      <article className="vn-dashboard-hero relative overflow-hidden rounded-3xl border border-violet-200 bg-gradient-to-br from-violet-100 via-white to-slate-50 p-6 shadow-xl shadow-slate-200/70 dark:border-violet-400/15 dark:from-violet-500/20 dark:via-[#1E293B] dark:to-[#0F172A] dark:shadow-violet-950/30 md:p-8">
+        <div className="vn-dashboard-hero-decor pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-fuchsia-300/25 blur-3xl dark:bg-fuchsia-500/20" />
 
-        <div className="relative flex flex-col gap-7 xl:flex-row xl:items-center xl:justify-between">
+        <div className="vn-dashboard-hero-layout relative grid items-center gap-6">
           <div className="max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-violet-700 dark:text-violet-300">
+            <p className="vn-dashboard-hero-kicker text-xs font-bold uppercase tracking-[0.2em] text-violet-700 dark:text-violet-300">
               Control global de VibeNotas
             </p>
 
@@ -755,21 +747,13 @@ export default function SuperAdminDashboard() {
               roles, sesiones y seguridad.
             </p>
 
-            <p className="mt-4 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-              <Clock3
-                size={16}
-                className="text-violet-600 dark:text-violet-300"
-              />
-
-              {currentDate}
-            </p>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 xl:w-[430px]">
+          <div className="vn-dashboard-hero-actions grid gap-3 sm:grid-cols-2 xl:w-[430px]">
             <button
               type="button"
               onClick={() => navigate("/superadmin/administrators")}
-              className="group flex items-center justify-between rounded-2xl border border-violet-200 bg-violet-100/80 p-4 text-left transition hover:-translate-y-1 hover:bg-violet-200/80 dark:border-violet-300/15 dark:bg-violet-500/15 dark:hover:bg-violet-500/25"
+              className="vn-dashboard-primary group flex items-center justify-between rounded-2xl border border-violet-200 bg-violet-100/80 p-4 text-left transition hover:-translate-y-1 hover:bg-violet-200/80 dark:border-violet-300/15 dark:bg-violet-500/15 dark:hover:bg-violet-500/25"
             >
               <div>
                 <p className="text-sm font-bold">Administradores</p>
@@ -788,7 +772,7 @@ export default function SuperAdminDashboard() {
             <button
               type="button"
               onClick={() => navigate("/superadmin/security")}
-              className="group flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 p-4 text-left transition hover:-translate-y-1 hover:bg-slate-100 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
+              className="vn-dashboard-secondary group flex items-center justify-between rounded-2xl border border-slate-200 bg-white/80 p-4 text-left transition hover:-translate-y-1 hover:bg-slate-100 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
             >
               <div>
                 <p className="text-sm font-bold">Seguridad</p>
@@ -822,13 +806,13 @@ export default function SuperAdminDashboard() {
           </div>
         </article>
 
-        <article className="flex items-center gap-3 rounded-2xl border border-violet-200 bg-violet-50 p-4 dark:border-violet-500/15 dark:bg-violet-500/[0.07]">
+        <article className="vn-superadmin-sessions flex items-center gap-3 rounded-2xl border border-violet-200 bg-violet-50 p-4 dark:border-violet-500/15 dark:bg-violet-500/[0.07]">
           <Activity className="text-violet-700 dark:text-violet-300" />
 
           <div>
             <p className="text-sm font-bold">Sesiones activas</p>
 
-            <p className="text-xs text-violet-700 dark:text-violet-300">
+            <p className="vn-superadmin-session-count text-xs text-violet-700 dark:text-violet-300">
               {sessions.active} vigentes
             </p>
           </div>
@@ -850,7 +834,7 @@ export default function SuperAdminDashboard() {
       {/* PLATAFORMA */}
 
       <div>
-        <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">
+        <p className="vn-dashboard-kicker text-sm font-semibold text-violet-700 dark:text-violet-300">
           Plataforma
         </p>
 
@@ -926,7 +910,7 @@ export default function SuperAdminDashboard() {
       {/* SEGURIDAD */}
 
       <div>
-        <p className="text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">
+        <p className="vn-dashboard-kicker text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">
           Seguridad y administración
         </p>
 
@@ -1012,8 +996,8 @@ export default function SuperAdminDashboard() {
       {/* ROLES Y USUARIOS */}
 
       <div className="grid gap-6 xl:grid-cols-[1fr_1.15fr]">
-        <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
-          <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">
+        <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
+          <p className="vn-dashboard-kicker text-sm font-semibold text-violet-700 dark:text-violet-300">
             Distribución
           </p>
 
@@ -1041,7 +1025,7 @@ export default function SuperAdminDashboard() {
                     </div>
 
                     <div className="text-right">
-                      <p className="text-lg font-extrabold text-violet-700 dark:text-violet-300">
+                      <p className="vn-superadmin-role-count text-lg font-extrabold text-violet-700 dark:text-violet-300">
                         {role.totalUsers}
                       </p>
 
@@ -1051,9 +1035,9 @@ export default function SuperAdminDashboard() {
                     </div>
                   </div>
 
-                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
+                  <div className="vn-superadmin-role-track mt-3 h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-500"
+                      className="vn-dashboard-progress h-full rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-500"
                       style={{
                         width: `${Math.min(percentage, 100)}%`,
                       }}
@@ -1065,10 +1049,10 @@ export default function SuperAdminDashboard() {
           </div>
         </article>
 
-        <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
+        <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-sky-700 dark:text-sky-300">
+              <p className="vn-dashboard-kicker text-sm font-semibold text-sky-700 dark:text-sky-300">
                 Identidad
               </p>
 
@@ -1089,9 +1073,9 @@ export default function SuperAdminDashboard() {
                   key={user.id}
                   type="button"
                   onClick={() => navigate("/superadmin/users")}
-                  className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-left dark:border-white/5 dark:bg-white/[0.03]"
+                  className="vn-superadmin-recent-user flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-left dark:border-white/5 dark:bg-white/[0.03]"
                 >
-                  <div className="flex min-w-0 items-center gap-3">
+                  <div className="vn-superadmin-recent-identity flex min-w-0 items-center gap-3">
                     <UserAvatar user={user} />
 
                     <div className="min-w-0">
@@ -1105,8 +1089,8 @@ export default function SuperAdminDashboard() {
                     </div>
                   </div>
 
-                  <div className="hidden text-right sm:block">
-                    <div className="flex gap-1.5">
+                  <div className="vn-superadmin-recent-meta hidden text-right sm:block">
+                    <div className="vn-superadmin-recent-badges flex gap-1.5">
                       <span
                         className={`rounded-full border px-2.5 py-1 text-[10px] font-bold ${getStatusStyle(
                           user.status,
@@ -1139,10 +1123,10 @@ export default function SuperAdminDashboard() {
 
       {/* AUDITORÍA */}
 
-      <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
+      <article className="vn-dashboard-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">
+            <p className="vn-dashboard-kicker text-sm font-semibold text-fuchsia-700 dark:text-fuchsia-300">
               Seguridad
             </p>
 
@@ -1201,24 +1185,24 @@ export default function SuperAdminDashboard() {
 
       {/* ACCIONES */}
 
-      <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
+      <article className="vn-dashboard-panel vn-superadmin-quick-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">
+            <p className="vn-dashboard-kicker text-sm font-semibold text-violet-700 dark:text-violet-300">
               Acciones rápidas
             </p>
 
             <h2 className="mt-1 text-xl font-bold">Gestionar VibeNotas</h2>
           </div>
 
-          <Plus className="text-violet-600" />
+          <Plus className="vn-superadmin-quick-plus text-violet-600" />
         </div>
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <button
             type="button"
             onClick={() => navigate("/superadmin/administrators")}
-            className="rounded-2xl border border-violet-200 bg-violet-50 p-4 text-left"
+            className="vn-superadmin-quick-action rounded-2xl border border-violet-200 bg-violet-50 p-4 text-left transition-colors"
           >
             <UserPlus className="text-violet-600" />
 
@@ -1228,7 +1212,7 @@ export default function SuperAdminDashboard() {
           <button
             type="button"
             onClick={() => navigate("/superadmin/users")}
-            className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-left"
+            className="vn-superadmin-quick-action rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-left transition-colors"
           >
             <Users className="text-emerald-700" />
 
@@ -1238,7 +1222,7 @@ export default function SuperAdminDashboard() {
           <button
             type="button"
             onClick={() => navigate("/superadmin/notifications")}
-            className="rounded-2xl border border-sky-200 bg-sky-50 p-4 text-left"
+            className="vn-superadmin-quick-action rounded-2xl border border-sky-200 bg-sky-50 p-4 text-left transition-colors"
           >
             <BellRing className="text-sky-700" />
 
@@ -1248,7 +1232,7 @@ export default function SuperAdminDashboard() {
           <button
             type="button"
             onClick={() => navigate("/superadmin/security")}
-            className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-left"
+            className="vn-superadmin-quick-action rounded-2xl border border-amber-200 bg-amber-50 p-4 text-left transition-colors"
           >
             <ShieldAlert className="text-amber-700" />
 

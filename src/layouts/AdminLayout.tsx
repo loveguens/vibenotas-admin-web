@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
+import "../styles/admin-theme.css";
 
 type AdminLayoutProps = {
   role: "admin" | "superadmin" | "owner";
@@ -12,7 +13,7 @@ export default function AdminLayout({ role }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-950 transition-colors duration-200 dark:bg-[#080E1D] dark:text-white lg:flex">
+    <div className="vn-admin lg:flex">
       <Sidebar
         role={role}
         isOpen={sidebarOpen}

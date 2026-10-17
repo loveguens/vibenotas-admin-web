@@ -21,7 +21,7 @@ export default function StatCard({
   return (
     <article
       className="
-        group relative overflow-hidden
+        vn-admin-stat-card group relative overflow-hidden
         rounded-3xl
         border border-slate-200
         bg-white
@@ -46,14 +46,14 @@ export default function StatCard({
           absolute -right-10 -top-10
           h-28 w-28
           rounded-full
-          bg-violet-200/50
+          bg-orange-100/40
           blur-2xl
           transition
 
-          group-hover:bg-violet-300/60
+          group-hover:bg-orange-100/60
 
-          dark:bg-violet-500/10
-          dark:group-hover:bg-violet-500/20
+          dark:bg-orange-500/5
+          dark:group-hover:bg-orange-500/10
         "
       />
 
@@ -61,7 +61,7 @@ export default function StatCard({
         <div className="min-w-0">
           <p
             className="
-              text-sm font-medium
+              vn-admin-stat-card-title text-sm font-medium
               text-slate-600
               dark:text-slate-400
             "
@@ -72,7 +72,7 @@ export default function StatCard({
           <h3
             className="
               mt-3
-              text-3xl font-bold
+              vn-admin-stat-card-value text-3xl font-bold
               tracking-tight
               text-slate-950
               dark:text-white
@@ -83,7 +83,7 @@ export default function StatCard({
 
           <p
             className="
-              mt-2
+              vn-admin-stat-card-description mt-2
               text-sm
               text-slate-500
               dark:text-slate-500
@@ -95,7 +95,7 @@ export default function StatCard({
 
         <div
           className="
-            shrink-0
+            vn-admin-stat-card-icon shrink-0
             rounded-2xl
             border border-violet-200
             bg-violet-100
@@ -146,7 +146,7 @@ export default function StatCard({
 
         <div
           className="
-            flex h-7
+            vn-admin-stat-card-bars flex h-7
             items-end gap-1
             opacity-80
             dark:opacity-100

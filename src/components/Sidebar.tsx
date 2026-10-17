@@ -195,8 +195,9 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
         onClick={onClose}
         aria-current={active ? "page" : undefined}
         title={collapsed ? item.label : undefined}
+        data-active={active}
         className={`
-          group relative flex min-h-12
+          vn-admin-nav-link group relative flex min-h-12
           items-center gap-3 rounded-2xl
           px-3 py-2.5 text-sm font-semibold
           outline-none transition-all duration-200
@@ -234,7 +235,7 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
         {active && (
           <span
             className="
-              absolute left-0 h-7 w-1
+              vn-admin-active-indicator absolute left-0 h-7 w-1
               rounded-r-full
               bg-gradient-to-b
               from-violet-500
@@ -250,7 +251,7 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
 
         <div
           className={`
-            flex h-9 w-9 shrink-0
+            vn-admin-nav-icon flex h-9 w-9 shrink-0
             items-center justify-center
             rounded-xl transition
             ${
@@ -312,8 +313,9 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
 
       <aside
         aria-label="Navegación principal"
+        data-collapsed={collapsed}
         className={`
-          fixed inset-y-3 left-3 z-[70]
+          vn-admin-sidebar fixed inset-y-3 left-3 z-[70]
           flex h-[calc(100vh-24px)]
           w-[280px] flex-col
           overflow-hidden
@@ -341,7 +343,7 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
       >
         <div
           className="
-            flex min-h-[78px]
+            vn-admin-sidebar-header flex min-h-[78px]
             items-center justify-between
             border-b border-slate-200
             px-4
@@ -356,24 +358,11 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
               items-center gap-3
             "
           >
-            <div
-              className="
-                flex h-11 w-11
-                shrink-0 items-center
-                justify-center
-                rounded-2xl
-                bg-gradient-to-br
-                from-violet-500
-                via-fuchsia-500
-                to-indigo-600
-                text-white
-                shadow-lg
-                shadow-violet-500/20
-                dark:shadow-violet-900/50
-              "
-            >
-              <Crown size={20} />
-            </div>
+            <img
+              src="/vibenotas-logo.png"
+              alt="Logo de VibeNotas"
+              className="h-11 w-11 shrink-0 rounded-2xl object-contain"
+            />
 
             <div
               className={`
@@ -383,7 +372,7 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
             >
               <h1
                 className="
-                  truncate
+                  vn-admin-brand-name truncate
                   text-[15px]
                   font-extrabold
                   tracking-tight
@@ -396,7 +385,7 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
 
               <p
                 className="
-                  mt-0.5
+                  vn-admin-role-label mt-0.5
                   text-[10px]
                   font-bold
                   uppercase
@@ -418,7 +407,7 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
             type="button"
             onClick={() => setCollapsed((value) => !value)}
             className="
-              hidden h-9 w-9
+              vn-admin-collapse hidden h-9 w-9
               items-center justify-center
               rounded-xl
               text-slate-500
@@ -474,7 +463,7 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
 
           <div
             className="
-              my-4
+              vn-admin-sidebar-separator my-4
               border-t border-slate-200
               dark:border-white/10
             "
@@ -488,7 +477,7 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
             <>
               <div
                 className="
-                  my-4
+                  vn-admin-sidebar-separator my-4
                   border-t border-slate-200
                   dark:border-white/10
                 "
@@ -503,7 +492,7 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
 
         <div
           className="
-            border-t border-slate-200
+            vn-admin-sidebar-footer border-t border-slate-200
             p-3
             dark:border-white/10
           "
@@ -512,8 +501,9 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
             to={`${basePath}/profile`}
             onClick={onClose}
             title={collapsed ? "Mi perfil" : undefined}
+            data-active={esRutaActiva(`${basePath}/profile`)}
             className={`
-              group mb-1 flex
+              vn-admin-bottom-link group mb-1 flex
               min-h-12 items-center
               gap-3 rounded-2xl
               px-3 py-2.5
@@ -565,8 +555,9 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
             to={`${basePath}/settings`}
             onClick={onClose}
             title={collapsed ? "Configuración" : undefined}
+            data-active={esRutaActiva(`${basePath}/settings`)}
             className={`
-              group mb-1 flex
+              vn-admin-bottom-link group mb-1 flex
               min-h-12 items-center
               gap-3 rounded-2xl
               px-3 py-2.5
@@ -616,7 +607,7 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
 
           <div
             className="
-              my-2
+              vn-admin-sidebar-separator my-2
               border-t border-slate-200
               dark:border-white/[0.06]
             "
@@ -627,7 +618,7 @@ export default function Sidebar({ role, isOpen, onClose }: SidebarProps) {
             onClick={cerrarSesion}
             title={collapsed ? "Cerrar sesión" : undefined}
             className="
-              group flex min-h-12
+              vn-admin-logout group flex min-h-12
               w-full items-center
               gap-3 rounded-2xl
               px-3 py-2.5
@@ -670,7 +661,7 @@ function SidebarSection({ label, collapsed, children }: SidebarSectionProps) {
     <section>
       <p
         className={`
-          mb-2 px-3
+          vn-admin-section-label mb-2 px-3
           text-[10px]
           font-bold
           uppercase
