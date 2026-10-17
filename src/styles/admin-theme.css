@@ -933,3 +933,14 @@ html.dark .vn-admin .vn-admin-recent-role-admin { color: #f4c95d; }
   .vn-admin .vn-notifications-head { padding: 10px 14px; }
   .vn-admin .vn-notifications-footer { padding: 8px; }
 }
+
+/* Neutralizar el antiguo resplandor violeta sobre notificaciones al pasar
+   el cursor: conservar los indicadores de no leídas en coral. */
+.vn-admin .vn-notifications-item > .absolute.inset-0 {
+  background: none;
+  pointer-events: none;
+}
+.vn-admin .vn-notifications-item[data-unread="true"]:hover,
+.vn-admin .vn-notifications-item[data-unread="true"]:focus-visible {
+  background: color-mix(in srgb, var(--vn-coral-soft) 70%, var(--vn-surface));
+}
