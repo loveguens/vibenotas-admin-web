@@ -550,26 +550,22 @@ function getApiErrorMessage(error: unknown): string {
 }
 
 function UserAvatar({ user }: { user: RecentUser }) {
-  const [failed, setFailed] = useState(false);
+  const [failedAvatarUrl, setFailedAvatarUrl] = useState<string | null>(null);
 
   const avatarUrl = useMemo(
     () => resolveAvatarUrl(user.avatarUrl),
     [user.avatarUrl],
   );
 
-  useEffect(() => {
-    setFailed(false);
-  }, [avatarUrl]);
-
   return (
     <div className="vn-superadmin-avatar flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-xs font-extrabold text-white">
-      {avatarUrl && !failed ? (
+      {avatarUrl && failedAvatarUrl !== avatarUrl ? (
         <img
           src={avatarUrl}
           alt={`Foto de ${user.displayName}`}
           className="h-full w-full object-cover"
           loading="lazy"
-          onError={() => setFailed(true)}
+          onError={() => setFailedAvatarUrl(avatarUrl)}
         />
       ) : (
         getInitials(user.displayName)
