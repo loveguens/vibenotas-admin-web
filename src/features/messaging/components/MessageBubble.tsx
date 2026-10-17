@@ -45,7 +45,7 @@ export function MessageBubble({
   const isSystem = message.tipo === "sistema";
 
   const copyKind =
-    message.tipo_copia ?? (Boolean(message.reenviado) ? "forwarded" : null);
+    message.tipo_copia ?? (message.reenviado ? "forwarded" : null);
 
   if (isSystem) {
     return (
