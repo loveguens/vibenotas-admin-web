@@ -658,7 +658,11 @@ export default function SuperAdminDashboard() {
   }, [navigate]);
 
   useEffect(() => {
-    void loadDashboard();
+    const initialFetch = window.setTimeout(() => {
+      void loadDashboard();
+    }, 0);
+
+    return () => window.clearTimeout(initialFetch);
   }, [loadDashboard]);
 
   if (loading) {
