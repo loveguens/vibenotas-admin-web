@@ -108,7 +108,7 @@ export function getFixedMenuPosition(
 ): FixedMenuPosition {
   const rect = button.getBoundingClientRect();
   const margin = 12;
-  let x = Math.min(
+  const x = Math.min(
     Math.max(margin, rect.right - width),
     window.innerWidth - width - margin,
   );
