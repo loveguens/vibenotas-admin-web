@@ -652,3 +652,27 @@ html.dark .vn-admin .vn-admin-recent-role-admin { color: #f4c95d; }
 .vn-admin .vn-regular-dashboard .vn-admin-today-icon {
   color: var(--vn-coral-strong);
 }
+
+/* Botones principales compartidos: quitar los últimos acentos violetas.
+   Las acciones, rutas y el contenido permanecen intactos. */
+.vn-admin .vn-dashboard-primary > div > p:first-child,
+.vn-admin .vn-dashboard-secondary > div > p:first-child {
+  color: var(--vn-ink);
+}
+.vn-admin .vn-dashboard-primary > div > p:not(:first-child),
+.vn-admin .vn-dashboard-secondary > div > p:not(:first-child) {
+  color: var(--vn-muted);
+}
+.vn-admin .vn-dashboard-primary > svg {
+  flex-shrink: 0;
+  color: var(--vn-coral-strong);
+}
+.vn-admin .vn-dashboard-secondary > svg {
+  flex-shrink: 0;
+  color: var(--vn-muted);
+}
+.vn-admin .vn-dashboard-primary:focus-visible,
+.vn-admin .vn-dashboard-secondary:focus-visible {
+  outline: 3px solid var(--vn-coral);
+  outline-offset: 3px;
+}
