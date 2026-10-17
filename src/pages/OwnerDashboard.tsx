@@ -339,7 +339,11 @@ export default function OwnerDashboard() {
   }, []);
 
   useEffect(() => {
-    void loadDashboard();
+    const initialFetch = window.setTimeout(() => {
+      void loadDashboard();
+    }, 0);
+
+    return () => window.clearTimeout(initialFetch);
   }, [loadDashboard]);
 
   if (loading) {
