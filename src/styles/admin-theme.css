@@ -812,3 +812,10 @@ html.dark .vn-admin .vn-admin-recent-role-admin { color: #f4c95d; }
     right: -72px;
   }
 }
+
+/* Desktop: respiración entre Sidebar y Topbar, conservando la alineación de tarjetas. */
+@media (min-width: 1024px) {
+  .vn-admin .vn-admin-sidebar {
+    margin-right: 12px;
+  }
+}
