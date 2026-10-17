@@ -231,6 +231,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
   const [loadingNotifications, setLoadingNotifications] = useState(false);
   const [markingAll, setMarkingAll] = useState(false);
   const [search, setSearch] = useState("");
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [usuarioActual, setUsuarioActual] =
     useState<UsuarioGuardado>(getStoredUser);
   const [profilePhotoError, setProfilePhotoError] = useState(false);
@@ -496,6 +497,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
 
     if (!texto) return;
 
+    setMobileSearchOpen(false);
     navigate(`${basePath}/users?buscar=${encodeURIComponent(texto)}`);
   };
 
@@ -629,14 +631,14 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
   return (
     <>
       <header
-        className={`vn-admin-topbar sticky top-0 z-40 border-b px-4 py-4 backdrop-blur-xl md:px-8 ${
+        className={`vn-admin-topbar sticky top-0 z-40 border-b px-4 py-3 backdrop-blur-xl md:px-5 ${
           darkMode
             ? "border-white/10 bg-[#0F172A]/85"
             : "border-slate-200 bg-white/90"
         }`}
       >
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex min-w-0 items-center gap-3">
+        <div className="vn-admin-topbar-inner flex items-center justify-between gap-4">
+          <div className="vn-admin-topbar-heading flex min-w-0 items-center gap-3">
             <button
               type="button"
               onClick={onOpenSidebar}
@@ -651,7 +653,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
               <button
                 type="button"
                 onClick={volverAtras}
-                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition ${claseBotonIcono}`}
+                className={`vn-admin-icon-button flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition ${claseBotonIcono}`}
                 title="Volver atrás"
                 aria-label="Volver atrás"
               >
@@ -692,10 +694,10 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
             </div>
           </div>
 
-          <div className="flex shrink-0 items-center gap-2 md:gap-3">
+          <div className="vn-admin-topbar-actions flex shrink-0 items-center gap-2 md:gap-3">
             <form
               onSubmit={buscar}
-              className={`vn-admin-search hidden min-w-[260px] items-center gap-3 rounded-2xl border px-4 py-3 lg:flex ${
+              className={`vn-admin-search hidden min-w-0 items-center gap-3 rounded-xl border px-4 py-3 lg:flex ${
                 darkMode
                   ? "border-white/10 bg-white/5"
                   : "border-slate-200 bg-slate-50"
@@ -718,6 +720,22 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                 }`}
               />
             </form>
+
+            <button
+              type="button"
+              onClick={() => {
+                setMobileSearchOpen((current) => !current);
+                setNotificationsOpen(false);
+                setProfileOpen(false);
+              }}
+              className={`vn-admin-icon-button flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition lg:hidden ${claseBotonIcono}`}
+              aria-label={mobileSearchOpen ? "Cerrar búsqueda de usuarios" : "Buscar usuarios"}
+              aria-expanded={mobileSearchOpen}
+              aria-controls="vn-mobile-user-search"
+              title="Buscar usuarios"
+            >
+              {mobileSearchOpen ? <X size={19} /> : <Search size={19} />}
+            </button>
 
             <button
               type="button"
@@ -760,7 +778,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
               </button>
 
               {notificationsOpen && (
-                <div className="absolute right-0 top-[calc(100%+14px)] z-50 w-[380px] overflow-hidden rounded-[28px] border border-white/10 bg-[#0F172A] shadow-2xl shadow-black/50">
+                <div className="vn-admin-notifications-popover absolute right-0 top-[calc(100%+14px)] z-50 w-[380px] overflow-hidden rounded-[28px] border border-white/10 bg-[#0F172A] shadow-2xl shadow-black/50">
                   <div className="relative overflow-hidden border-b border-white/10 px-5 py-4">
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#8B5CF633,transparent_40%)]" />
 
@@ -943,7 +961,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                   )}
                 </div>
 
-                <div className="hidden text-left lg:block">
+                <div className="hidden text-left xl:block">
                   <p
                     className={`max-w-[140px] truncate text-sm font-semibold ${
                       darkMode ? "text-white" : "text-slate-900"
@@ -1036,6 +1054,29 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
             </div>
           </div>
         </div>
+
+        {mobileSearchOpen && (
+          <form
+            id="vn-mobile-user-search"
+            onSubmit={buscar}
+            role="search"
+            className="vn-admin-mobile-search mt-3 flex items-center gap-3 rounded-xl border px-3 py-2.5 lg:hidden"
+          >
+            <Search size={18} aria-hidden="true" />
+            <input
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Buscar usuarios..."
+              aria-label="Buscar usuarios"
+              className="min-w-0 flex-1 bg-transparent text-sm outline-none"
+              autoFocus
+            />
+            <button type="submit" className="vn-admin-mobile-search-submit rounded-lg px-3 py-1.5 text-sm font-semibold">
+              Buscar
+            </button>
+          </form>
+        )}
       </header>
 
       {selectedNotification && selectedVisual && (
