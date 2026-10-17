@@ -676,3 +676,26 @@ html.dark .vn-admin .vn-admin-recent-role-admin { color: #f4c95d; }
   outline: 3px solid var(--vn-coral);
   outline-offset: 3px;
 }
+
+/* En el dashboard Admin, mantener las acciones legibles con menú expandido.
+   Usar fila completa cuando no hay ancho para texto + icono. */
+.vn-admin .vn-regular-dashboard .vn-dashboard-hero-actions {
+  width: 100%;
+  max-width: 580px;
+}
+.vn-admin .vn-regular-dashboard .vn-dashboard-hero-actions > button {
+  min-width: 0;
+}
+.vn-admin .vn-regular-dashboard .vn-dashboard-hero-actions > button > div {
+  min-width: 0;
+}
+@media (min-width: 1280px) and (max-width: 1535px) {
+  .vn-admin .vn-regular-dashboard .vn-dashboard-hero-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (min-width: 1536px) {
+  .vn-admin .vn-regular-dashboard .vn-dashboard-hero-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(480px, 560px);
+  }
+}
