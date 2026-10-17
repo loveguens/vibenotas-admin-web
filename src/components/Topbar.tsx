@@ -333,7 +333,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
     return () => {
       cancelled = true;
     };
-  }, [location.pathname, role]);
+  }, [location.pathname, role, roleLabel]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -400,13 +400,18 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
   }
 
   useEffect(() => {
-    void loadNotifications();
+    // Posponer la primera consulta evita actualizaciones síncronas de estado
+    // dentro del efecto sin alterar el polling de 30 segundos.
+    const initialFetch = window.setTimeout(() => {
+      void loadNotifications();
+    }, 0);
 
     const interval = window.setInterval(() => {
       void loadNotifications();
     }, 30000);
 
     return () => {
+      window.clearTimeout(initialFetch);
       window.clearInterval(interval);
     };
   }, []);
