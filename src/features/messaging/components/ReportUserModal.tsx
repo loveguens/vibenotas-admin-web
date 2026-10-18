@@ -1,5 +1,5 @@
 import { Flag, Loader2, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import api from "../../../services/api";
 import { API_ROUTES } from "../constants";
 import { getErrorMessage } from "../utils";
@@ -48,8 +48,20 @@ const REASONS: Array<{
   },
 ];
 
-export function ReportUserModal({
-  open,
+export function ReportUserModal(props: ReportUserModalProps) {
+  if (!props.open) {
+    return null;
+  }
+
+  return (
+    <ReportUserModalContent
+      key={props.conversationId}
+      {...props}
+    />
+  );
+}
+
+function ReportUserModalContent({
   conversationId,
   userName,
   onClose,
@@ -59,20 +71,6 @@ export function ReportUserModal({
   const [reason, setReason] = useState<ReportReason>("OTHER");
   const [details, setDetails] = useState("");
   const [busy, setBusy] = useState(false);
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    setReason("OTHER");
-    setDetails("");
-    setBusy(false);
-  }, [open, conversationId]);
-
-  if (!open) {
-    return null;
-  }
 
   async function submitReport(): Promise<void> {
     if (!conversationId || busy) {
