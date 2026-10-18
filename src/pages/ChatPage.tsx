@@ -1157,29 +1157,30 @@ export default function ChatPage() {
   useEffect(() => {
     const requestedTab = new URLSearchParams(location.search).get("tab");
 
-    if (requestedTab === "solicitudes") {
-      setActiveTab("solicitudes");
-      setSelectedConversationId(null);
-      selectedConversationIdRef.current = null;
-      void Promise.all([loadRequests(), loadSentRequests()]);
+    if (
+      requestedTab !== "solicitudes" &&
+      requestedTab !== "amigos" &&
+      requestedTab !== "bloqueados"
+    ) {
       return;
     }
 
-    if (requestedTab === "amigos") {
-      setActiveTab("amigos");
+    const openLinkedTab = window.setTimeout(() => {
+      setActiveTab(requestedTab);
       setSelectedConversationId(null);
       selectedConversationIdRef.current = null;
-      void loadFriends();
-      return;
-    }
 
-    if (requestedTab === "bloqueados") {
-      setActiveTab("bloqueados");
-      setSelectedConversationId(null);
-      selectedConversationIdRef.current = null;
-      void loadBlocked();
-    }
-  }, [location.search]);
+      if (requestedTab === "solicitudes") {
+        void Promise.all([loadRequests(), loadSentRequests()]);
+      } else if (requestedTab === "amigos") {
+        void loadFriends();
+      } else {
+        void loadBlocked();
+      }
+    }, 0);
+
+    return () => window.clearTimeout(openLinkedTab);
+  }, [location.search, loadBlocked, loadFriends, loadRequests, loadSentRequests]);
 
   function changeTab(tab: ChatTab): void {
     closeMenus();
