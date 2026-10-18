@@ -28,8 +28,20 @@ function formatMessageDate(value: string): string {
   }).format(date);
 }
 
-export function SearchMessagesModal({
-  open,
+export function SearchMessagesModal(props: SearchMessagesModalProps) {
+  if (!props.open) {
+    return null;
+  }
+
+  return (
+    <SearchMessagesModalContent
+      key={props.conversationId ?? "sin-conversacion"}
+      {...props}
+    />
+  );
+}
+
+function SearchMessagesModalContent({
   conversationId,
   onClose,
 }: SearchMessagesModalProps) {
@@ -155,41 +167,35 @@ export function SearchMessagesModal({
   );
 
   /*
-   * Reiniciamos el modal cada vez que se abre
-   * para otra conversación.
+   * Invalidamos solicitudes anteriores cuando cambia el texto.
+   * El formulario nuevo se monta con estado vacío al abrirse o
+   * al cambiar de conversación, sin efectos que reinicien estado.
    */
-  useEffect(() => {
-    if (!open) {
-      requestSequenceRef.current += 1;
-      return;
-    }
+  function updateQuery(value: string): void {
+    requestSequenceRef.current += 1;
+    setQuery(value);
 
-    setQuery("");
-    setResults([]);
-    setNextCursor(null);
-    setHasMore(false);
-    setError("");
-    setLoading(false);
-    setLoadingMore(false);
-  }, [conversationId, open]);
+    if (!value.trim()) {
+      setResults([]);
+      setNextCursor(null);
+      setHasMore(false);
+      setError("");
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  }
 
   /*
    * Búsqueda automática con pequeño debounce.
    */
   useEffect(() => {
-    if (!open || !conversationId) {
+    if (!conversationId) {
       return;
     }
 
     const normalizedQuery = query.trim();
 
     if (!normalizedQuery) {
-      requestSequenceRef.current += 1;
-      setResults([]);
-      setNextCursor(null);
-      setHasMore(false);
-      setError("");
-      setLoading(false);
       return;
     }
 
@@ -200,11 +206,7 @@ export function SearchMessagesModal({
     return () => {
       window.clearTimeout(timeoutId);
     };
-  }, [conversationId, open, query, search]);
-
-  if (!open) {
-    return null;
-  }
+  }, [conversationId, query, search]);
 
   const normalizedQuery = query.trim();
 
@@ -251,7 +253,7 @@ export function SearchMessagesModal({
               autoFocus
               type="search"
               value={query}
-              onChange={(event) => setQuery(event.target.value)}
+              onChange={(event) => updateQuery(event.target.value)}
               placeholder="Escribe una palabra o frase..."
               maxLength={200}
               className="h-12 min-w-0 flex-1 bg-transparent text-sm text-slate-950 outline-none placeholder:text-slate-400 dark:text-white"
