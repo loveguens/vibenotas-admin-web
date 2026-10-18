@@ -120,7 +120,11 @@ export default function SecurityPage() {
   }
 
   useEffect(() => {
-    loadSecurity();
+    const initialLoad = window.setTimeout(() => {
+      void loadSecurity();
+    }, 0);
+
+    return () => window.clearTimeout(initialLoad);
   }, []);
 
   const suspiciousSessions = useMemo(
