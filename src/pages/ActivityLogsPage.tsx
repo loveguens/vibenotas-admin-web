@@ -94,7 +94,11 @@ export default function ActivityLogsPage() {
   }
 
   useEffect(() => {
-    loadLogs();
+    const initialLoad = window.setTimeout(() => {
+      void loadLogs();
+    }, 0);
+
+    return () => window.clearTimeout(initialLoad);
   }, []);
 
   const filteredLogs = useMemo(() => {
