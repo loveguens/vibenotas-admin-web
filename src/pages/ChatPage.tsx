@@ -213,24 +213,37 @@ export default function ChatPage() {
   const selectedIsPinned = Boolean(selectedConversation?.isPinned);
 
   const theme = getTheme(chatTheme);
+  const settingsConversationId = selectedConversation?.id;
+  const settingsConversationTheme = selectedConversation?.chatTheme;
+  const settingsConversationDuration =
+    selectedConversation?.temporaryMessagesDuration;
+  const hasSettingsConversation = selectedConversation !== null;
 
   useEffect(() => {
-    const syncDuration = window.setTimeout(() => {
-      setTemporaryMessagesDuration(
-        selectedConversation?.temporaryMessagesDuration ?? "off",
-      );
+    const syncSettings = window.setTimeout(() => {
+      if (hasSettingsConversation) {
+        setChatTheme(settingsConversationTheme ?? "violet");
+      }
+
+      setTemporaryMessagesDuration(settingsConversationDuration ?? "off");
     }, 0);
 
-    return () => window.clearTimeout(syncDuration);
+    return () => window.clearTimeout(syncSettings);
   }, [
-    selectedConversation?.id,
-    selectedConversation?.temporaryMessagesDuration,
+    hasSettingsConversation,
+    settingsConversationId,
+    settingsConversationTheme,
+    settingsConversationDuration,
   ]);
 
   useEffect(() => {
     selectedConversationTypeRef.current = selectedConversation?.tipo ?? null;
 
-    setTypingUserIds([]);
+    const resetTyping = window.setTimeout(() => {
+      setTypingUserIds([]);
+    }, 0);
+
+    return () => window.clearTimeout(resetTyping);
   }, [selectedConversation?.id, selectedConversation?.tipo]);
   const filteredConversations = useMemo(() => {
     const query = chatSearch.trim().toLowerCase();
@@ -1091,22 +1104,6 @@ export default function ChatPage() {
 
     return () => window.clearTimeout(loadSelectedMessages);
   }, [selectedConversationId, loadMessages]);
-
-  useEffect(() => {
-    if (!selectedConversation) {
-      return;
-    }
-
-    setChatTheme(selectedConversation.chatTheme ?? "violet");
-
-    setTemporaryMessagesDuration(
-      selectedConversation.temporaryMessagesDuration ?? "off",
-    );
-  }, [
-    selectedConversation?.id,
-    selectedConversation?.chatTheme,
-    selectedConversation?.temporaryMessagesDuration,
-  ]);
 
   useEffect(() => {
     const close = (event: KeyboardEvent) => {
