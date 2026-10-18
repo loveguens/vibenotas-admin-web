@@ -82,7 +82,21 @@ function MenuButton({
   );
 }
 
-export function MessageActionsMenu({
+export function MessageActionsMenu(props: MessageActionsMenuProps) {
+  if (!props.menu) {
+    return null;
+  }
+
+  return (
+    <MessageActionsMenuContent
+      key={`${props.menu.message.id}:${props.menu.message.creado_en}`}
+      {...props}
+      menu={props.menu}
+    />
+  );
+}
+
+function MessageActionsMenuContent({
   menu,
   mine,
   onClose,
@@ -96,16 +110,10 @@ export function MessageActionsMenu({
   onDeleteMine,
   onDeleteAll,
   onReport,
-}: MessageActionsMenuProps) {
+}: MessageActionsMenuProps & { menu: MessageMenuState }) {
   const [nowMs, setNowMs] = useState(() => Date.now());
 
   useEffect(() => {
-    setNowMs(Date.now());
-
-    if (!menu) {
-      return;
-    }
-
     const createdAtMs = Date.parse(menu.message.creado_en);
 
     if (!Number.isFinite(createdAtMs)) {
@@ -126,10 +134,6 @@ export function MessageActionsMenu({
       window.clearTimeout(timeoutId);
     };
   }, [menu?.message.id, menu?.message.creado_en]);
-
-  if (!menu) {
-    return null;
-  }
 
   const message = menu.message;
 
