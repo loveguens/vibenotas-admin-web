@@ -1,5 +1,5 @@
 import { Check, Search, Users, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import type { Friend } from "../types/chat.types";
 import { Avatar } from "./Avatar";
 
@@ -11,8 +11,12 @@ type CreateGroupModalProps = {
   onCreate: (name: string, memberIds: string[]) => void;
 };
 
-export function CreateGroupModal({
-  open,
+export function CreateGroupModal(props: CreateGroupModalProps) {
+  if (!props.open) return null;
+  return <CreateGroupModalContent {...props} />;
+}
+
+function CreateGroupModalContent({
   friends,
   creating,
   onClose,
@@ -21,14 +25,6 @@ export function CreateGroupModal({
   const [name, setName] = useState("");
   const [query, setQuery] = useState("");
   const [memberIds, setMemberIds] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (!open) {
-      setName("");
-      setQuery("");
-      setMemberIds([]);
-    }
-  }, [open]);
 
   const filteredFriends = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -69,10 +65,6 @@ export function CreateGroupModal({
     }
 
     onCreate(groupName, memberIds);
-  }
-
-  if (!open) {
-    return null;
   }
 
   return (
