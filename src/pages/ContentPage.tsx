@@ -161,7 +161,11 @@ export default function ContentPage() {
   }
 
   useEffect(() => {
-    void loadContent();
+    const initialLoad = window.setTimeout(() => {
+      void loadContent();
+    }, 0);
+
+    return () => window.clearTimeout(initialLoad);
   }, []);
 
   const totals = content?.totals ?? emptyTotals;
