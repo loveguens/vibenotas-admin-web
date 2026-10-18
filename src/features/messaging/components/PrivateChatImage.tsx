@@ -12,6 +12,10 @@ type PrivateChatImageProps = {
 };
 
 export function PrivateChatImage({ messageId, alt }: PrivateChatImageProps) {
+  return <PrivateChatImageContent key={messageId} messageId={messageId} alt={alt} />;
+}
+
+function PrivateChatImageContent({ messageId, alt }: PrivateChatImageProps) {
   const [media, setMedia] = useState<ResolvedChatMedia | null>(null);
 
   const [loading, setLoading] = useState(true);
@@ -22,10 +26,6 @@ export function PrivateChatImage({ messageId, alt }: PrivateChatImageProps) {
     const controller = new AbortController();
 
     let current: ResolvedChatMedia | null = null;
-
-    setLoading(true);
-    setFailed(false);
-    setMedia(null);
 
     void resolveChatMedia(messageId, controller.signal)
       .then((resolved) => {
