@@ -1,5 +1,5 @@
 import { Check, Search, Send, Users, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import type { Conversation, Friend, Message } from "../types/chat.types";
 import { Avatar } from "./Avatar";
@@ -16,7 +16,21 @@ type ShareMessageModalProps = {
   onShare: (friendIds: string[], conversationIds: string[]) => Promise<void>;
 };
 
-export function ShareMessageModal({
+export function ShareMessageModal(props: ShareMessageModalProps) {
+  if (!props.message) {
+    return null;
+  }
+
+  return (
+    <ShareMessageModalContent
+      key={props.message.id}
+      {...props}
+      message={props.message}
+    />
+  );
+}
+
+function ShareMessageModalContent({
   message,
   friends,
   conversations,
@@ -24,7 +38,7 @@ export function ShareMessageModal({
   busy,
   onClose,
   onShare,
-}: ShareMessageModalProps) {
+}: ShareMessageModalProps & { message: Message }) {
   const [query, setQuery] = useState("");
 
   const [selectedFriendIds, setSelectedFriendIds] = useState<string[]>([]);
@@ -32,16 +46,6 @@ export function ShareMessageModal({
   const [selectedConversationIds, setSelectedConversationIds] = useState<
     string[]
   >([]);
-
-  useEffect(() => {
-    if (!message) {
-      return;
-    }
-
-    setQuery("");
-    setSelectedFriendIds([]);
-    setSelectedConversationIds([]);
-  }, [message?.id]);
 
   const normalizedQuery = query.trim().toLowerCase();
 
@@ -71,10 +75,6 @@ export function ShareMessageModal({
       (conversation.titulo ?? "Grupo").toLowerCase().includes(normalizedQuery),
     );
   }, [conversations, normalizedQuery]);
-
-  if (!message) {
-    return null;
-  }
 
   const totalSelected =
     selectedFriendIds.length + selectedConversationIds.length;
