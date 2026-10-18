@@ -11,6 +11,10 @@ type PrivateChatVideoProps = {
 };
 
 export function PrivateChatVideo({ messageId }: PrivateChatVideoProps) {
+  return <PrivateChatVideoContent key={messageId} messageId={messageId} />;
+}
+
+function PrivateChatVideoContent({ messageId }: PrivateChatVideoProps) {
   const [media, setMedia] = useState<ResolvedChatMedia | null>(null);
 
   const [loading, setLoading] = useState(true);
@@ -21,10 +25,6 @@ export function PrivateChatVideo({ messageId }: PrivateChatVideoProps) {
     const controller = new AbortController();
 
     let current: ResolvedChatMedia | null = null;
-
-    setLoading(true);
-    setFailed(false);
-    setMedia(null);
 
     void resolveChatMedia(messageId, controller.signal)
       .then((resolved) => {
