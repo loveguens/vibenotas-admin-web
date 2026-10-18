@@ -1763,7 +1763,7 @@ export default function ChatPage() {
   }
 
   async function toggleMessageFavorite(message: Message): Promise<void> {
-    const favorite = !Boolean(message.favorito);
+    const favorite = !message.favorito;
 
     try {
       setError("");
@@ -2039,7 +2039,7 @@ export default function ChatPage() {
 
     const conversationId = selectedConversationId;
 
-    const archived = !Boolean(selectedConversation.isArchived);
+    const archived = !selectedConversation.isArchived;
 
     try {
       setError("");
