@@ -329,7 +329,11 @@ export default function ProfilePage() {
   }, []);
 
   useEffect(() => {
-    void loadProfile();
+    const initialLoad = window.setTimeout(() => {
+      void loadProfile();
+    }, 0);
+
+    return () => window.clearTimeout(initialLoad);
   }, [loadProfile]);
 
   function updateField<K extends keyof ProfileForm>(
