@@ -1022,12 +1022,16 @@ export default function ChatPage() {
       return;
     }
 
-    setSelectedConversationId(null);
-    selectedConversationIdRef.current = null;
+    const clearMissingConversation = window.setTimeout(() => {
+      setSelectedConversationId(null);
+      selectedConversationIdRef.current = null;
 
-    navigate(chatBasePath, {
-      replace: true,
-    });
+      navigate(chatBasePath, {
+        replace: true,
+      });
+    }, 0);
+
+    return () => window.clearTimeout(clearMissingConversation);
   }, [
     chatBasePath,
     loadingConversations,
@@ -1039,9 +1043,15 @@ export default function ChatPage() {
   useEffect(() => {
     const id = conversacionId ?? null;
 
-    if (id !== selectedConversationId) {
-      setSelectedConversationId(id);
+    if (id === selectedConversationId) {
+      return;
     }
+
+    const syncConversationFromUrl = window.setTimeout(() => {
+      setSelectedConversationId(id);
+    }, 0);
+
+    return () => window.clearTimeout(syncConversationFromUrl);
   }, [conversacionId, selectedConversationId]);
 
   /*
