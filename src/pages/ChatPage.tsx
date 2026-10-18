@@ -215,9 +215,13 @@ export default function ChatPage() {
   const theme = getTheme(chatTheme);
 
   useEffect(() => {
-    setTemporaryMessagesDuration(
-      selectedConversation?.temporaryMessagesDuration ?? "off",
-    );
+    const syncDuration = window.setTimeout(() => {
+      setTemporaryMessagesDuration(
+        selectedConversation?.temporaryMessagesDuration ?? "off",
+      );
+    }, 0);
+
+    return () => window.clearTimeout(syncDuration);
   }, [
     selectedConversation?.id,
     selectedConversation?.temporaryMessagesDuration,
@@ -1080,10 +1084,13 @@ export default function ChatPage() {
   useEffect(() => {
     if (!selectedConversationId) return;
 
-    void loadMessages(selectedConversationId);
+    const loadSelectedMessages = window.setTimeout(() => {
+      void loadMessages(selectedConversationId);
+      void markConversationRead(selectedConversationId);
+    }, 0);
 
-    void markConversationRead(selectedConversationId);
-  }, [selectedConversationId]);
+    return () => window.clearTimeout(loadSelectedMessages);
+  }, [selectedConversationId, loadMessages]);
 
   useEffect(() => {
     if (!selectedConversation) {
