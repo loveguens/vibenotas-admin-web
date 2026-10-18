@@ -305,7 +305,11 @@ export default function ChatPage() {
   );
 
   useEffect(() => {
-    void loadConversations();
+    const initialLoad = window.setTimeout(() => {
+      void loadConversations();
+    }, 0);
+
+    return () => window.clearTimeout(initialLoad);
   }, [loadConversations]);
 
   const loadMessages = useCallback(async (id: string, keepPosition = false) => {
@@ -483,6 +487,7 @@ export default function ChatPage() {
     }
 
     const currentUserId = currentUser.id;
+    const remoteTypingTimers = remoteTypingTimersRef.current;
 
     let disposed = false;
 
@@ -980,11 +985,11 @@ export default function ChatPage() {
         chatSocketRef.current = null;
       }
 
-      for (const timer of remoteTypingTimersRef.current.values()) {
+      for (const timer of remoteTypingTimers.values()) {
         window.clearTimeout(timer);
       }
 
-      remoteTypingTimersRef.current.clear();
+      remoteTypingTimers.clear();
 
       socket?.removeAllListeners();
       socket?.disconnect();
