@@ -110,7 +110,9 @@ function MessageActionsMenuContent({
   onDeleteMine,
   onDeleteAll,
   onReport,
-}: MessageActionsMenuProps & { menu: MessageMenuState }) {
+}: Omit<MessageActionsMenuProps, "menu"> & {
+  menu: NonNullable<MessageMenuState>;
+}) {
   const [nowMs, setNowMs] = useState(() => Date.now());
 
   useEffect(() => {
@@ -133,7 +135,7 @@ function MessageActionsMenuContent({
     return () => {
       window.clearTimeout(timeoutId);
     };
-  }, [menu?.message.id, menu?.message.creado_en]);
+  }, [menu.message.id, menu.message.creado_en]);
 
   const message = menu.message;
 
