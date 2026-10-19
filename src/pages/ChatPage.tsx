@@ -8,7 +8,7 @@ import {
   UserPlus,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
@@ -497,6 +497,14 @@ export default function ChatPage() {
       setLoadingBlocked(false);
     }
   }, []);
+
+  const refreshRealtimeGroup = useEffectEvent((conversationId: string): void => {
+    void loadConversations(true);
+
+    if (conversationId === selectedConversationIdRef.current) {
+      void loadGroupDetail(conversationId);
+    }
+  });
 
   useEffect(() => {
     if (!currentUser?.id) {
@@ -1011,7 +1019,14 @@ export default function ChatPage() {
       socket?.removeAllListeners();
       socket?.disconnect();
     };
-  }, [currentUser?.id, loadConversations]);
+  }, [
+    chatBasePath,
+    currentUser?.id,
+    loadConversations,
+    loadMessages,
+    loadRequests,
+    navigate,
+  ]);
 
   useEffect(() => {
     if (
@@ -1140,14 +1155,6 @@ export default function ChatPage() {
       });
     });
   }, [messages, nearEnd]);
-
-  function refreshRealtimeGroup(conversationId: string): void {
-    void loadConversations(true);
-
-    if (conversationId === selectedConversationIdRef.current) {
-      void loadGroupDetail(conversationId);
-    }
-  }
 
   function closeMenus(): void {
     setMessageMenu(null);
