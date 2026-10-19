@@ -326,9 +326,8 @@ function mapApiUserToAdmin(user: ApiUser): AdminUser | null {
 async function fetchUsersByRole(role: AdminRoleSlug): Promise<ApiUser[]> {
   const users: ApiUser[] = [];
   let page = 1;
-  let totalPages = 1;
 
-  do {
+  while (true) {
     const response = await api.get<UsersResponse>("/users", {
       params: {
         role,
@@ -340,9 +339,13 @@ async function fetchUsersByRole(role: AdminRoleSlug): Promise<ApiUser[]> {
     });
 
     users.push(...response.data.users);
-    totalPages = response.data.totalPages;
+
+    if (page >= response.data.totalPages) {
+      break;
+    }
+
     page += 1;
-  } while (page <= totalPages);
+  }
 
   return users;
 }
@@ -560,8 +563,6 @@ export default function AdministratorsPage() {
     setError("");
     setSuccess("");
 
-    let createdUserId: string | null = null;
-
     try {
       const registerResponse = await api.post<RegisterResponse>(
         "/auth/register",
@@ -574,7 +575,7 @@ export default function AdministratorsPage() {
         },
       );
 
-      createdUserId = registerResponse.data.user?.id ?? null;
+      const createdUserId = registerResponse.data.user?.id ?? null;
 
       if (!createdUserId) {
         throw new Error(
@@ -708,21 +709,7 @@ export default function AdministratorsPage() {
   useEffect(() => {
     let cancelled = false;
 
-    if (!selectedAdmin) {
-      setSecurityDetail(null);
-      setSecurityError("");
-      setSecurityLoading(false);
-      return;
-    }
-
-    /*
-     * Conservamos la referencia no nula.
-     * TypeScript ya no necesita volver a
-     * inferir selectedAdmin dentro del async.
-     */
-    const targetAdmin = selectedAdmin;
-
-    async function loadSecurityDetail() {
+    async function loadSecurityDetail(targetAdmin: AdminUser) {
       setSecurityLoading(true);
       setSecurityError("");
       setSecurityDetail(null);
@@ -751,10 +738,20 @@ export default function AdministratorsPage() {
       }
     }
 
-    void loadSecurityDetail();
+    const syncSecurityDetail = window.setTimeout(() => {
+      if (!selectedAdmin) {
+        setSecurityDetail(null);
+        setSecurityError("");
+        setSecurityLoading(false);
+        return;
+      }
+
+      void loadSecurityDetail(selectedAdmin);
+    }, 0);
 
     return () => {
       cancelled = true;
+      window.clearTimeout(syncSecurityDetail);
     };
   }, [selectedAdmin]);
 
