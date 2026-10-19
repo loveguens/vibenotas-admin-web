@@ -1269,15 +1269,18 @@ export default function NotificationsPage() {
 
                       <button
                         type="button"
-                        onClick={() =>
+                        onClick={() => {
+                          const defaultScheduleDate = getLocalDateTimeValue(
+                            new Date(Date.now() + 5 * 60 * 1000)
+                          );
+
                           setForm((current) => ({
                             ...current,
                             estado: "programada",
                             programada_para:
-                              current.programada_para ||
-                                getLocalDateTimeValue(new Date(Date.now() + 5 * 60 * 1000)),
-                          }))
-                        }
+                              current.programada_para || defaultScheduleDate,
+                          }));
+                        }}
                         className={`rounded-xl px-3 py-2.5 text-xs font-bold transition ${
                           form.estado === "programada"
                             ? "bg-sky-100 text-sky-700 shadow-sm dark:bg-sky-500/15 dark:text-sky-200"
