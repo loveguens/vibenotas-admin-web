@@ -314,47 +314,47 @@ export function ChatComposer({
   }, [value]);
 
   useEffect(() => {
-    if (!selectedImage) {
-      setImagePreviewUrl(null);
-      return;
-    }
-
-    const url = URL.createObjectURL(selectedImage);
-
-    setImagePreviewUrl(url);
+    const url = selectedImage ? URL.createObjectURL(selectedImage) : null;
+    const syncPreview = window.setTimeout(() => {
+      setImagePreviewUrl(url);
+    }, 0);
 
     return () => {
-      URL.revokeObjectURL(url);
+      window.clearTimeout(syncPreview);
+
+      if (url) {
+        URL.revokeObjectURL(url);
+      }
     };
   }, [selectedImage]);
 
   useEffect(() => {
-    if (!recordedAudio) {
-      setAudioPreviewUrl(null);
-      return;
-    }
-
-    const url = URL.createObjectURL(recordedAudio);
-
-    setAudioPreviewUrl(url);
+    const url = recordedAudio ? URL.createObjectURL(recordedAudio) : null;
+    const syncPreview = window.setTimeout(() => {
+      setAudioPreviewUrl(url);
+    }, 0);
 
     return () => {
-      URL.revokeObjectURL(url);
+      window.clearTimeout(syncPreview);
+
+      if (url) {
+        URL.revokeObjectURL(url);
+      }
     };
   }, [recordedAudio]);
 
   useEffect(() => {
-    if (!selectedVideo) {
-      setVideoPreviewUrl(null);
-      return;
-    }
-
-    const url = URL.createObjectURL(selectedVideo);
-
-    setVideoPreviewUrl(url);
+    const url = selectedVideo ? URL.createObjectURL(selectedVideo) : null;
+    const syncPreview = window.setTimeout(() => {
+      setVideoPreviewUrl(url);
+    }, 0);
 
     return () => {
-      URL.revokeObjectURL(url);
+      window.clearTimeout(syncPreview);
+
+      if (url) {
+        URL.revokeObjectURL(url);
+      }
     };
   }, [selectedVideo]);
 
