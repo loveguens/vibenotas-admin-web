@@ -450,7 +450,6 @@ export default function NotificationsPage() {
       return;
     }
 
-    setClockTime(Date.now());
     setError("");
     setSuccess("");
     setEditingCampaign(campaign);
@@ -993,7 +992,10 @@ export default function NotificationsPage() {
                           {canEdit && (
                             <button
                               type="button"
-                              onClick={() => openEditModal(campaign)}
+                              onClick={() => {
+                                 setClockTime(Date.now());
+                                 openEditModal(campaign);
+                               }}
                               className="rounded-xl p-2 text-sky-700 transition hover:bg-sky-100 dark:text-sky-300 dark:hover:bg-sky-500/10"
                               title="Editar campaña"
                             >
