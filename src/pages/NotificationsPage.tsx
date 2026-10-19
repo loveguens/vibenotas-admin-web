@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import {
   AlertTriangle,
@@ -258,6 +258,7 @@ function getApiErrorMessage(error: unknown, fallback: string) {
 
 export default function NotificationsPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [clockTime, setClockTime] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [sendingId, setSendingId] = useState<string | null>(null);
@@ -275,7 +276,7 @@ export default function NotificationsPage() {
     admins: 0,
   });
 
-  async function loadAudienceSummary() {
+  const loadAudienceSummary = useCallback(async () => {
     const response = await api.get<AudienceSummaryResponse>(
       "/superadmin/notifications/summary"
     );
@@ -292,9 +293,9 @@ export default function NotificationsPage() {
         admins: 0,
       }
     );
-  }
+  }, []);
 
-  async function loadCampaigns() {
+  const loadCampaigns = useCallback(async () => {
     setLoading(true);
     setError("");
 
@@ -318,10 +319,25 @@ export default function NotificationsPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [loadAudienceSummary]);
 
   useEffect(() => {
-    void loadCampaigns();
+    const initialLoad = window.setTimeout(() => {
+      void loadCampaigns();
+    }, 0);
+
+    return () => window.clearTimeout(initialLoad);
+  }, [loadCampaigns]);
+
+  useEffect(() => {
+    const updateClock = () => setClockTime(Date.now());
+    const initialTick = window.setTimeout(updateClock, 0);
+    const clockInterval = window.setInterval(updateClock, 60_000);
+
+    return () => {
+      window.clearTimeout(initialTick);
+      window.clearInterval(clockInterval);
+    };
   }, []);
 
   const stats = useMemo(() => {
@@ -353,7 +369,9 @@ export default function NotificationsPage() {
   }, [campaigns, searchTerm, statusFilter]);
 
   const nextScheduledCampaign = useMemo(() => {
-    const now = Date.now();
+    if (clockTime === null) {
+      return undefined;
+    }
 
     return [...campaigns]
       .filter((campaign) => {
@@ -363,14 +381,14 @@ export default function NotificationsPage() {
 
         const scheduledAt = new Date(campaign.programada_para).getTime();
 
-        return Number.isFinite(scheduledAt) && scheduledAt > now;
+        return Number.isFinite(scheduledAt) && scheduledAt > clockTime;
       })
       .sort(
         (left, right) =>
           new Date(left.programada_para as string).getTime() -
           new Date(right.programada_para as string).getTime()
       )[0];
-  }, [campaigns]);
+  }, [campaigns, clockTime]);
 
   const audiencePreview =
     form.audiencia === "todos"
@@ -382,9 +400,10 @@ export default function NotificationsPage() {
       ? formatDate(toApiScheduledDate(form.programada_para))
       : null;
 
-  const minimumScheduleDate = getLocalDateTimeValue(
-    new Date(Date.now() + 5 * 60 * 1000)
-  );
+  const minimumScheduleDate =
+    clockTime === null
+      ? undefined
+      : getLocalDateTimeValue(new Date(clockTime + 5 * 60 * 1000));
 
   function setQuickSchedule(minutesFromNow: number) {
     const target = new Date(Date.now() + minutesFromNow * 60 * 1000);
@@ -417,6 +436,7 @@ export default function NotificationsPage() {
   }
 
   function openCreateModal() {
+    setClockTime(Date.now());
     setError("");
     setSuccess("");
     setEditingCampaign(null);
@@ -430,6 +450,7 @@ export default function NotificationsPage() {
       return;
     }
 
+    setClockTime(Date.now());
     setError("");
     setSuccess("");
     setEditingCampaign(campaign);
@@ -1253,7 +1274,8 @@ export default function NotificationsPage() {
                             ...current,
                             estado: "programada",
                             programada_para:
-                              current.programada_para || minimumScheduleDate,
+                              current.programada_para ||
+                                getLocalDateTimeValue(new Date(Date.now() + 5 * 60 * 1000)),
                           }))
                         }
                         className={`rounded-xl px-3 py-2.5 text-xs font-bold transition ${
