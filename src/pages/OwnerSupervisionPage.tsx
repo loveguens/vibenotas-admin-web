@@ -497,7 +497,11 @@ export default function OwnerSupervisionPage() {
   );
 
   useEffect(() => {
-    void loadAdministrators();
+    const initialLoad = window.setTimeout(() => {
+      void loadAdministrators();
+    }, 0);
+
+    return () => window.clearTimeout(initialLoad);
   }, [loadAdministrators]);
 
   useEffect(() => {
@@ -505,11 +509,19 @@ export default function OwnerSupervisionPage() {
       return;
     }
 
-    void loadEvents();
+    const refreshEvents = window.setTimeout(() => {
+      void loadEvents();
+    }, 0);
+
+    return () => window.clearTimeout(refreshEvents);
   }, [loadingUsers, loadEvents]);
 
   useEffect(() => {
-    setSecurityDetail(null);
+    const clearSecurityDetail = window.setTimeout(() => {
+      setSecurityDetail(null);
+    }, 0);
+
+    return () => window.clearTimeout(clearSecurityDetail);
   }, [selectedUserId]);
 
   const filteredEvents = useMemo(() => {
