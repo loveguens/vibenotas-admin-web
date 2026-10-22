@@ -129,7 +129,7 @@ export function MessageList({
   return (
     <div
       ref={scrollRef}
-      className="vn-message-surface relative flex-1 overflow-y-auto px-3 py-5 sm:px-6 sm:py-6"
+      className="vn-message-surface vn-chat-thread relative flex-1 overflow-y-auto px-3 py-6 sm:px-6 sm:py-7"
     >
       {loading ? (
         <div className="mx-auto max-w-3xl space-y-4">
@@ -154,7 +154,7 @@ export function MessageList({
           </div>
         </div>
       ) : (
-        <div className="mx-auto flex max-w-3xl flex-col gap-2.5">
+        <div className="mx-auto flex max-w-3xl flex-col gap-3">
           {messages.map((message, index) => {
             const previousMessage = messages[index - 1];
             const isMine = message.emisor_id === currentUserId;
@@ -163,7 +163,7 @@ export function MessageList({
               <div key={message.id}>
                 {isDifferentDay(previousMessage, message) && (
                   <div className="my-5 flex justify-center">
-                    <span className="rounded-full border border-slate-200 bg-white/90 px-3 py-1 text-[10px] font-bold text-slate-500 shadow-sm backdrop-blur dark:border-white/10 dark:bg-[#111a2c]/90 dark:text-slate-400">
+                    <span className="rounded-full border border-slate-200/80 bg-white/90 px-4 py-1.5 text-[10px] font-bold tracking-wide text-slate-500 shadow-sm backdrop-blur dark:border-white/10 dark:bg-[#18243a]/90 dark:text-slate-300">
                       {getDateDivider(message.creado_en)}
                     </span>
                   </div>
