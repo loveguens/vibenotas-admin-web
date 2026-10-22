@@ -1037,7 +1037,7 @@ export function ChatComposer({
     <>
       <form
         onSubmit={handleSubmit}
-        className="shrink-0 border-t border-slate-200 bg-white/95 px-3 py-3 backdrop-blur-xl dark:border-white/10 dark:bg-[#0d1526]/95 sm:px-5"
+        className="vn-chat-composer shrink-0 border-t border-slate-200 bg-white/95 px-3 py-4 backdrop-blur-xl dark:border-white/10 dark:bg-[#0d1526]/95 sm:px-6"
       >
         {replyTo && (
           <div className="mx-auto mb-2.5 flex max-w-3xl items-center gap-3 rounded-2xl border border-violet-200 bg-violet-50 px-3 py-2 dark:border-violet-400/20 dark:bg-violet-500/10">
@@ -1226,7 +1226,7 @@ export function ChatComposer({
           </p>
         )}
 
-        <div className="mx-auto flex max-w-3xl items-end gap-2 rounded-[24px] border border-slate-200 bg-slate-50 p-1.5 shadow-sm transition focus-within:border-violet-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-violet-500/5 dark:border-white/10 dark:bg-white/[0.04] dark:focus-within:border-violet-400/30 dark:focus-within:bg-white/[0.06]">
+        <div className="vn-chat-compose-field mx-auto flex max-w-3xl items-end gap-2 rounded-[24px] border border-slate-200 bg-slate-50 p-2 shadow-sm transition-all duration-200 focus-within:border-violet-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-violet-500/10 dark:border-white/10 dark:bg-white/[0.05] dark:focus-within:border-violet-400/40 dark:focus-within:bg-white/[0.08] dark:focus-within:ring-violet-500/10">
           <div className="relative">
             <button
               type="button"
@@ -1353,7 +1353,7 @@ export function ChatComposer({
                   ? "Comentario opcional..."
                   : "Escribe un mensaje..."
               }
-              className="max-h-[120px] min-h-10 w-full resize-none bg-transparent px-2 py-2.5 text-sm leading-5 text-slate-900 outline-none placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-500"
+              className="max-h-[120px] min-h-10 w-full resize-none bg-transparent px-2 py-2.5 text-[13px] leading-6 text-slate-900 outline-none placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-500 sm:text-sm"
             />
           </div>
 
