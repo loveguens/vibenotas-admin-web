@@ -83,9 +83,9 @@ export function ConversationList({
     <aside
       className={`${
         selectedConversationId ? "hidden lg:flex" : "flex"
-      } w-full shrink-0 flex-col border-r border-slate-200 bg-white dark:border-white/10 dark:bg-[#0d1526] lg:w-[360px] xl:w-[390px]`}
+      } vn-chat-conversations w-full shrink-0 flex-col border-r border-slate-200 bg-white dark:border-white/10 dark:bg-[#0d1526] lg:w-[340px] xl:w-[375px]`}
     >
-      <header className="border-b border-slate-200 px-4 pb-4 pt-4 dark:border-white/10 sm:px-5">
+      <header className="border-b border-slate-200/80 px-4 pb-5 pt-5 dark:border-white/10 sm:px-5">
         <div className="mb-4 flex items-center justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
@@ -100,7 +100,7 @@ export function ConversationList({
                 </button>
               )}
 
-              <h1 className="truncate text-xl font-black tracking-tight text-slate-950 dark:text-white">
+              <h1 className="truncate text-[19px] font-extrabold tracking-tight text-slate-950 dark:text-white sm:text-xl">
                 {showArchived ? "Archivados" : "Conversaciones"}
               </h1>
 
@@ -132,7 +132,7 @@ export function ConversationList({
               <button
                 type="button"
                 onClick={onCreateChat}
-                className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-600 text-white shadow-md shadow-violet-500/20 transition hover:bg-violet-500"
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-violet-600/25 transition hover:brightness-110"
                 title="Nuevo chat"
               >
                 <UserPlus size={17} />
@@ -155,7 +155,7 @@ export function ConversationList({
                 ? "Buscar en archivados..."
                 : "Buscar conversaciones..."
             }
-            className="w-full rounded-2xl border border-transparent bg-slate-100 px-4 py-3 pl-10 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-300 focus:bg-white focus:ring-4 focus:ring-violet-500/5 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-violet-400/40 dark:focus:bg-white/[0.07]"
+            className="vn-chat-search w-full rounded-2xl border border-slate-200/70 bg-slate-100/80 px-4 py-3 pl-10 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-300 focus:bg-white focus:ring-4 focus:ring-violet-500/5 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-violet-400/40 dark:focus:bg-white/[0.07]"
           />
         </div>
 
@@ -178,7 +178,7 @@ export function ConversationList({
         )}
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto p-2">
+      <div className="min-h-0 flex-1 space-y-1 overflow-y-auto p-2.5 sm:p-3">
         {loading ? (
           <div className="space-y-1">
             {[1, 2, 3, 4, 5].map((item) => (
