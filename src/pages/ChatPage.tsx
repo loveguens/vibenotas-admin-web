@@ -2974,10 +2974,10 @@ export default function ChatPage() {
 
   return (
     <div
-      className="vn-chat-page min-h-0 transition-colors duration-300"
+      className="vn-chat-page min-h-0 pb-2 transition-colors duration-300"
       onClick={closeMenus}
     >
-      <main className="vn-chat-shell mx-auto flex h-[calc(100dvh-150px)] min-h-[480px] max-w-[1650px] flex-col overflow-hidden rounded-[28px] transition-colors duration-300">
+      <main className="vn-chat-shell mx-auto flex h-[calc(100dvh-190px)] min-h-[460px] max-w-[1650px] flex-col overflow-hidden rounded-[26px] ring-1 ring-black/5 transition-colors duration-300 dark:ring-white/5 xl:rounded-[30px]">
         <ChatSidebar
           activeTab={activeTab}
           unreadChats={unreadChats}
@@ -2987,9 +2987,9 @@ export default function ChatPage() {
           onTabChange={changeTab}
         />
 
-        <section className="flex min-h-0 min-w-0 flex-1 flex-col">
+        <section className="vn-chat-content flex min-h-0 min-w-0 flex-1 flex-col">
           {activeTab === "chats" && (
-            <div className="flex min-h-0 flex-1 overflow-hidden">
+            <div className="vn-chat-split flex min-h-0 flex-1 overflow-hidden">
               <ConversationList
                 conversations={filteredConversations}
                 selectedConversationId={selectedConversation?.id ?? null}
@@ -3025,11 +3025,11 @@ export default function ChatPage() {
               <section
                 className={`${
                   selectedConversation ? "flex" : "hidden lg:flex"
-                } min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-white dark:bg-[#0b1220]`}
+                } vn-chat-room min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-white dark:bg-[#0b1220]`}
               >
                 {!selectedConversation ? (
-                  <div className="vn-message-surface flex flex-1 items-center justify-center px-6 text-center">
-                    <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-[22px] bg-violet-100 text-violet-600 dark:bg-violet-500/10 dark:text-violet-300">
+                  <div className="vn-message-surface flex flex-1 flex-col items-center justify-center px-6 text-center">
+                    <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-[26px] border border-violet-200/60 bg-gradient-to-br from-violet-100 to-sky-50 text-violet-600 shadow-lg shadow-violet-500/10 dark:border-violet-400/15 dark:from-violet-500/20 dark:to-sky-500/10 dark:text-violet-300">
                       <MessageCircle size={38} />
                     </div>
 
