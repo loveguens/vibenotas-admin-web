@@ -429,3 +429,67 @@ a {
   border-color: rgba(255, 255, 255, 0.08);
   box-shadow: 0 28px 70px rgba(0, 0, 0, 0.26);
 }
+
+/* =========================================================
+   SUPER ADMIN — CHAT VISUAL REFRESH
+   Cambios de presentación, sin afectar la lógica del chat.
+   ========================================================= */
+
+.vn-chat-tabs {
+  background: linear-gradient(105deg, #ffffff 0%, #faf8ff 55%, #f6f8ff 100%);
+}
+
+.dark .vn-chat-tabs {
+  background: linear-gradient(105deg, #10182b 0%, #10172a 62%, #171334 100%);
+}
+
+.vn-chat-conversations {
+  background: linear-gradient(175deg, #ffffff 0%, #fbfbff 100%);
+}
+
+.dark .vn-chat-conversations {
+  background: linear-gradient(165deg, #10192c 0%, #0c1426 100%);
+}
+
+.vn-chat-room-header {
+  background: linear-gradient(105deg, #ffffff 0%, #faf9ff 100%);
+}
+
+.dark .vn-chat-room-header {
+  background: linear-gradient(105deg, #131d30 0%, #11192d 100%);
+}
+
+.vn-chat-composer {
+  background: linear-gradient(180deg, #ffffff 0%, #fafaff 100%);
+}
+
+.dark .vn-chat-composer {
+  background: linear-gradient(180deg, #111a2b 0%, #101729 100%);
+}
+
+.vn-chat-compose-field:focus-within {
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.09), 0 12px 28px rgba(15, 23, 42, 0.06);
+}
+
+.dark .vn-chat-compose-field:focus-within {
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.12), 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+.vn-chat-conversations,
+.vn-chat-thread {
+  scrollbar-gutter: stable;
+}
+
+@media (max-width: 1023px) {
+  .vn-chat-conversations {
+    scrollbar-gutter: auto;
+    border-right: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-chat-conversation-item,
+  .vn-chat-compose-field {
+    transition-duration: 0ms;
+  }
+}
