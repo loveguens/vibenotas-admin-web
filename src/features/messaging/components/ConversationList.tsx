@@ -93,7 +93,7 @@ export function ConversationList({
             </span>
             <div className="min-w-0">
               <p className="vn-chat-inbox-kicker">TU CENTRO DE CONVERSACIONES</p>
-            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2">
               {showArchived && (
                 <button
                   type="button"
@@ -114,13 +114,13 @@ export function ConversationList({
                   {uniqueConversations.length}
                 </span>
               )}
-            </div>
+              </div>
 
-            <p className="vn-chat-inbox-description mt-1 text-xs text-slate-500 dark:text-slate-400">
-              {showArchived
-                ? "Conversaciones que archivaste"
-                : "Tus mensajes recientes"}
-            </p>
+              <p className="vn-chat-inbox-description mt-1 text-xs text-slate-500 dark:text-slate-400">
+                {showArchived
+                  ? "Conversaciones que archivaste"
+                  : "Tus mensajes recientes"}
+              </p>
             </div>
           </div>
 
