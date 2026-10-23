@@ -2974,10 +2974,10 @@ export default function ChatPage() {
 
   return (
     <div
-      className="vn-chat-page min-h-0 pb-2 transition-colors duration-300"
+      className={`vn-chat-page min-h-0 transition-colors duration-300 ${chatBasePath === "/superadmin/chat" ? "vn-superadmin-chat-v3" : "pb-2"}`}
       onClick={closeMenus}
     >
-      <main className="vn-chat-shell mx-auto flex h-[calc(100dvh-190px)] min-h-[460px] max-w-[1650px] flex-col overflow-hidden rounded-[26px] ring-1 ring-black/5 transition-colors duration-300 dark:ring-white/5 xl:rounded-[30px]">
+      <main className={`vn-chat-shell mx-auto flex max-w-[1650px] flex-col overflow-hidden transition-colors duration-300 ${chatBasePath === "/superadmin/chat" ? "h-[calc(100dvh-132px)] min-h-[420px] rounded-[24px] lg:h-[calc(100dvh-182px)] lg:min-h-[480px] xl:rounded-[30px]" : "h-[calc(100dvh-190px)] min-h-[460px] rounded-[26px] ring-1 ring-black/5 dark:ring-white/5 xl:rounded-[30px]"}`}>
         <ChatSidebar
           activeTab={activeTab}
           unreadChats={unreadChats}
@@ -3389,7 +3389,7 @@ export default function ChatPage() {
       />
       {(error || toast) && (
         <div
-          className={`fixed bottom-5 right-5 z-[10100] flex max-w-sm items-center gap-3 rounded-2xl border px-4 py-3 text-sm shadow-2xl ${
+          className={`fixed bottom-4 right-4 z-[10100] flex max-w-[calc(100vw-2rem)] items-center gap-3 rounded-2xl border px-4 py-3 text-sm shadow-2xl sm:bottom-5 sm:right-5 sm:max-w-sm ${
             error
               ? "border-red-500/30 bg-slate-900 text-red-100"
               : "border-emerald-500/30 bg-slate-900 text-emerald-100"
