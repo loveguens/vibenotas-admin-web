@@ -493,3 +493,318 @@ a {
     transition-duration: 0ms;
   }
 }
+
+/* =========================================================
+   SUPER ADMIN CHAT — BANDEJA V3
+   Cambios visibles solo en el chat del Super Admin.
+   ========================================================= */
+
+.vn-chat-inbox-symbol,
+.vn-chat-inbox-kicker,
+.vn-chat-action-label,
+.vn-chat-list-subheading {
+  display: none;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-shell {
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  background: #f9faff;
+  box-shadow: 0 24px 70px rgba(5, 10, 30, 0.14);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-shell {
+  border-color: rgba(167, 139, 250, 0.22);
+  background: #0b1221;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.32);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-tabs {
+  padding-top: 14px;
+  padding-bottom: 14px;
+  background: linear-gradient(105deg, #fafaff 0%, #eee8ff 100%);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-tabs {
+  background: linear-gradient(105deg, #161d38 0%, #201639 100%);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-tabs > div {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  padding: 5px;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  border-radius: 18px;
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-tabs > div {
+  background: rgba(4, 11, 26, 0.45);
+  border-color: rgba(167, 139, 250, 0.12);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-tabs button {
+  min-width: 0;
+  padding: 10px 8px;
+  gap: 7px;
+  border-radius: 13px;
+  white-space: nowrap;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-header {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 21px 20px 19px;
+  background: linear-gradient(125deg, #f5f0ff 0%, #ffffff 57%, #ebf2ff 100%);
+  border-bottom-color: rgba(139, 92, 246, 0.14);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-inbox-header {
+  background: linear-gradient(125deg, #231b43 0%, #18223c 58%, #10243d 100%);
+  border-bottom-color: rgba(167, 139, 250, 0.18);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-header::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  width: 200px;
+  height: 200px;
+  top: -130px;
+  right: -65px;
+  border-radius: 50%;
+  background: rgba(167, 139, 250, 0.19);
+  filter: blur(24px);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-headline {
+  align-items: center;
+  gap: 10px;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-identity {
+  gap: 12px;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border: 1px solid rgba(167, 139, 250, 0.34);
+  border-radius: 15px;
+  color: #6d28d9;
+  background: rgba(167, 139, 250, 0.15);
+  box-shadow: 0 9px 25px rgba(109, 40, 217, 0.1);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-inbox-symbol {
+  color: #ddd6fe;
+  background: rgba(139, 92, 246, 0.2);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-kicker {
+  display: block;
+  margin-bottom: 3px;
+  color: #6d28d9;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: 0.12em;
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-inbox-kicker {
+  color: #c4b5fd;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-title {
+  font-size: 19px;
+  letter-spacing: -0.035em;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-count {
+  color: #6d28d9;
+  border: 1px solid rgba(139, 92, 246, 0.18);
+  background: rgba(167, 139, 250, 0.14);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-inbox-count {
+  color: #ddd6fe;
+  background: rgba(167, 139, 250, 0.19);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-description {
+  font-size: 11px;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-actions button {
+  width: auto;
+  min-width: 40px;
+  height: 40px;
+  gap: 7px;
+  padding: 0 12px;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-action-label {
+  display: inline;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-search {
+  min-height: 44px;
+  background: rgba(255, 255, 255, 0.87);
+  border: 1px solid rgba(100, 116, 139, 0.2);
+  box-shadow: 0 5px 16px rgba(25, 29, 66, 0.035);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-search {
+  background: rgba(5, 13, 31, 0.45);
+  border-color: rgba(167, 139, 250, 0.19);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-scroll {
+  background: linear-gradient(180deg, #f7f8ff 0%, #fff 100%);
+  padding: 12px 14px 16px;
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-inbox-scroll {
+  background: linear-gradient(180deg, #0d1629 0%, #0b1222 100%);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-list-subheading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 5px 10px;
+  color: #7c6baf;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-list-subheading {
+  color: #b8a7de;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-list-subheading span:last-child {
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-conversation-item {
+  position: relative;
+  min-height: 75px;
+  margin-bottom: 9px;
+  padding: 13px 14px;
+  border-color: #e6e7f1;
+  background: rgba(255, 255, 255, 0.91);
+  border-radius: 18px;
+  box-shadow: 0 5px 20px rgba(27, 33, 86, 0.04);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-conversation-item {
+  border-color: rgba(167, 181, 211, 0.13);
+  background: rgba(28, 39, 65, 0.73);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-conversation-item[aria-current="page"] {
+  border-color: #a78bfa;
+  background: linear-gradient(105deg, #ede9fe, #f6f1ff 63%, #eef3ff);
+  box-shadow: inset 3px 0 0 #7c3aed, 0 9px 25px rgba(109, 40, 217, 0.1);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-conversation-item[aria-current="page"] {
+  border-color: rgba(167, 139, 250, 0.49);
+  background: linear-gradient(105deg, rgba(109, 40, 217, 0.3), rgba(38, 42, 81, 0.92));
+  box-shadow: inset 3px 0 0 #a78bfa, 0 10px 24px rgba(0, 0, 0, 0.14);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-conversation-item:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+  transform: translateY(-1px);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-room-header {
+  border-bottom-color: rgba(139, 92, 246, 0.18);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-composer {
+  border-top-color: rgba(139, 92, 246, 0.17);
+}
+
+@media (min-width: 1024px) {
+  .vn-superadmin-chat-v3 .vn-chat-action-label {
+    display: none;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-inbox-actions button {
+    width: 40px;
+    padding: 0;
+  }
+}
+
+@media (max-width: 639px) {
+  .vn-superadmin-chat-v3 .vn-chat-tabs {
+    padding: 9px 10px;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-tabs > div {
+    gap: 3px;
+    padding: 4px;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-tabs button {
+    flex-direction: column;
+    min-height: 55px;
+    gap: 4px;
+    padding: 6px 1px;
+    font-size: 10px;
+    letter-spacing: 0;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-tabs button svg {
+    width: 18px;
+    height: 18px;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-inbox-header {
+    padding: 16px 15px;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-inbox-identity {
+    gap: 9px;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-inbox-symbol {
+    width: 40px;
+    height: 40px;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-inbox-title {
+    font-size: 17px;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-inbox-kicker {
+    font-size: 8px;
+    letter-spacing: 0.065em;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-action-label {
+    display: none;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-inbox-actions button {
+    width: 36px;
+    min-width: 36px;
+    height: 38px;
+    padding: 0;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-inbox-scroll {
+    padding: 10px;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-conversation-item {
+    padding: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-superadmin-chat-v3 .vn-chat-conversation-item:hover {
+    transform: none;
+  }
+}
