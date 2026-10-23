@@ -808,3 +808,20 @@ a {
     transform: none;
   }
 }
+
+/* En móvil, al abrir un chat se prioriza la conversación y su compositor. */
+@media (max-width: 1023px) {
+  .vn-superadmin-chat-v3.vn-chat-conversation-open .vn-chat-tabs {
+    display: none;
+  }
+  .vn-superadmin-chat-v3.vn-chat-conversation-open .vn-chat-room-header {
+    min-height: 66px;
+  }
+  .vn-superadmin-chat-v3.vn-chat-conversation-open .vn-chat-composer {
+    padding: 10px 12px 12px;
+  }
+  .vn-superadmin-chat-v3.vn-chat-conversation-open .vn-chat-compose-field {
+    gap: 4px;
+    padding: 5px;
+  }
+}
