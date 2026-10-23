@@ -85,9 +85,14 @@ export function ConversationList({
         selectedConversationId ? "hidden lg:flex" : "flex"
       } vn-chat-conversations w-full shrink-0 flex-col border-r border-slate-200 bg-white dark:border-white/10 dark:bg-[#0d1526] lg:w-[340px] xl:w-[375px]`}
     >
-      <header className="border-b border-slate-200/80 px-4 pb-5 pt-5 dark:border-white/10 sm:px-5">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <div className="min-w-0">
+      <header className="vn-chat-inbox-header border-b border-slate-200/80 px-4 pb-5 pt-5 dark:border-white/10 sm:px-5">
+        <div className="vn-chat-inbox-headline mb-4 flex items-center justify-between gap-3">
+          <div className="vn-chat-inbox-identity flex min-w-0 items-center gap-3">
+            <span className="vn-chat-inbox-symbol" aria-hidden="true">
+              <MessageCircle size={21} />
+            </span>
+            <div className="min-w-0">
+              <p className="vn-chat-inbox-kicker">TU CENTRO DE CONVERSACIONES</p>
             <div className="flex items-center gap-2">
               {showArchived && (
                 <button
@@ -100,26 +105,27 @@ export function ConversationList({
                 </button>
               )}
 
-              <h1 className="truncate text-[19px] font-extrabold tracking-tight text-slate-950 dark:text-white sm:text-xl">
+              <h1 className="vn-chat-inbox-title truncate text-[19px] font-extrabold tracking-tight text-slate-950 dark:text-white sm:text-xl">
                 {showArchived ? "Archivados" : "Conversaciones"}
               </h1>
 
               {uniqueConversations.length > 0 && (
-                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-black text-slate-500 dark:bg-white/5 dark:text-slate-400">
+                <span className="vn-chat-inbox-count rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-black text-slate-500 dark:bg-white/5 dark:text-slate-400">
                   {uniqueConversations.length}
                 </span>
               )}
             </div>
 
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+            <p className="vn-chat-inbox-description mt-1 text-xs text-slate-500 dark:text-slate-400">
               {showArchived
                 ? "Conversaciones que archivaste"
                 : "Tus mensajes recientes"}
             </p>
+            </div>
           </div>
 
           {!showArchived && (
-            <div className="flex shrink-0 items-center gap-2">
+            <div className="vn-chat-inbox-actions flex shrink-0 items-center gap-2">
               <button
                 type="button"
                 onClick={onCreateGroup}
@@ -127,6 +133,7 @@ export function ConversationList({
                 title="Crear grupo"
               >
                 <Users size={17} />
+                <span className="vn-chat-action-label">Grupo</span>
               </button>
 
               <button
@@ -136,12 +143,13 @@ export function ConversationList({
                 title="Nuevo chat"
               >
                 <UserPlus size={17} />
+                <span className="vn-chat-action-label">Nuevo</span>
               </button>
             </div>
           )}
         </div>
 
-        <div className="relative">
+        <div className="vn-chat-inbox-search relative">
           <Search
             size={17}
             className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
@@ -178,7 +186,11 @@ export function ConversationList({
         )}
       </header>
 
-      <div className="min-h-0 flex-1 space-y-1 overflow-y-auto p-2.5 sm:p-3">
+      <div className="vn-chat-inbox-scroll min-h-0 flex-1 space-y-1 overflow-y-auto p-2.5 sm:p-3">
+        <div className="vn-chat-list-subheading" aria-hidden="true">
+          <span>ACTIVIDAD RECIENTE</span>
+          <span>{uniqueConversations.length} chats</span>
+        </div>
         {loading ? (
           <div className="space-y-1">
             {[1, 2, 3, 4, 5].map((item) => (
