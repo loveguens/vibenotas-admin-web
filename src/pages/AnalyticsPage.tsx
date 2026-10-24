@@ -267,10 +267,10 @@ export default function AnalyticsPage() {
                 key={option.value}
                 type="button"
                 onClick={() => setPeriod(option.value)}
-                className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${
+                className={`vn-analytics-period-button rounded-lg px-3 py-2 text-sm font-semibold transition ${
                   period === option.value
-                    ? "bg-violet-500 text-white shadow-lg shadow-violet-950/30"
-                    : "text-slate-600 hover:bg-violet-50 hover:text-violet-700 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white"
+                    ? "vn-analytics-period-selected bg-violet-500 text-white shadow-lg shadow-violet-950/30"
+                    : "vn-analytics-period-idle text-slate-600 hover:bg-violet-50 hover:text-violet-700 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white"
                 }`}
               >
                 {option.label}
@@ -282,7 +282,7 @@ export default function AnalyticsPage() {
             type="button"
             onClick={() => void loadAnalytics(period)}
             disabled={loading}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-3 text-sm font-semibold text-violet-300 transition hover:bg-violet-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+            className="vn-analytics-refresh inline-flex items-center justify-center gap-2 rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-3 text-sm font-semibold text-violet-300 transition hover:bg-violet-500/20 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
             Actualizar
@@ -436,7 +436,7 @@ export default function AnalyticsPage() {
                   <Line
                     type="monotone"
                     dataKey="total"
-                    stroke="#8b5cf6"
+                    stroke="#e96b54"
                     strokeWidth={3}
                     dot={false}
                     activeDot={{
