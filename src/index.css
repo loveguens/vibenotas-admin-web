@@ -2702,3 +2702,105 @@ html.dark .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filt
     transition: none;
   }
 }
+
+/* =========================================================
+   SUPER ADMIN COMMUNITY — BLOQUEADOS COMPACTO
+   Recorta el espacio vacío y respeta marfil/carbón/coral.
+   ========================================================= */
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-view .vn-chat-people-header {
+  padding: 13px 17px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-view .vn-chat-people-header h1 {
+  font-size: clamp(19px, 2.7vw, 22px);
+  line-height: 1.2;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-title-row {
+  gap: 7px 11px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-count {
+  padding: 4px 9px;
+  border-color: var(--vn-chat-line);
+  background: var(--vn-chat-accent-soft);
+  color: var(--vn-chat-accent-ink);
+  font-size: 10px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-view .vn-chat-people-header p.text-sm {
+  margin-top: 6px;
+  max-width: 54ch;
+  color: var(--vn-chat-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-view .vn-chat-people-body {
+  padding: 14px 16px;
+  background: var(--vn-chat-bg);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-empty {
+  min-height: 172px;
+  padding: 20px 17px;
+  border: 1px dashed color-mix(in srgb, var(--vn-chat-accent) 25%, var(--vn-chat-line));
+  border-radius: 17px;
+  background: var(--vn-chat-panel);
+  color: var(--vn-chat-text);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-empty-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: var(--vn-chat-accent-soft);
+  color: var(--vn-chat-accent-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-empty-icon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-empty h2 {
+  margin-top: 10px;
+  color: var(--vn-chat-text);
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-empty p {
+  margin-top: 5px;
+  max-width: 360px;
+  color: var(--vn-chat-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-view .vn-chat-person-card button {
+  border-color: color-mix(in srgb, var(--vn-chat-accent) 26%, var(--vn-chat-line));
+  background: var(--vn-chat-accent-soft);
+  color: var(--vn-chat-accent-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-view .vn-chat-person-card button:hover {
+  border-color: var(--vn-chat-accent);
+  background: color-mix(in srgb, var(--vn-chat-accent-soft) 80%, var(--vn-chat-accent));
+}
+
+@media (max-width: 639px) {
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-view .vn-chat-people-header {
+    padding: 11px 13px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-view .vn-chat-people-body {
+    padding: 10px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-empty {
+    min-height: 158px;
+    padding: 16px 12px;
+  }
+}
