@@ -105,7 +105,7 @@ export function ChatHeader({
   }
 
   return (
-    <header className="flex min-h-[72px] shrink-0 items-center gap-3 border-b border-slate-200 bg-white/95 px-3 backdrop-blur-xl dark:border-white/10 dark:bg-[#0d1526]/95 sm:px-5">
+    <header className="vn-chat-room-header flex min-h-[80px] shrink-0 items-center gap-3 border-b border-slate-200 bg-white/95 px-3.5 backdrop-blur-xl dark:border-white/10 dark:bg-[#0d1526]/95 sm:px-6">
       <button
         type="button"
         onClick={onBack}
@@ -118,7 +118,7 @@ export function ChatHeader({
       <button
         type="button"
         onClick={onOpenInfo}
-        className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl text-left outline-none"
+        className="vn-chat-header-identity group flex min-w-0 flex-1 items-center gap-3 rounded-2xl py-2 text-left outline-none transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-violet-400/40"
       >
         <Avatar
           name={title}
@@ -130,8 +130,9 @@ export function ChatHeader({
         />
 
         <div className="min-w-0">
+          <span className="vn-chat-room-eyebrow">CONVERSACIÓN ACTIVA</span>
           <div className="flex items-center gap-2">
-            <h2 className="truncate text-sm font-black text-slate-950 dark:text-white sm:text-base">
+            <h2 className="vn-chat-room-title truncate text-sm font-extrabold tracking-tight text-slate-950 dark:text-white sm:text-base">
               {title}
             </h2>
 
@@ -175,7 +176,7 @@ export function ChatHeader({
           event.stopPropagation();
           onOpenMenu(event.currentTarget);
         }}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white"
+        className="vn-chat-room-menu flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200/80 bg-slate-50 text-slate-500 transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:border-violet-400/30 dark:hover:bg-violet-500/10 dark:hover:text-violet-300"
         aria-label="Opciones del chat"
       >
         <MoreVertical size={20} />
