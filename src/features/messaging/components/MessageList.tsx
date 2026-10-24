@@ -139,7 +139,7 @@ export function MessageList({
         </div>
       ) : messages.length === 0 ? (
         <div className="flex h-full items-center justify-center text-center">
-          <div className="rounded-[28px] border border-white/70 bg-white/70 px-8 py-7 shadow-sm backdrop-blur dark:border-white/5 dark:bg-white/[0.03]">
+          <div className="vn-chat-empty-state rounded-[28px] border border-white/70 bg-white/70 px-8 py-7 shadow-sm backdrop-blur dark:border-white/5 dark:bg-white/[0.03]">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-100 text-violet-600 dark:bg-violet-500/10 dark:text-violet-300">
               <MessageCircle size={24} />
             </div>
@@ -163,7 +163,7 @@ export function MessageList({
               <div key={message.id}>
                 {isDifferentDay(previousMessage, message) && (
                   <div className="my-5 flex justify-center">
-                    <span className="rounded-full border border-slate-200/80 bg-white/90 px-4 py-1.5 text-[10px] font-bold tracking-wide text-slate-500 shadow-sm backdrop-blur dark:border-white/10 dark:bg-[#18243a]/90 dark:text-slate-300">
+                    <span className="vn-chat-date-pill rounded-full border border-slate-200/80 bg-white/90 px-4 py-1.5 text-[10px] font-bold tracking-wide text-slate-500 shadow-sm backdrop-blur dark:border-white/10 dark:bg-[#18243a]/90 dark:text-slate-300">
                       {getDateDivider(message.creado_en)}
                     </span>
                   </div>
@@ -204,7 +204,7 @@ export function MessageList({
 
             onJumpToBottom();
           }}
-          className="sticky bottom-4 ml-auto mr-2 flex h-10 w-10 items-center justify-center rounded-full border border-violet-400/20 bg-violet-600 text-white shadow-lg shadow-violet-500/20 transition hover:bg-violet-500"
+          className="vn-chat-jump-button sticky bottom-4 ml-auto mr-2 flex h-10 w-10 items-center justify-center rounded-full border border-violet-400/20 bg-violet-600 text-white shadow-lg shadow-violet-500/20 transition hover:bg-violet-500"
           aria-label="Ir al último mensaje"
         >
           <ArrowDown size={18} />
