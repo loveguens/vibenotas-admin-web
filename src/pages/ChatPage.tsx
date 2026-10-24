@@ -3869,30 +3869,29 @@ function BlockedPanel({
   onUnblock: (id: string) => Promise<void>;
 }) {
   return (
-    <section className="vn-chat-people-view flex min-h-0 flex-1 flex-col bg-slate-50/60 dark:bg-[#0b1220]">
+    <section className="vn-chat-people-view vn-chat-blocked-view flex min-h-0 flex-1 flex-col bg-slate-50/60 dark:bg-[#0b1220]">
       <header className="vn-chat-people-header shrink-0 border-b border-slate-200 bg-white px-4 py-5 dark:border-white/10 dark:bg-[#0d1526] sm:px-6">
         <div className="mx-auto max-w-5xl">
           <p className="text-[10px] font-black uppercase tracking-[0.22em] text-violet-500">
             Privacidad
           </p>
 
-          <div className="mt-1 flex flex-wrap items-end justify-between gap-3">
-            <div>
+          <div className="mt-1">
+            <div className="vn-chat-blocked-title-row flex flex-wrap items-center gap-2">
               <h1 className="text-2xl font-black tracking-tight text-slate-950 dark:text-white">
                 Usuarios bloqueados
               </h1>
-
-              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                Administra las personas que no pueden enviarte solicitudes ni
-                iniciar conversaciones privadas contigo.
-              </p>
+              {!loading && (
+                <span className="vn-chat-blocked-count rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-500 dark:border-white/10 dark:bg-white/5 dark:text-slate-300">
+                  {users.length} {users.length === 1 ? "bloqueado" : "bloqueados"}
+                </span>
+              )}
             </div>
 
-            {!loading && (
-              <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-500 dark:border-white/10 dark:bg-white/5 dark:text-slate-300">
-                {users.length} {users.length === 1 ? "bloqueado" : "bloqueados"}
-              </span>
-            )}
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              Administra las personas que no pueden enviarte solicitudes ni
+              iniciar conversaciones privadas contigo.
+            </p>
           </div>
         </div>
       </header>
@@ -3909,8 +3908,8 @@ function BlockedPanel({
               ))}
             </div>
           ) : users.length === 0 ? (
-            <div className="flex min-h-[300px] flex-col items-center justify-center rounded-3xl border border-dashed border-slate-200 bg-white px-6 text-center dark:border-white/10 dark:bg-[#0d1526]">
-              <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-50 text-violet-500 dark:bg-violet-500/10 dark:text-violet-300">
+            <div className="vn-chat-blocked-empty flex min-h-[180px] flex-col items-center justify-center rounded-3xl border border-dashed border-slate-200 bg-white px-6 text-center dark:border-white/10 dark:bg-[#0d1526]">
+              <span className="vn-chat-blocked-empty-icon flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-50 text-violet-500 dark:bg-violet-500/10 dark:text-violet-300">
                 <ShieldOff size={24} />
               </span>
 
