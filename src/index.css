@@ -2250,3 +2250,557 @@ html.dark .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filt
     transform: none;
   }
 }
+
+/* =========================================================
+   SUPER ADMIN COMMUNITY CHAT — VIBENOTAS V4
+   Alcance exclusivo de /superadmin/chat.
+   Preserva los colores personalizados de las burbujas.
+   ========================================================= */
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 {
+  --vn-chat-bg: var(--vn-bg);
+  --vn-chat-panel: var(--vn-surface);
+  --vn-chat-line: var(--vn-line);
+  --vn-chat-text: var(--vn-ink);
+  --vn-chat-muted: var(--vn-muted);
+  --vn-chat-soft: var(--vn-surface-hover);
+  --vn-chat-accent: var(--vn-coral);
+  --vn-chat-accent-ink: var(--vn-coral-strong);
+  --vn-chat-accent-soft: var(--vn-coral-soft);
+  min-width: 0;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-shell {
+  border: 1px solid var(--vn-chat-line);
+  border-radius: 22px;
+  background: var(--vn-chat-panel);
+  box-shadow: var(--vn-elevation);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-tabs {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--vn-chat-line);
+  background: var(--vn-chat-panel);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-tabs > div {
+  border: 1px solid var(--vn-chat-line);
+  border-radius: 14px;
+  background: var(--vn-chat-soft);
+  padding: 3px;
+  gap: 4px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-tabs button {
+  min-height: 39px;
+  border-radius: 11px;
+  box-shadow: none;
+  color: var(--vn-chat-muted);
+  background: transparent;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-tabs button:hover:not([aria-current="page"]) {
+  color: var(--vn-chat-text);
+  background: var(--vn-chat-panel);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-tabs button[aria-current="page"] {
+  background: var(--vn-chat-accent);
+  color: #fff;
+  box-shadow: 0 5px 13px color-mix(in srgb, var(--vn-chat-accent) 19%, transparent);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-tabs button[aria-current="page"] svg {
+  color: inherit;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-conversations {
+  border-right: 1px solid var(--vn-chat-line);
+  background: var(--vn-chat-panel);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-inbox-header {
+  border-bottom: 1px solid var(--vn-chat-line);
+  background: var(--vn-chat-panel);
+  padding: 12px 14px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-inbox-header::after,
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-people-header::after {
+  display: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-inbox-headline {
+  margin-bottom: 9px;
+  gap: 9px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-inbox-identity {
+  gap: 9px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-inbox-symbol {
+  width: 37px;
+  height: 37px;
+  border: 1px solid color-mix(in srgb, var(--vn-chat-accent) 23%, var(--vn-chat-line));
+  border-radius: 12px;
+  color: var(--vn-chat-accent-ink);
+  background: var(--vn-chat-accent-soft);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-inbox-kicker {
+  color: var(--vn-chat-accent-ink);
+  font-size: 9px;
+  letter-spacing: 0.09em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-inbox-title {
+  font-size: 17px;
+  color: var(--vn-chat-text);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-inbox-count {
+  border: 1px solid var(--vn-chat-line);
+  background: var(--vn-chat-soft);
+  color: var(--vn-chat-accent-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-inbox-description {
+  color: var(--vn-chat-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-inbox-actions button {
+  height: 37px;
+  min-width: 37px;
+  border: 1px solid var(--vn-chat-line);
+  border-radius: 11px;
+  background: var(--vn-chat-soft);
+  color: var(--vn-chat-ink, var(--vn-chat-text));
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-inbox-actions button:last-child {
+  border-color: var(--vn-chat-accent);
+  color: #fff;
+  background: var(--vn-chat-accent);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-inbox-actions button:hover {
+  border-color: var(--vn-chat-accent);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-search {
+  min-height: 41px;
+  background: var(--vn-chat-soft);
+  border: 1px solid var(--vn-chat-line);
+  border-radius: 12px;
+  color: var(--vn-chat-text);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-search::placeholder {
+  color: var(--vn-chat-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-search:focus {
+  border-color: var(--vn-chat-accent);
+  background: var(--vn-chat-panel);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--vn-chat-accent) 12%, transparent);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-inbox-scroll {
+  background: var(--vn-chat-bg);
+  padding: 10px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-list-subheading {
+  padding: 4px 6px 9px;
+  color: var(--vn-chat-accent-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-conversation-item {
+  min-height: 68px;
+  margin-bottom: 6px;
+  padding: 10px 11px;
+  border: 1px solid var(--vn-chat-line);
+  border-radius: 14px;
+  background: var(--vn-chat-panel);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-conversation-item:hover {
+  transform: none;
+  border-color: color-mix(in srgb, var(--vn-chat-accent) 43%, var(--vn-chat-line));
+  background: color-mix(in srgb, var(--vn-chat-accent-soft) 33%, var(--vn-chat-panel));
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-conversation-item[aria-current="page"] {
+  border-color: color-mix(in srgb, var(--vn-chat-accent) 45%, var(--vn-chat-line));
+  background: var(--vn-chat-accent-soft);
+  box-shadow: inset 3px 0 0 var(--vn-chat-accent);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-conversation-item .text-violet-600,
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-conversation-item .fill-violet-500 {
+  color: var(--vn-chat-accent-ink);
+  fill: currentColor;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-conversation-item span.bg-gradient-to-br {
+  background: var(--vn-chat-accent);
+  color: #fff;
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-room {
+  background: var(--vn-chat-panel);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-message-surface,
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-thread {
+  background-color: var(--vn-chat-bg);
+  background-image: radial-gradient(
+    circle at 100% 0%,
+    color-mix(in srgb, var(--vn-chat-accent) 5%, transparent),
+    transparent 50%
+  );
+  background-attachment: scroll;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-room-header {
+  min-height: 69px;
+  padding: 10px 17px;
+  border-bottom: 1px solid var(--vn-chat-line);
+  background: var(--vn-chat-panel);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-room-header::after {
+  display: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-room-eyebrow {
+  color: var(--vn-chat-accent-ink);
+  font-size: 9px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-room-title {
+  color: var(--vn-chat-text);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-room-menu {
+  border-color: var(--vn-chat-line);
+  background: var(--vn-chat-soft);
+  color: var(--vn-chat-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-room-menu:hover {
+  border-color: var(--vn-chat-accent);
+  color: var(--vn-chat-accent-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-bubble-other {
+  background: var(--vn-chat-panel);
+  border-color: var(--vn-chat-line);
+  color: var(--vn-chat-text);
+  box-shadow: 0 5px 16px rgba(27, 31, 34, 0.055);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-bubble-mine {
+  box-shadow: 0 6px 16px rgba(22, 18, 32, 0.12);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-date-pill {
+  border: 1px solid var(--vn-chat-line);
+  color: var(--vn-chat-muted);
+  background: var(--vn-chat-panel);
+  box-shadow: none;
+  padding: 5px 11px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-empty-state {
+  border: 1px solid var(--vn-chat-line);
+  background: var(--vn-chat-panel);
+  box-shadow: var(--vn-elevation);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-jump-button,
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-message-surface > button {
+  background: var(--vn-chat-accent);
+  border-color: var(--vn-chat-accent);
+  color: #fff;
+  box-shadow: 0 7px 15px color-mix(in srgb, var(--vn-chat-accent) 19%, transparent);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-composer {
+  padding: 12px 15px 10px;
+  border-top: 1px solid var(--vn-chat-line);
+  background: var(--vn-chat-panel);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-compose-field {
+  min-height: 52px;
+  border-radius: 17px;
+  border: 1px solid var(--vn-chat-line);
+  background: var(--vn-chat-soft);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-compose-field:focus-within {
+  border-color: var(--vn-chat-accent);
+  background: var(--vn-chat-panel);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--vn-chat-accent) 11%, transparent);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-message-input {
+  color: var(--vn-chat-text);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-message-input::placeholder {
+  color: var(--vn-chat-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-attach-action,
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-schedule-action {
+  color: var(--vn-chat-muted);
+  background: var(--vn-chat-panel);
+  border-radius: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-attach-action:hover,
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-schedule-action:hover {
+  color: var(--vn-chat-accent-ink);
+  background: var(--vn-chat-accent-soft);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-composer-help {
+  color: var(--vn-chat-muted);
+}
+
+/* Las burbujas personalizadas y su color de envío no se sobreescriben. */
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-people-view {
+  background: var(--vn-chat-bg);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-people-header {
+  padding: 17px 20px;
+  border-bottom: 1px solid var(--vn-chat-line);
+  background: var(--vn-chat-panel);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-people-header h1 {
+  color: var(--vn-chat-text);
+  font-size: clamp(21px, 2.6vw, 27px);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-people-header > div > p:first-child {
+  color: var(--vn-chat-accent-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-people-header input {
+  border-color: var(--vn-chat-line);
+  background: var(--vn-chat-soft);
+  color: var(--vn-chat-text);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-people-header input:focus {
+  background: var(--vn-chat-panel);
+  border-color: var(--vn-chat-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--vn-chat-accent) 10%, transparent);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-people-body {
+  background: var(--vn-chat-bg);
+  padding: 14px 16px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-person-card {
+  border: 1px solid var(--vn-chat-line);
+  background: var(--vn-chat-panel);
+  border-radius: 15px;
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-person-card:hover {
+  transform: none;
+  border-color: color-mix(in srgb, var(--vn-chat-accent) 37%, var(--vn-chat-line));
+  box-shadow: 0 6px 17px rgba(33, 28, 22, 0.07);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-person-card button.bg-violet-600,
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-person-card button.bg-gradient-to-r,
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-person-card button.bg-violet-50,
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-people-body button.bg-violet-600 {
+  background: var(--vn-chat-accent);
+  color: #fff;
+  border-color: var(--vn-chat-accent);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-toast {
+  border-radius: 13px;
+  background: #262527;
+  border-color: #684139;
+  color: #fff4ef;
+}
+
+@media (max-width: 1023px) {
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-conversations {
+    border-right: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-shell {
+    border-radius: 15px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-tabs {
+    padding: 7px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-tabs button {
+    min-height: 43px;
+    padding: 5px 2px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-inbox-header {
+    padding: 10px 11px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-inbox-scroll {
+    padding: 8px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-conversation-item {
+    min-height: 64px;
+    padding: 9px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4.vn-chat-conversation-open .vn-chat-room-header {
+    min-height: 63px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-composer {
+    padding: 8px 10px 10px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-people-header {
+    padding: 13px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-people-body {
+    padding: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-conversation-item,
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-person-card {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   SUPER ADMIN COMMUNITY — BLOQUEADOS COMPACTO
+   Recorta el espacio vacío y respeta marfil/carbón/coral.
+   ========================================================= */
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-view .vn-chat-people-header {
+  padding: 13px 17px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-view .vn-chat-people-header h1 {
+  font-size: clamp(19px, 2.7vw, 22px);
+  line-height: 1.2;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-title-row {
+  gap: 7px 11px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-count {
+  padding: 4px 9px;
+  border-color: var(--vn-chat-line);
+  background: var(--vn-chat-accent-soft);
+  color: var(--vn-chat-accent-ink);
+  font-size: 10px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-view .vn-chat-people-header p.text-sm {
+  margin-top: 6px;
+  max-width: 54ch;
+  color: var(--vn-chat-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-view .vn-chat-people-body {
+  padding: 14px 16px;
+  background: var(--vn-chat-bg);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-empty {
+  min-height: 172px;
+  padding: 20px 17px;
+  border: 1px dashed color-mix(in srgb, var(--vn-chat-accent) 25%, var(--vn-chat-line));
+  border-radius: 17px;
+  background: var(--vn-chat-panel);
+  color: var(--vn-chat-text);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-empty-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: var(--vn-chat-accent-soft);
+  color: var(--vn-chat-accent-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-empty-icon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-empty h2 {
+  margin-top: 10px;
+  color: var(--vn-chat-text);
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-empty p {
+  margin-top: 5px;
+  max-width: 360px;
+  color: var(--vn-chat-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-view .vn-chat-person-card button {
+  border-color: color-mix(in srgb, var(--vn-chat-accent) 26%, var(--vn-chat-line));
+  background: var(--vn-chat-accent-soft);
+  color: var(--vn-chat-accent-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-view .vn-chat-person-card button:hover {
+  border-color: var(--vn-chat-accent);
+  background: color-mix(in srgb, var(--vn-chat-accent-soft) 80%, var(--vn-chat-accent));
+}
+
+@media (max-width: 639px) {
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-view .vn-chat-people-header {
+    padding: 11px 13px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-view .vn-chat-people-body {
+    padding: 10px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-chat-v4 .vn-chat-blocked-empty {
+    min-height: 158px;
+    padding: 16px 12px;
+  }
+}
