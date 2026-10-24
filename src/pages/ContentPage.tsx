@@ -239,18 +239,18 @@ export default function ContentPage() {
   }, [totals]);
 
   return (
-    <section className="space-y-6">
-      <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+    <section className="vn-content-dashboard space-y-6">
+      <div className="vn-content-hero flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-700 dark:text-violet-300">
+          <p className="vn-content-eyebrow text-sm font-semibold uppercase tracking-[0.18em] text-violet-700 dark:text-violet-300">
             Visibilidad administrativa
           </p>
 
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950 dark:text-white">
+          <h1 className="vn-content-title mt-2 text-3xl font-bold tracking-tight text-slate-950 dark:text-white">
             Resumen de contenido
           </h1>
 
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400">
+          <p className="vn-content-description mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400">
             Supervisa el uso de contenido mediante métricas
             agregadas sin exponer títulos, correos ni información
             privada de los usuarios.
@@ -261,7 +261,7 @@ export default function ContentPage() {
           type="button"
           onClick={() => void loadContent()}
           disabled={loading}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm font-semibold text-violet-700 transition hover:bg-violet-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-300 dark:hover:bg-violet-500/20"
+          className="vn-content-refresh inline-flex items-center justify-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm font-semibold text-violet-700 transition hover:bg-violet-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-300 dark:hover:bg-violet-500/20"
         >
           <RefreshCw
             size={18}
@@ -272,11 +272,11 @@ export default function ContentPage() {
       </div>
 
       {loading && (
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <div className="vn-content-stats grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {[1, 2, 3, 4].map((item) => (
             <div
               key={item}
-              className="h-36 animate-pulse rounded-3xl border border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-white/5"
+              className="vn-content-loading h-36 animate-pulse rounded-3xl border border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-white/5"
             />
           ))}
         </div>
@@ -296,8 +296,8 @@ export default function ContentPage() {
 
       {!loading && !error && (
         <>
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            <article className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80 dark:shadow-black/10">
+          <div className="vn-content-stats grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            <article className="vn-content-stat rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80 dark:shadow-black/10">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-sm text-slate-500 dark:text-slate-400">
@@ -319,7 +319,7 @@ export default function ContentPage() {
               </p>
             </article>
 
-            <article className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80 dark:shadow-black/10">
+            <article className="vn-content-stat rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80 dark:shadow-black/10">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-sm text-slate-500 dark:text-slate-400">
@@ -341,7 +341,7 @@ export default function ContentPage() {
               </p>
             </article>
 
-            <article className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80 dark:shadow-black/10">
+            <article className="vn-content-stat rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80 dark:shadow-black/10">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-sm text-slate-500 dark:text-slate-400">
@@ -363,7 +363,7 @@ export default function ContentPage() {
               </p>
             </article>
 
-            <article className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80 dark:shadow-black/10">
+            <article className="vn-content-stat rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80 dark:shadow-black/10">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-sm text-slate-500 dark:text-slate-400">
@@ -386,8 +386,8 @@ export default function ContentPage() {
             </article>
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-[1.6fr_1fr]">
-            <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80 dark:shadow-black/10">
+          <div className="vn-content-insights grid gap-6 xl:grid-cols-[1.6fr_1fr]">
+            <article className="vn-content-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80 dark:shadow-black/10">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <div className="flex items-center gap-2 text-violet-700 dark:text-violet-300">
@@ -414,7 +414,7 @@ export default function ContentPage() {
                 </div>
               </div>
 
-              <div className="mt-7 grid grid-cols-7 gap-2 sm:gap-4">
+              <div className="vn-content-activity-bars mt-7 grid grid-cols-7 gap-2 sm:gap-4">
                 {analytics.days.map((day) => {
                   const total = day.created + day.updated;
 
@@ -437,7 +437,7 @@ export default function ContentPage() {
                     >
                       <div className="flex h-36 w-full items-end justify-center">
                         <div
-                          className="w-full max-w-8 rounded-t-xl bg-gradient-to-t from-violet-600 to-sky-400 opacity-90"
+                          className="vn-content-activity-bar w-full max-w-8 rounded-t-xl bg-gradient-to-t from-violet-600 to-sky-400 opacity-90"
                           style={{
                             height: `${height}px`,
                           }}
@@ -458,7 +458,7 @@ export default function ContentPage() {
               </div>
             </article>
 
-            <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80 dark:shadow-black/10">
+            <article className="vn-content-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80 dark:shadow-black/10">
               <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
                 <Database size={18} />
 
@@ -467,7 +467,7 @@ export default function ContentPage() {
                 </p>
               </div>
 
-              <div className="mt-5 grid gap-3">
+              <div className="vn-content-state-list mt-5 grid gap-3">
                 <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3 dark:bg-black/10">
                   <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
                     <Archive size={17} />
@@ -510,8 +510,8 @@ export default function ContentPage() {
             </article>
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-2">
-            <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80 dark:shadow-black/10">
+          <div className="vn-content-bottom grid gap-6 xl:grid-cols-2">
+            <article className="vn-content-panel rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-[#1E293B]/80 dark:shadow-black/10">
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-700 dark:text-violet-300">
                 Distribución
               </p>
@@ -520,7 +520,7 @@ export default function ContentPage() {
                 Contenido por tipo
               </h2>
 
-              <div className="mt-6 space-y-5">
+              <div className="vn-content-distribution mt-6 space-y-5">
                 {distribution.map((item) => (
                   <div key={item.label}>
                     <div className="flex items-center justify-between gap-4">
@@ -535,7 +535,7 @@ export default function ContentPage() {
 
                     <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-white/5">
                       <div
-                        className={`h-full rounded-full ${item.bar}`}
+                        className={`vn-content-distribution-bar h-full rounded-full ${item.bar}`}
                         style={{
                           width: `${item.percentage}%`,
                         }}
@@ -546,7 +546,7 @@ export default function ContentPage() {
               </div>
             </article>
 
-            <article className="rounded-3xl border border-emerald-200 bg-emerald-50/70 p-6 shadow-sm dark:border-emerald-400/20 dark:bg-emerald-500/[0.06]">
+            <article className="vn-content-privacy rounded-3xl border border-emerald-200 bg-emerald-50/70 p-6 shadow-sm dark:border-emerald-400/20 dark:bg-emerald-500/[0.06]">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
                 <ShieldCheck size={23} />
               </div>
