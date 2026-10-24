@@ -240,7 +240,7 @@ export default function AnalyticsPage() {
     PERIOD_OPTIONS.find((option) => option.value === period)?.label ?? period;
 
   return (
-    <section aria-labelledby="analytics-title" className="vn-final-page space-y-6">
+    <section aria-labelledby="analytics-title" className="vn-final-page vn-analytics-overview space-y-6">
       <div className="vn-final-hero flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
