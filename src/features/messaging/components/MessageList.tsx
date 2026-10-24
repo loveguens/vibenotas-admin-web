@@ -145,7 +145,7 @@ export function MessageList({
             </div>
 
             <p className="font-black text-slate-800 dark:text-slate-200">
-              Este chat est? listo
+              Este chat está listo
             </p>
 
             <p className="mt-2 text-sm text-slate-500">
