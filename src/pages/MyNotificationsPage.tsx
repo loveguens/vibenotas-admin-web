@@ -1447,7 +1447,7 @@ export default function MyNotificationsPage() {
                           }
                           className={`vn-myn-notification group relative flex w-full items-start gap-4 overflow-hidden px-5 py-5 text-left transition sm:px-6 ${
                             unread
-                              ? "bg-violet-50/80 dark:bg-violet-500/[0.055]"
+                              ? "vn-myn-unread bg-violet-50/80 dark:bg-violet-500/[0.055]"
                               : "bg-transparent"
                           } hover:bg-slate-50 focus:outline-none focus-visible:bg-slate-100 dark:hover:bg-white/[0.045] dark:focus-visible:bg-white/[0.06]`}
                         >
