@@ -1896,3 +1896,357 @@ html.dark .vn-admin.vn-superadmin-layout .vn-analytics-audit-outcome.is-other {
     transition: none;
   }
 }
+
+/* =========================================================
+   SUPER ADMIN — REPORTES COMPACTOS
+   Identidad VibeNotas: coral, marfil y carbón.
+   No modifica Reportes de Admin ni Owner.
+   ========================================================= */
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--vn-ink);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports > .pointer-events-none.absolute {
+  display: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-content {
+  padding: 0 0 18px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero {
+  border: 1px solid color-mix(in srgb, var(--vn-coral) 29%, var(--vn-line));
+  border-radius: 24px;
+  background: linear-gradient(115deg, #fffdf8 0%, #fff7ef 66%, #fae5db 100%);
+  padding: 20px 22px;
+  box-shadow: 0 16px 40px rgba(44, 38, 31, 0.07);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero > div {
+  gap: 16px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero-icon {
+  width: 46px;
+  height: 46px;
+  border: 1px solid color-mix(in srgb, var(--vn-coral) 24%, var(--vn-line));
+  border-radius: 15px;
+  background: var(--vn-coral-soft);
+  color: var(--vn-coral-strong);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero-icon svg {
+  width: 23px;
+  height: 23px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-kicker {
+  color: var(--vn-coral-strong);
+  letter-spacing: 0.14em;
+  font-size: 10px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-title {
+  color: var(--vn-ink);
+  margin-top: 4px;
+  font-size: clamp(23px, 2.5vw, 29px);
+  line-height: 1.18;
+  letter-spacing: -0.035em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero p.text-slate-600 {
+  margin-top: 7px;
+  color: var(--vn-muted);
+  max-width: 590px;
+  line-height: 1.5;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero-actions {
+  gap: 8px;
+  align-items: center;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero-actions > button {
+  min-height: 41px;
+  padding: 9px 14px;
+  border-radius: 12px;
+  box-shadow: none;
+  font-size: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-export {
+  border-color: var(--vn-line);
+  background: var(--vn-surface);
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-export:hover {
+  border-color: var(--vn-coral);
+  background: var(--vn-surface-hover);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-refresh {
+  background: var(--vn-coral);
+  color: #fff;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-refresh:hover {
+  background: var(--vn-coral-strong);
+  color: #fff;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-kpi-grid {
+  gap: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card {
+  min-width: 0;
+  min-height: 132px;
+  padding: 16px;
+  border-radius: 19px;
+  border-color: var(--vn-line);
+  background: var(--vn-surface);
+  box-shadow: var(--vn-elevation);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--vn-coral) 35%, var(--vn-line));
+  box-shadow: var(--vn-elevation);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card .relative > div {
+  min-width: 0;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card p.text-sm {
+  color: var(--vn-muted);
+  font-size: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card p.text-3xl {
+  color: var(--vn-ink);
+  margin-top: 6px;
+  font-size: 28px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card p.text-xs {
+  margin-top: 9px;
+  color: var(--vn-muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card .h-11.w-11 {
+  width: 37px;
+  height: 37px;
+  border-radius: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters,
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-list {
+  border: 1px solid var(--vn-line);
+  border-radius: 21px;
+  background: var(--vn-surface);
+  box-shadow: var(--vn-elevation);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters {
+  padding: 13px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-search,
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters details > summary {
+  min-height: 43px;
+  border-radius: 12px;
+  border: 1px solid var(--vn-line);
+  background: var(--vn-surface-hover);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-search {
+  padding: 9px 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-search:focus-within,
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters details > summary:focus-visible {
+  border-color: var(--vn-coral);
+  background: var(--vn-surface);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--vn-coral) 12%, transparent);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-search input {
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-search input::placeholder {
+  color: var(--vn-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters details > summary {
+  padding-top: 9px;
+  padding-bottom: 9px;
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters details > div {
+  border-color: var(--vn-line);
+  background: var(--vn-surface);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filter-pills {
+  margin-top: 11px;
+  gap: 6px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-status-filter {
+  min-height: 36px;
+  padding: 7px 11px;
+  border-radius: 10px;
+  font-size: 12px;
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-status-filter[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--vn-coral) 30%, var(--vn-line));
+  background: var(--vn-coral-soft);
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-status-filter[aria-pressed="false"] {
+  border-color: var(--vn-line);
+  background: var(--vn-surface-hover);
+  color: var(--vn-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-status-filter > span {
+  background: color-mix(in srgb, var(--vn-coral) 11%, var(--vn-surface));
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-list-heading {
+  padding: 15px 19px;
+  border-color: var(--vn-line);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-list-heading p.text-violet-700 {
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-list-heading h2 {
+  color: var(--vn-ink);
+  font-size: 18px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-table-scroll thead {
+  background: var(--vn-surface-hover);
+  color: var(--vn-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-table-scroll th {
+  padding-top: 11px;
+  padding-bottom: 11px;
+  letter-spacing: 0.075em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-row {
+  border-color: var(--vn-line);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-row:hover {
+  background: color-mix(in srgb, var(--vn-coral) 4%, var(--vn-surface));
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-row td {
+  padding-top: 11px;
+  padding-bottom: 11px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-row button,
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-mobile-list button {
+  border-color: color-mix(in srgb, var(--vn-coral) 23%, var(--vn-line));
+  background: var(--vn-coral-soft);
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-row button:hover,
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-mobile-list button:hover {
+  border-color: var(--vn-coral);
+  background: color-mix(in srgb, var(--vn-coral-soft) 78%, var(--vn-coral));
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-mobile-list > article {
+  padding: 15px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-mobile-list > article > div {
+  margin-top: 9px;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero {
+  border-color: #4c3936;
+  background: linear-gradient(120deg, #25282b, #242629 65%, #302827);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.17);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card,
+html.dark .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters,
+html.dark .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-list {
+  background: #202327;
+  border-color: var(--vn-line);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-search,
+html.dark .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters details > summary {
+  background: #292d31;
+  border-color: var(--vn-line);
+}
+
+@media (max-width: 639px) {
+  .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero {
+    padding: 15px;
+    border-radius: 19px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero-icon {
+    width: 39px;
+    height: 39px;
+    border-radius: 13px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero-actions > button {
+    flex: 1 1 auto;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card {
+    padding: 12px;
+    min-height: 120px;
+    border-radius: 15px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card p.text-3xl {
+    font-size: 25px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters {
+    padding: 10px;
+    border-radius: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card {
+    transition: none;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card:hover {
+    transform: none;
+  }
+}
