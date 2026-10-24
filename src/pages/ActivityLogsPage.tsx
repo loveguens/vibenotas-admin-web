@@ -127,9 +127,9 @@ export default function ActivityLogsPage() {
   }
 
   return (
-    <section role="superadmin">
+    <section role="superadmin" className="vn-final-page">
       <section className="space-y-6">
-        <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+        <div className="vn-final-hero flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
               Auditoría del sistema
@@ -154,7 +154,7 @@ export default function ActivityLogsPage() {
         </div>
 
         <div className="grid gap-5 md:grid-cols-3">
-          <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10 backdrop-blur-xl">
+          <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10 backdrop-blur-xl">
             <p className="text-sm text-slate-400">Eventos registrados</p>
             <p className="mt-3 text-3xl font-bold text-white">{logs.length}</p>
             <div className="mt-4 flex items-center gap-2 text-sm text-violet-300">
@@ -163,7 +163,7 @@ export default function ActivityLogsPage() {
             </div>
           </article>
 
-          <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10 backdrop-blur-xl">
+          <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10 backdrop-blur-xl">
             <p className="text-sm text-slate-400">Usuarios involucrados</p>
             <p className="mt-3 text-3xl font-bold text-white">
               {new Set(logs.map((log) => log.usuario_id)).size}
@@ -174,7 +174,7 @@ export default function ActivityLogsPage() {
             </div>
           </article>
 
-          <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10 backdrop-blur-xl">
+          <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10 backdrop-blur-xl">
             <p className="text-sm text-slate-400">Eventos críticos</p>
             <p className="mt-3 text-3xl font-bold text-white">
               {
@@ -192,7 +192,7 @@ export default function ActivityLogsPage() {
           </article>
         </div>
 
-        <div className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-4 shadow-xl shadow-black/10 backdrop-blur-xl">
+        <div className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-4 shadow-xl shadow-black/10 backdrop-blur-xl">
           <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3">
             <Search size={19} className="text-slate-500" />
 
@@ -224,7 +224,7 @@ export default function ActivityLogsPage() {
         )}
 
         {!loading && !error && (
-          <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10 backdrop-blur-xl">
+          <div className="overflow-hidden vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10 backdrop-blur-xl">
             <div className="border-b border-white/10 px-6 py-5">
               <h2 className="font-bold text-white">Actividad reciente</h2>
               <p className="mt-1 text-sm text-slate-500">
