@@ -187,9 +187,9 @@ export default function TagsPage() {
   }
 
   return (
-    <section role="superadmin">
+    <section role="superadmin" className="vn-final-page">
       <section className="space-y-6">
-        <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+        <div className="vn-final-hero flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
               Organización de contenido
@@ -237,7 +237,7 @@ export default function TagsPage() {
           </div>
         )}
 
-        <div className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-4 shadow-xl shadow-black/10 backdrop-blur-xl">
+        <div className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-4 shadow-xl shadow-black/10 backdrop-blur-xl">
           <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3">
             <Search size={19} className="text-slate-500" />
 
@@ -270,7 +270,7 @@ export default function TagsPage() {
               return (
                 <article
                   key={tag.id}
-                  className="group rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10 transition hover:-translate-y-1 hover:border-violet-400/30 hover:bg-[#24334a]"
+                  className="group vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10 transition hover:-translate-y-1 hover:border-violet-400/30 hover:bg-[#24334a]"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div
