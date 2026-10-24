@@ -1035,7 +1035,7 @@ export default function MyNotificationsPage() {
       : null;
 
   return (
-    <div className="min-h-screen bg-[var(--app-bg)] text-[var(--text-primary)] transition-colors duration-300 lg:flex">
+    <div className={`min-h-screen bg-[var(--app-bg)] text-[var(--text-primary)] transition-colors duration-300 lg:flex ${userRole === "superadmin" ? "vn-admin vn-superadmin-layout vn-my-notifications-superadmin" : ""}`}>
       <Sidebar
         role={userRole}
         isOpen={sidebarOpen}
@@ -1052,30 +1052,30 @@ export default function MyNotificationsPage() {
           }
         />
 
-        <main className="px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-          <section className="mx-auto max-w-6xl space-y-6">
-            <div className="relative overflow-hidden rounded-[30px] border border-slate-200 bg-gradient-to-br from-violet-50 via-white to-sky-50 p-6 shadow-xl shadow-slate-200/60 sm:p-8 dark:border-white/10 dark:from-[#131A2D] dark:via-[#111827] dark:to-[#10243A] dark:shadow-2xl dark:shadow-black/25">
+        <main className="vn-myn-main px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+          <section className="vn-myn-page mx-auto max-w-6xl space-y-6">
+            <div className="vn-myn-hero relative overflow-hidden rounded-[30px] border border-slate-200 bg-gradient-to-br from-violet-50 via-white to-sky-50 p-6 shadow-xl shadow-slate-200/60 sm:p-8 dark:border-white/10 dark:from-[#131A2D] dark:via-[#111827] dark:to-[#10243A] dark:shadow-2xl dark:shadow-black/25">
               <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-violet-300/25 blur-3xl dark:bg-violet-500/10" />
               <div className="pointer-events-none absolute -bottom-28 left-10 h-72 w-72 rounded-full bg-sky-300/25 blur-3xl dark:bg-sky-500/10" />
 
-              <div className="relative flex flex-col gap-8 xl:flex-row xl:items-end xl:justify-between">
+              <div className="vn-myn-hero-content relative flex flex-col gap-5">
                 <div className="max-w-2xl">
-                  <div className="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-violet-700 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-200">
+                  <div className="vn-myn-eyebrow inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-violet-700 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-200">
                     <Sparkles size={15} />
                     Centro de actividad
                   </div>
 
-                  <h1 className="mt-5 text-3xl font-black tracking-tight text-slate-950 dark:text-white sm:text-4xl">
+                  <h1 className="vn-myn-title mt-5 text-3xl font-black tracking-tight text-slate-950 dark:text-white sm:text-4xl">
                     Mis notificaciones
                   </h1>
 
-                  <p className="mt-3 max-w-xl text-sm leading-7 text-slate-600 dark:text-slate-400 sm:text-base">
+                  <p className="vn-myn-subtitle mt-3 max-w-xl text-sm leading-7 text-slate-600 dark:text-slate-400 sm:text-base">
                     Mantente al día con mensajes, alertas de seguridad y avisos importantes. Las notificaciones nuevas se sincronizan automáticamente.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 xl:min-w-[600px]">
-                  <article className="rounded-3xl border border-slate-200 bg-white/80 p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.045] dark:shadow-none">
+                <div className="vn-myn-kpi-grid grid grid-cols-2 gap-3 sm:grid-cols-4">
+                  <article className="vn-myn-kpi vn-myn-kpi-total rounded-3xl border border-slate-200 bg-white/80 p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.045] dark:shadow-none">
                     <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Total
                     </p>
@@ -1084,7 +1084,7 @@ export default function MyNotificationsPage() {
                     </p>
                   </article>
 
-                  <article className="rounded-3xl border border-violet-200 bg-violet-50 p-5 dark:border-violet-400/20 dark:bg-violet-500/[0.08]">
+                  <article className="vn-myn-kpi vn-myn-kpi-unread rounded-3xl border border-violet-200 bg-violet-50 p-5 dark:border-violet-400/20 dark:bg-violet-500/[0.08]">
                     <p className="text-xs font-semibold uppercase tracking-wide text-violet-700 dark:text-violet-300">
                       Sin leer
                     </p>
@@ -1093,7 +1093,7 @@ export default function MyNotificationsPage() {
                     </p>
                   </article>
 
-                  <article className="rounded-3xl border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-400/20 dark:bg-emerald-500/[0.08]">
+                  <article className="vn-myn-kpi vn-myn-kpi-read rounded-3xl border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-400/20 dark:bg-emerald-500/[0.08]">
                     <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">
                       Leídas
                     </p>
@@ -1102,7 +1102,7 @@ export default function MyNotificationsPage() {
                     </p>
                   </article>
 
-                  <article className="rounded-3xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-400/20 dark:bg-amber-500/[0.08]">
+                  <article className="vn-myn-kpi vn-myn-kpi-priority rounded-3xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-400/20 dark:bg-amber-500/[0.08]">
                     <p className="text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300">
                       Prioridad
                     </p>
@@ -1114,7 +1114,7 @@ export default function MyNotificationsPage() {
               </div>
             </div>
 
-            <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 dark:border-white/10 dark:bg-[#101827] dark:shadow-none">
+            <div className="vn-myn-filters rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 dark:border-white/10 dark:bg-[#101827] dark:shadow-none">
               <div className="flex flex-col gap-4 xl:flex-row xl:items-center">
                 <div className="relative min-w-0 flex-1">
                   <Search
@@ -1130,7 +1130,7 @@ export default function MyNotificationsPage() {
                       )
                     }
                     placeholder="Buscar por título o mensaje"
-                    className="min-h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-11 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-300 focus:ring-4 focus:ring-violet-100 dark:border-white/10 dark:bg-white/[0.035] dark:text-white dark:placeholder:text-slate-600 dark:focus:border-violet-400/30 dark:focus:ring-violet-500/10"
+                    className="vn-myn-search min-h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-11 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-300 focus:ring-4 focus:ring-violet-100 dark:border-white/10 dark:bg-white/[0.035] dark:text-white dark:placeholder:text-slate-600 dark:focus:border-violet-400/30 dark:focus:ring-violet-500/10"
                   />
 
                   {search && (
@@ -1158,7 +1158,8 @@ export default function MyNotificationsPage() {
                             filter.key,
                           )
                         }
-                        className={`rounded-xl px-3.5 py-2.5 text-sm font-bold transition ${
+                        aria-pressed={readFilter === filter.key}
+                        className={`vn-myn-read-filter rounded-xl px-3.5 py-2.5 text-sm font-bold transition ${
                           readFilter ===
                           filter.key
                             ? "bg-violet-600 text-white shadow-lg shadow-violet-500/20"
@@ -1179,7 +1180,7 @@ export default function MyNotificationsPage() {
                     })
                   }
                   disabled={refreshing}
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 dark:hover:bg-white/[0.08] dark:hover:text-white"
+                  className="vn-myn-refresh inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 dark:hover:bg-white/[0.08] dark:hover:text-white"
                 >
                   <RefreshCw
                     size={17}
@@ -1203,7 +1204,7 @@ export default function MyNotificationsPage() {
                         "todos",
                       )
                     }
-                    className={`rounded-full border px-3 py-1.5 text-xs font-bold transition ${
+                    className={`vn-myn-type-filter rounded-full border px-3 py-1.5 text-xs font-bold transition ${
                       typeFilter ===
                       "todos"
                         ? "border-violet-300 bg-violet-50 text-violet-700 dark:border-violet-400/25 dark:bg-violet-500/10 dark:text-violet-200"
@@ -1223,7 +1224,7 @@ export default function MyNotificationsPage() {
                             type.value,
                           )
                         }
-                        className={`rounded-full border px-3 py-1.5 text-xs font-bold transition ${
+                        className={`vn-myn-type-filter rounded-full border px-3 py-1.5 text-xs font-bold transition ${
                           typeFilter ===
                           type.value
                             ? "border-violet-300 bg-violet-50 text-violet-700 dark:border-violet-400/25 dark:bg-violet-500/10 dark:text-violet-200"
@@ -1238,7 +1239,7 @@ export default function MyNotificationsPage() {
               )}
             </div>
 
-            <div className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-5 dark:border-white/10 dark:bg-[#101827] dark:shadow-none">
+            <div className="vn-myn-pending flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-5 dark:border-white/10 dark:bg-[#101827] dark:shadow-none">
               <div className="min-w-0">
                 <p className="font-bold text-slate-900 dark:text-white">
                   {unreadCount > 0
@@ -1267,7 +1268,7 @@ export default function MyNotificationsPage() {
                   unreadCount === 0 ||
                   markingAll
                 }
-                className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-2xl border border-violet-200 bg-violet-50 px-5 py-3 text-sm font-bold text-violet-700 transition hover:border-violet-300 hover:bg-violet-100 focus:outline-none focus:ring-2 focus:ring-violet-400/30 disabled:cursor-not-allowed disabled:opacity-40 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-100 dark:hover:border-violet-400/30 dark:hover:bg-violet-500/20 dark:focus:ring-violet-400/40"
+                className="vn-myn-mark-all inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-2xl border border-violet-200 bg-violet-50 px-5 py-3 text-sm font-bold text-violet-700 transition hover:border-violet-300 hover:bg-violet-100 focus:outline-none focus:ring-2 focus:ring-violet-400/30 disabled:cursor-not-allowed disabled:opacity-40 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-100 dark:hover:border-violet-400/30 dark:hover:bg-violet-500/20 dark:focus:ring-violet-400/40"
               >
                 {markingAll ? (
                   <LoaderCircle
@@ -1335,8 +1336,8 @@ export default function MyNotificationsPage() {
               </div>
             )}
 
-            <div className="overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-xl shadow-slate-200/50 dark:border-white/10 dark:bg-[#101827] dark:shadow-black/15">
-              <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:border-white/[0.07]">
+            <div className="vn-myn-list overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-xl shadow-slate-200/50 dark:border-white/10 dark:bg-[#101827] dark:shadow-black/15">
+              <div className="vn-myn-list-header flex flex-col gap-2 border-b border-slate-100 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:border-white/[0.07]">
                 <div>
                   <p className="text-sm font-black text-slate-900 dark:text-white">
                     Centro de notificaciones
@@ -1444,9 +1445,9 @@ export default function MyNotificationsPage() {
                               notification,
                             )
                           }
-                          className={`group relative flex w-full items-start gap-4 overflow-hidden px-5 py-5 text-left transition sm:px-6 ${
+                          className={`vn-myn-notification group relative flex w-full items-start gap-4 overflow-hidden px-5 py-5 text-left transition sm:px-6 ${
                             unread
-                              ? "bg-violet-50/80 dark:bg-violet-500/[0.055]"
+                              ? "vn-myn-unread bg-violet-50/80 dark:bg-violet-500/[0.055]"
                               : "bg-transparent"
                           } hover:bg-slate-50 focus:outline-none focus-visible:bg-slate-100 dark:hover:bg-white/[0.045] dark:focus-visible:bg-white/[0.06]`}
                         >
@@ -1545,7 +1546,7 @@ export default function MyNotificationsPage() {
 
       {selectedNotification &&
         selectedStyle && (
-          <div className="fixed inset-0 z-[120] flex items-end justify-center bg-slate-950/55 backdrop-blur-md sm:items-center sm:p-6 dark:bg-slate-950/80">
+          <div className="vn-myn-detail-overlay fixed inset-0 z-[120] flex items-end justify-center bg-slate-950/55 backdrop-blur-md sm:items-center sm:p-6 dark:bg-slate-950/80">
             <button
               type="button"
               className="absolute inset-0 cursor-default"
@@ -1557,7 +1558,7 @@ export default function MyNotificationsPage() {
               aria-label="Cerrar detalle de notificación"
             />
 
-            <section className="relative w-full overflow-hidden rounded-t-[34px] border border-slate-200 bg-white shadow-2xl shadow-slate-500/30 sm:max-w-2xl sm:rounded-[34px] dark:border-white/10 dark:bg-[#0F172A] dark:shadow-black/50">
+            <section className="vn-myn-detail relative w-full overflow-hidden rounded-t-[34px] border border-slate-200 bg-white shadow-2xl shadow-slate-500/30 sm:max-w-2xl sm:rounded-[34px] dark:border-white/10 dark:bg-[#0F172A] dark:shadow-black/50">
               <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-violet-500/10 blur-3xl" />
 
               <header className="relative border-b border-slate-200 p-6 sm:p-7 dark:border-white/10">

@@ -278,6 +278,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
   const tituloPagina = (() => {
     const path = location.pathname;
 
+    if (path.startsWith("/my-notifications")) return "Mis notificaciones";
     if (path.includes("/users")) return "Usuarios";
     if (path.includes("/administrators")) return "Administradores";
     if (path.includes("/reports")) return "Reportes";
@@ -690,6 +691,8 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
               >
                 {esDashboard
                   ? currentDate
+                  : location.pathname.startsWith("/my-notifications")
+                    ? "Consulta mensajes, avisos y alertas de tu cuenta"
                   : location.pathname.includes("/reports")
                     ? "Gestiona y modera reportes de la comunidad"
                     : location.pathname.includes("/content")
