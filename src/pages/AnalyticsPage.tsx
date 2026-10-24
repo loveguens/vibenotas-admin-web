@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   Activity,
+  ArrowUpRight,
   BarChart3,
   FileText,
   RefreshCw,
@@ -160,6 +162,33 @@ function formatAction(action?: string) {
   );
 }
 
+type ActivityFilter = "all" | "access" | "profile" | "other";
+
+const ACTIVITY_FILTERS: Array<{ value: ActivityFilter; label: string }> = [
+  { value: "all", label: "Todos" },
+  { value: "access", label: "Accesos" },
+  { value: "profile", label: "Perfiles" },
+  { value: "other", label: "Otros" },
+];
+
+function getActivityCategory(eventType: string): Exclude<ActivityFilter, "all"> {
+  const normalized = eventType.toLowerCase();
+
+  if (/(login|logout|auth|session|security)/.test(normalized)) {
+    return "access";
+  }
+
+  if (/(profile|identity|user)/.test(normalized)) {
+    return "profile";
+  }
+
+  return "other";
+}
+
+function shortEventId(id: string) {
+  return id.length > 23 ? `${id.slice(0, 10)}…${id.slice(-6)}` : id;
+}
+
 function formatStatus(status: string) {
   return (
     STATUS_LABELS[status] ??
@@ -187,6 +216,9 @@ function statusStyle(status: string) {
 }
 
 export default function AnalyticsPage() {
+  const { pathname } = useLocation();
+  const isSuperAdmin = pathname.startsWith("/superadmin/");
+  const [activityFilter, setActivityFilter] = useState<ActivityFilter>("all");
   const [analytics, setAnalytics] = useState<AnalyticsOverview | null>(null);
 
   const [period, setPeriod] = useState<AnalyticsPeriod>("30d");
@@ -238,6 +270,14 @@ export default function AnalyticsPage() {
 
   const periodLabel =
     PERIOD_OPTIONS.find((option) => option.value === period)?.label ?? period;
+
+  const recentEvents = analytics?.recentActivity ?? [];
+  const filteredRecentEvents = recentEvents.filter(
+    (event) =>
+      activityFilter === "all" ||
+      getActivityCategory(event.eventType) === activityFilter,
+  );
+  const displayedRecentEvents = filteredRecentEvents.slice(0, 6);
 
   return (
     <section aria-labelledby="analytics-title" className="vn-final-page vn-analytics-overview space-y-4 sm:space-y-6">
@@ -551,6 +591,85 @@ export default function AnalyticsPage() {
             </article>
           </div>
 
+          {isSuperAdmin ? (
+            <article className="vn-final-card vn-analytics-audit-compact overflow-hidden rounded-3xl">
+              <div className="vn-analytics-audit-heading">
+                <div className="min-w-0">
+                  <p className="vn-analytics-audit-eyebrow">Auditoría reciente</p>
+                  <h2>Actividad del sistema</h2>
+                  <p className="vn-analytics-audit-summary">
+                    {analytics.summary.audit.eventsInPeriod} eventos durante {periodLabel}
+                  </p>
+                </div>
+                <Link to="/superadmin/logs" className="vn-analytics-all-logs">
+                  Ir a Logs de actividad <ArrowUpRight size={16} aria-hidden="true" />
+                </Link>
+              </div>
+
+              <div className="vn-analytics-audit-filters" role="group" aria-label="Filtrar eventos recientes">
+                {ACTIVITY_FILTERS.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setActivityFilter(option.value)}
+                    aria-pressed={activityFilter === option.value}
+                    className={`vn-analytics-audit-filter ${activityFilter === option.value ? "is-active" : ""}`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="vn-analytics-audit-list">
+                {displayedRecentEvents.map((event) => {
+                  const actor = event.actor?.displayName || event.actor?.email || "Sistema";
+                  const isSuccess = event.outcome.toUpperCase() === "SUCCESS";
+                  const target = event.targetType
+                    ? `${event.targetType}${event.targetId ? ` · ${shortEventId(event.targetId)}` : ""}`
+                    : "Evento de plataforma";
+                  const fullTarget = event.targetType
+                    ? `${event.targetType}${event.targetId ? ` · ${event.targetId}` : ""}`
+                    : "Evento de plataforma";
+
+                  return (
+                    <div key={event.id} className="vn-analytics-audit-entry">
+                      <span className="vn-analytics-audit-symbol" aria-hidden="true">
+                        <FileText size={17} />
+                      </span>
+                      <div className="vn-analytics-audit-details">
+                        <div className="vn-analytics-audit-firstline">
+                          <strong>{formatAction(event.eventType)}</strong>
+                          <span className={`vn-analytics-audit-outcome ${isSuccess ? "is-success" : "is-other"}`}>
+                            {event.outcome}
+                          </span>
+                        </div>
+                        <p className="vn-analytics-audit-metadata" title={fullTarget}>
+                          <span>{actor}</span>
+                          <span aria-hidden="true">·</span>
+                          <span className="vn-analytics-audit-target">{target}</span>
+                        </p>
+                      </div>
+                      <time className="vn-analytics-audit-time" dateTime={event.occurredAt}>
+                        {formatDate(event.occurredAt)}
+                      </time>
+                    </div>
+                  );
+                })}
+
+                {displayedRecentEvents.length === 0 && (
+                  <p className="vn-analytics-audit-empty">
+                    {recentEvents.length === 0
+                      ? "Todavía no hay actividad para mostrar."
+                      : "No hay eventos de este tipo entre los recientes."}
+                  </p>
+                )}
+              </div>
+              <div className="vn-analytics-audit-footer">
+                Mostrando {displayedRecentEvents.length} de {filteredRecentEvents.length} eventos recientes
+                {activityFilter !== "all" && " para este filtro"}. El historial completo está en Logs de actividad.
+              </div>
+            </article>
+          ) : (
           <article className="overflow-hidden vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10">
             <div className="flex flex-col gap-3 border-b border-white/10 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
@@ -618,6 +737,7 @@ export default function AnalyticsPage() {
               )}
             </div>
           </article>
+          )}
 
           <p className="text-right text-xs text-slate-600 dark:text-slate-400">
             Actualizado: {formatDate(analytics.generatedAt)}
