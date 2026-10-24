@@ -1489,7 +1489,7 @@ html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .recharts-cartes
   color: var(--an-ink);
 }
 
-.vn-admin.vn-superadmin-layout .vn-analytics-hero {
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-analytics-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -1502,6 +1502,18 @@ html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .recharts-cartes
     radial-gradient(circle at -7% 107%, rgba(45, 212, 191, 0.17), transparent 36%),
     linear-gradient(113deg, #1f173c 0%, #25234b 55%, #153653 100%);
   box-shadow: 0 25px 55px rgba(33, 25, 75, 0.18);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-analytics-hero {
+  border-color: rgba(167, 139, 250, 0.38);
+  background:
+    radial-gradient(circle at 82% -34%, rgba(196, 181, 253, 0.36), transparent 37%),
+    radial-gradient(circle at -7% 107%, rgba(45, 212, 191, 0.14), transparent 36%),
+    linear-gradient(113deg, #1f173c 0%, #25234b 55%, #153653 100%);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-hero p.vn-analytics-hero-description {
+  color: #cad5ef;
 }
 
 .vn-admin.vn-superadmin-layout .vn-analytics-hero-main {
@@ -1878,7 +1890,7 @@ html.dark .vn-admin.vn-superadmin-layout .vn-analytics-audit-row p.font-semibold
 }
 
 @media (max-width: 1180px) {
-  .vn-admin.vn-superadmin-layout .vn-analytics-hero {
+  .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-analytics-hero {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -1896,7 +1908,7 @@ html.dark .vn-admin.vn-superadmin-layout .vn-analytics-audit-row p.font-semibold
 }
 
 @media (max-width: 639px) {
-  .vn-admin.vn-superadmin-layout .vn-analytics-hero {
+  .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-analytics-hero {
     padding: 19px 16px;
     gap: 17px;
     border-radius: 22px;
