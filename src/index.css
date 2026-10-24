@@ -825,3 +825,145 @@ a {
     padding: 5px;
   }
 }
+
+/* =========================================================
+   SUPERADMIN CHAT — PERSONAS Y AVISOS
+   Vista de conversaciones, amigos, solicitudes y bloqueados.
+   ========================================================= */
+.vn-superadmin-chat-v3 .vn-chat-people-view {
+  background: linear-gradient(160deg, #f6f7ff, #fff);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-people-view {
+  background: linear-gradient(160deg, #0f1830, #0b1222);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-people-header {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(124, 58, 237, 0.2);
+  background: linear-gradient(120deg, #f5efff 0%, #fff 62%, #edf4ff 100%);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-people-header {
+  background: linear-gradient(115deg, #241d45 0%, #17223b 62%, #11263e 100%);
+  border-color: rgba(167, 139, 250, 0.18);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-people-header::after {
+  content: "";
+  position: absolute;
+  top: -85px;
+  right: -50px;
+  width: 190px;
+  height: 190px;
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-people-header > div {
+  position: relative;
+  z-index: 1;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-people-header h1 {
+  font-size: clamp(1.55rem, 3.8vw, 2rem);
+  letter-spacing: -0.045em;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-people-header > div > p:first-child {
+  color: #7c3aed;
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-people-header > div > p:first-child {
+  color: #c4b5fd;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-people-body {
+  background: transparent;
+  scrollbar-gutter: stable;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-person-card {
+  border-color: rgba(111, 117, 160, 0.15);
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 9px 28px rgba(39, 40, 93, 0.045);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-person-card {
+  border-color: rgba(167, 181, 211, 0.13);
+  background: rgba(26, 38, 65, 0.9);
+  box-shadow: 0 9px 28px rgba(0, 0, 0, 0.1);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-person-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 12px 30px rgba(76, 50, 134, 0.1);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-room-header {
+  background: linear-gradient(115deg, #fff 30%, #f1efff 100%);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-room-header {
+  background: linear-gradient(115deg, #15213a 30%, #21183c 100%);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-composer {
+  background: linear-gradient(180deg, #fff, #f7f5ff);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-composer {
+  background: linear-gradient(180deg, #141d32, #121a30);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-toast {
+  border-radius: 16px;
+  border-color: rgba(248, 113, 113, 0.32);
+  background: rgba(17, 24, 39, 0.96);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.23);
+  backdrop-filter: blur(14px);
+}
+
+.vn-superadmin-chat-v3.vn-chat-has-feedback .vn-chat-inbox-scroll {
+  padding-bottom: 85px;
+}
+
+@media (max-width: 639px) {
+  .vn-superadmin-chat-v3 .vn-chat-people-header {
+    padding: 20px 17px;
+  }
+
+  .vn-superadmin-chat-v3 .vn-chat-people-body {
+    padding: 16px 12px;
+    scrollbar-gutter: auto;
+  }
+
+  .vn-superadmin-chat-v3 .vn-chat-person-card {
+    padding: 14px;
+  }
+
+  .vn-superadmin-chat-v3 .vn-chat-toast {
+    bottom: 12px;
+    right: 12px;
+    max-width: min(315px, calc(100vw - 24px));
+    gap: 10px;
+    padding: 10px 12px;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-superadmin-chat-v3 .vn-chat-person-card {
+    transition: none;
+  }
+
+  .vn-superadmin-chat-v3 .vn-chat-person-card:hover {
+    transform: none;
+  }
+}
