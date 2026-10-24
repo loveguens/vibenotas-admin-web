@@ -173,16 +173,16 @@ function formatStatus(status: string) {
 function statusStyle(status: string) {
   switch (status) {
     case "ACTIVE":
-      return "border-emerald-400/20 bg-emerald-500/10 text-emerald-300";
+      return "border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-400/20 dark:bg-emerald-500/10 dark:text-emerald-300";
 
     case "SUSPENDED":
-      return "border-red-400/20 bg-red-500/10 text-red-300";
+      return "border-red-300 bg-red-50 text-red-800 dark:border-red-400/20 dark:bg-red-500/10 dark:text-red-300";
 
     case "DISABLED":
-      return "border-slate-400/20 bg-slate-500/10 text-slate-300";
+      return "border-slate-300 bg-slate-100 text-slate-700 dark:border-slate-400/20 dark:bg-slate-500/10 dark:text-slate-300";
 
     default:
-      return "border-amber-400/20 bg-amber-500/10 text-amber-300";
+      return "border-amber-300 bg-amber-50 text-amber-800 dark:border-amber-400/20 dark:bg-amber-500/10 dark:text-amber-300";
   }
 }
 
@@ -261,7 +261,7 @@ export default function AnalyticsPage() {
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="flex rounded-xl border border-white/10 bg-white/5 p-1">
+          <div className="flex rounded-xl border border-slate-200 bg-white/75 p-1 dark:border-white/10 dark:bg-white/5">
             {PERIOD_OPTIONS.map((option) => (
               <button
                 key={option.value}
@@ -270,7 +270,7 @@ export default function AnalyticsPage() {
                 className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${
                   period === option.value
                     ? "bg-violet-500 text-white shadow-lg shadow-violet-950/30"
-                    : "text-slate-400 hover:bg-white/5 hover:text-white"
+                    : "text-slate-600 hover:bg-violet-50 hover:text-violet-700 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white"
                 }`}
               >
                 {option.label}
@@ -332,7 +332,7 @@ export default function AnalyticsPage() {
                 {analytics.summary.users.createdInPeriod}
               </p>
 
-              <div className="mt-4 flex items-center gap-2 text-sm text-fuchsia-300">
+              <div className="mt-4 flex items-center gap-2 text-sm text-fuchsia-700 dark:text-fuchsia-300">
                 <UserPlus size={16} />
                 Registros del per&iacute;odo
               </div>
@@ -476,16 +476,16 @@ export default function AnalyticsPage() {
                   return (
                     <div key={item.id}>
                       <div className="mb-2 flex items-center justify-between gap-4">
-                        <span className="text-sm font-medium text-slate-300">
+                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
                           {item.name}
                         </span>
 
-                        <span className="rounded-full bg-violet-500/10 px-2.5 py-1 text-xs font-bold text-violet-300">
+                        <span className="rounded-full bg-violet-100 px-2.5 py-1 text-xs font-bold text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">
                           {item.totalUsers} usuarios
                         </span>
                       </div>
 
-                      <div className="h-2.5 overflow-hidden rounded-full bg-black/20">
+                      <div className="h-2.5 overflow-hidden rounded-full bg-slate-200 dark:bg-black/20">
                         <div
                           className="h-full rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-400 transition-all duration-500"
                           style={{
@@ -595,7 +595,7 @@ export default function AnalyticsPage() {
                           : "Evento de plataforma"}
                       </p>
 
-                      <p className="mt-1 text-xs text-slate-600">
+                      <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
                         {event.actor?.displayName ||
                           event.actor?.email ||
                           "Sistema"}
@@ -619,7 +619,7 @@ export default function AnalyticsPage() {
             </div>
           </article>
 
-          <p className="text-right text-xs text-slate-600">
+          <p className="text-right text-xs text-slate-600 dark:text-slate-400">
             Actualizado: {formatDate(analytics.generatedAt)}
           </p>
         </>
