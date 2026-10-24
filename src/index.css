@@ -1221,3 +1221,228 @@ a {
     transition: none;
   }
 }
+
+/* =========================================================
+   SUPER ADMIN COMPLETION — MANAGEMENT SCREENS
+   Estilos exclusivos de seis pantallas, sin afectar Dashboard,
+   Mensajería, Admin ni Owner.
+   ========================================================= */
+.vn-admin.vn-superadmin-layout .vn-final-page {
+  --vn-final-border: #e4e2f2;
+  --vn-final-copy: #57667e;
+  --vn-final-ink: #202644;
+  min-width: 0;
+  color: var(--vn-final-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-width: 0;
+  padding: clamp(18px, 2.3vw, 26px);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 25px;
+  background:
+    radial-gradient(circle at 95% 2%, rgba(167, 139, 250, 0.17), transparent 18rem),
+    linear-gradient(112deg, #f4f0ff 0%, #ffffff 58%, #edf4ff 100%);
+  box-shadow: 0 15px 40px rgba(58, 41, 126, 0.065);
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-hero h1 {
+  color: #201c42;
+  font-size: clamp(1.55rem, 2.6vw, 2.05rem);
+  line-height: 1.15;
+  letter-spacing: -0.045em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-hero p:first-child {
+  color: #6d28d9;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-hero p:not(:first-child) {
+  color: var(--vn-final-copy);
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-hero button {
+  min-height: 40px;
+  border-radius: 13px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-hero button[class*="border-"] {
+  color: #6d28d9;
+  border-color: rgba(124, 58, 237, 0.22);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-hero button[class*="border-"]:hover {
+  background: #ede9fe;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-card {
+  min-width: 0;
+  border: 1px solid var(--vn-final-border);
+  border-radius: 22px;
+  background: linear-gradient(145deg, #ffffff 0%, #fafbff 100%);
+  box-shadow: 0 12px 30px rgba(27, 35, 84, 0.045);
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-card:hover {
+  border-color: rgba(139, 92, 246, 0.3);
+  box-shadow: 0 16px 36px rgba(74, 55, 137, 0.085);
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-card :is(h2, h3, p).text-white,
+.vn-admin.vn-superadmin-layout .vn-final-card > .text-white {
+  color: var(--vn-final-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-card .text-slate-400 {
+  color: #60708a;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-card .text-violet-300 {
+  color: #6d28d9;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-card .text-sky-300 {
+  color: #0369a1;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-card .text-emerald-300 {
+  color: #047857;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-search {
+  min-height: 46px;
+  border-color: rgba(120, 125, 164, 0.22);
+  background: #f6f7fd;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-search:focus-within {
+  border-color: rgba(124, 58, 237, 0.55);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.085);
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-search input {
+  min-width: 0;
+  color: #202644;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-search input::placeholder {
+  color: #8390a5;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-page {
+  --vn-final-border: rgba(172, 187, 222, 0.15);
+  --vn-final-copy: #aab8d3;
+  --vn-final-ink: #f4f5ff;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-hero {
+  border-color: rgba(167, 139, 250, 0.2);
+  background:
+    radial-gradient(circle at 95% 2%, rgba(167, 139, 250, 0.15), transparent 18rem),
+    linear-gradient(115deg, #292140 0%, #1a2540 60%, #14243b 100%);
+  box-shadow: 0 20px 43px rgba(0, 0, 0, 0.12);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-hero h1 {
+  color: #ffffff;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-hero p:first-child {
+  color: #c4b5fd;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-hero p:not(:first-child) {
+  color: #b0bad0;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-hero button[class*="border-"] {
+  color: #ddd6fe;
+  border-color: rgba(167, 139, 250, 0.24);
+  background: rgba(139, 92, 246, 0.1);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-hero button[class*="border-"]:hover {
+  background: rgba(139, 92, 246, 0.2);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-card {
+  border-color: var(--vn-final-border);
+  background: linear-gradient(145deg, rgba(32, 43, 68, 0.96), rgba(23, 34, 56, 0.98));
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.14);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-card:hover {
+  border-color: rgba(167, 139, 250, 0.32);
+  box-shadow: 0 19px 39px rgba(0, 0, 0, 0.2);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-card :is(h2, h3, p).text-white,
+html.dark .vn-admin.vn-superadmin-layout .vn-final-card > .text-white {
+  color: #ffffff;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-card .text-slate-400 {
+  color: #a3b0c8;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-card .text-violet-300 {
+  color: #c4b5fd;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-card .text-sky-300 {
+  color: #7dd3fc;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-card .text-emerald-300 {
+  color: #6ee7b7;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-search {
+  border-color: rgba(167, 139, 250, 0.18);
+  background: rgba(5, 13, 28, 0.32);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-search input {
+  color: #ffffff;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-search input::placeholder {
+  color: #8b9bb7;
+}
+
+@media (max-width: 639px) {
+  .vn-admin.vn-superadmin-layout .vn-final-hero {
+    padding: 16px;
+    border-radius: 20px;
+    gap: 14px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-final-hero button {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-final-card {
+    border-radius: 18px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-final-page {
+    padding-bottom: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-admin.vn-superadmin-layout .vn-final-card,
+  .vn-admin.vn-superadmin-layout .vn-final-search {
+    transition: none;
+  }
+}
