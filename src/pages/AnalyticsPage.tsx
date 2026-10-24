@@ -241,7 +241,7 @@ export default function AnalyticsPage() {
 
   return (
     <section aria-labelledby="analytics-title" className="vn-final-page vn-analytics-overview space-y-6">
-      <div className="vn-final-hero flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+      <div className="vn-final-hero flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
             Inteligencia de plataforma
@@ -260,7 +260,7 @@ export default function AnalyticsPage() {
           </p>
         </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <div className="flex rounded-xl border border-slate-200 bg-white/75 p-1 dark:border-white/10 dark:bg-white/5">
             {PERIOD_OPTIONS.map((option) => (
               <button
@@ -299,7 +299,7 @@ export default function AnalyticsPage() {
       )}
 
       {loading && !analytics && (
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 max-[359px]:grid-cols-1 sm:gap-4 xl:grid-cols-4">
           {[1, 2, 3, 4].map((item) => (
             <div
               key={item}
@@ -311,54 +311,54 @@ export default function AnalyticsPage() {
 
       {analytics && (
         <>
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
+          <div className="grid grid-cols-2 gap-3 max-[359px]:grid-cols-1 sm:gap-4 xl:grid-cols-4">
+            <article className="vn-final-card vn-analytics-kpi rounded-3xl border border-white/10 bg-[#1E293B]/80 p-3.5 shadow-xl shadow-black/10 sm:p-5">
               <p className="text-sm text-slate-400">Usuarios totales</p>
 
-              <p className="mt-3 text-3xl font-bold text-white">
+              <p className="mt-2 text-2xl font-bold text-white sm:mt-3 sm:text-3xl">
                 {analytics.summary.users.total}
               </p>
 
-              <div className="mt-4 flex items-center gap-2 text-sm text-violet-300">
+              <div className="mt-3 flex items-center gap-2 text-xs text-violet-300 sm:mt-4 sm:text-sm">
                 <Users size={16} />
                 Comunidad registrada
               </div>
             </article>
 
-            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
+            <article className="vn-final-card vn-analytics-kpi rounded-3xl border border-white/10 bg-[#1E293B]/80 p-3.5 shadow-xl shadow-black/10 sm:p-5">
               <p className="text-sm text-slate-400">Nuevos en {periodLabel}</p>
 
-              <p className="mt-3 text-3xl font-bold text-white">
+              <p className="mt-2 text-2xl font-bold text-white sm:mt-3 sm:text-3xl">
                 {analytics.summary.users.createdInPeriod}
               </p>
 
-              <div className="mt-4 flex items-center gap-2 text-sm text-fuchsia-700 dark:text-fuchsia-300">
+              <div className="mt-3 flex items-center gap-2 text-xs text-fuchsia-700 sm:mt-4 sm:text-sm dark:text-fuchsia-300">
                 <UserPlus size={16} />
                 Registros del per&iacute;odo
               </div>
             </article>
 
-            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
+            <article className="vn-final-card vn-analytics-kpi rounded-3xl border border-white/10 bg-[#1E293B]/80 p-3.5 shadow-xl shadow-black/10 sm:p-5">
               <p className="text-sm text-slate-400">Usuarios activos</p>
 
-              <p className="mt-3 text-3xl font-bold text-white">
+              <p className="mt-2 text-2xl font-bold text-white sm:mt-3 sm:text-3xl">
                 {analytics.summary.users.active}
               </p>
 
-              <div className="mt-4 flex items-center gap-2 text-sm text-emerald-300">
+              <div className="mt-3 flex items-center gap-2 text-xs text-emerald-300 sm:mt-4 sm:text-sm">
                 <ShieldCheck size={16} />
                 Acceso habilitado
               </div>
             </article>
 
-            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
+            <article className="vn-final-card vn-analytics-kpi rounded-3xl border border-white/10 bg-[#1E293B]/80 p-3.5 shadow-xl shadow-black/10 sm:p-5">
               <p className="text-sm text-slate-400">Eventos de hoy</p>
 
-              <p className="mt-3 text-3xl font-bold text-white">
+              <p className="mt-2 text-2xl font-bold text-white sm:mt-3 sm:text-3xl">
                 {analytics.summary.audit.eventsToday}
               </p>
 
-              <div className="mt-4 flex items-center gap-2 text-sm text-sky-300">
+              <div className="mt-3 flex items-center gap-2 text-xs text-sky-300 sm:mt-4 sm:text-sm">
                 <Activity size={16} />
                 Auditor&iacute;a registrada
               </div>
