@@ -1652,3 +1652,247 @@ html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-analytics-re
     transition: none;
   }
 }
+
+/* =========================================================
+   ANALÍTICAS — AUDITORÍA COMPACTA
+   Vista de seis eventos; diseño exclusivo de Super Admin.
+   ========================================================= */
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-compact {
+  border-color: var(--vn-line);
+  background: var(--vn-surface);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  padding: 18px 22px 15px;
+  border-bottom: 1px solid var(--vn-line);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-eyebrow {
+  color: var(--vn-coral-strong);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-heading h2 {
+  margin-top: 4px;
+  color: var(--vn-ink);
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-summary {
+  margin-top: 3px;
+  color: var(--vn-muted);
+  font-size: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-all-logs {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--vn-coral) 25%, var(--vn-line));
+  border-radius: 12px;
+  background: var(--vn-coral-soft);
+  color: var(--vn-coral-strong);
+  font-size: 12px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-all-logs:hover {
+  background: color-mix(in srgb, var(--vn-coral-soft) 78%, var(--vn-coral));
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 10px 22px;
+  border-bottom: 1px solid var(--vn-line);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-filter {
+  padding: 6px 11px;
+  border-radius: 9px;
+  color: var(--vn-muted);
+  font-size: 12px;
+  font-weight: 700;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-filter:hover {
+  background: var(--vn-surface-hover);
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-filter.is-active {
+  color: var(--vn-coral-strong);
+  background: var(--vn-coral-soft);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-entry {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  min-height: 64px;
+  padding: 10px 22px;
+  border-bottom: 1px solid var(--vn-line);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-entry:hover {
+  background: color-mix(in srgb, var(--vn-coral) 3%, var(--vn-surface));
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-symbol {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  color: var(--vn-coral-strong);
+  background: var(--vn-coral-soft);
+  border-radius: 10px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-details {
+  min-width: 0;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-firstline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px 9px;
+  color: var(--vn-ink);
+  font-size: 13px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-firstline strong {
+  font-weight: 750;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-outcome {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-outcome.is-success {
+  color: #047857;
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-outcome.is-other {
+  color: #b45309;
+  background: rgba(245, 158, 11, 0.12);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-metadata {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 5px;
+  min-width: 0;
+  color: var(--vn-muted);
+  font-size: 11px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-metadata > span:first-child {
+  flex-shrink: 0;
+  max-width: 40%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-target {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-time {
+  align-self: center;
+  max-width: 175px;
+  color: var(--vn-muted);
+  font-size: 11px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-footer {
+  padding: 11px 22px;
+  color: var(--vn-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-empty {
+  padding: 24px 18px;
+  color: var(--vn-muted);
+  text-align: center;
+  font-size: 13px;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-audit-outcome.is-success {
+  color: #6ee7b7;
+  background: rgba(16, 185, 129, 0.13);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-audit-outcome.is-other {
+  color: #fcd34d;
+  background: rgba(245, 158, 11, 0.12);
+}
+
+@media (max-width: 767px) {
+  .vn-admin.vn-superadmin-layout .vn-analytics-audit-heading {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 15px 14px 12px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-audit-filters {
+    padding: 8px 12px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-audit-entry {
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 7px 10px;
+    min-height: 62px;
+    padding: 10px 14px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-audit-time {
+    grid-column: 2;
+    justify-self: start;
+    text-align: left;
+    font-size: 10px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-audit-metadata {
+    gap: 5px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-audit-footer {
+    padding: 10px 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-admin.vn-superadmin-layout .vn-analytics-audit-filter {
+    transition: none;
+  }
+}
