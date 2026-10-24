@@ -1,5 +1,5 @@
 import { Users } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { getInitials } from "../utils";
 
@@ -64,13 +64,9 @@ export function Avatar({
 
   const resolvedSrc = useMemo(() => resolveAvatarUrl(src), [src]);
 
-  const [imageFailed, setImageFailed] = useState(false);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
 
-  useEffect(() => {
-    setImageFailed(false);
-  }, [resolvedSrc]);
-
-  const showImage = Boolean(resolvedSrc) && !imageFailed;
+  const showImage = Boolean(resolvedSrc) && failedSrc !== resolvedSrc;
 
   if (group) {
     if (showImage) {
@@ -78,7 +74,7 @@ export function Avatar({
         <img
           src={resolvedSrc ?? undefined}
           alt={name ?? "Grupo"}
-          onError={() => setImageFailed(true)}
+          onError={() => setFailedSrc(resolvedSrc)}
           className={`${sizeClass} ${className} shrink-0 rounded-full border border-slate-200 object-cover dark:border-white/10`}
         />
       );
@@ -100,7 +96,7 @@ export function Avatar({
         <img
           src={resolvedSrc ?? undefined}
           alt={name ?? "Usuario"}
-          onError={() => setImageFailed(true)}
+          onError={() => setFailedSrc(resolvedSrc)}
           className={`${sizeClass} rounded-full border border-slate-200 object-cover dark:border-white/10`}
         />
       ) : (

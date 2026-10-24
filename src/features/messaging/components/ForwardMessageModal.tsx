@@ -1,5 +1,5 @@
 import { Check, Forward, Search, Users, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import type { Conversation, Friend, Message } from "../types/chat.types";
 import { Avatar } from "./Avatar";
@@ -27,7 +27,21 @@ type ForwardMessageModalProps = {
   ) => Promise<void>;
 };
 
-export function ForwardMessageModal({
+export function ForwardMessageModal(props: ForwardMessageModalProps) {
+  if (!props.message) {
+    return null;
+  }
+
+  return (
+    <ForwardMessageModalContent
+      key={props.message.id}
+      {...props}
+      message={props.message}
+    />
+  );
+}
+
+function ForwardMessageModalContent({
   message,
   friends,
   conversations,
@@ -35,18 +49,9 @@ export function ForwardMessageModal({
   busy,
   onClose,
   onForward,
-}: ForwardMessageModalProps) {
+}: ForwardMessageModalProps & { message: Message }) {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<ForwardTarget | null>(null);
-
-  useEffect(() => {
-    if (!message) {
-      return;
-    }
-
-    setQuery("");
-    setSelected(null);
-  }, [message?.id]);
 
   const normalizedQuery = query.trim().toLowerCase();
 
@@ -76,10 +81,6 @@ export function ForwardMessageModal({
       (conversation.titulo ?? "Grupo").toLowerCase().includes(normalizedQuery),
     );
   }, [conversations, normalizedQuery]);
-
-  if (!message) {
-    return null;
-  }
 
   async function submit(): Promise<void> {
     if (!selected || busy) {

@@ -542,7 +542,11 @@ export default function ReportsPage({
   }, []);
 
   useEffect(() => {
-    void loadReports();
+    const initialLoad = window.setTimeout(() => {
+      void loadReports();
+    }, 0);
+
+    return () => window.clearTimeout(initialLoad);
   }, [loadReports]);
 
   useEffect(() => {
@@ -683,24 +687,16 @@ export default function ReportsPage({
     Math.ceil(filteredReports.length / PAGE_SIZE)
   );
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [search, activeFilter, typeFilter, sortBy]);
-
-  useEffect(() => {
-    if (currentPage > pageCount) {
-      setCurrentPage(pageCount);
-    }
-  }, [currentPage, pageCount]);
+  const visiblePage = Math.min(currentPage, pageCount);
 
   const paginatedReports = useMemo(() => {
-    const start = (currentPage - 1) * PAGE_SIZE;
+    const start = (visiblePage - 1) * PAGE_SIZE;
 
     return filteredReports.slice(
       start,
       start + PAGE_SIZE
     );
-  }, [filteredReports, currentPage]);
+  }, [filteredReports, visiblePage]);
 
   const filterOptions: {
     id: ReportFilter;
@@ -1046,10 +1042,10 @@ export default function ReportsPage({
   const visibleFrom =
     filteredReports.length === 0
       ? 0
-      : (currentPage - 1) * PAGE_SIZE + 1;
+      : (visiblePage - 1) * PAGE_SIZE + 1;
 
   const visibleTo = Math.min(
-    currentPage * PAGE_SIZE,
+    visiblePage * PAGE_SIZE,
     filteredReports.length
   );
 
@@ -1227,9 +1223,10 @@ export default function ReportsPage({
 
               <input
                 value={search}
-                onChange={(event) =>
-                  setSearch(event.target.value)
-                }
+                onChange={(event) => {
+                  setSearch(event.target.value);
+                  setCurrentPage(1);
+                }}
                 placeholder="Buscar ID, motivo, correo o persona..."
                 className="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-600"
               />
@@ -1237,7 +1234,10 @@ export default function ReportsPage({
               {search && (
                 <button
                   type="button"
-                  onClick={() => setSearch("")}
+                  onClick={() => {
+                    setSearch("");
+                    setCurrentPage(1);
+                  }}
                   className="rounded-lg p-1 text-slate-500 transition hover:bg-white/10 hover:text-white"
                   aria-label="Limpiar búsqueda"
                 >
@@ -1254,7 +1254,10 @@ export default function ReportsPage({
 
               <FilterSelect
                 value={typeFilter}
-                onChange={setTypeFilter}
+                onChange={(value) => {
+                  setTypeFilter(value);
+                  setCurrentPage(1);
+                }}
                 ariaLabel="Filtrar por tipo de reporte"
                 leadingPadding
                 options={[
@@ -1272,9 +1275,10 @@ export default function ReportsPage({
 
             <FilterSelect
               value={sortBy}
-              onChange={(value) =>
-                setSortBy(value as SortOption)
-              }
+              onChange={(value) => {
+                setSortBy(value as SortOption);
+                setCurrentPage(1);
+              }}
               ariaLabel="Ordenar reportes"
               options={[
                 {
@@ -1302,9 +1306,10 @@ export default function ReportsPage({
                 <button
                   key={filter.id}
                   type="button"
-                  onClick={() =>
-                    setActiveFilter(filter.id)
-                  }
+                  onClick={() => {
+                    setActiveFilter(filter.id);
+                    setCurrentPage(1);
+                  }}
                   className={`inline-flex shrink-0 items-center gap-2 rounded-xl border px-3.5 py-2.5 text-sm font-semibold transition ${
                     active
                       ? "border-violet-300 bg-violet-50 text-violet-700 shadow-sm dark:border-violet-400/25 dark:bg-violet-500/15 dark:text-violet-100 dark:shadow-lg dark:shadow-violet-950/20"
@@ -1380,6 +1385,7 @@ export default function ReportsPage({
                   setActiveFilter("todos");
                   setTypeFilter("todos");
                   setSortBy("recientes");
+                  setCurrentPage(1);
                 }}
                 className="mt-5 rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-2.5 text-sm font-semibold text-violet-200 transition hover:bg-violet-500/20"
               >
@@ -1617,11 +1623,9 @@ export default function ReportsPage({
                   <button
                     type="button"
                     onClick={() =>
-                      setCurrentPage((page) =>
-                        Math.max(1, page - 1)
-                      )
+                      setCurrentPage(Math.max(1, visiblePage - 1))
                     }
-                    disabled={currentPage === 1}
+                    disabled={visiblePage === 1}
                     className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-100 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-slate-300 dark:shadow-none dark:hover:bg-white/[0.08] dark:hover:text-white"
                     aria-label="Página anterior"
                   >
@@ -1629,21 +1633,16 @@ export default function ReportsPage({
                   </button>
 
                   <span className="min-w-24 text-center text-xs font-semibold text-slate-500 dark:text-slate-400">
-                    Página {currentPage} de {pageCount}
+                    Página {visiblePage} de {pageCount}
                   </span>
 
                   <button
                     type="button"
                     onClick={() =>
-                      setCurrentPage((page) =>
-                        Math.min(
-                          pageCount,
-                          page + 1
-                        )
-                      )
+                      setCurrentPage(Math.min(pageCount, visiblePage + 1))
                     }
                     disabled={
-                      currentPage === pageCount
+                      visiblePage === pageCount
                     }
                     className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-100 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-30 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-slate-300 dark:shadow-none dark:hover:bg-white/[0.08] dark:hover:text-white"
                     aria-label="Página siguiente"

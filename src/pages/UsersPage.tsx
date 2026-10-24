@@ -573,7 +573,11 @@ export default function UsersPage({
   }
 
   useEffect(() => {
-    void loadUsers();
+    const loadForRole = window.setTimeout(() => {
+      void loadUsers();
+    }, 0);
+
+    return () => window.clearTimeout(loadForRole);
   }, [role]);
 
   const filteredUsers = useMemo(() => {

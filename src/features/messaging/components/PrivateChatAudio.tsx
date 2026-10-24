@@ -11,6 +11,10 @@ type PrivateChatAudioProps = {
 };
 
 export function PrivateChatAudio({ messageId }: PrivateChatAudioProps) {
+  return <PrivateChatAudioContent key={messageId} messageId={messageId} />;
+}
+
+function PrivateChatAudioContent({ messageId }: PrivateChatAudioProps) {
   const [media, setMedia] = useState<ResolvedChatMedia | null>(null);
 
   const [loading, setLoading] = useState(true);
@@ -21,10 +25,6 @@ export function PrivateChatAudio({ messageId }: PrivateChatAudioProps) {
     const controller = new AbortController();
 
     let current: ResolvedChatMedia | null = null;
-
-    setLoading(true);
-    setFailed(false);
-    setMedia(null);
 
     void resolveChatMedia(messageId, controller.signal)
       .then((resolved) => {

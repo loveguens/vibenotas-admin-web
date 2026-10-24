@@ -8,7 +8,7 @@ import {
   UserPlus,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
@@ -213,20 +213,37 @@ export default function ChatPage() {
   const selectedIsPinned = Boolean(selectedConversation?.isPinned);
 
   const theme = getTheme(chatTheme);
+  const settingsConversationId = selectedConversation?.id;
+  const settingsConversationTheme = selectedConversation?.chatTheme;
+  const settingsConversationDuration =
+    selectedConversation?.temporaryMessagesDuration;
+  const hasSettingsConversation = selectedConversation !== null;
 
   useEffect(() => {
-    setTemporaryMessagesDuration(
-      selectedConversation?.temporaryMessagesDuration ?? "off",
-    );
+    const syncSettings = window.setTimeout(() => {
+      if (hasSettingsConversation) {
+        setChatTheme(settingsConversationTheme ?? "violet");
+      }
+
+      setTemporaryMessagesDuration(settingsConversationDuration ?? "off");
+    }, 0);
+
+    return () => window.clearTimeout(syncSettings);
   }, [
-    selectedConversation?.id,
-    selectedConversation?.temporaryMessagesDuration,
+    hasSettingsConversation,
+    settingsConversationId,
+    settingsConversationTheme,
+    settingsConversationDuration,
   ]);
 
   useEffect(() => {
     selectedConversationTypeRef.current = selectedConversation?.tipo ?? null;
 
-    setTypingUserIds([]);
+    const resetTyping = window.setTimeout(() => {
+      setTypingUserIds([]);
+    }, 0);
+
+    return () => window.clearTimeout(resetTyping);
   }, [selectedConversation?.id, selectedConversation?.tipo]);
   const filteredConversations = useMemo(() => {
     const query = chatSearch.trim().toLowerCase();
@@ -305,7 +322,11 @@ export default function ChatPage() {
   );
 
   useEffect(() => {
-    void loadConversations();
+    const initialLoad = window.setTimeout(() => {
+      void loadConversations();
+    }, 0);
+
+    return () => window.clearTimeout(initialLoad);
   }, [loadConversations]);
 
   const loadMessages = useCallback(async (id: string, keepPosition = false) => {
@@ -477,12 +498,21 @@ export default function ChatPage() {
     }
   }, []);
 
+  const refreshRealtimeGroup = useEffectEvent((conversationId: string): void => {
+    void loadConversations(true);
+
+    if (conversationId === selectedConversationIdRef.current) {
+      void loadGroupDetail(conversationId);
+    }
+  });
+
   useEffect(() => {
     if (!currentUser?.id) {
       return;
     }
 
     const currentUserId = currentUser.id;
+    const remoteTypingTimers = remoteTypingTimersRef.current;
 
     let disposed = false;
 
@@ -980,16 +1010,23 @@ export default function ChatPage() {
         chatSocketRef.current = null;
       }
 
-      for (const timer of remoteTypingTimersRef.current.values()) {
+      for (const timer of remoteTypingTimers.values()) {
         window.clearTimeout(timer);
       }
 
-      remoteTypingTimersRef.current.clear();
+      remoteTypingTimers.clear();
 
       socket?.removeAllListeners();
       socket?.disconnect();
     };
-  }, [currentUser?.id, loadConversations]);
+  }, [
+    chatBasePath,
+    currentUser?.id,
+    loadConversations,
+    loadMessages,
+    loadRequests,
+    navigate,
+  ]);
 
   useEffect(() => {
     if (
@@ -1000,12 +1037,16 @@ export default function ChatPage() {
       return;
     }
 
-    setSelectedConversationId(null);
-    selectedConversationIdRef.current = null;
+    const clearMissingConversation = window.setTimeout(() => {
+      setSelectedConversationId(null);
+      selectedConversationIdRef.current = null;
 
-    navigate(chatBasePath, {
-      replace: true,
-    });
+      navigate(chatBasePath, {
+        replace: true,
+      });
+    }, 0);
+
+    return () => window.clearTimeout(clearMissingConversation);
   }, [
     chatBasePath,
     loadingConversations,
@@ -1017,9 +1058,15 @@ export default function ChatPage() {
   useEffect(() => {
     const id = conversacionId ?? null;
 
-    if (id !== selectedConversationId) {
-      setSelectedConversationId(id);
+    if (id === selectedConversationId) {
+      return;
     }
+
+    const syncConversationFromUrl = window.setTimeout(() => {
+      setSelectedConversationId(id);
+    }, 0);
+
+    return () => window.clearTimeout(syncConversationFromUrl);
   }, [conversacionId, selectedConversationId]);
 
   /*
@@ -1075,26 +1122,13 @@ export default function ChatPage() {
   useEffect(() => {
     if (!selectedConversationId) return;
 
-    void loadMessages(selectedConversationId);
+    const loadSelectedMessages = window.setTimeout(() => {
+      void loadMessages(selectedConversationId);
+      void markConversationRead(selectedConversationId);
+    }, 0);
 
-    void markConversationRead(selectedConversationId);
-  }, [selectedConversationId]);
-
-  useEffect(() => {
-    if (!selectedConversation) {
-      return;
-    }
-
-    setChatTheme(selectedConversation.chatTheme ?? "violet");
-
-    setTemporaryMessagesDuration(
-      selectedConversation.temporaryMessagesDuration ?? "off",
-    );
-  }, [
-    selectedConversation?.id,
-    selectedConversation?.chatTheme,
-    selectedConversation?.temporaryMessagesDuration,
-  ]);
+    return () => window.clearTimeout(loadSelectedMessages);
+  }, [selectedConversationId, loadMessages]);
 
   useEffect(() => {
     const close = (event: KeyboardEvent) => {
@@ -1122,14 +1156,6 @@ export default function ChatPage() {
     });
   }, [messages, nearEnd]);
 
-  function refreshRealtimeGroup(conversationId: string): void {
-    void loadConversations(true);
-
-    if (conversationId === selectedConversationIdRef.current) {
-      void loadGroupDetail(conversationId);
-    }
-  }
-
   function closeMenus(): void {
     setMessageMenu(null);
     setConversationMenu(null);
@@ -1148,29 +1174,30 @@ export default function ChatPage() {
   useEffect(() => {
     const requestedTab = new URLSearchParams(location.search).get("tab");
 
-    if (requestedTab === "solicitudes") {
-      setActiveTab("solicitudes");
-      setSelectedConversationId(null);
-      selectedConversationIdRef.current = null;
-      void Promise.all([loadRequests(), loadSentRequests()]);
+    if (
+      requestedTab !== "solicitudes" &&
+      requestedTab !== "amigos" &&
+      requestedTab !== "bloqueados"
+    ) {
       return;
     }
 
-    if (requestedTab === "amigos") {
-      setActiveTab("amigos");
+    const openLinkedTab = window.setTimeout(() => {
+      setActiveTab(requestedTab);
       setSelectedConversationId(null);
       selectedConversationIdRef.current = null;
-      void loadFriends();
-      return;
-    }
 
-    if (requestedTab === "bloqueados") {
-      setActiveTab("bloqueados");
-      setSelectedConversationId(null);
-      selectedConversationIdRef.current = null;
-      void loadBlocked();
-    }
-  }, [location.search]);
+      if (requestedTab === "solicitudes") {
+        void Promise.all([loadRequests(), loadSentRequests()]);
+      } else if (requestedTab === "amigos") {
+        void loadFriends();
+      } else {
+        void loadBlocked();
+      }
+    }, 0);
+
+    return () => window.clearTimeout(openLinkedTab);
+  }, [location.search, loadBlocked, loadFriends, loadRequests, loadSentRequests]);
 
   function changeTab(tab: ChatTab): void {
     closeMenus();
@@ -1763,7 +1790,7 @@ export default function ChatPage() {
   }
 
   async function toggleMessageFavorite(message: Message): Promise<void> {
-    const favorite = !Boolean(message.favorito);
+    const favorite = !message.favorito;
 
     try {
       setError("");
@@ -2039,7 +2066,7 @@ export default function ChatPage() {
 
     const conversationId = selectedConversationId;
 
-    const archived = !Boolean(selectedConversation.isArchived);
+    const archived = !selectedConversation.isArchived;
 
     try {
       setError("");

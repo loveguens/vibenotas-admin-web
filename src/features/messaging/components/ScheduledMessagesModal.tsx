@@ -136,7 +136,11 @@ export function ScheduledMessagesModal({
   }, [conversationId, onError, open]);
 
   useEffect(() => {
-    void loadScheduledMessages();
+    const timeoutId = window.setTimeout(() => {
+      void loadScheduledMessages();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [loadScheduledMessages]);
 
   function closeModal(): void {

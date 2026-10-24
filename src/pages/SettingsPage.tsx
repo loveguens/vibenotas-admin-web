@@ -118,7 +118,11 @@ export default function SettingsPage() {
   }
 
   useEffect(() => {
-    loadSettings();
+    const initialLoad = window.setTimeout(() => {
+      void loadSettings();
+    }, 0);
+
+    return () => window.clearTimeout(initialLoad);
   }, []);
 
   const maintenanceWarning = useMemo(

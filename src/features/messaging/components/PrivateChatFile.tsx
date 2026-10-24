@@ -27,6 +27,10 @@ function formatBytes(bytes: number): string {
 }
 
 export function PrivateChatFile({ messageId }: PrivateChatFileProps) {
+  return <PrivateChatFileContent key={messageId} messageId={messageId} />;
+}
+
+function PrivateChatFileContent({ messageId }: PrivateChatFileProps) {
   const [media, setMedia] = useState<ResolvedChatMedia | null>(null);
 
   const [loading, setLoading] = useState(true);
@@ -37,10 +41,6 @@ export function PrivateChatFile({ messageId }: PrivateChatFileProps) {
     const controller = new AbortController();
 
     let current: ResolvedChatMedia | null = null;
-
-    setLoading(true);
-    setFailed(false);
-    setMedia(null);
 
     void resolveChatMedia(messageId, controller.signal)
       .then((resolved) => {

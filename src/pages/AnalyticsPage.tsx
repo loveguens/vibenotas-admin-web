@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Activity,
   BarChart3,
@@ -194,7 +194,7 @@ export default function AnalyticsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  async function loadAnalytics(selectedPeriod: AnalyticsPeriod = period) {
+  const loadAnalytics = useCallback(async (selectedPeriod: AnalyticsPeriod) => {
     setLoading(true);
     setError("");
 
@@ -215,11 +215,15 @@ export default function AnalyticsPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
-    void loadAnalytics(period);
-  }, [period]);
+    const loadForPeriod = window.setTimeout(() => {
+      void loadAnalytics(period);
+    }, 0);
+
+    return () => window.clearTimeout(loadForPeriod);
+  }, [period, loadAnalytics]);
 
   const maxRoleTotal = useMemo(() => {
     if (!analytics) {

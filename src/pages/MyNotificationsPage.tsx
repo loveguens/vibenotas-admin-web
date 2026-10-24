@@ -726,7 +726,9 @@ export default function MyNotificationsPage() {
     );
 
   useEffect(() => {
-    void loadNotifications();
+    const initialLoad = window.setTimeout(() => {
+      void loadNotifications();
+    }, 0);
 
     const poll = window.setInterval(
       () => {
@@ -760,6 +762,7 @@ export default function MyNotificationsPage() {
     );
 
     return () => {
+      window.clearTimeout(initialLoad);
       window.clearInterval(poll);
 
       document.removeEventListener(

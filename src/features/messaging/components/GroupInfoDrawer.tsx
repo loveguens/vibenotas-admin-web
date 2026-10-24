@@ -10,7 +10,7 @@ import {
   X,
 } from "lucide-react";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import type { Conversation, GroupMember, GroupRole } from "../types/chat.types";
 
@@ -49,8 +49,23 @@ type GroupInfoDrawerProps = {
   onDeleteGroup?: () => void;
 };
 
-export function GroupInfoDrawer({
-  open,
+// Montar el formulario solamente con una conversación activa. El key reinicia
+// los campos al cambiar de grupo y el desmontaje los limpia al cerrar.
+export function GroupInfoDrawer(props: GroupInfoDrawerProps) {
+  if (!props.open || !props.conversation) {
+    return null;
+  }
+
+  return (
+    <GroupInfoDrawerContent
+      key={props.conversation.id}
+      {...props}
+      conversation={props.conversation}
+    />
+  );
+}
+
+function GroupInfoDrawerContent({
   conversation,
   members,
   loading,
@@ -65,22 +80,12 @@ export function GroupInfoDrawer({
   onLeaveGroup,
   onUpdateMetadata,
   onDeleteGroup,
-}: GroupInfoDrawerProps) {
-  if (!open || !conversation) {
-    return null;
-  }
-
+}: GroupInfoDrawerProps & { conversation: Conversation }) {
   const title = conversation.titulo?.trim() || "Grupo sin nombre";
 
   const [editedTitle, setEditedTitle] = useState(title);
 
   const [avatarUrl, setAvatarUrl] = useState(conversation.avatar_url ?? "");
-
-  useEffect(() => {
-    setEditedTitle(conversation.titulo?.trim() || "Grupo sin nombre");
-
-    setAvatarUrl(conversation.avatar_url ?? "");
-  }, [conversation.id, conversation.titulo, conversation.avatar_url]);
 
   const isOwner = myRole === "owner";
 

@@ -315,7 +315,11 @@ export default function OwnerOwnersPage() {
   }, []);
 
   useEffect(() => {
-    void loadData();
+    const initialLoad = window.setTimeout(() => {
+      void loadData();
+    }, 0);
+
+    return () => window.clearTimeout(initialLoad);
   }, [loadData]);
 
   const ownerRole = roles.find((role) => role.slug === "owner");
@@ -402,8 +406,6 @@ export default function OwnerOwnersPage() {
       return;
     }
 
-    let createdUserId: string | null = null;
-
     try {
       setSaving(true);
       setError("");
@@ -417,7 +419,7 @@ export default function OwnerOwnersPage() {
         password,
       });
 
-      createdUserId = extractCreatedUserId(registerResponse.data);
+      const createdUserId = extractCreatedUserId(registerResponse.data);
 
       if (!createdUserId) {
         throw new Error(

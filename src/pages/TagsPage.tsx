@@ -76,7 +76,11 @@ export default function TagsPage() {
   }
 
   useEffect(() => {
-    loadTags();
+    const initialLoad = window.setTimeout(() => {
+      void loadTags();
+    }, 0);
+
+    return () => window.clearTimeout(initialLoad);
   }, []);
 
   const filteredTags = useMemo(() => {

@@ -1,5 +1,5 @@
 import { Check, Search, UserPlus, Users, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import type { Friend } from "../types/chat.types";
 import { Avatar } from "./Avatar";
 
@@ -12,8 +12,12 @@ type AddGroupMembersModalProps = {
   onAdd: (memberIds: string[]) => void;
 };
 
-export function AddGroupMembersModal({
-  open,
+export function AddGroupMembersModal(props: AddGroupMembersModalProps) {
+  if (!props.open) return null;
+  return <AddGroupMembersModalContent {...props} />;
+}
+
+function AddGroupMembersModalContent({
   friends,
   existingMemberIds = [],
   saving,
@@ -22,13 +26,6 @@ export function AddGroupMembersModal({
 }: AddGroupMembersModalProps) {
   const [query, setQuery] = useState("");
   const [memberIds, setMemberIds] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (!open) {
-      setQuery("");
-      setMemberIds([]);
-    }
-  }, [open]);
 
   const availableFriends = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -69,8 +66,6 @@ export function AddGroupMembersModal({
 
     onAdd(memberIds);
   }
-
-  if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-[10030] flex items-end bg-slate-950/35 dark:bg-slate-950/75 p-0 backdrop-blur-sm sm:items-center sm:justify-center sm:p-6">
