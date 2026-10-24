@@ -2974,7 +2974,7 @@ export default function ChatPage() {
 
   return (
     <div
-      className={`vn-chat-page min-h-0 transition-colors duration-300 ${chatBasePath === "/superadmin/chat" ? "vn-superadmin-chat-v3" : "pb-2"} ${activeTab === "chats" && selectedConversation ? "vn-chat-conversation-open" : ""}`}
+      className={`vn-chat-page min-h-0 transition-colors duration-300 ${chatBasePath === "/superadmin/chat" ? "vn-superadmin-chat-v3" : "pb-2"} ${activeTab === "chats" && selectedConversation ? "vn-chat-conversation-open" : ""} ${error || toast ? "vn-chat-has-feedback" : ""}`}
       onClick={closeMenus}
     >
       <main className={`vn-chat-shell mx-auto flex max-w-[1650px] flex-col overflow-hidden transition-colors duration-300 ${chatBasePath === "/superadmin/chat" ? "h-[calc(100dvh-132px)] min-h-[420px] rounded-[24px] lg:h-[calc(100dvh-182px)] lg:min-h-[480px] xl:rounded-[30px]" : "h-[calc(100dvh-190px)] min-h-[460px] rounded-[26px] ring-1 ring-black/5 dark:ring-white/5 xl:rounded-[30px]"}`}>
@@ -3389,7 +3389,7 @@ export default function ChatPage() {
       />
       {(error || toast) && (
         <div
-          className={`fixed bottom-4 right-4 z-[10100] flex max-w-[calc(100vw-2rem)] items-center gap-3 rounded-2xl border px-4 py-3 text-sm shadow-2xl sm:bottom-5 sm:right-5 sm:max-w-sm ${
+          className={`vn-chat-toast fixed bottom-4 right-4 z-[10100] flex max-w-[calc(100vw-2rem)] items-center gap-3 rounded-2xl border px-4 py-3 text-sm shadow-2xl sm:bottom-5 sm:right-5 sm:max-w-sm ${
             error
               ? "border-red-500/30 bg-slate-900 text-red-100"
               : "border-emerald-500/30 bg-slate-900 text-emerald-100"
@@ -3435,8 +3435,8 @@ function FriendsPanel({
   const hasQuery = search.trim().length >= 2;
 
   return (
-    <section className="flex min-h-0 flex-1 flex-col bg-slate-50/60 dark:bg-[#0b1220]">
-      <header className="shrink-0 border-b border-slate-200 bg-white px-4 py-5 dark:border-white/10 dark:bg-[#0d1526] sm:px-6">
+    <section className="vn-chat-people-view flex min-h-0 flex-1 flex-col bg-slate-50/60 dark:bg-[#0b1220]">
+      <header className="vn-chat-people-header shrink-0 border-b border-slate-200 bg-white px-4 py-5 dark:border-white/10 dark:bg-[#0d1526] sm:px-6">
         <div className="mx-auto max-w-5xl">
           <p className="text-[10px] font-black uppercase tracking-[0.22em] text-violet-500">
             Comunidad
@@ -3474,7 +3474,7 @@ function FriendsPanel({
         </div>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6">
+      <div className="vn-chat-people-body min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6">
         <div className="mx-auto max-w-5xl space-y-8">
           {hasQuery && (
             <section>
@@ -3508,7 +3508,7 @@ function FriendsPanel({
                   {results.map((user) => (
                     <article
                       key={user.id}
-                      className="flex items-center gap-3 rounded-[22px] border border-slate-200 bg-white p-3.5 shadow-sm transition hover:border-violet-200 hover:shadow-md dark:border-white/10 dark:bg-white/[0.035] dark:hover:border-violet-400/20"
+                      className="vn-chat-person-card flex items-center gap-3 rounded-[22px] border border-slate-200 bg-white p-3.5 shadow-sm transition hover:border-violet-200 hover:shadow-md dark:border-white/10 dark:bg-white/[0.035] dark:hover:border-violet-400/20"
                     >
                       <Avatar name={user.nombre} src={user.avatar} size="md" />
 
@@ -3599,7 +3599,7 @@ function FriendsPanel({
                 {friends.map((friend) => (
                   <article
                     key={friend.amistad_id}
-                    className="flex items-center gap-3 rounded-[22px] border border-slate-200 bg-white p-4 shadow-sm transition hover:border-violet-200 hover:shadow-md dark:border-white/10 dark:bg-white/[0.035] dark:hover:border-violet-400/20"
+                    className="vn-chat-person-card flex items-center gap-3 rounded-[22px] border border-slate-200 bg-white p-4 shadow-sm transition hover:border-violet-200 hover:shadow-md dark:border-white/10 dark:bg-white/[0.035] dark:hover:border-violet-400/20"
                   >
                     <Avatar
                       name={friend.nombre}
@@ -3668,8 +3668,8 @@ function RequestsPanel({
   onCancel: (id: string) => Promise<void>;
 }) {
   return (
-    <section className="flex min-h-0 flex-1 flex-col bg-slate-50/60 dark:bg-[#0b1220]">
-      <header className="shrink-0 border-b border-slate-200 bg-white px-4 py-5 dark:border-white/10 dark:bg-[#0d1526] sm:px-6">
+    <section className="vn-chat-people-view flex min-h-0 flex-1 flex-col bg-slate-50/60 dark:bg-[#0b1220]">
+      <header className="vn-chat-people-header shrink-0 border-b border-slate-200 bg-white px-4 py-5 dark:border-white/10 dark:bg-[#0d1526] sm:px-6">
         <div className="mx-auto max-w-5xl">
           <p className="text-[10px] font-black uppercase tracking-[0.22em] text-violet-500">
             Comunidad
@@ -3685,7 +3685,7 @@ function RequestsPanel({
         </div>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6">
+      <div className="vn-chat-people-body min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6">
         <div className="mx-auto max-w-5xl space-y-8">
           <section>
             <div className="mb-3 flex items-center justify-between gap-3">
@@ -3728,7 +3728,7 @@ function RequestsPanel({
                 {requests.map((request) => (
                   <article
                     key={request.amistad_id}
-                    className="flex items-center gap-3 rounded-[22px] border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.035]"
+                    className="vn-chat-person-card flex items-center gap-3 rounded-[22px] border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.035]"
                   >
                     <Avatar
                       name={request.nombre}
@@ -3808,7 +3808,7 @@ function RequestsPanel({
                 {sentRequests.map((request) => (
                   <article
                     key={request.amistad_id}
-                    className="flex items-center gap-3 rounded-[22px] border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.035]"
+                    className="vn-chat-person-card flex items-center gap-3 rounded-[22px] border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.035]"
                   >
                     <Avatar
                       name={request.nombre}
@@ -3869,8 +3869,8 @@ function BlockedPanel({
   onUnblock: (id: string) => Promise<void>;
 }) {
   return (
-    <section className="flex min-h-0 flex-1 flex-col bg-slate-50/60 dark:bg-[#0b1220]">
-      <header className="shrink-0 border-b border-slate-200 bg-white px-4 py-5 dark:border-white/10 dark:bg-[#0d1526] sm:px-6">
+    <section className="vn-chat-people-view flex min-h-0 flex-1 flex-col bg-slate-50/60 dark:bg-[#0b1220]">
+      <header className="vn-chat-people-header shrink-0 border-b border-slate-200 bg-white px-4 py-5 dark:border-white/10 dark:bg-[#0d1526] sm:px-6">
         <div className="mx-auto max-w-5xl">
           <p className="text-[10px] font-black uppercase tracking-[0.22em] text-violet-500">
             Privacidad
@@ -3897,7 +3897,7 @@ function BlockedPanel({
         </div>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6">
+      <div className="vn-chat-people-body min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6">
         <div className="mx-auto max-w-5xl">
           {loading ? (
             <div className="space-y-3">
@@ -3928,7 +3928,7 @@ function BlockedPanel({
               {users.map((user) => (
                 <article
                   key={user.bloqueo_id}
-                  className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm shadow-slate-200/30 dark:border-white/10 dark:bg-[#0d1526] dark:shadow-none"
+                  className="vn-chat-person-card flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm shadow-slate-200/30 dark:border-white/10 dark:bg-[#0d1526] dark:shadow-none"
                 >
                   <Avatar
                     name={user.usuario.nombre}
