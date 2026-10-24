@@ -1,0 +1,69 @@
+/* Administración / Superadmin — estilos aislados, sin alterar lógica de permisos */
+.superadmin-administration {
+  --adm-ink: #292c30;
+  --adm-coral: #db765e;
+  --adm-line: #eadfd3;
+  color: var(--adm-ink);
+}
+.superadmin-administration > header {
+  background: radial-gradient(circle at 95% 0%, #ffe0cf 0, transparent 37%), linear-gradient(135deg,#fffaf2,#f8eee4) !important;
+  border: 1px solid var(--adm-line) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 35px #48362c0c !important;
+}
+.superadmin-administration > header > .absolute { display: none; }
+.superadmin-administration > header h1 { color: var(--adm-ink) !important; letter-spacing: -.04em; }
+.superadmin-administration > header p { color: #706962 !important; }
+.superadmin-administration > header div.rounded-full {
+  background: #fce6d9 !important; border-color: #f4d1c3 !important; color: #a64e3c !important;
+}
+.superadmin-administration > header button:last-child {
+  background: var(--adm-ink) !important; box-shadow: none !important; color: #fff !important;
+}
+.superadmin-administration > header button:first-child {
+  border-color: var(--adm-line) !important; background: #fffdfa !important; color: var(--adm-ink) !important;
+}
+.superadmin-administration > .grid > article {
+  background: #fffaf5 !important; border-color: var(--adm-line) !important;
+  border-radius: 18px !important; padding: 18px !important;
+}
+.superadmin-administration > .grid > article:nth-child(2) { background: #f3f6ef !important; }
+.superadmin-administration > .grid > article:nth-child(3) { background: #fff3e8 !important; }
+.superadmin-administration > .grid > article:nth-child(4) { background: #f9ecea !important; }
+.superadmin-administration > .grid > article p { color: var(--adm-ink) !important; }
+.superadmin-administration > .grid > article p:first-child,
+.superadmin-administration > .grid > article p:last-child { color: #786e66 !important; }
+.superadmin-administration > .grid > article > div > div:last-child {
+  background: #ffffffa8 !important; color: #b85843 !important;
+}
+.superadmin-administration > .rounded-3xl {
+  background: #fffdf9 !important; border-color: var(--adm-line) !important;
+  border-radius: 20px !important; box-shadow: 0 8px 30px #49382d0a !important;
+}
+.superadmin-administration > .rounded-3xl input {
+  color: var(--adm-ink) !important;
+}
+.superadmin-administration > .rounded-3xl input:focus-visible {
+  outline: 2px solid #db765e; outline-offset: 2px;
+}
+.superadmin-administration > .rounded-3xl button.bg-violet-500,
+.superadmin-administration > .rounded-3xl button.bg-fuchsia-500 {
+  background: var(--adm-ink) !important; color: #fff !important; box-shadow: none !important;
+}
+.superadmin-administration > .rounded-3xl button.bg-violet-50 {
+  background: #fff0e8 !important; border-color: #f4d2c4 !important; color: #ad5b47 !important;
+}
+.superadmin-administration > .rounded-3xl p.text-violet-700 { color: #b45d49 !important; }
+.superadmin-administration button:focus-visible {
+  outline: 2px solid var(--adm-coral); outline-offset: 3px;
+}
+@media (max-width: 640px) {
+  .superadmin-administration > header { padding: 20px !important; }
+  .superadmin-administration > header h1 { font-size: 1.75rem !important; }
+  .superadmin-administration > .grid { gap: 10px; }
+  .superadmin-administration > .grid > article { padding: 14px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .superadmin-administration *, .superadmin-administration *::before,
+  .superadmin-administration *::after { scroll-behavior: auto !important; }
+}
