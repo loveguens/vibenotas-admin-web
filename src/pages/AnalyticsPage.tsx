@@ -283,7 +283,7 @@ export default function AnalyticsPage() {
         </div>
 
         <div className="vn-analytics-hero-footer">
-          <span className="vn-analytics-live"><span aria-hidden="true" /> Datos reales de la plataforma</span>
+          <span className="vn-analytics-live"><span aria-hidden="true" /> Datos de la plataforma</span>
           <span>
             {analytics
               ? `Última actualización: ${formatDate(analytics.generatedAt)}`
@@ -370,85 +370,85 @@ export default function AnalyticsPage() {
           <div className="vn-analytics-insight-grid">
             <article className="vn-final-card vn-analytics-chart rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm font-semibold text-violet-300">
-                  Crecimiento de usuarios
-                </p>
+                <div>
+                  <p className="text-sm font-semibold text-violet-300">
+                    Crecimiento de usuarios
+                  </p>
 
-                <h2 className="mt-1 text-xl font-bold text-white">
-                  Registros durante {periodLabel}
-                </h2>
+                  <h2 className="mt-1 text-xl font-bold text-white">
+                    Registros durante {periodLabel}
+                  </h2>
+                </div>
+
+                <div className="rounded-2xl bg-violet-500/10 p-3 text-violet-300">
+                  <TrendingUp size={20} />
+                </div>
               </div>
 
-              <div className="rounded-2xl bg-violet-500/10 p-3 text-violet-300">
-                <TrendingUp size={20} />
+              <div className="mt-7 h-72">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={analytics.trends.userRegistrations}
+                    margin={{
+                      top: 10,
+                      right: 10,
+                      left: -20,
+                      bottom: 0,
+                    }}
+                  >
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="rgba(148, 163, 184, 0.12)"
+                    />
+
+                    <XAxis
+                      dataKey="date"
+                      tickFormatter={formatShortDate}
+                      minTickGap={24}
+                      tick={{
+                        fill: "#94a3b8",
+                        fontSize: 12,
+                      }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+
+                    <YAxis
+                      allowDecimals={false}
+                      tick={{
+                        fill: "#94a3b8",
+                        fontSize: 12,
+                      }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+
+                    <Tooltip
+                      labelFormatter={(label) => formatShortDate(String(label))}
+                      formatter={(value) => [Number(value), "Usuarios"]}
+                      contentStyle={{
+                        backgroundColor: "#0f172a",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                        borderRadius: "12px",
+                      }}
+                      labelStyle={{
+                        color: "#e2e8f0",
+                      }}
+                    />
+
+                    <Line
+                      type="monotone"
+                      dataKey="total"
+                      stroke="#8b5cf6"
+                      strokeWidth={3}
+                      dot={false}
+                      activeDot={{
+                        r: 5,
+                      }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
-            </div>
-
-            <div className="mt-7 h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={analytics.trends.userRegistrations}
-                  margin={{
-                    top: 10,
-                    right: 10,
-                    left: -20,
-                    bottom: 0,
-                  }}
-                >
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="rgba(148, 163, 184, 0.12)"
-                  />
-
-                  <XAxis
-                    dataKey="date"
-                    tickFormatter={formatShortDate}
-                    minTickGap={24}
-                    tick={{
-                      fill: "#94a3b8",
-                      fontSize: 12,
-                    }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-
-                  <YAxis
-                    allowDecimals={false}
-                    tick={{
-                      fill: "#94a3b8",
-                      fontSize: 12,
-                    }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-
-                  <Tooltip
-                    labelFormatter={(label) => formatShortDate(String(label))}
-                    formatter={(value) => [Number(value), "Usuarios"]}
-                    contentStyle={{
-                      backgroundColor: "#0f172a",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      borderRadius: "12px",
-                    }}
-                    labelStyle={{
-                      color: "#e2e8f0",
-                    }}
-                  />
-
-                  <Line
-                    type="monotone"
-                    dataKey="total"
-                    stroke="#8b5cf6"
-                    strokeWidth={3}
-                    dot={false}
-                    activeDot={{
-                      r: 5,
-                    }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
             </article>
             <article className="vn-final-card vn-analytics-roles rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
               <div className="flex items-center justify-between">
@@ -515,51 +515,51 @@ export default function AnalyticsPage() {
             <span className="vn-analytics-period-label">Situación de las cuentas</span>
           </div>
           <article className="vn-final-card vn-analytics-health rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-semibold text-violet-300">
-                    Estado de cuentas
-                  </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-violet-300">
+                  Estado de cuentas
+                </p>
 
-                  <h2 className="mt-1 text-xl font-bold text-white">
-                    Salud de la plataforma
-                  </h2>
-                </div>
-
-                <div className="rounded-2xl bg-emerald-500/10 p-3 text-emerald-300">
-                  <ShieldCheck size={20} />
-                </div>
+                <h2 className="mt-1 text-xl font-bold text-white">
+                  Salud de la plataforma
+                </h2>
               </div>
 
-              <div className="mt-5 grid grid-cols-2 gap-3 max-[359px]:grid-cols-1 lg:grid-cols-4">
-                {analytics.distributions.usersByStatus.map((item) => (
-                  <div
-                    key={item.status}
-                    className={`rounded-2xl border p-4 ${statusStyle(
-                      item.status,
-                    )}`}
-                  >
-                    <p className="text-xs font-semibold uppercase tracking-wider opacity-70">
-                      {formatStatus(item.status)}
-                    </p>
-
-                    <p className="mt-2 text-3xl font-bold">{item.total}</p>
-
-                    <p className="mt-1 text-xs opacity-70">
-                      cuentas registradas
-                    </p>
-                  </div>
-                ))}
-
-                {analytics.distributions.usersByStatus.length === 0 && (
-                  <p className="col-span-full py-8 text-center text-sm text-slate-500">
-                    No hay datos de estados disponibles.
-                  </p>
-                )}
+              <div className="rounded-2xl bg-emerald-500/10 p-3 text-emerald-300">
+                <ShieldCheck size={20} />
               </div>
-          </article>
+            </div>
 
-          <div className="vn-analytics-section-label">
+            <div className="mt-5 grid grid-cols-2 gap-3 max-[359px]:grid-cols-1 lg:grid-cols-4">
+              {analytics.distributions.usersByStatus.map((item) => (
+                <div
+                  key={item.status}
+                  className={`rounded-2xl border p-4 ${statusStyle(
+                    item.status,
+                  )}`}
+                >
+                  <p className="text-xs font-semibold uppercase tracking-wider opacity-70">
+                    {formatStatus(item.status)}
+                  </p>
+
+                  <p className="mt-2 text-3xl font-bold">{item.total}</p>
+
+                  <p className="mt-1 text-xs opacity-70">
+                    cuentas registradas
+                  </p>
+                </div>
+              ))}
+
+              {analytics.distributions.usersByStatus.length === 0 && (
+                <p className="col-span-full py-8 text-center text-sm text-slate-500">
+                  No hay datos de estados disponibles.
+                </p>
+              )}
+            </div>
+        </article>
+
+        <div className="vn-analytics-section-label">
             <div>
               <span>04 / AUDITORÍA</span>
               <h2>Movimientos recientes</h2>
