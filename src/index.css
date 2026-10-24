@@ -519,8 +519,8 @@ a {
 }
 
 .vn-superadmin-chat-v3 .vn-chat-tabs {
-  padding-top: 14px;
-  padding-bottom: 14px;
+  padding-top: 7px;
+  padding-bottom: 7px;
   background: linear-gradient(105deg, #fafaff 0%, #eee8ff 100%);
 }
 
@@ -532,8 +532,8 @@ a {
   display: grid;
   width: 100%;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 6px;
-  padding: 5px;
+  gap: 5px;
+  padding: 3px;
   background: rgba(255, 255, 255, 0.62);
   border: 1px solid rgba(139, 92, 246, 0.1);
   border-radius: 18px;
@@ -546,9 +546,10 @@ a {
 
 .vn-superadmin-chat-v3 .vn-chat-tabs button {
   min-width: 0;
-  padding: 10px 8px;
+  min-height: 38px;
+  padding: 6px 8px;
   gap: 7px;
-  border-radius: 13px;
+  border-radius: 12px;
   white-space: nowrap;
 }
 
@@ -556,7 +557,7 @@ a {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: 21px 20px 19px;
+  padding: 11px 16px 12px;
   background: linear-gradient(125deg, #f5f0ff 0%, #ffffff 57%, #ebf2ff 100%);
   border-bottom-color: rgba(139, 92, 246, 0.14);
 }
@@ -582,7 +583,8 @@ a {
 
 .vn-superadmin-chat-v3 .vn-chat-inbox-headline {
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .vn-superadmin-chat-v3 .vn-chat-inbox-identity {
@@ -593,8 +595,8 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 46px;
+  width: 38px;
+  height: 38px;
   flex-shrink: 0;
   border: 1px solid rgba(167, 139, 250, 0.34);
   border-radius: 15px;
@@ -610,7 +612,7 @@ a {
 
 .vn-superadmin-chat-v3 .vn-chat-inbox-kicker {
   display: block;
-  margin-bottom: 3px;
+  margin-bottom: 1px;
   color: #6d28d9;
   font-size: 9px;
   font-weight: 800;
@@ -623,7 +625,7 @@ a {
 }
 
 .vn-superadmin-chat-v3 .vn-chat-inbox-title {
-  font-size: 19px;
+  font-size: 17px;
   letter-spacing: -0.035em;
 }
 
@@ -657,7 +659,9 @@ a {
 }
 
 .vn-superadmin-chat-v3 .vn-chat-search {
-  min-height: 44px;
+  min-height: 40px;
+  padding-top: 9px;
+  padding-bottom: 9px;
   background: rgba(255, 255, 255, 0.87);
   border: 1px solid rgba(100, 116, 139, 0.2);
   box-shadow: 0 5px 16px rgba(25, 29, 66, 0.035);
@@ -751,7 +755,7 @@ a {
 
 @media (max-width: 639px) {
   .vn-superadmin-chat-v3 .vn-chat-tabs {
-    padding: 9px 10px;
+    padding: 6px 8px;
   }
   .vn-superadmin-chat-v3 .vn-chat-tabs > div {
     gap: 3px;
@@ -759,9 +763,9 @@ a {
   }
   .vn-superadmin-chat-v3 .vn-chat-tabs button {
     flex-direction: column;
-    min-height: 55px;
-    gap: 4px;
-    padding: 6px 1px;
+    min-height: 44px;
+    gap: 3px;
+    padding: 4px 1px;
     font-size: 10px;
     letter-spacing: 0;
   }
@@ -770,14 +774,14 @@ a {
     height: 18px;
   }
   .vn-superadmin-chat-v3 .vn-chat-inbox-header {
-    padding: 16px 15px;
+    padding: 11px 13px 12px;
   }
   .vn-superadmin-chat-v3 .vn-chat-inbox-identity {
     gap: 9px;
   }
   .vn-superadmin-chat-v3 .vn-chat-inbox-symbol {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
   }
   .vn-superadmin-chat-v3 .vn-chat-inbox-title {
     font-size: 17px;
