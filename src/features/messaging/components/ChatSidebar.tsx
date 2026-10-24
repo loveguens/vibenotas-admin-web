@@ -73,6 +73,7 @@ export function ChatSidebar({
               key={id}
               type="button"
               onClick={() => onTabChange(id)}
+              aria-current={active ? "page" : undefined}
               className={`relative flex min-h-10 min-w-fit items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold tracking-wide transition-all duration-200 sm:text-sm ${
                 active
                   ? "bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-violet-600/20"
