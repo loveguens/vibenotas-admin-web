@@ -1,3 +1,4 @@
+import "./AdministratorsPage.css";
 ﻿import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import axios from "axios";
@@ -1147,7 +1148,7 @@ export default function AdministratorsPage() {
   }
 
   return (
-    <section className="space-y-6 pb-10 text-slate-900 dark:text-white">
+    <section className="superadmin-administration space-y-6 pb-10 text-slate-900 dark:text-white">
       <header className="relative overflow-hidden rounded-[28px] border border-slate-200 bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.12),transparent_38%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(248,250,252,0.98))] p-6 shadow-xl shadow-slate-200/60 sm:p-8 dark:border-white/10 dark:bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.18),transparent_38%),linear-gradient(135deg,rgba(30,41,59,0.96),rgba(15,23,42,0.96))] dark:shadow-2xl dark:shadow-black/20">
         <div className="absolute -right-16 -top-20 h-52 w-52 rounded-full bg-fuchsia-300/20 blur-3xl dark:bg-fuchsia-500/10" />
         <div className="absolute -bottom-24 left-1/3 h-52 w-52 rounded-full bg-violet-300/20 blur-3xl dark:bg-violet-500/10" />
