@@ -241,54 +241,56 @@ export default function AnalyticsPage() {
 
   return (
     <section aria-labelledby="analytics-title" className="vn-final-page vn-analytics-overview space-y-4 sm:space-y-6">
-      <div className="vn-final-hero flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
-            Inteligencia de plataforma
-          </p>
-
-          <h1
-            id="analytics-title"
-            className="mt-2 text-3xl font-bold tracking-tight text-white"
-          >
-            Analytics
-          </h1>
-
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-            M&eacute;tricas reales de usuarios, crecimiento y actividad
-            administrativa de VibeNotas.
-          </p>
+      <header className="vn-final-hero vn-analytics-hero">
+        <div className="vn-analytics-hero-main">
+          <span className="vn-analytics-hero-icon" aria-hidden="true">
+            <BarChart3 size={26} strokeWidth={1.8} />
+          </span>
+          <div className="min-w-0">
+            <p className="vn-analytics-eyebrow">CENTRO DE INTELIGENCIA</p>
+            <h1 id="analytics-title" className="vn-analytics-display">
+              Analíticas <span>de VibeNotas</span>
+            </h1>
+            <p className="vn-analytics-hero-description">
+              Una vista clara del crecimiento, la comunidad y la actividad de tu plataforma.
+            </p>
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          <div className="flex rounded-xl border border-slate-200 bg-white/75 p-1 dark:border-white/10 dark:bg-white/5">
+        <div className="vn-analytics-controls">
+          <div className="vn-analytics-periods" role="group" aria-label="Período de análisis">
             {PERIOD_OPTIONS.map((option) => (
               <button
                 key={option.value}
                 type="button"
                 onClick={() => setPeriod(option.value)}
-                className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${
-                  period === option.value
-                    ? "bg-violet-500 text-white shadow-lg shadow-violet-950/30"
-                    : "text-slate-600 hover:bg-violet-50 hover:text-violet-700 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white"
-                }`}
+                aria-pressed={period === option.value}
+                className={`vn-analytics-period ${period === option.value ? "is-active" : ""}`}
               >
                 {option.label}
               </button>
             ))}
           </div>
-
           <button
             type="button"
             onClick={() => void loadAnalytics(period)}
             disabled={loading}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-3 text-sm font-semibold text-violet-300 transition hover:bg-violet-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+            className="vn-analytics-refresh"
           >
-            <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
+            <RefreshCw size={17} className={loading ? "animate-spin" : ""} />
             Actualizar
           </button>
         </div>
-      </div>
+
+        <div className="vn-analytics-hero-footer">
+          <span className="vn-analytics-live"><span aria-hidden="true" /> Datos reales de la plataforma</span>
+          <span>
+            {analytics
+              ? `Última actualización: ${formatDate(analytics.generatedAt)}`
+              : "Resumen de actividad administrativa"}
+          </span>
+        </div>
+      </header>
 
       {error && (
         <div className="rounded-3xl border border-red-500/20 bg-red-500/10 p-6 text-red-200">
@@ -311,57 +313,50 @@ export default function AnalyticsPage() {
 
       {analytics && (
         <>
-          <div className="grid grid-cols-2 gap-3 max-[359px]:grid-cols-1 sm:gap-4 xl:grid-cols-4">
-            <article className="vn-final-card vn-analytics-kpi rounded-3xl border border-white/10 bg-[#1E293B]/80 p-3.5 shadow-xl shadow-black/10 sm:p-5">
-              <p className="text-sm text-slate-400">Usuarios totales</p>
+          <div className="vn-analytics-section-label">
+            <div>
+              <span>01 / PANORAMA</span>
+              <h2>Indicadores principales</h2>
+            </div>
+            <span className="vn-analytics-period-label">Período seleccionado: {periodLabel}</span>
+          </div>
 
-              <p className="mt-2 text-2xl font-bold text-white sm:mt-3 sm:text-3xl">
-                {analytics.summary.users.total}
-              </p>
-
-              <div className="mt-3 flex items-center gap-2 text-xs text-violet-300 sm:mt-4 sm:text-sm">
-                <Users size={16} />
-                Comunidad registrada
+          <div className="vn-analytics-overview-grid">
+            <article className="vn-final-card vn-analytics-kpi vn-analytics-stat" data-tone="violet">
+              <div className="vn-analytics-stat-top">
+                <span className="vn-analytics-stat-number">01</span>
+                <span className="vn-analytics-stat-icon" aria-hidden="true"><Users size={21} /></span>
               </div>
+              <p className="vn-analytics-stat-name">Usuarios registrados</p>
+              <p className="vn-analytics-stat-value">{analytics.summary.users.total}</p>
+              <p className="vn-analytics-stat-note">Comunidad de VibeNotas</p>
             </article>
-
-            <article className="vn-final-card vn-analytics-kpi rounded-3xl border border-white/10 bg-[#1E293B]/80 p-3.5 shadow-xl shadow-black/10 sm:p-5">
-              <p className="text-sm text-slate-400">Nuevos en {periodLabel}</p>
-
-              <p className="mt-2 text-2xl font-bold text-white sm:mt-3 sm:text-3xl">
-                {analytics.summary.users.createdInPeriod}
-              </p>
-
-              <div className="mt-3 flex items-center gap-2 text-xs text-fuchsia-700 sm:mt-4 sm:text-sm dark:text-fuchsia-300">
-                <UserPlus size={16} />
-                Registros del per&iacute;odo
+            <article className="vn-final-card vn-analytics-kpi vn-analytics-stat" data-tone="pink">
+              <div className="vn-analytics-stat-top">
+                <span className="vn-analytics-stat-number">02</span>
+                <span className="vn-analytics-stat-icon" aria-hidden="true"><UserPlus size={21} /></span>
               </div>
+              <p className="vn-analytics-stat-name">Nuevos usuarios</p>
+              <p className="vn-analytics-stat-value">{analytics.summary.users.createdInPeriod}</p>
+              <p className="vn-analytics-stat-note">Registros en el período</p>
             </article>
-
-            <article className="vn-final-card vn-analytics-kpi rounded-3xl border border-white/10 bg-[#1E293B]/80 p-3.5 shadow-xl shadow-black/10 sm:p-5">
-              <p className="text-sm text-slate-400">Usuarios activos</p>
-
-              <p className="mt-2 text-2xl font-bold text-white sm:mt-3 sm:text-3xl">
-                {analytics.summary.users.active}
-              </p>
-
-              <div className="mt-3 flex items-center gap-2 text-xs text-emerald-300 sm:mt-4 sm:text-sm">
-                <ShieldCheck size={16} />
-                Acceso habilitado
+            <article className="vn-final-card vn-analytics-kpi vn-analytics-stat" data-tone="green">
+              <div className="vn-analytics-stat-top">
+                <span className="vn-analytics-stat-number">03</span>
+                <span className="vn-analytics-stat-icon" aria-hidden="true"><ShieldCheck size={21} /></span>
               </div>
+              <p className="vn-analytics-stat-name">Cuentas activas</p>
+              <p className="vn-analytics-stat-value">{analytics.summary.users.active}</p>
+              <p className="vn-analytics-stat-note">Acceso habilitado</p>
             </article>
-
-            <article className="vn-final-card vn-analytics-kpi rounded-3xl border border-white/10 bg-[#1E293B]/80 p-3.5 shadow-xl shadow-black/10 sm:p-5">
-              <p className="text-sm text-slate-400">Eventos de hoy</p>
-
-              <p className="mt-2 text-2xl font-bold text-white sm:mt-3 sm:text-3xl">
-                {analytics.summary.audit.eventsToday}
-              </p>
-
-              <div className="mt-3 flex items-center gap-2 text-xs text-sky-300 sm:mt-4 sm:text-sm">
-                <Activity size={16} />
-                Auditor&iacute;a registrada
+            <article className="vn-final-card vn-analytics-kpi vn-analytics-stat" data-tone="blue">
+              <div className="vn-analytics-stat-top">
+                <span className="vn-analytics-stat-number">04</span>
+                <span className="vn-analytics-stat-icon" aria-hidden="true"><Activity size={21} /></span>
               </div>
+              <p className="vn-analytics-stat-name">Eventos de hoy</p>
+              <p className="vn-analytics-stat-value">{analytics.summary.audit.eventsToday}</p>
+              <p className="vn-analytics-stat-note">Actividad registrada</p>
             </article>
           </div>
 
