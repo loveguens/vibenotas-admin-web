@@ -240,8 +240,8 @@ export default function AnalyticsPage() {
     PERIOD_OPTIONS.find((option) => option.value === period)?.label ?? period;
 
   return (
-    <section aria-labelledby="analytics-title" className="space-y-6">
-      <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+    <section aria-labelledby="analytics-title" className="vn-final-page space-y-6">
+      <div className="vn-final-hero flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
             Inteligencia de plataforma
@@ -312,7 +312,7 @@ export default function AnalyticsPage() {
       {analytics && (
         <>
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
+            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
               <p className="text-sm text-slate-400">Usuarios totales</p>
 
               <p className="mt-3 text-3xl font-bold text-white">
@@ -325,7 +325,7 @@ export default function AnalyticsPage() {
               </div>
             </article>
 
-            <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
+            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
               <p className="text-sm text-slate-400">Nuevos en {periodLabel}</p>
 
               <p className="mt-3 text-3xl font-bold text-white">
@@ -338,7 +338,7 @@ export default function AnalyticsPage() {
               </div>
             </article>
 
-            <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
+            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
               <p className="text-sm text-slate-400">Usuarios activos</p>
 
               <p className="mt-3 text-3xl font-bold text-white">
@@ -351,7 +351,7 @@ export default function AnalyticsPage() {
               </div>
             </article>
 
-            <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
+            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
               <p className="text-sm text-slate-400">Eventos de hoy</p>
 
               <p className="mt-3 text-3xl font-bold text-white">
@@ -365,7 +365,7 @@ export default function AnalyticsPage() {
             </article>
           </div>
 
-          <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
+          <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm font-semibold text-violet-300">
@@ -449,7 +449,7 @@ export default function AnalyticsPage() {
           </article>
 
           <div className="grid gap-6 xl:grid-cols-2">
-            <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
+            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-violet-300">
@@ -505,7 +505,7 @@ export default function AnalyticsPage() {
               </div>
             </article>
 
-            <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
+            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-violet-300">
@@ -551,7 +551,7 @@ export default function AnalyticsPage() {
             </article>
           </div>
 
-          <article className="overflow-hidden rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10">
+          <article className="overflow-hidden vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10">
             <div className="flex flex-col gap-3 border-b border-white/10 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm font-semibold text-violet-300">
