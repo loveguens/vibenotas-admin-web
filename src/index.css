@@ -3570,3 +3570,598 @@ html.dark .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-stat:
     transition-duration: 0ms;
   }
 }
+
+/* =========================================================
+   SUPER ADMIN · NOTIFICACIONES GLOBALES — VIBENOTAS
+   Solo presentación del centro de campañas del Super Admin.
+   Estados semánticos, confirmaciones y backend se conservan.
+   ========================================================= */
+.vn-admin.vn-superadmin-layout .vn-ntf-page {
+  --vn-ntf-accent: var(--vn-coral);
+  --vn-ntf-accent-ink: var(--vn-coral-strong);
+  --vn-ntf-accent-soft: var(--vn-coral-soft);
+  color: var(--vn-ink);
+  gap: 14px;
+  min-width: 0;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-hero {
+  align-items: center;
+  gap: 15px;
+  padding: 18px 21px;
+  border: 1px solid color-mix(in srgb, var(--vn-coral) 24%, var(--vn-line));
+  border-radius: 20px;
+  background: linear-gradient(112deg, var(--vn-surface) 0%, color-mix(in srgb, var(--vn-coral-soft) 37%, var(--vn-surface)) 100%);
+  box-shadow: var(--vn-elevation);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-kicker {
+  color: var(--vn-ntf-accent-ink);
+  font-size: 10px;
+  letter-spacing: .13em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-title {
+  margin-top: 5px;
+  font-size: clamp(23px, 2.3vw, 29px);
+  line-height: 1.18;
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-description {
+  margin-top: 6px;
+  max-width: 66ch;
+  color: var(--vn-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-actions {
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-refresh,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-create,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-save {
+  min-height: 39px;
+  padding: 9px 13px;
+  border-radius: 11px;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-refresh {
+  border: 1px solid var(--vn-line);
+  color: var(--vn-ink);
+  background: var(--vn-surface-hover);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-refresh:hover:not(:disabled) {
+  border-color: var(--vn-coral);
+  color: var(--vn-coral-strong);
+  background: var(--vn-coral-soft);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-create,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-save,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-send {
+  border: 1px solid var(--vn-coral);
+  color: #fff;
+  background: var(--vn-coral);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-create:hover:not(:disabled),
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-save:hover:not(:disabled),
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-send:hover:not(:disabled) {
+  background: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-stats > article {
+  min-height: 110px;
+  padding: 13px 15px;
+  border: 1px solid var(--vn-line);
+  border-radius: 16px;
+  background: var(--vn-surface);
+  box-shadow: none;
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-stats > article:first-child {
+  border-color: color-mix(in srgb, var(--vn-coral) 30%, var(--vn-line));
+  background: color-mix(in srgb, var(--vn-coral-soft) 32%, var(--vn-surface));
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-stats > article > .absolute,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-next > .absolute {
+  display: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-stats > article .flex.items-center > p {
+  color: var(--vn-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-stats > article .flex.items-center > div {
+  padding: 8px;
+  border-radius: 11px;
+  background: var(--vn-coral-soft);
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-stats > article > .relative > p.text-3xl {
+  margin-top: 9px;
+  color: var(--vn-ink);
+  font-size: clamp(23px, 2.5vw, 29px);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-stats > article > .relative > p.text-xs {
+  margin-top: 5px;
+  color: var(--vn-muted);
+  font-size: 10px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-highlights {
+  gap: 10px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-next,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-backend-notice {
+  padding: 15px 17px;
+  border: 1px solid var(--vn-line);
+  border-radius: 16px;
+  background: var(--vn-surface);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-next .text-sky-700,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-next .dark\:text-sky-300 {
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-next h2,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-backend-notice p.font-bold {
+  color: var(--vn-ink);
+  font-size: 14px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-next p.text-sm {
+  color: var(--vn-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-next button {
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid color-mix(in srgb, var(--vn-coral) 27%, var(--vn-line));
+  border-radius: 10px;
+  background: var(--vn-coral-soft);
+  color: var(--vn-coral-strong);
+  font-size: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-next button:hover {
+  border-color: var(--vn-coral);
+  background: color-mix(in srgb, var(--vn-coral-soft) 78%, var(--vn-coral));
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-backend-notice {
+  border-color: color-mix(in srgb, #b98024 26%, var(--vn-line));
+  background: color-mix(in srgb, #b98024 6%, var(--vn-surface));
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-backend-notice p.leading-5 {
+  color: var(--vn-muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-history {
+  border: 1px solid var(--vn-line);
+  border-radius: 18px;
+  background: var(--vn-surface);
+  box-shadow: var(--vn-elevation);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-history-header {
+  padding: 14px 17px;
+  border-color: var(--vn-line);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-history-header p.text-violet-700 {
+  color: var(--vn-coral-strong);
+  font-size: 11px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-history-header h2 {
+  color: var(--vn-ink);
+  font-size: 17px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-history-header p.text-xs {
+  color: var(--vn-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-history-header .grid {
+  gap: 8px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-search,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-filter {
+  min-height: 40px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  border: 1px solid var(--vn-line);
+  border-radius: 11px;
+  background: var(--vn-surface-hover);
+  color: var(--vn-ink);
+  font-size: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-search::placeholder {
+  color: var(--vn-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-search:focus,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-filter:focus {
+  border-color: var(--vn-coral);
+  background: var(--vn-surface);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--vn-coral) 12%, transparent);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-filter option {
+  background: var(--vn-surface);
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table {
+  min-width: 930px;
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table thead {
+  border-color: var(--vn-line);
+  background: var(--vn-surface-hover);
+  color: var(--vn-muted);
+  font-size: 10px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table th {
+  padding: 11px 14px;
+  font-weight: 700;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-row {
+  border-color: var(--vn-line);
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-row:hover {
+  background: var(--vn-surface-hover);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table td {
+  padding: 12px 14px;
+  vertical-align: middle;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-row td:first-child .rounded-2xl.bg-violet-100 {
+  padding: 9px;
+  border-radius: 10px;
+  background: var(--vn-coral-soft);
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-row td:first-child p.font-semibold,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-row td:nth-child(5) p.font-semibold {
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-row td:first-child p.text-xs,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-row td:first-child p.text-\[11px\],
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-row td:nth-child(3),
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-row td:nth-child(5) p.text-xs {
+  color: var(--vn-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-row td:first-child .max-w-md {
+  max-width: 345px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-send {
+  min-height: 32px;
+  padding: 6px 10px;
+  border-radius: 10px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-row button[title="Editar campaña"] {
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-row button[title="Editar campaña"]:hover {
+  background: var(--vn-coral-soft);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal-backdrop {
+  background: rgba(9, 10, 11, .66);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal {
+  max-width: 940px;
+  max-height: min(92dvh, 850px);
+  padding: clamp(16px, 2vw, 25px);
+  border: 1px solid var(--vn-line);
+  border-radius: 20px;
+  background: var(--vn-surface);
+  color: var(--vn-ink);
+  box-shadow: 0 24px 65px rgba(0, 0, 0, .2);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal h2,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal h3,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal p.text-slate-950,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal p.text-slate-900 {
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal p.text-violet-700 {
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal p.text-slate-500,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal .text-slate-600 {
+  color: var(--vn-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-form-panel,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-checklist {
+  border: 1px solid var(--vn-line);
+  border-radius: 15px;
+  background: var(--vn-surface-hover);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal input:not([type="radio"]),
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal select,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal textarea {
+  border: 1px solid var(--vn-line);
+  border-radius: 10px;
+  background: var(--vn-surface);
+  color: var(--vn-ink);
+  font-size: 13px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal input::placeholder,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal textarea::placeholder {
+  color: var(--vn-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal input:focus,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal select:focus,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal textarea:focus {
+  outline: none;
+  border-color: var(--vn-coral);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--vn-coral) 12%, transparent);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal select option {
+  background: var(--vn-surface);
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-audience {
+  border: 1px solid var(--vn-line);
+  border-radius: 12px;
+  background: var(--vn-surface);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-audience[aria-pressed="true"] {
+  border-color: var(--vn-coral);
+  background: var(--vn-coral-soft);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-audience[aria-pressed="true"] p.font-bold {
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-audience[aria-pressed="false"] p.font-bold {
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-delivery-selector {
+  border-color: var(--vn-line);
+  background: var(--vn-surface);
+  border-radius: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-delivery-selector > button {
+  border-radius: 9px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-delivery-selector > button.bg-white,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-delivery-selector > button.bg-sky-100 {
+  color: var(--vn-coral-strong);
+  background: var(--vn-coral-soft);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-preview {
+  border: 1px solid color-mix(in srgb, var(--vn-coral) 24%, var(--vn-line));
+  border-radius: 15px;
+  background: var(--vn-surface-hover);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-preview .text-violet-700,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-preview .text-violet-300 {
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-preview > div.rounded-2xl,
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-preview .grid > div {
+  border: 1px solid var(--vn-line);
+  border-radius: 12px;
+  background: var(--vn-surface);
+}
+
+.vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal form > div:last-child {
+  border-color: var(--vn-line);
+}
+
+@media (max-width: 1023px) {
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-hero {
+    align-items: flex-start;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-highlights {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .vn-admin.vn-superadmin-layout .vn-ntf-page {
+    gap: 12px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-hero {
+    padding: 15px;
+    border-radius: 15px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-actions {
+    width: 100%;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-actions button {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-stats {
+    gap: 8px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-stats > article {
+    min-height: 100px;
+    padding: 11px;
+    border-radius: 13px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-next,
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-backend-notice {
+    padding: 12px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-history-header {
+    padding: 13px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-history-header .grid {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-history {
+    border-radius: 15px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table-wrap {
+    overflow-x: visible;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table {
+    display: block;
+    min-width: 0;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table thead {
+    display: none;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table tbody {
+    display: grid;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table tbody > tr {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    min-width: 0;
+    border: 1px solid var(--vn-line);
+    border-radius: 13px;
+    background: var(--vn-surface);
+    overflow: hidden;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table td {
+    display: block;
+    min-width: 0;
+    padding: 9px 11px;
+    font-size: 12px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table td:first-child,
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table td:last-child,
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table td[colspan] {
+    grid-column: 1 / -1;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table td:first-child {
+    border-bottom: 1px solid var(--vn-line);
+    padding: 12px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table td:last-child {
+    border-top: 1px solid var(--vn-line);
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table td:nth-child(2)::before,
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table td:nth-child(3)::before,
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table td:nth-child(4)::before,
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table td:nth-child(5)::before {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--vn-muted);
+    font-size: 10px;
+    font-weight: 750;
+    letter-spacing: .025em;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table td:nth-child(2)::before { content: "Tipo"; }
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table td:nth-child(3)::before { content: "Audiencia"; }
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table td:nth-child(4)::before { content: "Estado"; }
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-table td:nth-child(5)::before { content: "Alcance"; }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal-backdrop {
+    padding: 8px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-modal {
+    max-height: 96dvh;
+    padding: 14px;
+    border-radius: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-admin.vn-superadmin-layout .vn-ntf-page button,
+  .vn-admin.vn-superadmin-layout .vn-ntf-page .vn-ntf-row {
+    transition-duration: 0ms;
+  }
+}

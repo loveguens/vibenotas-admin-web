@@ -645,29 +645,29 @@ export default function NotificationsPage() {
   }
 
   return (
-    <section className="space-y-6 text-slate-900 dark:text-white">
-      <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+    <section className="vn-ntf-page space-y-6 text-slate-900 dark:text-white">
+      <div className="vn-ntf-hero flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-700 dark:text-violet-300">
+          <p className="vn-ntf-kicker text-sm font-semibold uppercase tracking-[0.18em] text-violet-700 dark:text-violet-300">
             Comunicación global
           </p>
 
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950 dark:text-white">
+          <h1 className="vn-ntf-title mt-2 text-3xl font-bold tracking-tight text-slate-950 dark:text-white">
             Notificaciones globales
           </h1>
 
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400">
+          <p className="vn-ntf-description mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400">
             Crea, edita y envía campañas globales usando destinatarios reales de
             VibeNotas.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-3">
+        <div className="vn-ntf-actions flex flex-wrap gap-3">
           <button
             type="button"
             onClick={() => void loadCampaigns()}
             disabled={loading}
-            className="inline-flex items-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm font-semibold text-violet-700 transition hover:bg-violet-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-300 dark:hover:bg-violet-500/20"
+            className="vn-ntf-refresh inline-flex items-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm font-semibold text-violet-700 transition hover:bg-violet-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-300 dark:hover:bg-violet-500/20"
           >
             <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
             Actualizar
@@ -676,7 +676,7 @@ export default function NotificationsPage() {
           <button
             type="button"
             onClick={openCreateModal}
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/40 transition hover:brightness-110"
+            className="vn-ntf-create inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/40 transition hover:brightness-110"
           >
             <Plus size={18} />
             Nueva campaña
@@ -698,7 +698,7 @@ export default function NotificationsPage() {
         </div>
       )}
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="vn-ntf-stats grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <article className="relative overflow-hidden rounded-3xl border border-violet-200 bg-gradient-to-br from-violet-50 via-white to-slate-50 p-5 shadow-xl shadow-slate-200/50 dark:border-violet-400/15 dark:from-violet-500/[0.16] dark:via-[#1E293B]/90 dark:to-[#1E293B]/90 dark:shadow-black/20">
           <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-violet-400/10 blur-2xl" />
           <div className="relative">
@@ -774,8 +774,8 @@ export default function NotificationsPage() {
         </article>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
-        <article className="relative overflow-hidden rounded-3xl border border-sky-200 bg-gradient-to-br from-sky-50 via-white to-slate-50 p-5 shadow-xl shadow-slate-200/50 dark:border-sky-400/15 dark:from-sky-500/[0.12] dark:via-[#172033]/90 dark:to-[#111827]/90 dark:shadow-black/10">
+      <div className="vn-ntf-highlights grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+        <article className="vn-ntf-next relative overflow-hidden rounded-3xl border border-sky-200 bg-gradient-to-br from-sky-50 via-white to-slate-50 p-5 shadow-xl shadow-slate-200/50 dark:border-sky-400/15 dark:from-sky-500/[0.12] dark:via-[#172033]/90 dark:to-[#111827]/90 dark:shadow-black/10">
           <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-sky-400/10 blur-3xl" />
           <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -810,7 +810,7 @@ export default function NotificationsPage() {
           </div>
         </article>
 
-        <article className="rounded-3xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-400/15 dark:bg-amber-500/[0.06]">
+        <article className="vn-ntf-backend-notice rounded-3xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-400/15 dark:bg-amber-500/[0.06]">
           <div className="flex items-start gap-3">
             <div className="rounded-2xl bg-amber-100 p-2.5 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
               <AlertTriangle size={18} />
@@ -840,8 +840,8 @@ export default function NotificationsPage() {
           ))}
         </div>
       ) : (
-        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50 dark:border-white/10 dark:bg-[#1E293B]/80 dark:shadow-black/10">
-          <div className="border-b border-slate-200 p-5 sm:p-6 dark:border-white/10">
+        <div className="vn-ntf-history overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50 dark:border-white/10 dark:bg-[#1E293B]/80 dark:shadow-black/10">
+          <div className="vn-ntf-history-header border-b border-slate-200 p-5 sm:p-6 dark:border-white/10">
             <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
               <div>
                 <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">
@@ -866,7 +866,7 @@ export default function NotificationsPage() {
                     value={searchTerm}
                     onChange={(event) => setSearchTerm(event.target.value)}
                     placeholder="Buscar campaña, mensaje o tipo..."
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm text-slate-900 outline-none placeholder:text-slate-400 transition focus:border-violet-400 focus:bg-white dark:border-white/10 dark:bg-black/10 dark:text-white dark:placeholder:text-slate-600 dark:focus:border-violet-400/40 dark:focus:bg-white/[0.03]"
+                    className="vn-ntf-search w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm text-slate-900 outline-none placeholder:text-slate-400 transition focus:border-violet-400 focus:bg-white dark:border-white/10 dark:bg-black/10 dark:text-white dark:placeholder:text-slate-600 dark:focus:border-violet-400/40 dark:focus:bg-white/[0.03]"
                   />
                 </label>
 
@@ -880,7 +880,7 @@ export default function NotificationsPage() {
                     onChange={(event) =>
                       setStatusFilter(event.target.value as CampaignStatusFilter)
                     }
-                    className="w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm text-slate-900 outline-none transition focus:border-violet-400 dark:border-white/10 dark:bg-[#172033] dark:text-slate-200 dark:focus:border-violet-400/40"
+                    className="vn-ntf-filter w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm text-slate-900 outline-none transition focus:border-violet-400 dark:border-white/10 dark:bg-[#172033] dark:text-slate-200 dark:focus:border-violet-400/40"
                   >
                     <option value="todas">Todos los estados</option>
                     <option value="borrador">Borradores</option>
@@ -893,8 +893,8 @@ export default function NotificationsPage() {
             </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[1180px] text-left">
+          <div className="vn-ntf-table-wrap overflow-x-auto">
+            <table className="vn-ntf-table w-full min-w-[1180px] text-left">
               <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-black/10">
                 <tr>
                   <th className="px-6 py-4 font-semibold">Campaña</th>
@@ -917,7 +917,7 @@ export default function NotificationsPage() {
                   return (
                     <tr
                       key={campaign.id}
-                      className="border-t border-slate-100 text-sm transition hover:bg-slate-50 dark:border-white/5 dark:hover:bg-white/[0.035]"
+                      className="vn-ntf-row border-t border-slate-100 text-sm transition hover:bg-slate-50 dark:border-white/5 dark:hover:bg-white/[0.035]"
                     >
                       <td className="px-6 py-4">
                         <div className="flex items-start gap-3">
@@ -998,6 +998,7 @@ export default function NotificationsPage() {
                                }}
                               className="rounded-xl p-2 text-sky-700 transition hover:bg-sky-100 dark:text-sky-300 dark:hover:bg-sky-500/10"
                               title="Editar campaña"
+                               aria-label={`Editar campaña ${campaign.titulo}`}
                             >
                               <Pencil size={17} />
                             </button>
@@ -1008,7 +1009,7 @@ export default function NotificationsPage() {
                               type="button"
                               onClick={() => void sendCampaign(campaign)}
                               disabled={sendingId === campaign.id}
-                              className="inline-flex items-center gap-2 rounded-xl bg-violet-500 px-3 py-2 text-xs font-bold text-white transition hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-50"
+                              className="vn-ntf-send inline-flex items-center gap-2 rounded-xl bg-violet-500 px-3 py-2 text-xs font-bold text-white transition hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-50"
                             >
                               <Send size={15} />
                               {sendingId === campaign.id ? "Enviando..." : "Enviar"}
@@ -1022,6 +1023,7 @@ export default function NotificationsPage() {
                               disabled={deletingId === campaign.id}
                               className="rounded-xl p-2 text-red-700 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50 dark:text-red-300 dark:hover:bg-red-500/10"
                               title="Eliminar campaña"
+                               aria-label={`Eliminar campaña ${campaign.titulo}`}
                             >
                               <Trash2 size={17} />
                             </button>
@@ -1046,8 +1048,8 @@ export default function NotificationsPage() {
       )}
 
       {modalOpen && (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-          <div className="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl shadow-slate-400/30 dark:border-white/10 dark:bg-[#1E293B] dark:shadow-black/50">
+        <div className="vn-ntf-modal-backdrop fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+          <div className="vn-ntf-modal max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl shadow-slate-400/30 dark:border-white/10 dark:bg-[#1E293B] dark:shadow-black/50">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">
@@ -1062,6 +1064,7 @@ export default function NotificationsPage() {
                 type="button"
                 onClick={closeModal}
                 disabled={saving}
+                aria-label="Cerrar formulario de campaña"
                 className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 disabled:opacity-50 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
               >
                 <X size={20} />
@@ -1071,7 +1074,7 @@ export default function NotificationsPage() {
             <form onSubmit={saveCampaign} className="mt-6">
               <div className="grid gap-5 xl:grid-cols-[1.12fr_0.88fr]">
                 <div className="space-y-5">
-                  <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5 dark:border-white/10 dark:bg-black/10">
+                  <div className="vn-ntf-form-panel rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5 dark:border-white/10 dark:bg-black/10">
                     <div className="flex items-center gap-2">
                       <div className="rounded-xl bg-violet-100 p-2 text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">
                         <Sparkles size={16} />
@@ -1134,7 +1137,7 @@ export default function NotificationsPage() {
                     </div>
                   </div>
 
-                  <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5 dark:border-white/10 dark:bg-black/10">
+                  <div className="vn-ntf-form-panel rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5 dark:border-white/10 dark:bg-black/10">
                     <p className="text-sm font-bold text-slate-900 dark:text-white">
                       Clasificación y audiencia
                     </p>
@@ -1210,7 +1213,8 @@ export default function NotificationsPage() {
                                       audiencia: audience,
                                     }))
                                   }
-                                  className={`rounded-2xl border p-4 text-left transition ${
+                                  aria-pressed={selected}
+                                   className={`vn-ntf-audience rounded-2xl border p-4 text-left transition ${
                                     selected
                                       ? "border-violet-300 bg-violet-50 shadow-lg shadow-violet-200/40 dark:border-violet-400/35 dark:bg-violet-500/10 dark:shadow-violet-950/10"
                                       : "border-slate-200 bg-white hover:bg-slate-50 dark:border-white/10 dark:bg-white/[0.02] dark:hover:bg-white/[0.05]"
@@ -1250,7 +1254,7 @@ export default function NotificationsPage() {
                       Guarda como borrador o reserva una fecha y hora.
                     </p>
 
-                    <div className="mt-4 grid grid-cols-2 rounded-2xl border border-slate-200 bg-slate-100 p-1 dark:border-white/10 dark:bg-[#111827]/80">
+                    <div className="vn-ntf-delivery-selector mt-4 grid grid-cols-2 rounded-2xl border border-slate-200 bg-slate-100 p-1 dark:border-white/10 dark:bg-[#111827]/80">
                       <button
                         type="button"
                         onClick={() =>
@@ -1366,7 +1370,7 @@ export default function NotificationsPage() {
                 </div>
 
                 <aside className="space-y-4 xl:sticky xl:top-0 xl:self-start">
-                  <div className="overflow-hidden rounded-3xl border border-violet-200 bg-gradient-to-br from-violet-50 via-white to-slate-50 p-5 shadow-xl shadow-slate-200/50 dark:border-violet-400/15 dark:from-violet-500/[0.12] dark:via-[#171f31] dark:to-[#111827] dark:shadow-black/20">
+                  <div className="vn-ntf-preview overflow-hidden rounded-3xl border border-violet-200 bg-gradient-to-br from-violet-50 via-white to-slate-50 p-5 shadow-xl shadow-slate-200/50 dark:border-violet-400/15 dark:from-violet-500/[0.12] dark:via-[#171f31] dark:to-[#111827] dark:shadow-black/20">
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2">
                         <div className="rounded-xl bg-violet-500/15 p-2 text-violet-300">
@@ -1424,7 +1428,7 @@ export default function NotificationsPage() {
                     </div>
                   </div>
 
-                  <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                  <div className="vn-ntf-checklist rounded-3xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                     <p className="text-xs font-bold text-slate-900 dark:text-white">
                       Antes de guardar
                     </p>
@@ -1453,7 +1457,7 @@ export default function NotificationsPage() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/40 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="vn-ntf-save inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/40 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {saving ? (
                     <>
