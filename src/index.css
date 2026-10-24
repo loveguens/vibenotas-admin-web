@@ -3195,3 +3195,378 @@ html.dark .vn-my-notifications-superadmin .vn-myn-kpi-priority p.text-3xl {
     transition: none;
   }
 }
+
+/* =========================================================
+   SUPER ADMIN · CONTENIDO / METRICAS AGREGADAS — VIBENOTAS
+   Estilos locales, sin cambiar Admin, Owner ni datos privados.
+   ========================================================= */
+.vn-admin.vn-superadmin-layout .vn-content-dashboard {
+  --vn-content-accent: var(--vn-coral);
+  --vn-content-ink: var(--vn-ink);
+  color: var(--vn-content-ink);
+  min-width: 0;
+  gap: 14px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-hero {
+  align-items: center;
+  gap: 16px;
+  padding: 20px 22px;
+  border: 1px solid color-mix(in srgb, var(--vn-coral) 25%, var(--vn-line));
+  border-radius: 20px;
+  background: linear-gradient(112deg, var(--vn-surface) 0%, color-mix(in srgb, var(--vn-coral-soft) 46%, var(--vn-surface)) 100%);
+  box-shadow: var(--vn-elevation);
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-eyebrow {
+  color: var(--vn-coral-strong);
+  font-size: 10px;
+  line-height: 1.4;
+  letter-spacing: .14em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-title {
+  margin-top: 7px;
+  color: var(--vn-ink);
+  font-size: clamp(24px, 2.6vw, 30px);
+  line-height: 1.12;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-description {
+  margin-top: 7px;
+  max-width: 74ch;
+  color: var(--vn-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-refresh {
+  min-height: 40px;
+  padding: 9px 13px;
+  flex-shrink: 0;
+  border: 1px solid color-mix(in srgb, var(--vn-coral) 25%, var(--vn-line));
+  border-radius: 11px;
+  color: var(--vn-coral-strong);
+  background: var(--vn-coral-soft);
+  box-shadow: none;
+  font-size: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-refresh:hover:not(:disabled) {
+  border-color: var(--vn-coral);
+  background: color-mix(in srgb, var(--vn-coral-soft) 80%, var(--vn-coral));
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-stat {
+  min-width: 0;
+  min-height: 128px;
+  padding: 16px;
+  border: 1px solid var(--vn-line);
+  border-radius: 16px;
+  background: var(--vn-surface);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-stat:first-child {
+  border-color: color-mix(in srgb, var(--vn-coral) 33%, var(--vn-line));
+  background: color-mix(in srgb, var(--vn-coral-soft) 29%, var(--vn-surface));
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-stat .flex.items-start > div:first-child > p.text-sm {
+  color: var(--vn-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-stat p.text-3xl {
+  margin-top: 9px;
+  color: var(--vn-ink);
+  font-size: clamp(26px, 2.6vw, 30px);
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-stat > p.text-xs {
+  margin-top: 10px;
+  color: var(--vn-muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-stat .flex.items-start > div.rounded-2xl {
+  padding: 9px;
+  border-radius: 12px;
+  color: var(--vn-coral-strong);
+  background: var(--vn-coral-soft);
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-stat:nth-child(2) .flex.items-start > div.rounded-2xl {
+  color: var(--vn-petroleum);
+  background: color-mix(in srgb, var(--vn-petroleum) 10%, var(--vn-surface));
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-stat:nth-child(3) .flex.items-start > div.rounded-2xl {
+  color: #a36720;
+  background: color-mix(in srgb, #a36720 9%, var(--vn-surface));
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-stat:nth-child(4) .flex.items-start > div.rounded-2xl {
+  color: var(--vn-petroleum);
+  background: color-mix(in srgb, var(--vn-petroleum) 10%, var(--vn-surface));
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-insights,
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-bottom {
+  gap: 10px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-panel {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--vn-line);
+  border-radius: 17px;
+  background: var(--vn-surface);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-panel h2 {
+  color: var(--vn-ink);
+  font-size: 17px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-panel .text-violet-700,
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-panel .text-violet-300 {
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-panel .text-sky-700,
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-panel .text-sky-300 {
+  color: var(--vn-petroleum);
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-panel .text-slate-500,
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-panel .text-slate-400,
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-panel .text-slate-600,
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-panel .text-slate-300 {
+  color: var(--vn-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-panel strong,
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-panel span.text-slate-950 {
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-activity-bars {
+  margin-top: 19px;
+  gap: clamp(5px, 1vw, 15px);
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-activity-bars .h-36 {
+  height: 128px;
+  border-bottom: 1px solid var(--vn-line);
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-activity-bar {
+  width: 100%;
+  max-width: 34px;
+  border-radius: 9px 9px 2px 2px;
+  background: linear-gradient(to top, var(--vn-coral-strong), #f8ae93);
+  opacity: 1;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-activity-bars p.text-xs {
+  color: var(--vn-muted);
+  font-size: 11px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-state-list {
+  gap: 9px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-state-list > div {
+  min-height: 48px;
+  padding: 10px 13px;
+  border: 1px solid var(--vn-line);
+  border-radius: 12px;
+  background: var(--vn-surface-hover);
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-state-list svg {
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-state-list span {
+  color: var(--vn-muted);
+  font-size: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-state-list strong {
+  color: var(--vn-ink);
+  font-size: 16px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-distribution {
+  margin-top: 19px;
+  gap: 15px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-distribution span {
+  color: var(--vn-muted);
+  font-size: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-distribution span.font-bold {
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-distribution .h-2 {
+  height: 8px;
+  margin-top: 7px;
+  border-radius: 99px;
+  background: var(--vn-surface-hover);
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-distribution-bar {
+  border-radius: 99px;
+  background: var(--vn-coral);
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-distribution > div:nth-child(2) .vn-content-distribution-bar {
+  background: var(--vn-petroleum);
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-distribution > div:nth-child(3) .vn-content-distribution-bar {
+  background: #c58a48;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-distribution > div:nth-child(4) .vn-content-distribution-bar {
+  background: #78977b;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-privacy {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid color-mix(in srgb, var(--vn-petroleum) 30%, var(--vn-line));
+  border-radius: 17px;
+  background: color-mix(in srgb, var(--vn-petroleum) 7%, var(--vn-surface));
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-privacy > div:first-child {
+  width: 43px;
+  height: 43px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--vn-petroleum) 13%, var(--vn-surface));
+  color: var(--vn-petroleum);
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-privacy > p.uppercase {
+  margin-top: 15px;
+  color: var(--vn-petroleum);
+  font-size: 10px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-privacy h2 {
+  color: var(--vn-ink);
+  font-size: 17px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-privacy p.leading-6 {
+  color: var(--vn-muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-loading {
+  height: 125px;
+  border: 1px solid var(--vn-line);
+  border-radius: 16px;
+  background: var(--vn-surface-hover);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-hero {
+  background: linear-gradient(112deg, var(--vn-surface) 0%, #342824 100%);
+  border-color: color-mix(in srgb, var(--vn-coral) 26%, var(--vn-line));
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-activity-bar {
+  background: linear-gradient(to top, var(--vn-coral), #e7a48e);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-stat:nth-child(3) .flex.items-start > div.rounded-2xl {
+  color: #edbe7d;
+}
+
+@media (max-width: 1023px) {
+  .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-insights,
+  .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-bottom {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .vn-admin.vn-superadmin-layout .vn-content-dashboard {
+    gap: 12px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-hero {
+    align-items: flex-start;
+    padding: 15px;
+    border-radius: 15px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-title {
+    font-size: 24px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-refresh {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-stats {
+    gap: 8px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-stat {
+    min-height: 115px;
+    padding: 12px;
+    border-radius: 13px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-stat p.text-3xl {
+    font-size: 25px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-panel,
+  .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-privacy {
+    padding: 15px 13px;
+    border-radius: 14px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-panel h2,
+  .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-privacy h2 {
+    font-size: 16px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-activity-bars {
+    gap: 5px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-panel .flex.gap-4.text-xs {
+    gap: 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-admin.vn-superadmin-layout .vn-content-dashboard .vn-content-refresh {
+    transition-duration: 0ms;
+  }
+}
