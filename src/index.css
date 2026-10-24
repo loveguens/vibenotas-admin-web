@@ -2804,3 +2804,394 @@ html.dark .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filt
     padding: 16px 12px;
   }
 }
+
+/* =========================================================
+   SUPER ADMIN — MIS NOTIFICACIONES VIBENOTAS
+   Página independiente: hereda tokens del panel solo para
+   superadmin; no modifica las notificaciones del rol Admin.
+   ========================================================= */
+.vn-my-notifications-superadmin {
+  background: var(--vn-bg);
+  color: var(--vn-ink);
+  min-width: 0;
+}
+
+.vn-my-notifications-superadmin .vn-myn-main {
+  padding: 20px clamp(14px, 2.4vw, 30px) 34px;
+}
+
+.vn-my-notifications-superadmin .vn-myn-page {
+  max-width: 1320px;
+  min-width: 0;
+  gap: 14px;
+}
+
+.vn-my-notifications-superadmin .vn-myn-hero {
+  padding: clamp(17px, 2vw, 23px);
+  border: 1px solid color-mix(in srgb, var(--vn-coral) 23%, var(--vn-line));
+  border-radius: 23px;
+  background: linear-gradient(115deg, #fffdf8 0%, #fff6ee 66%, #fae9df 100%);
+  color: var(--vn-ink);
+  box-shadow: var(--vn-elevation);
+}
+
+.vn-my-notifications-superadmin .vn-myn-hero > .pointer-events-none {
+  display: none;
+}
+
+.vn-my-notifications-superadmin .vn-myn-hero-content {
+  gap: 17px;
+}
+
+.vn-my-notifications-superadmin .vn-myn-hero-content > div:first-child {
+  max-width: 100%;
+}
+
+.vn-my-notifications-superadmin .vn-myn-eyebrow {
+  padding: 6px 10px;
+  border: 1px solid color-mix(in srgb, var(--vn-coral) 23%, var(--vn-line));
+  border-radius: 10px;
+  background: var(--vn-coral-soft);
+  color: var(--vn-coral-strong);
+  font-size: 10px;
+  letter-spacing: 0.11em;
+  box-shadow: none;
+}
+
+.vn-my-notifications-superadmin .vn-myn-title {
+  margin-top: 10px;
+  color: var(--vn-ink);
+  font-size: clamp(24px, 2.6vw, 31px);
+  line-height: 1.15;
+}
+
+.vn-my-notifications-superadmin .vn-myn-subtitle {
+  max-width: 76ch;
+  margin-top: 6px;
+  color: var(--vn-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.vn-my-notifications-superadmin .vn-myn-kpi-grid {
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  min-width: 0;
+}
+
+.vn-my-notifications-superadmin .vn-myn-kpi {
+  min-width: 0;
+  min-height: 102px;
+  padding: 14px 16px;
+  border: 1px solid var(--vn-line);
+  border-radius: 16px;
+  background: var(--vn-surface);
+  box-shadow: none;
+}
+
+.vn-my-notifications-superadmin .vn-myn-kpi p:first-child {
+  color: var(--vn-muted);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.vn-my-notifications-superadmin .vn-myn-kpi p.text-3xl {
+  margin-top: 7px;
+  color: var(--vn-ink);
+  font-size: clamp(22px, 2.4vw, 28px);
+  line-height: 1.1;
+}
+
+.vn-my-notifications-superadmin .vn-myn-kpi-unread {
+  border-color: color-mix(in srgb, var(--vn-coral) 35%, var(--vn-line));
+  background: var(--vn-coral-soft);
+}
+
+.vn-my-notifications-superadmin .vn-myn-kpi-unread p:first-child,
+.vn-my-notifications-superadmin .vn-myn-kpi-unread p.text-3xl {
+  color: var(--vn-coral-strong);
+}
+
+.vn-my-notifications-superadmin .vn-myn-kpi-read p.text-3xl {
+  color: #087758;
+}
+
+.vn-my-notifications-superadmin .vn-myn-kpi-priority p.text-3xl {
+  color: #a96513;
+}
+
+.vn-my-notifications-superadmin .vn-myn-filters,
+.vn-my-notifications-superadmin .vn-myn-pending,
+.vn-my-notifications-superadmin .vn-myn-list {
+  border: 1px solid var(--vn-line);
+  border-radius: 19px;
+  background: var(--vn-surface);
+  color: var(--vn-ink);
+  box-shadow: var(--vn-elevation);
+}
+
+.vn-my-notifications-superadmin .vn-myn-filters {
+  padding: 13px;
+}
+
+.vn-my-notifications-superadmin .vn-myn-filters > div:first-child {
+  gap: 10px;
+}
+
+.vn-my-notifications-superadmin .vn-myn-search {
+  min-height: 42px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  border: 1px solid var(--vn-line);
+  border-radius: 12px;
+  background: var(--vn-surface-hover);
+  color: var(--vn-ink);
+}
+
+.vn-my-notifications-superadmin .vn-myn-search::placeholder {
+  color: var(--vn-muted);
+}
+
+.vn-my-notifications-superadmin .vn-myn-search:focus {
+  border-color: var(--vn-coral);
+  background: var(--vn-surface);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--vn-coral) 11%, transparent);
+}
+
+.vn-my-notifications-superadmin .vn-myn-read-filter,
+.vn-my-notifications-superadmin .vn-myn-type-filter,
+.vn-my-notifications-superadmin .vn-myn-refresh {
+  min-height: 36px;
+  border: 1px solid var(--vn-line);
+  border-radius: 10px;
+  background: var(--vn-surface-hover);
+  color: var(--vn-muted);
+  box-shadow: none;
+  font-size: 12px;
+}
+
+.vn-my-notifications-superadmin .vn-myn-read-filter {
+  padding: 8px 11px;
+}
+
+.vn-my-notifications-superadmin .vn-myn-read-filter[aria-pressed="true"],
+.vn-my-notifications-superadmin .vn-myn-type-filter.border-violet-300 {
+  color: var(--vn-coral-strong);
+  border-color: color-mix(in srgb, var(--vn-coral) 35%, var(--vn-line));
+  background: var(--vn-coral-soft);
+}
+
+.vn-my-notifications-superadmin .vn-myn-read-filter[aria-pressed="false"]:hover,
+.vn-my-notifications-superadmin .vn-myn-type-filter:hover,
+.vn-my-notifications-superadmin .vn-myn-refresh:hover {
+  color: var(--vn-ink);
+  border-color: var(--vn-coral);
+  background: var(--vn-surface);
+}
+
+.vn-my-notifications-superadmin .vn-myn-type-filter {
+  min-height: 30px;
+  padding: 5px 10px;
+}
+
+.vn-my-notifications-superadmin .vn-myn-refresh {
+  min-height: 39px;
+  padding: 8px 12px;
+  color: var(--vn-ink);
+}
+
+.vn-my-notifications-superadmin .vn-myn-pending {
+  gap: 12px;
+  padding: 13px 16px;
+}
+
+.vn-my-notifications-superadmin .vn-myn-pending p.font-bold {
+  color: var(--vn-ink);
+  font-size: 13px;
+}
+
+.vn-my-notifications-superadmin .vn-myn-pending p.text-sm {
+  color: var(--vn-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.vn-my-notifications-superadmin .vn-myn-mark-all {
+  min-height: 39px;
+  padding: 9px 13px;
+  border: 1px solid color-mix(in srgb, var(--vn-coral) 29%, var(--vn-line));
+  border-radius: 11px;
+  background: var(--vn-coral-soft);
+  color: var(--vn-coral-strong);
+  font-size: 12px;
+  box-shadow: none;
+}
+
+.vn-my-notifications-superadmin .vn-myn-mark-all:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--vn-coral-soft) 76%, var(--vn-coral));
+}
+
+.vn-my-notifications-superadmin .vn-myn-list-header {
+  gap: 8px;
+  padding: 14px 17px;
+  border-color: var(--vn-line);
+}
+
+.vn-my-notifications-superadmin .vn-myn-list-header p.font-black {
+  color: var(--vn-ink);
+  font-size: 15px;
+}
+
+.vn-my-notifications-superadmin .vn-myn-list-header p.text-xs {
+  color: var(--vn-muted);
+}
+
+.vn-my-notifications-superadmin .vn-myn-notification {
+  gap: 11px;
+  min-height: 84px;
+  padding: 13px 17px;
+  border-bottom-color: var(--vn-line);
+  background: var(--vn-surface);
+}
+
+.vn-my-notifications-superadmin .vn-myn-notification.vn-myn-unread {
+  background: color-mix(in srgb, var(--vn-coral-soft) 48%, var(--vn-surface));
+}
+
+.vn-my-notifications-superadmin .vn-myn-notification.vn-myn-unread > span.absolute {
+  background: var(--vn-coral);
+  width: 3px;
+}
+
+.vn-my-notifications-superadmin .vn-myn-notification:hover,
+.vn-my-notifications-superadmin .vn-myn-notification:focus-visible {
+  background: var(--vn-surface-hover);
+  outline-color: var(--vn-coral);
+}
+
+.vn-my-notifications-superadmin .vn-myn-notification > div.relative.flex.h-12.w-12 {
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+}
+
+.vn-my-notifications-superadmin .vn-myn-notification p.text-sm.font-black {
+  color: var(--vn-ink);
+  font-size: 13px;
+}
+
+.vn-my-notifications-superadmin .vn-myn-notification p.line-clamp-2 {
+  margin-top: 3px;
+  color: var(--vn-muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.vn-my-notifications-superadmin .vn-myn-notification div.mt-4 {
+  margin-top: 8px;
+}
+
+.vn-my-notifications-superadmin .vn-myn-notification span.bg-violet-500 {
+  background: var(--vn-coral);
+  color: #fff;
+}
+
+.vn-my-notifications-superadmin .vn-myn-notification span.bg-violet-400 {
+  background: var(--vn-coral);
+  box-shadow: none;
+}
+
+.vn-my-notifications-superadmin .vn-myn-detail {
+  border-color: var(--vn-line);
+  background: var(--vn-surface);
+  color: var(--vn-ink);
+  border-radius: 22px;
+}
+
+.vn-my-notifications-superadmin .vn-myn-detail header,
+.vn-my-notifications-superadmin .vn-myn-detail footer {
+  border-color: var(--vn-line);
+}
+
+.vn-my-notifications-superadmin .vn-myn-detail h2 {
+  color: var(--vn-ink);
+}
+
+.vn-my-notifications-superadmin .vn-myn-detail footer button.bg-violet-500 {
+  background: var(--vn-coral);
+  color: #fff;
+  box-shadow: none;
+}
+
+.vn-my-notifications-superadmin .vn-myn-detail footer button.bg-violet-500:hover {
+  background: var(--vn-coral-strong);
+}
+
+html.dark .vn-my-notifications-superadmin .vn-myn-hero {
+  border-color: #4d3c37;
+  background: linear-gradient(115deg, #242628 0%, #282729 62%, #352927 100%);
+}
+
+html.dark .vn-my-notifications-superadmin .vn-myn-kpi-read p.text-3xl {
+  color: #6ee7b7;
+}
+
+html.dark .vn-my-notifications-superadmin .vn-myn-kpi-priority p.text-3xl {
+  color: #fcd34d;
+}
+
+@media (max-width: 767px) {
+  .vn-my-notifications-superadmin .vn-myn-main {
+    padding: 13px 11px 24px;
+  }
+
+  .vn-my-notifications-superadmin .vn-myn-hero {
+    padding: 16px 14px;
+    border-radius: 17px;
+  }
+
+  .vn-my-notifications-superadmin .vn-myn-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .vn-my-notifications-superadmin .vn-myn-kpi {
+    min-height: 82px;
+    padding: 11px 12px;
+    border-radius: 13px;
+  }
+
+  .vn-my-notifications-superadmin .vn-myn-kpi p.text-3xl {
+    font-size: 24px;
+  }
+
+  .vn-my-notifications-superadmin .vn-myn-filters {
+    padding: 10px;
+  }
+
+  .vn-my-notifications-superadmin .vn-myn-pending {
+    padding: 12px;
+  }
+
+  .vn-my-notifications-superadmin .vn-myn-notification {
+    gap: 9px;
+    min-height: 76px;
+    padding: 11px 12px;
+  }
+
+  .vn-my-notifications-superadmin .vn-myn-list-header {
+    padding: 12px;
+  }
+
+  .vn-my-notifications-superadmin .vn-myn-detail {
+    border-radius: 20px 20px 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-my-notifications-superadmin .vn-myn-notification,
+  .vn-my-notifications-superadmin .vn-myn-read-filter,
+  .vn-my-notifications-superadmin .vn-myn-type-filter {
+    transition: none;
+  }
+}
