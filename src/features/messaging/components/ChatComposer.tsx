@@ -1232,7 +1232,7 @@ export function ChatComposer({
               type="button"
               disabled={sending || recording}
               onClick={() => setAttachmentMenuOpen((open) => !open)}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-white hover:text-violet-600 disabled:opacity-50 dark:hover:bg-white/10 dark:hover:text-violet-300"
+              className="vn-chat-attach-action flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-white hover:text-violet-600 disabled:opacity-50 dark:hover:bg-white/10 dark:hover:text-violet-300"
               title="Adjuntar"
             >
               <Paperclip size={18} />
@@ -1331,7 +1331,7 @@ export function ChatComposer({
               )
             }
             onClick={openScheduleModal}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-white hover:text-violet-600 disabled:opacity-40 dark:hover:bg-white/10 dark:hover:text-violet-300"
+            className="vn-chat-schedule-action flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-white hover:text-violet-600 disabled:opacity-40 dark:hover:bg-white/10 dark:hover:text-violet-300"
             title="Programar mensaje"
           >
             <CalendarClock size={18} />
@@ -1353,7 +1353,7 @@ export function ChatComposer({
                   ? "Comentario opcional..."
                   : "Escribe un mensaje..."
               }
-              className="max-h-[120px] min-h-10 w-full resize-none bg-transparent px-2 py-2.5 text-[13px] leading-6 text-slate-900 outline-none placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-500 sm:text-sm"
+              className="vn-chat-message-input max-h-[120px] min-h-10 w-full resize-none bg-transparent px-2 py-2.5 text-[13px] leading-6 text-slate-900 outline-none placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-500 sm:text-sm"
             />
           </div>
 
@@ -1366,7 +1366,7 @@ export function ChatComposer({
               type="button"
               disabled={sending}
               onClick={() => void startRecording()}
-              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white shadow-md transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 ${sendClass}`}
+              className={`vn-chat-send-action flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white shadow-md transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 ${sendClass}`}
               title="Grabar nota de voz"
             >
               <Mic size={18} />
@@ -1375,7 +1375,7 @@ export function ChatComposer({
             <button
               type="submit"
               disabled={sending || recording}
-              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white shadow-md transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 ${sendClass}`}
+              className={`vn-chat-send-action flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white shadow-md transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 ${sendClass}`}
               aria-label={sending ? "Enviando" : "Enviar"}
             >
               <Send size={17} className={sending ? "animate-pulse" : ""} />
@@ -1383,7 +1383,7 @@ export function ChatComposer({
           )}
         </div>
 
-        <div className="mx-auto mt-1.5 flex max-w-3xl items-center justify-between px-2">
+        <div className="vn-chat-composer-help mx-auto mt-1.5 flex max-w-3xl items-center justify-between px-2">
           <p className="hidden text-[9px] text-slate-400 sm:block">
             Enter para enviar · Shift + Enter para nueva línea
           </p>
