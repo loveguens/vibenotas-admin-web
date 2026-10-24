@@ -2974,7 +2974,7 @@ export default function ChatPage() {
 
   return (
     <div
-      className={`vn-chat-page min-h-0 transition-colors duration-300 ${chatBasePath === "/superadmin/chat" ? "vn-superadmin-chat-v3" : "pb-2"} ${activeTab === "chats" && selectedConversation ? "vn-chat-conversation-open" : ""} ${error || toast ? "vn-chat-has-feedback" : ""}`}
+      className={`vn-chat-page min-h-0 transition-colors duration-300 ${chatBasePath === "/superadmin/chat" ? "vn-superadmin-chat-v3 vn-superadmin-chat-v4" : "pb-2"} ${activeTab === "chats" && selectedConversation ? "vn-chat-conversation-open" : ""} ${error || toast ? "vn-chat-has-feedback" : ""}`}
       onClick={closeMenus}
     >
       <main className={`vn-chat-shell mx-auto flex max-w-[1650px] flex-col overflow-hidden transition-colors duration-300 ${chatBasePath === "/superadmin/chat" ? "h-[calc(100dvh-132px)] min-h-[420px] rounded-[24px] lg:h-[calc(100dvh-182px)] lg:min-h-[480px] xl:rounded-[30px]" : "h-[calc(100dvh-190px)] min-h-[460px] rounded-[26px] ring-1 ring-black/5 dark:ring-white/5 xl:rounded-[30px]"}`}>
