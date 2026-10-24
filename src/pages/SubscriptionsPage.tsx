@@ -426,8 +426,8 @@ async function renewPaidSubscription() {
 }
 
   return (
-    <section className="space-y-6 pb-8">
-      <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+    <section className="vn-final-page space-y-6 pb-8">
+      <div className="vn-final-hero flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
             Monetización y control
@@ -556,7 +556,7 @@ async function renewPaidSubscription() {
         </p>
       </article>
 
-      <div className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-4 shadow-xl shadow-black/10">
+      <div className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-4 shadow-xl shadow-black/10">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3">
             <Search size={19} className="shrink-0 text-slate-500" />
@@ -617,7 +617,7 @@ async function renewPaidSubscription() {
           ))}
         </div>
       ) : (
-        <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10">
+        <div className="overflow-hidden vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10">
           <div className="flex flex-col justify-between gap-3 border-b border-white/10 px-6 py-5 sm:flex-row sm:items-center">
             <div>
               <p className="text-sm font-semibold text-violet-300">
@@ -758,7 +758,7 @@ async function renewPaidSubscription() {
         </div>
       )}
 
-      <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10">
+      <div className="overflow-hidden vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10">
         <div className="flex flex-col justify-between gap-3 border-b border-white/10 px-6 py-5 sm:flex-row sm:items-center">
           <div>
             <p className="text-sm font-semibold text-violet-300">

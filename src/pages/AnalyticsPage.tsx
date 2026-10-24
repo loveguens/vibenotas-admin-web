@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   Activity,
+  ArrowUpRight,
   BarChart3,
   FileText,
   RefreshCw,
@@ -160,6 +162,33 @@ function formatAction(action?: string) {
   );
 }
 
+type ActivityFilter = "all" | "access" | "profile" | "other";
+
+const ACTIVITY_FILTERS: Array<{ value: ActivityFilter; label: string }> = [
+  { value: "all", label: "Todos" },
+  { value: "access", label: "Accesos" },
+  { value: "profile", label: "Perfiles" },
+  { value: "other", label: "Otros" },
+];
+
+function getActivityCategory(eventType: string): Exclude<ActivityFilter, "all"> {
+  const normalized = eventType.toLowerCase();
+
+  if (/(login|logout|auth|session|security)/.test(normalized)) {
+    return "access";
+  }
+
+  if (/(profile|identity|user)/.test(normalized)) {
+    return "profile";
+  }
+
+  return "other";
+}
+
+function shortEventId(id: string) {
+  return id.length > 23 ? `${id.slice(0, 10)}…${id.slice(-6)}` : id;
+}
+
 function formatStatus(status: string) {
   return (
     STATUS_LABELS[status] ??
@@ -173,20 +202,23 @@ function formatStatus(status: string) {
 function statusStyle(status: string) {
   switch (status) {
     case "ACTIVE":
-      return "border-emerald-400/20 bg-emerald-500/10 text-emerald-300";
+      return "border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-400/20 dark:bg-emerald-500/10 dark:text-emerald-300";
 
     case "SUSPENDED":
-      return "border-red-400/20 bg-red-500/10 text-red-300";
+      return "border-red-300 bg-red-50 text-red-800 dark:border-red-400/20 dark:bg-red-500/10 dark:text-red-300";
 
     case "DISABLED":
-      return "border-slate-400/20 bg-slate-500/10 text-slate-300";
+      return "border-slate-300 bg-slate-100 text-slate-700 dark:border-slate-400/20 dark:bg-slate-500/10 dark:text-slate-300";
 
     default:
-      return "border-amber-400/20 bg-amber-500/10 text-amber-300";
+      return "border-amber-300 bg-amber-50 text-amber-800 dark:border-amber-400/20 dark:bg-amber-500/10 dark:text-amber-300";
   }
 }
 
 export default function AnalyticsPage() {
+  const { pathname } = useLocation();
+  const isSuperAdmin = pathname.startsWith("/superadmin/");
+  const [activityFilter, setActivityFilter] = useState<ActivityFilter>("all");
   const [analytics, setAnalytics] = useState<AnalyticsOverview | null>(null);
 
   const [period, setPeriod] = useState<AnalyticsPeriod>("30d");
@@ -239,9 +271,17 @@ export default function AnalyticsPage() {
   const periodLabel =
     PERIOD_OPTIONS.find((option) => option.value === period)?.label ?? period;
 
+  const recentEvents = analytics?.recentActivity ?? [];
+  const filteredRecentEvents = recentEvents.filter(
+    (event) =>
+      activityFilter === "all" ||
+      getActivityCategory(event.eventType) === activityFilter,
+  );
+  const displayedRecentEvents = filteredRecentEvents.slice(0, 6);
+
   return (
-    <section aria-labelledby="analytics-title" className="space-y-6">
-      <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+    <section aria-labelledby="analytics-title" className="vn-final-page vn-analytics-overview space-y-4 sm:space-y-6">
+      <div className="vn-final-hero flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
             Inteligencia de plataforma
@@ -260,17 +300,17 @@ export default function AnalyticsPage() {
           </p>
         </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="flex rounded-xl border border-white/10 bg-white/5 p-1">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="flex rounded-xl border border-slate-200 bg-white/75 p-1 dark:border-white/10 dark:bg-white/5">
             {PERIOD_OPTIONS.map((option) => (
               <button
                 key={option.value}
                 type="button"
                 onClick={() => setPeriod(option.value)}
-                className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${
+                className={`vn-analytics-period-button rounded-lg px-3 py-2 text-sm font-semibold transition ${
                   period === option.value
-                    ? "bg-violet-500 text-white shadow-lg shadow-violet-950/30"
-                    : "text-slate-400 hover:bg-white/5 hover:text-white"
+                    ? "vn-analytics-period-selected bg-violet-500 text-white shadow-lg shadow-violet-950/30"
+                    : "vn-analytics-period-idle text-slate-600 hover:bg-violet-50 hover:text-violet-700 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white"
                 }`}
               >
                 {option.label}
@@ -282,7 +322,7 @@ export default function AnalyticsPage() {
             type="button"
             onClick={() => void loadAnalytics(period)}
             disabled={loading}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-3 text-sm font-semibold text-violet-300 transition hover:bg-violet-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+            className="vn-analytics-refresh inline-flex items-center justify-center gap-2 rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-3 text-sm font-semibold text-violet-300 transition hover:bg-violet-500/20 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
             Actualizar
@@ -299,7 +339,7 @@ export default function AnalyticsPage() {
       )}
 
       {loading && !analytics && (
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 max-[359px]:grid-cols-1 sm:gap-4 xl:grid-cols-4">
           {[1, 2, 3, 4].map((item) => (
             <div
               key={item}
@@ -311,61 +351,61 @@ export default function AnalyticsPage() {
 
       {analytics && (
         <>
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
+          <div className="grid grid-cols-2 gap-3 max-[359px]:grid-cols-1 sm:gap-4 xl:grid-cols-4">
+            <article className="vn-final-card vn-analytics-kpi rounded-3xl border border-white/10 bg-[#1E293B]/80 p-3.5 shadow-xl shadow-black/10 sm:p-5">
               <p className="text-sm text-slate-400">Usuarios totales</p>
 
-              <p className="mt-3 text-3xl font-bold text-white">
+              <p className="mt-2 text-2xl font-bold text-white sm:mt-3 sm:text-3xl">
                 {analytics.summary.users.total}
               </p>
 
-              <div className="mt-4 flex items-center gap-2 text-sm text-violet-300">
+              <div className="mt-3 flex items-center gap-2 text-xs text-violet-300 sm:mt-4 sm:text-sm">
                 <Users size={16} />
                 Comunidad registrada
               </div>
             </article>
 
-            <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
+            <article className="vn-final-card vn-analytics-kpi rounded-3xl border border-white/10 bg-[#1E293B]/80 p-3.5 shadow-xl shadow-black/10 sm:p-5">
               <p className="text-sm text-slate-400">Nuevos en {periodLabel}</p>
 
-              <p className="mt-3 text-3xl font-bold text-white">
+              <p className="mt-2 text-2xl font-bold text-white sm:mt-3 sm:text-3xl">
                 {analytics.summary.users.createdInPeriod}
               </p>
 
-              <div className="mt-4 flex items-center gap-2 text-sm text-fuchsia-300">
+              <div className="mt-3 flex items-center gap-2 text-xs text-fuchsia-700 sm:mt-4 sm:text-sm dark:text-fuchsia-300">
                 <UserPlus size={16} />
                 Registros del per&iacute;odo
               </div>
             </article>
 
-            <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
+            <article className="vn-final-card vn-analytics-kpi rounded-3xl border border-white/10 bg-[#1E293B]/80 p-3.5 shadow-xl shadow-black/10 sm:p-5">
               <p className="text-sm text-slate-400">Usuarios activos</p>
 
-              <p className="mt-3 text-3xl font-bold text-white">
+              <p className="mt-2 text-2xl font-bold text-white sm:mt-3 sm:text-3xl">
                 {analytics.summary.users.active}
               </p>
 
-              <div className="mt-4 flex items-center gap-2 text-sm text-emerald-300">
+              <div className="mt-3 flex items-center gap-2 text-xs text-emerald-300 sm:mt-4 sm:text-sm">
                 <ShieldCheck size={16} />
                 Acceso habilitado
               </div>
             </article>
 
-            <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
+            <article className="vn-final-card vn-analytics-kpi rounded-3xl border border-white/10 bg-[#1E293B]/80 p-3.5 shadow-xl shadow-black/10 sm:p-5">
               <p className="text-sm text-slate-400">Eventos de hoy</p>
 
-              <p className="mt-3 text-3xl font-bold text-white">
+              <p className="mt-2 text-2xl font-bold text-white sm:mt-3 sm:text-3xl">
                 {analytics.summary.audit.eventsToday}
               </p>
 
-              <div className="mt-4 flex items-center gap-2 text-sm text-sky-300">
+              <div className="mt-3 flex items-center gap-2 text-xs text-sky-300 sm:mt-4 sm:text-sm">
                 <Activity size={16} />
                 Auditor&iacute;a registrada
               </div>
             </article>
           </div>
 
-          <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
+          <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm font-semibold text-violet-300">
@@ -436,7 +476,7 @@ export default function AnalyticsPage() {
                   <Line
                     type="monotone"
                     dataKey="total"
-                    stroke="#8b5cf6"
+                    stroke="#e96b54"
                     strokeWidth={3}
                     dot={false}
                     activeDot={{
@@ -449,7 +489,7 @@ export default function AnalyticsPage() {
           </article>
 
           <div className="grid gap-6 xl:grid-cols-2">
-            <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
+            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-violet-300">
@@ -476,16 +516,16 @@ export default function AnalyticsPage() {
                   return (
                     <div key={item.id}>
                       <div className="mb-2 flex items-center justify-between gap-4">
-                        <span className="text-sm font-medium text-slate-300">
+                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
                           {item.name}
                         </span>
 
-                        <span className="rounded-full bg-violet-500/10 px-2.5 py-1 text-xs font-bold text-violet-300">
+                        <span className="rounded-full bg-violet-100 px-2.5 py-1 text-xs font-bold text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">
                           {item.totalUsers} usuarios
                         </span>
                       </div>
 
-                      <div className="h-2.5 overflow-hidden rounded-full bg-black/20">
+                      <div className="h-2.5 overflow-hidden rounded-full bg-slate-200 dark:bg-black/20">
                         <div
                           className="h-full rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-400 transition-all duration-500"
                           style={{
@@ -505,7 +545,7 @@ export default function AnalyticsPage() {
               </div>
             </article>
 
-            <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
+            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-violet-300">
@@ -551,7 +591,86 @@ export default function AnalyticsPage() {
             </article>
           </div>
 
-          <article className="overflow-hidden rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10">
+          {isSuperAdmin ? (
+            <article className="vn-final-card vn-analytics-audit-compact overflow-hidden rounded-3xl">
+              <div className="vn-analytics-audit-heading">
+                <div className="min-w-0">
+                  <p className="vn-analytics-audit-eyebrow">Auditoría reciente</p>
+                  <h2>Actividad del sistema</h2>
+                  <p className="vn-analytics-audit-summary">
+                    {analytics.summary.audit.eventsInPeriod} eventos durante {periodLabel}
+                  </p>
+                </div>
+                <Link to="/superadmin/logs" className="vn-analytics-all-logs">
+                  Ir a Logs de actividad <ArrowUpRight size={16} aria-hidden="true" />
+                </Link>
+              </div>
+
+              <div className="vn-analytics-audit-filters" role="group" aria-label="Filtrar eventos recientes">
+                {ACTIVITY_FILTERS.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setActivityFilter(option.value)}
+                    aria-pressed={activityFilter === option.value}
+                    className={`vn-analytics-audit-filter ${activityFilter === option.value ? "is-active" : ""}`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="vn-analytics-audit-list">
+                {displayedRecentEvents.map((event) => {
+                  const actor = event.actor?.displayName || event.actor?.email || "Sistema";
+                  const isSuccess = event.outcome.toUpperCase() === "SUCCESS";
+                  const target = event.targetType
+                    ? `${event.targetType}${event.targetId ? ` · ${shortEventId(event.targetId)}` : ""}`
+                    : "Evento de plataforma";
+                  const fullTarget = event.targetType
+                    ? `${event.targetType}${event.targetId ? ` · ${event.targetId}` : ""}`
+                    : "Evento de plataforma";
+
+                  return (
+                    <div key={event.id} className="vn-analytics-audit-entry">
+                      <span className="vn-analytics-audit-symbol" aria-hidden="true">
+                        <FileText size={17} />
+                      </span>
+                      <div className="vn-analytics-audit-details">
+                        <div className="vn-analytics-audit-firstline">
+                          <strong>{formatAction(event.eventType)}</strong>
+                          <span className={`vn-analytics-audit-outcome ${isSuccess ? "is-success" : "is-other"}`}>
+                            {event.outcome}
+                          </span>
+                        </div>
+                        <p className="vn-analytics-audit-metadata" title={fullTarget}>
+                          <span>{actor}</span>
+                          <span aria-hidden="true">·</span>
+                          <span className="vn-analytics-audit-target">{target}</span>
+                        </p>
+                      </div>
+                      <time className="vn-analytics-audit-time" dateTime={event.occurredAt}>
+                        {formatDate(event.occurredAt)}
+                      </time>
+                    </div>
+                  );
+                })}
+
+                {displayedRecentEvents.length === 0 && (
+                  <p className="vn-analytics-audit-empty">
+                    {recentEvents.length === 0
+                      ? "Todavía no hay actividad para mostrar."
+                      : "No hay eventos de este tipo entre los recientes."}
+                  </p>
+                )}
+              </div>
+              <div className="vn-analytics-audit-footer">
+                Mostrando {displayedRecentEvents.length} de {filteredRecentEvents.length} eventos recientes
+                {activityFilter !== "all" && " para este filtro"}. El historial completo está en Logs de actividad.
+              </div>
+            </article>
+          ) : (
+          <article className="overflow-hidden vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10">
             <div className="flex flex-col gap-3 border-b border-white/10 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm font-semibold text-violet-300">
@@ -595,7 +714,7 @@ export default function AnalyticsPage() {
                           : "Evento de plataforma"}
                       </p>
 
-                      <p className="mt-1 text-xs text-slate-600">
+                      <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
                         {event.actor?.displayName ||
                           event.actor?.email ||
                           "Sistema"}
@@ -618,8 +737,9 @@ export default function AnalyticsPage() {
               )}
             </div>
           </article>
+          )}
 
-          <p className="text-right text-xs text-slate-600">
+          <p className="text-right text-xs text-slate-600 dark:text-slate-400">
             Actualizado: {formatDate(analytics.generatedAt)}
           </p>
         </>

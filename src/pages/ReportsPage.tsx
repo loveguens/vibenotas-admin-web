@@ -366,7 +366,7 @@ function StatCard({
   glow: string;
 }) {
   return (
-    <article className="group relative overflow-hidden rounded-[26px] border border-slate-200 bg-white p-5 shadow-lg shadow-slate-200/50 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl dark:border-white/[0.08] dark:bg-slate-900/70 dark:shadow-lg dark:shadow-black/20 dark:hover:border-white/[0.14]">
+    <article className="vn-reports-stat-card group relative overflow-hidden rounded-[26px] border border-slate-200 bg-white p-5 shadow-lg shadow-slate-200/50 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl dark:border-white/[0.08] dark:bg-slate-900/70 dark:shadow-lg dark:shadow-black/20 dark:hover:border-white/[0.14]">
       <div
         className={`pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full blur-3xl ${glow}`}
       />
@@ -1050,24 +1050,24 @@ export default function ReportsPage({
   );
 
   return (
-    <section className="relative min-h-full overflow-hidden rounded-[32px] border border-slate-200 bg-slate-50 p-4 text-slate-900 shadow-xl shadow-slate-200/50 sm:p-6 xl:p-8 dark:border-white/[0.06] dark:bg-[#0b1120] dark:text-white dark:shadow-2xl dark:shadow-black/20">
+    <section className={`relative min-h-full overflow-hidden rounded-[32px] border border-slate-200 bg-slate-50 p-4 text-slate-900 shadow-xl shadow-slate-200/50 sm:p-6 xl:p-8 dark:border-white/[0.06] dark:bg-[#0b1120] dark:text-white dark:shadow-2xl dark:shadow-black/20 ${isSuperAdmin ? "vn-superadmin-reports" : ""}`}>
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-32 -top-32 h-80 w-80 rounded-full bg-violet-300/25 blur-[110px] dark:bg-violet-600/10" />
         <div className="absolute right-0 top-20 h-72 w-72 rounded-full bg-sky-300/20 blur-[110px] dark:bg-sky-500/[0.07]" />
         <div className="absolute bottom-0 left-1/2 h-64 w-64 rounded-full bg-fuchsia-300/15 blur-[100px] dark:bg-fuchsia-500/[0.05]" />
       </div>
 
-      <div className="relative space-y-6">
-        <header className="overflow-hidden rounded-[28px] border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-violet-50 p-5 shadow-xl shadow-slate-200/60 sm:p-7 dark:border-white/[0.08] dark:from-slate-900/95 dark:via-slate-900/80 dark:to-violet-950/30 dark:shadow-lg dark:shadow-black/25">
+      <div className="vn-reports-content relative space-y-6">
+        <header className="vn-reports-hero overflow-hidden rounded-[28px] border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-violet-50 p-5 shadow-xl shadow-slate-200/60 sm:p-7 dark:border-white/[0.08] dark:from-slate-900/95 dark:via-slate-900/80 dark:to-violet-950/30 dark:shadow-lg dark:shadow-black/25">
           <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
             <div className="flex items-start gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[20px] border border-violet-200 bg-violet-100 text-violet-700 shadow-lg shadow-violet-200/50 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-300 dark:shadow-violet-950/30">
+              <div className="vn-reports-hero-icon flex h-14 w-14 shrink-0 items-center justify-center rounded-[20px] border border-violet-200 bg-violet-100 text-violet-700 shadow-lg shadow-violet-200/50 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-300 dark:shadow-violet-950/30">
                 <ShieldAlert size={27} />
               </div>
 
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <p className="text-xs font-bold uppercase tracking-[0.22em] text-violet-700 dark:text-violet-300">
+                  <p className="vn-reports-kicker text-xs font-bold uppercase tracking-[0.22em] text-violet-700 dark:text-violet-300">
                     Centro de confianza
                   </p>
 
@@ -1078,7 +1078,7 @@ export default function ReportsPage({
                   </span>
                 </div>
 
-                <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl dark:text-white">
+                <h1 className="vn-reports-title mt-2 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl dark:text-white">
                   Moderación de reportes
                 </h1>
 
@@ -1090,14 +1090,14 @@ export default function ReportsPage({
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="vn-reports-hero-actions flex flex-wrap gap-3">
               <button
                 type="button"
                 onClick={exportReports}
                 disabled={
                   loading || filteredReports.length === 0
                 }
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-40 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-200 dark:shadow-none dark:hover:border-white/20 dark:hover:bg-white/10 dark:hover:text-white"
+                className="vn-reports-export inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-40 dark:border-white/10 dark:bg-white/[0.05] dark:text-slate-200 dark:shadow-none dark:hover:border-white/20 dark:hover:bg-white/10 dark:hover:text-white"
               >
                 <Download size={17} />
                 Exportar CSV
@@ -1107,7 +1107,7 @@ export default function ReportsPage({
                 type="button"
                 onClick={() => void loadReports()}
                 disabled={loading}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-violet-950/40 transition hover:from-violet-500 hover:to-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
+                className="vn-reports-refresh inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-violet-950/40 transition hover:from-violet-500 hover:to-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <RefreshCw
                   size={17}
@@ -1175,7 +1175,7 @@ export default function ReportsPage({
           </div>
         )}
 
-        <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-4">
+        <div className="vn-reports-kpi-grid grid grid-cols-2 gap-3 max-[359px]:grid-cols-1 xl:grid-cols-4 sm:gap-4">
           <StatCard
             title="Reportes totales"
             value={counts.total}
@@ -1213,9 +1213,9 @@ export default function ReportsPage({
           />
         </div>
 
-        <div className="rounded-[26px] border border-slate-200 bg-white/90 p-4 shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-white/[0.08] dark:bg-slate-900/65 dark:shadow-black/10">
+        <div className="vn-reports-filters rounded-[26px] border border-slate-200 bg-white/90 p-4 shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-white/[0.08] dark:bg-slate-900/65 dark:shadow-black/10">
           <div className="grid gap-3 lg:grid-cols-[minmax(260px,1fr)_190px_180px]">
-            <label className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 transition focus-within:border-violet-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-violet-500/10 dark:border-white/[0.08] dark:bg-black/15 dark:focus-within:border-violet-400/30 dark:focus-within:bg-violet-500/[0.04] dark:focus-within:ring-0">
+            <label className="vn-reports-search flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 transition focus-within:border-violet-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-violet-500/10 dark:border-white/[0.08] dark:bg-black/15 dark:focus-within:border-violet-400/30 dark:focus-within:bg-violet-500/[0.04] dark:focus-within:ring-0">
               <Search
                 size={19}
                 className="shrink-0 text-slate-500"
@@ -1228,7 +1228,7 @@ export default function ReportsPage({
                   setCurrentPage(1);
                 }}
                 placeholder="Buscar ID, motivo, correo o persona..."
-                className="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-600"
+                className="w-full min-w-0 bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-500 dark:text-white dark:placeholder:text-slate-500"
               />
 
               {search && (
@@ -1297,7 +1297,7 @@ export default function ReportsPage({
             />
           </div>
 
-          <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
+          <div className="vn-reports-filter-pills mt-4 flex gap-2 overflow-x-auto pb-1">
             {filterOptions.map((filter) => {
               const active =
                 activeFilter === filter.id;
@@ -1310,7 +1310,8 @@ export default function ReportsPage({
                     setActiveFilter(filter.id);
                     setCurrentPage(1);
                   }}
-                  className={`inline-flex shrink-0 items-center gap-2 rounded-xl border px-3.5 py-2.5 text-sm font-semibold transition ${
+                  aria-pressed={active}
+                  className={`vn-reports-status-filter inline-flex shrink-0 items-center gap-2 rounded-xl border px-3.5 py-2.5 text-sm font-semibold transition ${
                     active
                       ? "border-violet-300 bg-violet-50 text-violet-700 shadow-sm dark:border-violet-400/25 dark:bg-violet-500/15 dark:text-violet-100 dark:shadow-lg dark:shadow-violet-950/20"
                       : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-950 dark:border-transparent dark:bg-white/[0.04] dark:text-slate-400 dark:hover:border-white/10 dark:hover:bg-white/[0.07] dark:hover:text-white"
@@ -1333,8 +1334,8 @@ export default function ReportsPage({
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-white/[0.08] dark:bg-slate-900/70 dark:shadow-lg dark:shadow-black/20">
-          <div className="flex flex-col gap-3 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:border-white/[0.07]">
+        <div className="vn-reports-list overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-white/[0.08] dark:bg-slate-900/70 dark:shadow-lg dark:shadow-black/20">
+          <div className="vn-reports-list-heading flex flex-col gap-3 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:border-white/[0.07]">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-violet-700 dark:text-violet-300">
                 Bandeja de moderación
@@ -1394,7 +1395,7 @@ export default function ReportsPage({
             </div>
           ) : (
             <>
-              <div className="hidden lg:block">
+              <div className="vn-reports-table-scroll hidden lg:block">
                 <table className="w-full table-fixed text-left">
                   <colgroup>
                     <col className="w-[26%]" />
@@ -1432,7 +1433,7 @@ export default function ReportsPage({
                     {paginatedReports.map((report) => (
                       <tr
                         key={report.id}
-                        className="group border-t border-slate-100 text-sm transition hover:bg-slate-50 dark:border-white/[0.055] dark:hover:bg-white/[0.035]"
+                        className="vn-reports-row group border-t border-slate-100 text-sm transition hover:bg-slate-50 dark:border-white/[0.055] dark:hover:bg-white/[0.035]"
                       >
                         <td className="px-6 py-4">
                           <div className="flex items-start gap-3">
@@ -1530,7 +1531,7 @@ export default function ReportsPage({
                 </table>
               </div>
 
-              <div className="divide-y divide-slate-100 lg:hidden dark:divide-white/[0.06]">
+              <div className="vn-reports-mobile-list divide-y divide-slate-100 lg:hidden dark:divide-white/[0.06]">
                 {paginatedReports.map((report) => (
                   <article
                     key={report.id}

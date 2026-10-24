@@ -1037,7 +1037,7 @@ export function ChatComposer({
     <>
       <form
         onSubmit={handleSubmit}
-        className="shrink-0 border-t border-slate-200 bg-white/95 px-3 py-3 backdrop-blur-xl dark:border-white/10 dark:bg-[#0d1526]/95 sm:px-5"
+        className="vn-chat-composer shrink-0 border-t border-slate-200 bg-white/95 px-3 py-4 backdrop-blur-xl dark:border-white/10 dark:bg-[#0d1526]/95 sm:px-6"
       >
         {replyTo && (
           <div className="mx-auto mb-2.5 flex max-w-3xl items-center gap-3 rounded-2xl border border-violet-200 bg-violet-50 px-3 py-2 dark:border-violet-400/20 dark:bg-violet-500/10">
@@ -1226,13 +1226,13 @@ export function ChatComposer({
           </p>
         )}
 
-        <div className="mx-auto flex max-w-3xl items-end gap-2 rounded-[24px] border border-slate-200 bg-slate-50 p-1.5 shadow-sm transition focus-within:border-violet-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-violet-500/5 dark:border-white/10 dark:bg-white/[0.04] dark:focus-within:border-violet-400/30 dark:focus-within:bg-white/[0.06]">
+        <div className="vn-chat-compose-field mx-auto flex max-w-3xl items-end gap-2 rounded-[24px] border border-slate-200 bg-slate-50 p-2 shadow-sm transition-all duration-200 focus-within:border-violet-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-violet-500/10 dark:border-white/10 dark:bg-white/[0.05] dark:focus-within:border-violet-400/40 dark:focus-within:bg-white/[0.08] dark:focus-within:ring-violet-500/10">
           <div className="relative">
             <button
               type="button"
               disabled={sending || recording}
               onClick={() => setAttachmentMenuOpen((open) => !open)}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-white hover:text-violet-600 disabled:opacity-50 dark:hover:bg-white/10 dark:hover:text-violet-300"
+              className="vn-chat-attach-action flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-white hover:text-violet-600 disabled:opacity-50 dark:hover:bg-white/10 dark:hover:text-violet-300"
               title="Adjuntar"
             >
               <Paperclip size={18} />
@@ -1331,7 +1331,7 @@ export function ChatComposer({
               )
             }
             onClick={openScheduleModal}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-white hover:text-violet-600 disabled:opacity-40 dark:hover:bg-white/10 dark:hover:text-violet-300"
+            className="vn-chat-schedule-action flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:bg-white hover:text-violet-600 disabled:opacity-40 dark:hover:bg-white/10 dark:hover:text-violet-300"
             title="Programar mensaje"
           >
             <CalendarClock size={18} />
@@ -1353,7 +1353,7 @@ export function ChatComposer({
                   ? "Comentario opcional..."
                   : "Escribe un mensaje..."
               }
-              className="max-h-[120px] min-h-10 w-full resize-none bg-transparent px-2 py-2.5 text-sm leading-5 text-slate-900 outline-none placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-500"
+              className="vn-chat-message-input max-h-[120px] min-h-10 w-full resize-none bg-transparent px-2 py-2.5 text-[13px] leading-6 text-slate-900 outline-none placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-500 sm:text-sm"
             />
           </div>
 
@@ -1366,7 +1366,7 @@ export function ChatComposer({
               type="button"
               disabled={sending}
               onClick={() => void startRecording()}
-              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white shadow-md transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 ${sendClass}`}
+              className={`vn-chat-send-action flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white shadow-md transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 ${sendClass}`}
               title="Grabar nota de voz"
             >
               <Mic size={18} />
@@ -1375,7 +1375,7 @@ export function ChatComposer({
             <button
               type="submit"
               disabled={sending || recording}
-              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white shadow-md transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 ${sendClass}`}
+              className={`vn-chat-send-action flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white shadow-md transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 ${sendClass}`}
               aria-label={sending ? "Enviando" : "Enviar"}
             >
               <Send size={17} className={sending ? "animate-pulse" : ""} />
@@ -1383,7 +1383,7 @@ export function ChatComposer({
           )}
         </div>
 
-        <div className="mx-auto mt-1.5 flex max-w-3xl items-center justify-between px-2">
+        <div className="vn-chat-composer-help mx-auto mt-1.5 flex max-w-3xl items-center justify-between px-2">
           <p className="hidden text-[9px] text-slate-400 sm:block">
             Enter para enviar · Shift + Enter para nueva línea
           </p>

@@ -429,3 +429,1824 @@ a {
   border-color: rgba(255, 255, 255, 0.08);
   box-shadow: 0 28px 70px rgba(0, 0, 0, 0.26);
 }
+
+/* =========================================================
+   SUPER ADMIN — CHAT VISUAL REFRESH
+   Cambios de presentación, sin afectar la lógica del chat.
+   ========================================================= */
+
+.vn-chat-tabs {
+  background: linear-gradient(105deg, #ffffff 0%, #faf8ff 55%, #f6f8ff 100%);
+}
+
+.dark .vn-chat-tabs {
+  background: linear-gradient(105deg, #10182b 0%, #10172a 62%, #171334 100%);
+}
+
+.vn-chat-conversations {
+  background: linear-gradient(175deg, #ffffff 0%, #fbfbff 100%);
+}
+
+.dark .vn-chat-conversations {
+  background: linear-gradient(165deg, #10192c 0%, #0c1426 100%);
+}
+
+.vn-chat-room-header {
+  background: linear-gradient(105deg, #ffffff 0%, #faf9ff 100%);
+}
+
+.dark .vn-chat-room-header {
+  background: linear-gradient(105deg, #131d30 0%, #11192d 100%);
+}
+
+.vn-chat-composer {
+  background: linear-gradient(180deg, #ffffff 0%, #fafaff 100%);
+}
+
+.dark .vn-chat-composer {
+  background: linear-gradient(180deg, #111a2b 0%, #101729 100%);
+}
+
+.vn-chat-compose-field:focus-within {
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.09), 0 12px 28px rgba(15, 23, 42, 0.06);
+}
+
+.dark .vn-chat-compose-field:focus-within {
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.12), 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+.vn-chat-conversations,
+.vn-chat-thread {
+  scrollbar-gutter: stable;
+}
+
+@media (max-width: 1023px) {
+  .vn-chat-conversations {
+    scrollbar-gutter: auto;
+    border-right: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-chat-conversation-item,
+  .vn-chat-compose-field {
+    transition-duration: 0ms;
+  }
+}
+
+/* =========================================================
+   SUPER ADMIN CHAT — BANDEJA V3
+   Cambios visibles solo en el chat del Super Admin.
+   ========================================================= */
+
+.vn-chat-inbox-symbol,
+.vn-chat-inbox-kicker,
+.vn-chat-action-label,
+.vn-chat-list-subheading {
+  display: none;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-shell {
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  background: #f9faff;
+  box-shadow: 0 24px 70px rgba(5, 10, 30, 0.14);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-shell {
+  border-color: rgba(167, 139, 250, 0.22);
+  background: #0b1221;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.32);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-tabs {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  background: linear-gradient(105deg, #fafaff 0%, #eee8ff 100%);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-tabs {
+  background: linear-gradient(105deg, #161d38 0%, #201639 100%);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-tabs > div {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+  padding: 3px;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  border-radius: 18px;
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-tabs > div {
+  background: rgba(4, 11, 26, 0.45);
+  border-color: rgba(167, 139, 250, 0.12);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-tabs button {
+  min-width: 0;
+  min-height: 38px;
+  padding: 6px 8px;
+  gap: 7px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-header {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 11px 16px 12px;
+  background: linear-gradient(125deg, #f5f0ff 0%, #ffffff 57%, #ebf2ff 100%);
+  border-bottom-color: rgba(139, 92, 246, 0.14);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-inbox-header {
+  background: linear-gradient(125deg, #231b43 0%, #18223c 58%, #10243d 100%);
+  border-bottom-color: rgba(167, 139, 250, 0.18);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-header::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  width: 200px;
+  height: 200px;
+  top: -130px;
+  right: -65px;
+  border-radius: 50%;
+  background: rgba(167, 139, 250, 0.19);
+  filter: blur(24px);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-headline {
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-identity {
+  gap: 12px;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border: 1px solid rgba(167, 139, 250, 0.34);
+  border-radius: 15px;
+  color: #6d28d9;
+  background: rgba(167, 139, 250, 0.15);
+  box-shadow: 0 9px 25px rgba(109, 40, 217, 0.1);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-inbox-symbol {
+  color: #ddd6fe;
+  background: rgba(139, 92, 246, 0.2);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-kicker {
+  display: block;
+  margin-bottom: 1px;
+  color: #6d28d9;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: 0.12em;
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-inbox-kicker {
+  color: #c4b5fd;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-title {
+  font-size: 17px;
+  letter-spacing: -0.035em;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-count {
+  color: #6d28d9;
+  border: 1px solid rgba(139, 92, 246, 0.18);
+  background: rgba(167, 139, 250, 0.14);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-inbox-count {
+  color: #ddd6fe;
+  background: rgba(167, 139, 250, 0.19);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-description {
+  font-size: 11px;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-actions button {
+  width: auto;
+  min-width: 40px;
+  height: 40px;
+  gap: 7px;
+  padding: 0 12px;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-action-label {
+  display: inline;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-search {
+  min-height: 40px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  background: rgba(255, 255, 255, 0.87);
+  border: 1px solid rgba(100, 116, 139, 0.2);
+  box-shadow: 0 5px 16px rgba(25, 29, 66, 0.035);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-search {
+  background: rgba(5, 13, 31, 0.45);
+  border-color: rgba(167, 139, 250, 0.19);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-inbox-scroll {
+  background: linear-gradient(180deg, #f7f8ff 0%, #fff 100%);
+  padding: 12px 14px 16px;
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-inbox-scroll {
+  background: linear-gradient(180deg, #0d1629 0%, #0b1222 100%);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-list-subheading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 5px 10px;
+  color: #7c6baf;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-list-subheading {
+  color: #b8a7de;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-list-subheading span:last-child {
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-conversation-item {
+  position: relative;
+  min-height: 75px;
+  margin-bottom: 9px;
+  padding: 13px 14px;
+  border-color: #e6e7f1;
+  background: rgba(255, 255, 255, 0.91);
+  border-radius: 18px;
+  box-shadow: 0 5px 20px rgba(27, 33, 86, 0.04);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-conversation-item {
+  border-color: rgba(167, 181, 211, 0.13);
+  background: rgba(28, 39, 65, 0.73);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-conversation-item[aria-current="page"] {
+  border-color: #a78bfa;
+  background: linear-gradient(105deg, #ede9fe, #f6f1ff 63%, #eef3ff);
+  box-shadow: inset 3px 0 0 #7c3aed, 0 9px 25px rgba(109, 40, 217, 0.1);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-conversation-item[aria-current="page"] {
+  border-color: rgba(167, 139, 250, 0.49);
+  background: linear-gradient(105deg, rgba(109, 40, 217, 0.3), rgba(38, 42, 81, 0.92));
+  box-shadow: inset 3px 0 0 #a78bfa, 0 10px 24px rgba(0, 0, 0, 0.14);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-conversation-item:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+  transform: translateY(-1px);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-room-header {
+  border-bottom-color: rgba(139, 92, 246, 0.18);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-composer {
+  border-top-color: rgba(139, 92, 246, 0.17);
+}
+
+@media (min-width: 1024px) {
+  .vn-superadmin-chat-v3 .vn-chat-action-label {
+    display: none;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-inbox-actions button {
+    width: 40px;
+    padding: 0;
+  }
+}
+
+@media (max-width: 639px) {
+  .vn-superadmin-chat-v3 .vn-chat-tabs {
+    padding: 6px 8px;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-tabs > div {
+    gap: 3px;
+    padding: 4px;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-tabs button {
+    flex-direction: column;
+    min-height: 44px;
+    gap: 3px;
+    padding: 4px 1px;
+    font-size: 10px;
+    letter-spacing: 0;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-tabs button svg {
+    width: 18px;
+    height: 18px;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-inbox-header {
+    padding: 11px 13px 12px;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-inbox-identity {
+    gap: 9px;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-inbox-symbol {
+    width: 36px;
+    height: 36px;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-inbox-title {
+    font-size: 17px;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-inbox-kicker {
+    font-size: 8px;
+    letter-spacing: 0.065em;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-action-label {
+    display: none;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-inbox-actions button {
+    width: 36px;
+    min-width: 36px;
+    height: 38px;
+    padding: 0;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-inbox-scroll {
+    padding: 10px;
+  }
+  .vn-superadmin-chat-v3 .vn-chat-conversation-item {
+    padding: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-superadmin-chat-v3 .vn-chat-conversation-item:hover {
+    transform: none;
+  }
+}
+
+/* En móvil, al abrir un chat se prioriza la conversación y su compositor. */
+@media (max-width: 1023px) {
+  .vn-superadmin-chat-v3.vn-chat-conversation-open .vn-chat-tabs {
+    display: none;
+  }
+  .vn-superadmin-chat-v3.vn-chat-conversation-open .vn-chat-room-header {
+    min-height: 66px;
+  }
+  .vn-superadmin-chat-v3.vn-chat-conversation-open .vn-chat-composer {
+    padding: 10px 12px 12px;
+  }
+  .vn-superadmin-chat-v3.vn-chat-conversation-open .vn-chat-compose-field {
+    gap: 4px;
+    padding: 5px;
+  }
+}
+
+/* =========================================================
+   SUPERADMIN CHAT — PERSONAS Y AVISOS
+   Vista de conversaciones, amigos, solicitudes y bloqueados.
+   ========================================================= */
+.vn-superadmin-chat-v3 .vn-chat-people-view {
+  background: linear-gradient(160deg, #f6f7ff, #fff);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-people-view {
+  background: linear-gradient(160deg, #0f1830, #0b1222);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-people-header {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(124, 58, 237, 0.2);
+  background: linear-gradient(120deg, #f5efff 0%, #fff 62%, #edf4ff 100%);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-people-header {
+  background: linear-gradient(115deg, #241d45 0%, #17223b 62%, #11263e 100%);
+  border-color: rgba(167, 139, 250, 0.18);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-people-header::after {
+  content: "";
+  position: absolute;
+  top: -85px;
+  right: -50px;
+  width: 190px;
+  height: 190px;
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-people-header > div {
+  position: relative;
+  z-index: 1;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-people-header h1 {
+  font-size: clamp(1.55rem, 3.8vw, 2rem);
+  letter-spacing: -0.045em;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-people-header > div > p:first-child {
+  color: #7c3aed;
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-people-header > div > p:first-child {
+  color: #c4b5fd;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-people-body {
+  background: transparent;
+  scrollbar-gutter: stable;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-person-card {
+  border-color: rgba(111, 117, 160, 0.15);
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 9px 28px rgba(39, 40, 93, 0.045);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-person-card {
+  border-color: rgba(167, 181, 211, 0.13);
+  background: rgba(26, 38, 65, 0.9);
+  box-shadow: 0 9px 28px rgba(0, 0, 0, 0.1);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-person-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 12px 30px rgba(76, 50, 134, 0.1);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-room-header {
+  background: linear-gradient(115deg, #fff 30%, #f1efff 100%);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-room-header {
+  background: linear-gradient(115deg, #15213a 30%, #21183c 100%);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-composer {
+  background: linear-gradient(180deg, #fff, #f7f5ff);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-composer {
+  background: linear-gradient(180deg, #141d32, #121a30);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-toast {
+  border-radius: 16px;
+  border-color: rgba(248, 113, 113, 0.32);
+  background: rgba(17, 24, 39, 0.96);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.23);
+  backdrop-filter: blur(14px);
+}
+
+.vn-superadmin-chat-v3.vn-chat-has-feedback .vn-chat-inbox-scroll {
+  padding-bottom: 85px;
+}
+
+@media (max-width: 639px) {
+  .vn-superadmin-chat-v3 .vn-chat-people-header {
+    padding: 20px 17px;
+  }
+
+  .vn-superadmin-chat-v3 .vn-chat-people-body {
+    padding: 16px 12px;
+    scrollbar-gutter: auto;
+  }
+
+  .vn-superadmin-chat-v3 .vn-chat-person-card {
+    padding: 14px;
+  }
+
+  .vn-superadmin-chat-v3 .vn-chat-toast {
+    bottom: 12px;
+    right: 12px;
+    max-width: min(315px, calc(100vw - 24px));
+    gap: 10px;
+    padding: 10px 12px;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-superadmin-chat-v3 .vn-chat-person-card {
+    transition: none;
+  }
+
+  .vn-superadmin-chat-v3 .vn-chat-person-card:hover {
+    transform: none;
+  }
+}
+
+/* =========================================================
+   SUPER ADMIN CHAT — CONVERSACIÓN ABIERTA
+   Solo presentación: se conservan temas, estados y acciones.
+   ========================================================= */
+
+.vn-chat-room-eyebrow {
+  display: none;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-room {
+  background: #f8f9ff;
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-room {
+  background: #0d1527;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-room-header {
+  position: relative;
+  min-height: 82px;
+  padding-inline: 20px;
+  background: linear-gradient(105deg, #fff 0%, #faf8ff 58%, #eef4ff 100%);
+  border-bottom: 1px solid rgba(124, 58, 237, 0.18);
+  box-shadow: 0 3px 15px rgba(31, 35, 80, 0.035);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-room-header {
+  background: linear-gradient(105deg, #151d33 0%, #1d1b3a 62%, #14253d 100%);
+  border-bottom-color: rgba(167, 139, 250, 0.18);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.09);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-room-header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(124, 58, 237, 0.55), rgba(217, 70, 239, 0.18), transparent 80%);
+  pointer-events: none;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-room-eyebrow {
+  display: block;
+  margin-bottom: 3px;
+  color: #7652bd;
+  font-size: 9px;
+  line-height: 1.3;
+  letter-spacing: 0.13em;
+  font-weight: 800;
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-room-eyebrow {
+  color: #c4b5fd;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-room-title {
+  font-size: clamp(14px, 1.4vw, 17px);
+  letter-spacing: -0.025em;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-room-menu {
+  border-color: rgba(139, 92, 246, 0.19);
+  background: rgba(139, 92, 246, 0.075);
+  color: #7950c4;
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-room-menu {
+  border-color: rgba(167, 139, 250, 0.2);
+  background: rgba(167, 139, 250, 0.1);
+  color: #d7c7ff;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-thread {
+  background-color: #f9faff;
+  background-image:
+    radial-gradient(circle at 78% 8%, rgba(167, 139, 250, 0.115), transparent 24rem),
+    radial-gradient(circle at 10% 92%, rgba(56, 189, 248, 0.075), transparent 24rem);
+  background-attachment: local;
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-thread {
+  background-color: #0c1528;
+  background-image:
+    radial-gradient(circle at 78% 8%, rgba(139, 92, 246, 0.12), transparent 26rem),
+    radial-gradient(circle at 12% 94%, rgba(56, 189, 248, 0.07), transparent 25rem);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-bubble {
+  border-radius: 19px;
+  line-height: 1.5;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-bubble-mine {
+  border-bottom-right-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow: 0 9px 24px rgba(71, 45, 149, 0.14);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-bubble-other {
+  border-bottom-left-radius: 5px;
+  border-color: rgba(140, 151, 188, 0.2);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 5px 19px rgba(36, 45, 82, 0.065);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-bubble-other {
+  background: #1c2942;
+  border-color: rgba(164, 178, 212, 0.16);
+  box-shadow: 0 7px 21px rgba(0, 0, 0, 0.14);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-date-pill {
+  padding: 7px 15px;
+  color: #6b59a0;
+  border-color: rgba(124, 58, 237, 0.13);
+  background: rgba(255, 255, 255, 0.89);
+  box-shadow: 0 5px 18px rgba(35, 37, 83, 0.045);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-date-pill {
+  color: #c6b9e4;
+  border-color: rgba(167, 139, 250, 0.17);
+  background: rgba(30, 40, 65, 0.93);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-empty-state {
+  width: min(100%, 390px);
+  padding: 34px 26px;
+  border-color: rgba(167, 139, 250, 0.25);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 20px 54px rgba(65, 56, 116, 0.075);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-empty-state {
+  background: rgba(26, 38, 61, 0.85);
+  border-color: rgba(167, 139, 250, 0.17);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-jump-button {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  border-color: rgba(196, 181, 253, 0.45);
+  box-shadow: 0 12px 26px rgba(109, 40, 217, 0.24);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-composer {
+  padding: 16px 20px 15px;
+  border-top: 1px solid rgba(124, 58, 237, 0.16);
+  box-shadow: 0 -9px 26px rgba(26, 24, 78, 0.035);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-composer {
+  box-shadow: 0 -9px 28px rgba(0, 0, 0, 0.13);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-compose-field {
+  min-height: 58px;
+  border-radius: 20px;
+  border: 1px solid rgba(139, 92, 246, 0.23);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 5px 19px rgba(39, 37, 86, 0.065);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-compose-field {
+  background: rgba(7, 15, 32, 0.57);
+  border-color: rgba(167, 139, 250, 0.25);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-attach-action,
+.vn-superadmin-chat-v3 .vn-chat-schedule-action {
+  border-radius: 13px;
+  color: #806ca6;
+  background: rgba(124, 58, 237, 0.065);
+}
+
+.dark .vn-superadmin-chat-v3 .vn-chat-attach-action,
+.dark .vn-superadmin-chat-v3 .vn-chat-schedule-action {
+  color: #c8b9eb;
+  background: rgba(167, 139, 250, 0.1);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-message-input {
+  min-height: 42px;
+  font-size: 14px;
+}
+
+.vn-superadmin-chat-v3 .vn-chat-send-action {
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(109, 40, 217, 0.21);
+}
+
+.vn-superadmin-chat-v3 .vn-chat-composer-help {
+  margin-top: 8px;
+  color: #8d91aa;
+}
+
+@media (max-width: 639px) {
+  .vn-superadmin-chat-v3 .vn-chat-room-header {
+    padding-inline: 12px;
+    min-height: 73px;
+    gap: 10px;
+  }
+
+  .vn-superadmin-chat-v3 .vn-chat-room-eyebrow {
+    font-size: 8px;
+    letter-spacing: 0.08em;
+  }
+
+  .vn-superadmin-chat-v3 .vn-chat-thread {
+    padding: 17px 10px 22px;
+  }
+
+  .vn-superadmin-chat-v3 .vn-chat-bubble {
+    padding: 10px 12px;
+  }
+
+  .vn-superadmin-chat-v3 .vn-chat-composer {
+    padding: 10px 10px 11px;
+  }
+
+  .vn-superadmin-chat-v3 .vn-chat-compose-field {
+    min-height: 50px;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 17px;
+  }
+
+  .vn-superadmin-chat-v3 .vn-chat-attach-action,
+  .vn-superadmin-chat-v3 .vn-chat-schedule-action,
+  .vn-superadmin-chat-v3 .vn-chat-send-action {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+  }
+
+  .vn-superadmin-chat-v3 .vn-chat-message-input {
+    min-height: 36px;
+    padding: 8px 4px;
+    font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-superadmin-chat-v3 .vn-chat-bubble {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   SUPER ADMIN COMPLETION — MANAGEMENT SCREENS
+   Estilos exclusivos de seis pantallas, sin afectar Dashboard,
+   Mensajería, Admin ni Owner.
+   ========================================================= */
+.vn-admin.vn-superadmin-layout .vn-final-page {
+  --vn-final-border: #e4e2f2;
+  --vn-final-copy: #57667e;
+  --vn-final-ink: #202644;
+  min-width: 0;
+  color: var(--vn-final-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-width: 0;
+  padding: clamp(18px, 2.3vw, 26px);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 25px;
+  background:
+    radial-gradient(circle at 95% 2%, rgba(167, 139, 250, 0.17), transparent 18rem),
+    linear-gradient(112deg, #f4f0ff 0%, #ffffff 58%, #edf4ff 100%);
+  box-shadow: 0 15px 40px rgba(58, 41, 126, 0.065);
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-hero h1 {
+  color: #201c42;
+  font-size: clamp(1.55rem, 2.6vw, 2.05rem);
+  line-height: 1.15;
+  letter-spacing: -0.045em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-hero p:first-child {
+  color: #6d28d9;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-hero p:not(:first-child) {
+  color: var(--vn-final-copy);
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-hero button {
+  min-height: 40px;
+  border-radius: 13px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-hero button[class*="border-"] {
+  color: #6d28d9;
+  border-color: rgba(124, 58, 237, 0.22);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-hero button[class*="border-"]:hover {
+  background: #ede9fe;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-card {
+  min-width: 0;
+  border: 1px solid var(--vn-final-border);
+  border-radius: 22px;
+  background: linear-gradient(145deg, #ffffff 0%, #fafbff 100%);
+  box-shadow: 0 12px 30px rgba(27, 35, 84, 0.045);
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-card:hover {
+  border-color: rgba(139, 92, 246, 0.3);
+  box-shadow: 0 16px 36px rgba(74, 55, 137, 0.085);
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-card :is(h2, h3, p).text-white,
+.vn-admin.vn-superadmin-layout .vn-final-card > .text-white {
+  color: var(--vn-final-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-card .text-slate-400 {
+  color: #60708a;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-card .text-violet-300 {
+  color: #6d28d9;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-card .text-sky-300 {
+  color: #0369a1;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-card .text-emerald-300 {
+  color: #047857;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-search {
+  min-height: 46px;
+  border-color: rgba(120, 125, 164, 0.22);
+  background: #f6f7fd;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-search:focus-within {
+  border-color: rgba(124, 58, 237, 0.55);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.085);
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-search input {
+  min-width: 0;
+  color: #202644;
+}
+
+.vn-admin.vn-superadmin-layout .vn-final-search input::placeholder {
+  color: #8390a5;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-page {
+  --vn-final-border: rgba(172, 187, 222, 0.15);
+  --vn-final-copy: #aab8d3;
+  --vn-final-ink: #f4f5ff;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-hero {
+  border-color: rgba(167, 139, 250, 0.2);
+  background:
+    radial-gradient(circle at 95% 2%, rgba(167, 139, 250, 0.15), transparent 18rem),
+    linear-gradient(115deg, #292140 0%, #1a2540 60%, #14243b 100%);
+  box-shadow: 0 20px 43px rgba(0, 0, 0, 0.12);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-hero h1 {
+  color: #ffffff;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-hero p:first-child {
+  color: #c4b5fd;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-hero p:not(:first-child) {
+  color: #b0bad0;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-hero button[class*="border-"] {
+  color: #ddd6fe;
+  border-color: rgba(167, 139, 250, 0.24);
+  background: rgba(139, 92, 246, 0.1);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-hero button[class*="border-"]:hover {
+  background: rgba(139, 92, 246, 0.2);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-card {
+  border-color: var(--vn-final-border);
+  background: linear-gradient(145deg, rgba(32, 43, 68, 0.96), rgba(23, 34, 56, 0.98));
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.14);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-card:hover {
+  border-color: rgba(167, 139, 250, 0.32);
+  box-shadow: 0 19px 39px rgba(0, 0, 0, 0.2);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-card :is(h2, h3, p).text-white,
+html.dark .vn-admin.vn-superadmin-layout .vn-final-card > .text-white {
+  color: #ffffff;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-card .text-slate-400 {
+  color: #a3b0c8;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-card .text-violet-300 {
+  color: #c4b5fd;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-card .text-sky-300 {
+  color: #7dd3fc;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-card .text-emerald-300 {
+  color: #6ee7b7;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-search {
+  border-color: rgba(167, 139, 250, 0.18);
+  background: rgba(5, 13, 28, 0.32);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-search input {
+  color: #ffffff;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-final-search input::placeholder {
+  color: #8b9bb7;
+}
+
+@media (max-width: 639px) {
+  .vn-admin.vn-superadmin-layout .vn-final-hero {
+    padding: 16px;
+    border-radius: 20px;
+    gap: 14px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-final-hero button {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-final-card {
+    border-radius: 18px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-final-page {
+    padding-bottom: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-admin.vn-superadmin-layout .vn-final-card,
+  .vn-admin.vn-superadmin-layout .vn-final-search {
+    transition: none;
+  }
+}
+
+/* ANALYTICS — ACCESSIBLE CHART AXES */
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .recharts-cartesian-axis-tick-value {
+  fill: #475569;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .recharts-cartesian-axis-tick-value {
+  fill: #a5b4d0;
+}
+
+/* ANALYTICS — COMPACT KPI LAYOUT */
+@media (max-width: 767px) {
+  .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-hero {
+    padding: 15px 16px;
+    gap: 12px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-hero h1 {
+    margin-top: 4px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-hero p:not(:first-child) {
+    margin-top: 5px;
+    line-height: 1.4;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-analytics-kpi {
+    min-width: 0;
+  }
+}
+
+/* =========================================================
+   ANALITICAS — PALETA VIBENOTAS
+   Conserva el layout compacto; conecta la vista con el
+   coral, marfil y carbón del Dashboard en ambos temas.
+   ========================================================= */
+.vn-admin.vn-superadmin-layout .vn-analytics-overview {
+  --vn-final-border: var(--vn-line);
+  --vn-final-copy: var(--vn-muted);
+  --vn-final-ink: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-hero {
+  border-color: color-mix(in srgb, var(--vn-coral) 23%, var(--vn-line));
+  background: linear-gradient(112deg, #fffdf8 0%, #fff9f3 70%, #f9ebe5 100%);
+  box-shadow: 0 15px 40px rgba(61, 43, 35, 0.07);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-hero::after {
+  background: color-mix(in srgb, var(--vn-coral) 13%, transparent);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-hero h1 {
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-hero p:first-child {
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-hero p:not(:first-child) {
+  color: var(--vn-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card {
+  border-color: var(--vn-line);
+  background: var(--vn-surface);
+  color: var(--vn-ink);
+  box-shadow: 0 12px 30px rgba(38, 32, 27, 0.055);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card:hover {
+  border-color: color-mix(in srgb, var(--vn-coral) 30%, var(--vn-line));
+  box-shadow: 0 15px 32px rgba(38, 32, 27, 0.075);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card .text-violet-300,
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card .text-fuchsia-300 {
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card .text-emerald-300 {
+  color: #087758;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card .text-sky-300 {
+  color: #0b7484;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card .bg-violet-500\/10 {
+  background: color-mix(in srgb, var(--vn-coral) 10%, transparent);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card .bg-gradient-to-r.from-violet-600.to-fuchsia-400 {
+  background: linear-gradient(90deg, #e66d57, #eea27d);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card .bg-violet-100 {
+  background: #fae8e2;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card .text-violet-700 {
+  color: #aa4636;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-analytics-kpi {
+  position: relative;
+  overflow: hidden;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-analytics-kpi::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--vn-coral);
+  opacity: 0.75;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-analytics-period-selected {
+  color: #fff;
+  background: var(--vn-coral);
+  box-shadow: 0 7px 18px rgba(201, 86, 65, 0.16);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-analytics-period-idle {
+  color: var(--vn-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-analytics-period-idle:hover {
+  color: var(--vn-coral-strong);
+  background: var(--vn-coral-soft);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-analytics-refresh {
+  color: var(--vn-coral-strong);
+  border-color: color-mix(in srgb, var(--vn-coral) 24%, var(--vn-line));
+  background: color-mix(in srgb, var(--vn-coral-soft) 47%, var(--vn-surface));
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-analytics-refresh:hover {
+  color: var(--vn-coral-strong);
+  background: var(--vn-coral-soft);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-hero {
+  border-color: #4b3d39;
+  background: linear-gradient(112deg, #242629 0%, #262729 65%, #302a29 100%);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card {
+  border-color: var(--vn-line);
+  background: #202327;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.13);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card:hover {
+  border-color: #65504a;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card .text-violet-300,
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card .text-fuchsia-300 {
+  color: #ff9b86;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card .text-emerald-300 {
+  color: #6ee7b7;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card .text-sky-300 {
+  color: #7dd3e7;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card .bg-violet-100 {
+  background: #3a2a28;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card .text-violet-700 {
+  color: #ffaf9a;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-analytics-kpi::before {
+  background: #f4775f;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-analytics-period-selected {
+  color: #17191c;
+  background: #ff9b86;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-analytics-refresh {
+  color: #ffb5a4;
+  border-color: #5c4642;
+  background: #322928;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-analytics-refresh:hover {
+  background: #42302e;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-admin.vn-superadmin-layout .vn-analytics-overview .vn-final-card {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   ANALÍTICAS — AUDITORÍA COMPACTA
+   Vista de seis eventos; diseño exclusivo de Super Admin.
+   ========================================================= */
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-compact {
+  border-color: var(--vn-line);
+  background: var(--vn-surface);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  padding: 18px 22px 15px;
+  border-bottom: 1px solid var(--vn-line);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-eyebrow {
+  color: var(--vn-coral-strong);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-heading h2 {
+  margin-top: 4px;
+  color: var(--vn-ink);
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-summary {
+  margin-top: 3px;
+  color: var(--vn-muted);
+  font-size: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-all-logs {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--vn-coral) 25%, var(--vn-line));
+  border-radius: 12px;
+  background: var(--vn-coral-soft);
+  color: var(--vn-coral-strong);
+  font-size: 12px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-all-logs:hover {
+  background: color-mix(in srgb, var(--vn-coral-soft) 78%, var(--vn-coral));
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 10px 22px;
+  border-bottom: 1px solid var(--vn-line);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-filter {
+  padding: 6px 11px;
+  border-radius: 9px;
+  color: var(--vn-muted);
+  font-size: 12px;
+  font-weight: 700;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-filter:hover {
+  background: var(--vn-surface-hover);
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-filter.is-active {
+  color: var(--vn-coral-strong);
+  background: var(--vn-coral-soft);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-entry {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  min-height: 64px;
+  padding: 10px 22px;
+  border-bottom: 1px solid var(--vn-line);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-entry:hover {
+  background: color-mix(in srgb, var(--vn-coral) 3%, var(--vn-surface));
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-symbol {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  color: var(--vn-coral-strong);
+  background: var(--vn-coral-soft);
+  border-radius: 10px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-details {
+  min-width: 0;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-firstline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px 9px;
+  color: var(--vn-ink);
+  font-size: 13px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-firstline strong {
+  font-weight: 750;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-outcome {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-outcome.is-success {
+  color: #047857;
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-outcome.is-other {
+  color: #b45309;
+  background: rgba(245, 158, 11, 0.12);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-metadata {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 5px;
+  min-width: 0;
+  color: var(--vn-muted);
+  font-size: 11px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-metadata > span:first-child {
+  flex-shrink: 0;
+  max-width: 40%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-target {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-time {
+  align-self: center;
+  max-width: 175px;
+  color: var(--vn-muted);
+  font-size: 11px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-footer {
+  padding: 11px 22px;
+  color: var(--vn-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-empty {
+  padding: 24px 18px;
+  color: var(--vn-muted);
+  text-align: center;
+  font-size: 13px;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-audit-outcome.is-success {
+  color: #6ee7b7;
+  background: rgba(16, 185, 129, 0.13);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-audit-outcome.is-other {
+  color: #fcd34d;
+  background: rgba(245, 158, 11, 0.12);
+}
+
+@media (max-width: 767px) {
+  .vn-admin.vn-superadmin-layout .vn-analytics-audit-heading {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 15px 14px 12px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-audit-filters {
+    padding: 8px 12px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-audit-entry {
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 7px 10px;
+    min-height: 62px;
+    padding: 10px 14px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-audit-time {
+    grid-column: 2;
+    justify-self: start;
+    text-align: left;
+    font-size: 10px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-audit-metadata {
+    gap: 5px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-audit-footer {
+    padding: 10px 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-admin.vn-superadmin-layout .vn-analytics-audit-filter {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   SUPER ADMIN — REPORTES COMPACTOS
+   Identidad VibeNotas: coral, marfil y carbón.
+   No modifica Reportes de Admin ni Owner.
+   ========================================================= */
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--vn-ink);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports > .pointer-events-none.absolute {
+  display: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-content {
+  padding: 0 0 18px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero {
+  border: 1px solid color-mix(in srgb, var(--vn-coral) 29%, var(--vn-line));
+  border-radius: 24px;
+  background: linear-gradient(115deg, #fffdf8 0%, #fff7ef 66%, #fae5db 100%);
+  padding: 20px 22px;
+  box-shadow: 0 16px 40px rgba(44, 38, 31, 0.07);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero > div {
+  gap: 16px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero-icon {
+  width: 46px;
+  height: 46px;
+  border: 1px solid color-mix(in srgb, var(--vn-coral) 24%, var(--vn-line));
+  border-radius: 15px;
+  background: var(--vn-coral-soft);
+  color: var(--vn-coral-strong);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero-icon svg {
+  width: 23px;
+  height: 23px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-kicker {
+  color: var(--vn-coral-strong);
+  letter-spacing: 0.14em;
+  font-size: 10px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-title {
+  color: var(--vn-ink);
+  margin-top: 4px;
+  font-size: clamp(23px, 2.5vw, 29px);
+  line-height: 1.18;
+  letter-spacing: -0.035em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero p.text-slate-600 {
+  margin-top: 7px;
+  color: var(--vn-muted);
+  max-width: 590px;
+  line-height: 1.5;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero-actions {
+  gap: 8px;
+  align-items: center;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero-actions > button {
+  min-height: 41px;
+  padding: 9px 14px;
+  border-radius: 12px;
+  box-shadow: none;
+  font-size: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-export {
+  border-color: var(--vn-line);
+  background: var(--vn-surface);
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-export:hover {
+  border-color: var(--vn-coral);
+  background: var(--vn-surface-hover);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-refresh {
+  background: var(--vn-coral);
+  color: #fff;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-refresh:hover {
+  background: var(--vn-coral-strong);
+  color: #fff;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-kpi-grid {
+  gap: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card {
+  min-width: 0;
+  min-height: 132px;
+  padding: 16px;
+  border-radius: 19px;
+  border-color: var(--vn-line);
+  background: var(--vn-surface);
+  box-shadow: var(--vn-elevation);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--vn-coral) 35%, var(--vn-line));
+  box-shadow: var(--vn-elevation);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card .relative > div {
+  min-width: 0;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card p.text-sm {
+  color: var(--vn-muted);
+  font-size: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card p.text-3xl {
+  color: var(--vn-ink);
+  margin-top: 6px;
+  font-size: 28px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card p.text-xs {
+  margin-top: 9px;
+  color: var(--vn-muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card .h-11.w-11 {
+  width: 37px;
+  height: 37px;
+  border-radius: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters,
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-list {
+  border: 1px solid var(--vn-line);
+  border-radius: 21px;
+  background: var(--vn-surface);
+  box-shadow: var(--vn-elevation);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters {
+  padding: 13px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-search,
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters details > summary {
+  min-height: 43px;
+  border-radius: 12px;
+  border: 1px solid var(--vn-line);
+  background: var(--vn-surface-hover);
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-search {
+  padding: 9px 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-search:focus-within,
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters details > summary:focus-visible {
+  border-color: var(--vn-coral);
+  background: var(--vn-surface);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--vn-coral) 12%, transparent);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-search input {
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-search input::placeholder {
+  color: var(--vn-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters details > summary {
+  padding-top: 9px;
+  padding-bottom: 9px;
+  color: var(--vn-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters details > div {
+  border-color: var(--vn-line);
+  background: var(--vn-surface);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filter-pills {
+  margin-top: 11px;
+  gap: 6px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-status-filter {
+  min-height: 36px;
+  padding: 7px 11px;
+  border-radius: 10px;
+  font-size: 12px;
+  box-shadow: none;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-status-filter[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--vn-coral) 30%, var(--vn-line));
+  background: var(--vn-coral-soft);
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-status-filter[aria-pressed="false"] {
+  border-color: var(--vn-line);
+  background: var(--vn-surface-hover);
+  color: var(--vn-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-status-filter > span {
+  background: color-mix(in srgb, var(--vn-coral) 11%, var(--vn-surface));
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-list-heading {
+  padding: 15px 19px;
+  border-color: var(--vn-line);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-list-heading p.text-violet-700 {
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-list-heading h2 {
+  color: var(--vn-ink);
+  font-size: 18px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-table-scroll thead {
+  background: var(--vn-surface-hover);
+  color: var(--vn-muted);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-table-scroll th {
+  padding-top: 11px;
+  padding-bottom: 11px;
+  letter-spacing: 0.075em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-row {
+  border-color: var(--vn-line);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-row:hover {
+  background: color-mix(in srgb, var(--vn-coral) 4%, var(--vn-surface));
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-row td {
+  padding-top: 11px;
+  padding-bottom: 11px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-row button,
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-mobile-list button {
+  border-color: color-mix(in srgb, var(--vn-coral) 23%, var(--vn-line));
+  background: var(--vn-coral-soft);
+  color: var(--vn-coral-strong);
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-row button:hover,
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-mobile-list button:hover {
+  border-color: var(--vn-coral);
+  background: color-mix(in srgb, var(--vn-coral-soft) 78%, var(--vn-coral));
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-mobile-list > article {
+  padding: 15px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-mobile-list > article > div {
+  margin-top: 9px;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero {
+  border-color: #4c3936;
+  background: linear-gradient(120deg, #25282b, #242629 65%, #302827);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.17);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card,
+html.dark .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters,
+html.dark .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-list {
+  background: #202327;
+  border-color: var(--vn-line);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-search,
+html.dark .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters details > summary {
+  background: #292d31;
+  border-color: var(--vn-line);
+}
+
+@media (max-width: 639px) {
+  .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero {
+    padding: 15px;
+    border-radius: 19px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero-icon {
+    width: 39px;
+    height: 39px;
+    border-radius: 13px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-hero-actions > button {
+    flex: 1 1 auto;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card {
+    padding: 12px;
+    min-height: 120px;
+    border-radius: 15px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card p.text-3xl {
+    font-size: 25px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-filters {
+    padding: 10px;
+    border-radius: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card {
+    transition: none;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-superadmin-reports .vn-reports-stat-card:hover {
+    transform: none;
+  }
+}

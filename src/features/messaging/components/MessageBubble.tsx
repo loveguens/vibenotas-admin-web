@@ -75,8 +75,8 @@ export function MessageBubble({
   }
 
   return (
-    <div className={`group flex ${isMine ? "justify-end" : "justify-start"}`}>
-      <div className="flex max-w-[92%] items-end gap-2 sm:max-w-[78%]">
+    <div className={`vn-chat-message-row group flex ${isMine ? "justify-end" : "justify-start"}`}>
+      <div className="flex max-w-[94%] items-end gap-2.5 sm:max-w-[80%]">
         {!isMine && (
           <Avatar
             name={message.emisor_nombre}
@@ -87,10 +87,10 @@ export function MessageBubble({
 
         <div className="relative min-w-0">
           <div
-            className={`relative px-4 py-2.5 shadow-sm ${
+            className={`vn-chat-bubble ${isMine ? "vn-chat-bubble-mine" : "vn-chat-bubble-other"} relative px-4 py-3 shadow-sm transition-colors duration-200 ${
               isMine
-                ? `rounded-[22px] rounded-br-md ${mineBubbleClass} text-white`
-                : "rounded-[22px] rounded-bl-md border border-slate-200 bg-white/95 text-slate-900 dark:border-white/10 dark:bg-[#172033] dark:text-slate-100"
+                ? `rounded-[21px] rounded-br-md ${mineBubbleClass} text-white shadow-md shadow-violet-950/10`
+                : "rounded-[21px] rounded-bl-md border border-slate-200/80 bg-white/95 text-slate-900 shadow-sm dark:border-white/10 dark:bg-[#1a263b] dark:text-slate-100"
             }`}
           >
             {!isMine && isGroup && (

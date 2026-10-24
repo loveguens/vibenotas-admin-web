@@ -205,9 +205,9 @@ export default function SettingsPage() {
   }
 
   return (
-    <section role="superadmin">
+    <section role="superadmin" className="vn-final-page">
       <section className="space-y-6">
-        <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+        <div className="vn-final-hero flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
               Control del sistema
@@ -286,7 +286,7 @@ export default function SettingsPage() {
           </div>
         ) : (
           <div className="grid gap-5 lg:grid-cols-2">
-            <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
+            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
               <div className="flex items-center gap-3">
                 <div className="rounded-2xl bg-violet-500/10 p-3 text-violet-300">
                   <Building2 size={21} />
@@ -343,7 +343,7 @@ export default function SettingsPage() {
               </div>
             </article>
 
-            <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
+            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
               <div className="flex items-center gap-3">
                 <div className="rounded-2xl bg-amber-500/10 p-3 text-amber-300">
                   <Wrench size={21} />
@@ -392,7 +392,7 @@ export default function SettingsPage() {
               </div>
             </article>
 
-            <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
+            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
               <div className="flex items-center gap-3">
                 <div className="rounded-2xl bg-sky-500/10 p-3 text-sky-300">
                   <HardDriveUpload size={21} />
@@ -463,7 +463,7 @@ export default function SettingsPage() {
               </div>
             </article>
 
-            <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
+            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
               <div className="flex items-center gap-3">
                 <div className="rounded-2xl bg-fuchsia-500/10 p-3 text-fuchsia-300">
                   <BellRing size={21} />

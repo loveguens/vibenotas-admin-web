@@ -177,8 +177,8 @@ export default function SecurityPage() {
 
   return (
     
-      <section className="space-y-6">
-        <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+      <section className="vn-final-page space-y-6">
+        <div className="vn-final-hero flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
               Protección de plataforma
@@ -218,7 +218,7 @@ export default function SecurityPage() {
         )}
 
         <div className="grid gap-5 md:grid-cols-3">
-          <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
+          <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
             <p className="text-sm text-slate-400">Sesiones activas</p>
             <p className="mt-3 text-3xl font-bold text-white">
               {summary?.sesiones_activas ?? 0}
@@ -229,7 +229,7 @@ export default function SecurityPage() {
             </div>
           </article>
 
-          <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
+          <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
             <p className="text-sm text-slate-400">Usuarios suspendidos</p>
             <p className="mt-3 text-3xl font-bold text-white">
               {summary?.usuarios_suspendidos ?? 0}
@@ -240,7 +240,7 @@ export default function SecurityPage() {
             </div>
           </article>
 
-          <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
+          <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10">
             <p className="text-sm text-slate-400">Sesiones a revisar</p>
             <p className="mt-3 text-3xl font-bold text-white">
               {suspiciousSessions.length}
@@ -263,7 +263,7 @@ export default function SecurityPage() {
           </div>
         ) : (
           <>
-            <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10">
+            <div className="overflow-hidden vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10">
               <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
                 <div>
                   <p className="text-sm font-semibold text-violet-300">
@@ -385,7 +385,7 @@ export default function SecurityPage() {
               </div>
             </div>
 
-            <article className="rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
+            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
               <div className="flex items-center gap-3">
                 <div className="rounded-2xl bg-violet-500/10 p-3 text-violet-300">
                   <Clock3 size={20} />
