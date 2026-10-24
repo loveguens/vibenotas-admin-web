@@ -241,56 +241,54 @@ export default function AnalyticsPage() {
 
   return (
     <section aria-labelledby="analytics-title" className="vn-final-page vn-analytics-overview space-y-4 sm:space-y-6">
-      <header className="vn-final-hero vn-analytics-hero">
-        <div className="vn-analytics-hero-main">
-          <span className="vn-analytics-hero-icon" aria-hidden="true">
-            <BarChart3 size={26} strokeWidth={1.8} />
-          </span>
-          <div className="min-w-0">
-            <p className="vn-analytics-eyebrow">CENTRO DE INTELIGENCIA</p>
-            <h1 id="analytics-title" className="vn-analytics-display">
-              Analíticas <span>de VibeNotas</span>
-            </h1>
-            <p className="vn-analytics-hero-description">
-              Una vista clara del crecimiento, la comunidad y la actividad de tu plataforma.
-            </p>
-          </div>
+      <div className="vn-final-hero flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
+            Inteligencia de plataforma
+          </p>
+
+          <h1
+            id="analytics-title"
+            className="mt-2 text-3xl font-bold tracking-tight text-white"
+          >
+            Analytics
+          </h1>
+
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
+            M&eacute;tricas reales de usuarios, crecimiento y actividad
+            administrativa de VibeNotas.
+          </p>
         </div>
 
-        <div className="vn-analytics-controls">
-          <div className="vn-analytics-periods" role="group" aria-label="Período de análisis">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="flex rounded-xl border border-slate-200 bg-white/75 p-1 dark:border-white/10 dark:bg-white/5">
             {PERIOD_OPTIONS.map((option) => (
               <button
                 key={option.value}
                 type="button"
                 onClick={() => setPeriod(option.value)}
-                aria-pressed={period === option.value}
-                className={`vn-analytics-period ${period === option.value ? "is-active" : ""}`}
+                className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${
+                  period === option.value
+                    ? "bg-violet-500 text-white shadow-lg shadow-violet-950/30"
+                    : "text-slate-600 hover:bg-violet-50 hover:text-violet-700 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white"
+                }`}
               >
                 {option.label}
               </button>
             ))}
           </div>
+
           <button
             type="button"
             onClick={() => void loadAnalytics(period)}
             disabled={loading}
-            className="vn-analytics-refresh"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-3 text-sm font-semibold text-violet-300 transition hover:bg-violet-500/20 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <RefreshCw size={17} className={loading ? "animate-spin" : ""} />
+            <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
             Actualizar
           </button>
         </div>
-
-        <div className="vn-analytics-hero-footer">
-          <span className="vn-analytics-live"><span aria-hidden="true" /> Datos de la plataforma</span>
-          <span>
-            {analytics
-              ? `Última actualización: ${formatDate(analytics.generatedAt)}`
-              : "Resumen de actividad administrativa"}
-          </span>
-        </div>
-      </header>
+      </div>
 
       {error && (
         <div className="rounded-3xl border border-red-500/20 bg-red-500/10 p-6 text-red-200">
@@ -313,144 +311,145 @@ export default function AnalyticsPage() {
 
       {analytics && (
         <>
-          <div className="vn-analytics-section-label">
-            <div>
-              <span>01 / PANORAMA</span>
-              <h2>Indicadores principales</h2>
+          <div className="grid grid-cols-2 gap-3 max-[359px]:grid-cols-1 sm:gap-4 xl:grid-cols-4">
+            <article className="vn-final-card vn-analytics-kpi rounded-3xl border border-white/10 bg-[#1E293B]/80 p-3.5 shadow-xl shadow-black/10 sm:p-5">
+              <p className="text-sm text-slate-400">Usuarios totales</p>
+
+              <p className="mt-2 text-2xl font-bold text-white sm:mt-3 sm:text-3xl">
+                {analytics.summary.users.total}
+              </p>
+
+              <div className="mt-3 flex items-center gap-2 text-xs text-violet-300 sm:mt-4 sm:text-sm">
+                <Users size={16} />
+                Comunidad registrada
+              </div>
+            </article>
+
+            <article className="vn-final-card vn-analytics-kpi rounded-3xl border border-white/10 bg-[#1E293B]/80 p-3.5 shadow-xl shadow-black/10 sm:p-5">
+              <p className="text-sm text-slate-400">Nuevos en {periodLabel}</p>
+
+              <p className="mt-2 text-2xl font-bold text-white sm:mt-3 sm:text-3xl">
+                {analytics.summary.users.createdInPeriod}
+              </p>
+
+              <div className="mt-3 flex items-center gap-2 text-xs text-fuchsia-700 sm:mt-4 sm:text-sm dark:text-fuchsia-300">
+                <UserPlus size={16} />
+                Registros del per&iacute;odo
+              </div>
+            </article>
+
+            <article className="vn-final-card vn-analytics-kpi rounded-3xl border border-white/10 bg-[#1E293B]/80 p-3.5 shadow-xl shadow-black/10 sm:p-5">
+              <p className="text-sm text-slate-400">Usuarios activos</p>
+
+              <p className="mt-2 text-2xl font-bold text-white sm:mt-3 sm:text-3xl">
+                {analytics.summary.users.active}
+              </p>
+
+              <div className="mt-3 flex items-center gap-2 text-xs text-emerald-300 sm:mt-4 sm:text-sm">
+                <ShieldCheck size={16} />
+                Acceso habilitado
+              </div>
+            </article>
+
+            <article className="vn-final-card vn-analytics-kpi rounded-3xl border border-white/10 bg-[#1E293B]/80 p-3.5 shadow-xl shadow-black/10 sm:p-5">
+              <p className="text-sm text-slate-400">Eventos de hoy</p>
+
+              <p className="mt-2 text-2xl font-bold text-white sm:mt-3 sm:text-3xl">
+                {analytics.summary.audit.eventsToday}
+              </p>
+
+              <div className="mt-3 flex items-center gap-2 text-xs text-sky-300 sm:mt-4 sm:text-sm">
+                <Activity size={16} />
+                Auditor&iacute;a registrada
+              </div>
+            </article>
+          </div>
+
+          <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm font-semibold text-violet-300">
+                  Crecimiento de usuarios
+                </p>
+
+                <h2 className="mt-1 text-xl font-bold text-white">
+                  Registros durante {periodLabel}
+                </h2>
+              </div>
+
+              <div className="rounded-2xl bg-violet-500/10 p-3 text-violet-300">
+                <TrendingUp size={20} />
+              </div>
             </div>
-            <span className="vn-analytics-period-label">Período seleccionado: {periodLabel}</span>
-          </div>
 
-          <div className="vn-analytics-overview-grid">
-            <article className="vn-final-card vn-analytics-kpi vn-analytics-stat" data-tone="violet">
-              <div className="vn-analytics-stat-top">
-                <span className="vn-analytics-stat-number">01</span>
-                <span className="vn-analytics-stat-icon" aria-hidden="true"><Users size={21} /></span>
-              </div>
-              <p className="vn-analytics-stat-name">Usuarios registrados</p>
-              <p className="vn-analytics-stat-value">{analytics.summary.users.total}</p>
-              <p className="vn-analytics-stat-note">Comunidad de VibeNotas</p>
-            </article>
-            <article className="vn-final-card vn-analytics-kpi vn-analytics-stat" data-tone="pink">
-              <div className="vn-analytics-stat-top">
-                <span className="vn-analytics-stat-number">02</span>
-                <span className="vn-analytics-stat-icon" aria-hidden="true"><UserPlus size={21} /></span>
-              </div>
-              <p className="vn-analytics-stat-name">Nuevos usuarios</p>
-              <p className="vn-analytics-stat-value">{analytics.summary.users.createdInPeriod}</p>
-              <p className="vn-analytics-stat-note">Registros en el período</p>
-            </article>
-            <article className="vn-final-card vn-analytics-kpi vn-analytics-stat" data-tone="green">
-              <div className="vn-analytics-stat-top">
-                <span className="vn-analytics-stat-number">03</span>
-                <span className="vn-analytics-stat-icon" aria-hidden="true"><ShieldCheck size={21} /></span>
-              </div>
-              <p className="vn-analytics-stat-name">Cuentas activas</p>
-              <p className="vn-analytics-stat-value">{analytics.summary.users.active}</p>
-              <p className="vn-analytics-stat-note">Acceso habilitado</p>
-            </article>
-            <article className="vn-final-card vn-analytics-kpi vn-analytics-stat" data-tone="blue">
-              <div className="vn-analytics-stat-top">
-                <span className="vn-analytics-stat-number">04</span>
-                <span className="vn-analytics-stat-icon" aria-hidden="true"><Activity size={21} /></span>
-              </div>
-              <p className="vn-analytics-stat-name">Eventos de hoy</p>
-              <p className="vn-analytics-stat-value">{analytics.summary.audit.eventsToday}</p>
-              <p className="vn-analytics-stat-note">Actividad registrada</p>
-            </article>
-          </div>
+            <div className="mt-7 h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={analytics.trends.userRegistrations}
+                  margin={{
+                    top: 10,
+                    right: 10,
+                    left: -20,
+                    bottom: 0,
+                  }}
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="rgba(148, 163, 184, 0.12)"
+                  />
 
-          <div className="vn-analytics-section-label">
-            <div>
-              <span>02 / EVOLUCIÓN</span>
-              <h2>Crecimiento y composición</h2>
-            </div>
-            <span className="vn-analytics-period-label">Datos del período: {periodLabel}</span>
-          </div>
-          <div className="vn-analytics-insight-grid">
-            <article className="vn-final-card vn-analytics-chart rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <p className="text-sm font-semibold text-violet-300">
-                    Crecimiento de usuarios
-                  </p>
-
-                  <h2 className="mt-1 text-xl font-bold text-white">
-                    Registros durante {periodLabel}
-                  </h2>
-                </div>
-
-                <div className="rounded-2xl bg-violet-500/10 p-3 text-violet-300">
-                  <TrendingUp size={20} />
-                </div>
-              </div>
-
-              <div className="mt-7 h-72">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    data={analytics.trends.userRegistrations}
-                    margin={{
-                      top: 10,
-                      right: 10,
-                      left: -20,
-                      bottom: 0,
+                  <XAxis
+                    dataKey="date"
+                    tickFormatter={formatShortDate}
+                    minTickGap={24}
+                    tick={{
+                      fill: "#94a3b8",
+                      fontSize: 12,
                     }}
-                  >
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                      stroke="rgba(148, 163, 184, 0.12)"
-                    />
+                    axisLine={false}
+                    tickLine={false}
+                  />
 
-                    <XAxis
-                      dataKey="date"
-                      tickFormatter={formatShortDate}
-                      minTickGap={24}
-                      tick={{
-                        fill: "#94a3b8",
-                        fontSize: 12,
-                      }}
-                      axisLine={false}
-                      tickLine={false}
-                    />
+                  <YAxis
+                    allowDecimals={false}
+                    tick={{
+                      fill: "#94a3b8",
+                      fontSize: 12,
+                    }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
 
-                    <YAxis
-                      allowDecimals={false}
-                      tick={{
-                        fill: "#94a3b8",
-                        fontSize: 12,
-                      }}
-                      axisLine={false}
-                      tickLine={false}
-                    />
+                  <Tooltip
+                    labelFormatter={(label) => formatShortDate(String(label))}
+                    formatter={(value) => [Number(value), "Usuarios"]}
+                    contentStyle={{
+                      backgroundColor: "#0f172a",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      borderRadius: "12px",
+                    }}
+                    labelStyle={{
+                      color: "#e2e8f0",
+                    }}
+                  />
 
-                    <Tooltip
-                      labelFormatter={(label) => formatShortDate(String(label))}
-                      formatter={(value) => [Number(value), "Usuarios"]}
-                      contentStyle={{
-                        backgroundColor: "#0f172a",
-                        border: "1px solid rgba(255,255,255,0.1)",
-                        borderRadius: "12px",
-                      }}
-                      labelStyle={{
-                        color: "#e2e8f0",
-                      }}
-                    />
+                  <Line
+                    type="monotone"
+                    dataKey="total"
+                    stroke="#8b5cf6"
+                    strokeWidth={3}
+                    dot={false}
+                    activeDot={{
+                      r: 5,
+                    }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </article>
 
-                    <Line
-                      type="monotone"
-                      dataKey="total"
-                      stroke="#8b5cf6"
-                      strokeWidth={3}
-                      dot={false}
-                      activeDot={{
-                        r: 5,
-                      }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </article>
-            <article className="vn-final-card vn-analytics-roles rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
+          <div className="grid gap-6 xl:grid-cols-2">
+            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-violet-300">
@@ -505,68 +504,54 @@ export default function AnalyticsPage() {
                 )}
               </div>
             </article>
-          </div>
 
-          <div className="vn-analytics-section-label">
-            <div>
-              <span>03 / ESTADO</span>
-              <h2>Salud de la comunidad</h2>
-            </div>
-            <span className="vn-analytics-period-label">Situación de las cuentas</span>
-          </div>
-          <article className="vn-final-card vn-analytics-health rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold text-violet-300">
-                  Estado de cuentas
-                </p>
-
-                <h2 className="mt-1 text-xl font-bold text-white">
-                  Salud de la plataforma
-                </h2>
-              </div>
-
-              <div className="rounded-2xl bg-emerald-500/10 p-3 text-emerald-300">
-                <ShieldCheck size={20} />
-              </div>
-            </div>
-
-            <div className="mt-5 grid grid-cols-2 gap-3 max-[359px]:grid-cols-1 lg:grid-cols-4">
-              {analytics.distributions.usersByStatus.map((item) => (
-                <div
-                  key={item.status}
-                  className={`rounded-2xl border p-4 ${statusStyle(
-                    item.status,
-                  )}`}
-                >
-                  <p className="text-xs font-semibold uppercase tracking-wider opacity-70">
-                    {formatStatus(item.status)}
+            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-violet-300">
+                    Estado de cuentas
                   </p>
 
-                  <p className="mt-2 text-3xl font-bold">{item.total}</p>
-
-                  <p className="mt-1 text-xs opacity-70">
-                    cuentas registradas
-                  </p>
+                  <h2 className="mt-1 text-xl font-bold text-white">
+                    Salud de la plataforma
+                  </h2>
                 </div>
-              ))}
 
-              {analytics.distributions.usersByStatus.length === 0 && (
-                <p className="col-span-full py-8 text-center text-sm text-slate-500">
-                  No hay datos de estados disponibles.
-                </p>
-              )}
-            </div>
-        </article>
+                <div className="rounded-2xl bg-emerald-500/10 p-3 text-emerald-300">
+                  <ShieldCheck size={20} />
+                </div>
+              </div>
 
-        <div className="vn-analytics-section-label">
-            <div>
-              <span>04 / AUDITORÍA</span>
-              <h2>Movimientos recientes</h2>
-            </div>
-            <span className="vn-analytics-period-label">{analytics.summary.audit.eventsInPeriod} eventos durante {periodLabel}</span>
+              <div className="mt-7 grid gap-3 sm:grid-cols-2">
+                {analytics.distributions.usersByStatus.map((item) => (
+                  <div
+                    key={item.status}
+                    className={`rounded-2xl border p-4 ${statusStyle(
+                      item.status,
+                    )}`}
+                  >
+                    <p className="text-xs font-semibold uppercase tracking-wider opacity-70">
+                      {formatStatus(item.status)}
+                    </p>
+
+                    <p className="mt-2 text-3xl font-bold">{item.total}</p>
+
+                    <p className="mt-1 text-xs opacity-70">
+                      cuentas registradas
+                    </p>
+                  </div>
+                ))}
+
+                {analytics.distributions.usersByStatus.length === 0 && (
+                  <p className="col-span-full py-8 text-center text-sm text-slate-500">
+                    No hay datos de estados disponibles.
+                  </p>
+                )}
+              </div>
+            </article>
           </div>
-          <article className="vn-final-card vn-analytics-audit overflow-hidden rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10">
+
+          <article className="overflow-hidden vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10">
             <div className="flex flex-col gap-3 border-b border-white/10 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm font-semibold text-violet-300">
@@ -590,7 +575,7 @@ export default function AnalyticsPage() {
               {analytics.recentActivity.slice(0, 10).map((event) => (
                 <div
                   key={event.id}
-                  className="vn-analytics-audit-row flex flex-col gap-2 px-6 py-4 transition md:flex-row md:items-center md:justify-between"
+                  className="flex flex-col gap-2 px-6 py-4 transition hover:bg-white/[0.03] md:flex-row md:items-center md:justify-between"
                 >
                   <div className="flex min-w-0 items-start gap-3">
                     <div className="rounded-xl bg-violet-500/10 p-2 text-violet-300">
