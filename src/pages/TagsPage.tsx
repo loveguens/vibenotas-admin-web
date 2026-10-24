@@ -238,7 +238,7 @@ export default function TagsPage() {
         )}
 
         <div className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-4 shadow-xl shadow-black/10 backdrop-blur-xl">
-          <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3">
+          <div className="vn-final-search flex items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3">
             <Search size={19} className="text-slate-500" />
 
             <input
