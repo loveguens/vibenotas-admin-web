@@ -13,7 +13,7 @@ export default function AdminLayout({ role }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className={`vn-admin ${role === "superadmin" ? "vn-superadmin-layout" : ""} lg:flex`}>
+    <div className="vn-admin lg:flex">
       <Sidebar
         role={role}
         isOpen={sidebarOpen}
