@@ -360,8 +360,16 @@ export default function AnalyticsPage() {
             </article>
           </div>
 
-          <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="vn-analytics-section-label">
+            <div>
+              <span>02 / EVOLUCIÓN</span>
+              <h2>Crecimiento y composición</h2>
+            </div>
+            <span className="vn-analytics-period-label">Datos del período: {periodLabel}</span>
+          </div>
+          <div className="vn-analytics-insight-grid">
+            <article className="vn-final-card vn-analytics-chart rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm font-semibold text-violet-300">
                   Crecimiento de usuarios
@@ -441,10 +449,8 @@ export default function AnalyticsPage() {
                 </LineChart>
               </ResponsiveContainer>
             </div>
-          </article>
-
-          <div className="grid gap-6 xl:grid-cols-2">
-            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
+            </article>
+            <article className="vn-final-card vn-analytics-roles rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-violet-300">
@@ -499,8 +505,16 @@ export default function AnalyticsPage() {
                 )}
               </div>
             </article>
+          </div>
 
-            <article className="vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
+          <div className="vn-analytics-section-label">
+            <div>
+              <span>03 / ESTADO</span>
+              <h2>Salud de la comunidad</h2>
+            </div>
+            <span className="vn-analytics-period-label">Situación de las cuentas</span>
+          </div>
+          <article className="vn-final-card vn-analytics-health rounded-3xl border border-white/10 bg-[#1E293B]/80 p-6 shadow-xl shadow-black/10">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-violet-300">
@@ -517,7 +531,7 @@ export default function AnalyticsPage() {
                 </div>
               </div>
 
-              <div className="mt-7 grid gap-3 sm:grid-cols-2">
+              <div className="mt-5 grid grid-cols-2 gap-3 max-[359px]:grid-cols-1 lg:grid-cols-4">
                 {analytics.distributions.usersByStatus.map((item) => (
                   <div
                     key={item.status}
@@ -543,10 +557,16 @@ export default function AnalyticsPage() {
                   </p>
                 )}
               </div>
-            </article>
-          </div>
+          </article>
 
-          <article className="overflow-hidden vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10">
+          <div className="vn-analytics-section-label">
+            <div>
+              <span>04 / AUDITORÍA</span>
+              <h2>Movimientos recientes</h2>
+            </div>
+            <span className="vn-analytics-period-label">{analytics.summary.audit.eventsInPeriod} eventos durante {periodLabel}</span>
+          </div>
+          <article className="vn-final-card vn-analytics-audit overflow-hidden rounded-3xl border border-white/10 bg-[#1E293B]/80 shadow-xl shadow-black/10">
             <div className="flex flex-col gap-3 border-b border-white/10 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm font-semibold text-violet-300">
@@ -570,7 +590,7 @@ export default function AnalyticsPage() {
               {analytics.recentActivity.slice(0, 10).map((event) => (
                 <div
                   key={event.id}
-                  className="flex flex-col gap-2 px-6 py-4 transition hover:bg-white/[0.03] md:flex-row md:items-center md:justify-between"
+                  className="vn-analytics-audit-row flex flex-col gap-2 px-6 py-4 transition md:flex-row md:items-center md:justify-between"
                 >
                   <div className="flex min-w-0 items-start gap-3">
                     <div className="rounded-xl bg-violet-500/10 p-2 text-violet-300">
