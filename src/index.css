@@ -1476,3 +1476,524 @@ html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview .recharts-cartes
     min-width: 0;
   }
 }
+
+/* =========================================================
+   ANALYTICS V2 — INTELLIGENCE DASHBOARD
+   Diseño exclusivo de Analíticas del Super Admin.
+   ========================================================= */
+.vn-admin.vn-superadmin-layout .vn-analytics-overview {
+  --an-ink: #18243d;
+  --an-muted: #67748e;
+  --an-outline: rgba(116, 91, 176, 0.17);
+  --an-accent: #8b5cf6;
+  color: var(--an-ink);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 22px 28px;
+  padding: clamp(20px, 3.5vw, 36px);
+  border: 1px solid rgba(167, 139, 250, 0.38);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 82% -34%, rgba(196, 181, 253, 0.42), transparent 37%),
+    radial-gradient(circle at -7% 107%, rgba(45, 212, 191, 0.17), transparent 36%),
+    linear-gradient(113deg, #1f173c 0%, #25234b 55%, #153653 100%);
+  box-shadow: 0 25px 55px rgba(33, 25, 75, 0.18);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-hero-main {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: clamp(13px, 2vw, 20px);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-hero-icon {
+  display: grid;
+  flex-shrink: 0;
+  width: 68px;
+  height: 68px;
+  place-items: center;
+  color: #f5f3ff;
+  border: 1px solid rgba(221, 214, 254, 0.45);
+  border-radius: 23px;
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.46), rgba(45, 212, 191, 0.13));
+  box-shadow: 0 12px 35px rgba(17, 9, 39, 0.22);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-hero p.vn-analytics-eyebrow {
+  margin: 0 0 5px;
+  color: #d8caff;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.17em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-hero h1.vn-analytics-display {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(26px, 3.6vw, 42px);
+  line-height: 1.08;
+  letter-spacing: -0.052em;
+  font-weight: 850;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-display span {
+  color: #bca9f9;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-hero p.vn-analytics-hero-description {
+  max-width: 530px;
+  margin-top: 10px;
+  color: #cad5ef;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-periods {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid rgba(221, 214, 254, 0.24);
+  border-radius: 15px;
+  background: rgba(4, 9, 26, 0.25);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-period {
+  min-height: 36px;
+  padding: 7px 12px;
+  border-radius: 11px;
+  color: #c3c6df;
+  font-size: 12px;
+  font-weight: 650;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-period:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-period.is-active {
+  color: #fff;
+  background: linear-gradient(135deg, #7c3aed, #ba4fe9);
+  box-shadow: 0 6px 18px rgba(91, 33, 182, 0.22);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-refresh {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  color: #f5f3ff;
+  border: 1px solid rgba(221, 214, 254, 0.3);
+  border-radius: 13px;
+  background: rgba(167, 139, 250, 0.13);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-refresh:hover {
+  background: rgba(167, 139, 250, 0.22);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-refresh:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-hero-footer {
+  display: flex;
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 18px;
+  padding-top: 16px;
+  color: #adb9d8;
+  border-top: 1px solid rgba(221, 214, 254, 0.17);
+  font-size: 11px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #a7f3d0;
+  font-weight: 700;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-live span {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.12);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-section-label {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 1px 3px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-section-label > div > span {
+  color: #7c3aed;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 0.15em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-section-label h2 {
+  margin-top: 4px;
+  color: var(--an-ink);
+  font-size: clamp(17px, 2.2vw, 21px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-period-label {
+  color: var(--an-muted);
+  font-size: 11px;
+  text-align: right;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-stat {
+  --an-tone: #8b5cf6;
+  --an-wash: rgba(139, 92, 246, 0.11);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 183px;
+  padding: 19px;
+  border-radius: 23px;
+  border-color: var(--an-outline);
+  background: linear-gradient(145deg, #fff 0%, #f5f2ff 100%);
+  box-shadow: 0 12px 32px rgba(54, 44, 107, 0.06);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-stat[data-tone="pink"] {
+  --an-tone: #d946ef;
+  --an-wash: rgba(217, 70, 239, 0.12);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-stat[data-tone="green"] {
+  --an-tone: #059669;
+  --an-wash: rgba(16, 185, 129, 0.13);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-stat[data-tone="blue"] {
+  --an-tone: #0284c7;
+  --an-wash: rgba(2, 132, 199, 0.12);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-stat::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -75px;
+  right: -48px;
+  width: 190px;
+  height: 190px;
+  background: var(--an-wash);
+  border-radius: 50%;
+  filter: blur(12px);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-stat::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 19px;
+  right: 19px;
+  height: 3px;
+  border-radius: 5px 5px 0 0;
+  background: var(--an-tone);
+  opacity: 0.8;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-stat-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-stat-number {
+  color: #8d92aa;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-stat-icon {
+  display: grid;
+  width: 43px;
+  height: 43px;
+  flex-shrink: 0;
+  place-items: center;
+  color: var(--an-tone);
+  background: var(--an-wash);
+  border-radius: 14px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-stat-name {
+  margin-top: -8px;
+  color: #576680;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-stat-value {
+  margin-top: 6px;
+  color: #1c2440;
+  font-size: clamp(27px, 3vw, 39px);
+  font-weight: 850;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-stat-note {
+  margin-top: 10px;
+  color: var(--an-tone);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-insight-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(280px, 1fr);
+  align-items: stretch;
+  gap: 16px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-chart,
+.vn-admin.vn-superadmin-layout .vn-analytics-roles,
+.vn-admin.vn-superadmin-layout .vn-analytics-health,
+.vn-admin.vn-superadmin-layout .vn-analytics-audit {
+  border-color: var(--an-outline);
+  background: linear-gradient(145deg, #ffffff, #f8f9ff);
+  box-shadow: 0 15px 38px rgba(32, 44, 87, 0.055);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-chart {
+  min-width: 0;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-roles {
+  min-width: 0;
+  background: linear-gradient(155deg, #f9f5ff 0%, #ffffff 100%);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-roles .mt-7.space-y-4 {
+  margin-top: 22px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-health .grid > div {
+  min-width: 0;
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit .divide-y > .vn-analytics-audit-row {
+  border-color: rgba(131, 145, 177, 0.15);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-row:hover {
+  background: rgba(139, 92, 246, 0.055);
+}
+
+.vn-admin.vn-superadmin-layout .vn-analytics-audit-row p.font-semibold {
+  color: var(--an-ink);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-overview {
+  --an-ink: #f5f3ff;
+  --an-muted: #9caecc;
+  --an-outline: rgba(167, 139, 250, 0.16);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-stat {
+  background: linear-gradient(145deg, #202a47 0%, #19243e 100%);
+  border-color: var(--an-outline);
+  box-shadow: 0 16px 40px rgba(1, 6, 19, 0.14);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-stat-number {
+  color: #8b9ab8;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-stat-name {
+  color: #b5bfd5;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-stat-value {
+  color: #fff;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-chart,
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-roles,
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-health,
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-audit {
+  background: linear-gradient(145deg, #202a43 0%, #17243b 100%);
+  border-color: var(--an-outline);
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.14);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-roles {
+  background: linear-gradient(150deg, #292042, #18253c);
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-section-label > div > span {
+  color: #bda8f9;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-section-label h2 {
+  color: #fff;
+}
+
+html.dark .vn-admin.vn-superadmin-layout .vn-analytics-audit-row p.font-semibold {
+  color: #fff;
+}
+
+@media (max-width: 1180px) {
+  .vn-admin.vn-superadmin-layout .vn-analytics-hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-controls {
+    justify-content: flex-start;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-overview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-insight-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 639px) {
+  .vn-admin.vn-superadmin-layout .vn-analytics-hero {
+    padding: 19px 16px;
+    gap: 17px;
+    border-radius: 22px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-hero-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-hero-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-hero h1.vn-analytics-display {
+    font-size: clamp(22px, 5.5vw, 31px);
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-display span {
+    display: block;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-controls {
+    gap: 8px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-period {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-hero-footer {
+    padding-top: 13px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-section-label {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-period-label {
+    text-align: left;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-overview-grid {
+    gap: 10px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-stat {
+    min-height: 150px;
+    padding: 13px;
+    border-radius: 17px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-stat::after {
+    left: 13px;
+    right: 13px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-stat-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-stat-name {
+    font-size: 11px;
+    margin-top: 2px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-stat-note {
+    font-size: 10px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-stat-value {
+    font-size: 29px;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-analytics-chart,
+  .vn-admin.vn-superadmin-layout .vn-analytics-roles,
+  .vn-admin.vn-superadmin-layout .vn-analytics-health {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 340px) {
+  .vn-admin.vn-superadmin-layout .vn-analytics-overview-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn-admin.vn-superadmin-layout .vn-analytics-period,
+  .vn-admin.vn-superadmin-layout .vn-analytics-stat {
+    transition: none;
+  }
+}
