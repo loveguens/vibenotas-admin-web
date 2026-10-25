@@ -1,144 +1,97 @@
-/* Administración / Superadmin — estilos aislados, sin alterar lógica de permisos */
+/* Administración: estilos estructurales propios. Sin parches por nth-child. */
 .superadmin-administration {
+  --adm-bg: #fffaf5;
+  --adm-surface: #fffdf9;
   --adm-ink: #292c30;
-  --adm-coral: #db765e;
-  --adm-line: #eadfd3;
+  --adm-muted: #6c625d;
+  --adm-border: #e8ded4;
+  --adm-coral: #b85843;
   color: var(--adm-ink);
+  padding-top: 12px;
 }
-.superadmin-administration > header {
-  background: radial-gradient(circle at 95% 0%, #ffe0cf 0, transparent 37%), linear-gradient(135deg,#fffaf2,#f8eee4) !important;
-  border: 1px solid var(--adm-line) !important;
-  border-radius: 22px !important;
-  box-shadow: 0 12px 35px #48362c0c !important;
+.superadmin-administration .adm-hero,
+.superadmin-administration .adm-filters,
+.superadmin-administration .adm-directory {
+  background: var(--adm-surface) !important;
+  border: 1px solid var(--adm-border) !important;
+  box-shadow: 0 5px 24px rgba(43,36,31,.045) !important;
+  border-radius: 20px !important;
 }
-.superadmin-administration > header > .absolute { display: none; }
-.superadmin-administration > header h1 { color: var(--adm-ink) !important; letter-spacing: -.04em; }
-.superadmin-administration > header p { color: #706962 !important; }
-.superadmin-administration > header div.rounded-full {
-  background: #fce6d9 !important; border-color: #f4d1c3 !important; color: #a64e3c !important;
+.superadmin-administration .adm-hero {
+  padding: 24px !important;
+  overflow: hidden;
+  background: linear-gradient(115deg,#fffaf2,#f8eee5) !important;
 }
-.superadmin-administration > header button:last-child {
-  background: var(--adm-ink) !important; box-shadow: none !important; color: #fff !important;
+.superadmin-administration .adm-hero > .absolute { display:none; }
+.superadmin-administration .adm-hero > .relative { align-items:center; gap:18px; }
+.superadmin-administration .adm-hero h1 {
+  font-size:clamp(1.65rem,2.3vw,2.1rem) !important;
+  line-height:1.17; margin-top:10px !important;
+  color:var(--adm-ink) !important;
 }
-.superadmin-administration > header button:first-child {
-  border-color: var(--adm-line) !important; background: #fffdfa !important; color: var(--adm-ink) !important;
+.superadmin-administration .adm-hero p { color:var(--adm-muted) !important; }
+.superadmin-administration .adm-hero h1 + p {
+  font-size:13px !important; line-height:1.55 !important; margin-top:8px !important;
 }
-.superadmin-administration > .grid > article {
-  background: #fffaf5 !important; border-color: var(--adm-line) !important;
-  border-radius: 18px !important; padding: 18px !important;
+.superadmin-administration .adm-hero .rounded-full {
+  background:#fce9de !important; border-color:#f0d4c6 !important; color:#9b4d3b !important;
 }
-.superadmin-administration > .grid > article:nth-child(2),
-.superadmin-administration > .grid > article:nth-child(3),
-.superadmin-administration > .grid > article:nth-child(4) {
-  background: #fffaf5 !important;
+.superadmin-administration .adm-hero .adm-export,
+.superadmin-administration .adm-hero .adm-create {
+  white-space:nowrap; min-height:42px; min-width:max-content;
+  padding:10px 14px !important; box-shadow:none !important;
 }
-.superadmin-administration > .grid > article p { color: var(--adm-ink) !important; }
-.superadmin-administration > .grid > article p:first-child,
-.superadmin-administration > .grid > article p:last-child { color: #786e66 !important; }
-.superadmin-administration > .grid > article > div > div:last-child {
-  background: #ffffffa8 !important; color: #b85843 !important;
+.superadmin-administration .adm-hero .adm-export {
+  background:#fffdfa !important; border-color:var(--adm-border) !important; color:var(--adm-ink) !important;
 }
-.superadmin-administration > .rounded-3xl {
-  background: #fffdf9 !important; border-color: var(--adm-line) !important;
-  border-radius: 20px !important; box-shadow: 0 8px 30px #49382d0a !important;
+.superadmin-administration .adm-hero .adm-create {
+  background:var(--adm-ink) !important; color:white !important;
 }
-.superadmin-administration > .rounded-3xl input {
-  color: var(--adm-ink) !important;
+.superadmin-administration .adm-metrics { gap:12px; }
+.superadmin-administration .adm-metric-card {
+  padding:18px; border:1px solid var(--adm-border) !important;
+  border-radius:18px; background:var(--adm-bg) !important;
+  box-shadow:0 2px 8px rgba(43,36,31,.035);
+  color:var(--adm-ink) !important;
 }
-.superadmin-administration > .rounded-3xl input:focus-visible {
-  outline: 2px solid #db765e; outline-offset: 2px;
+.superadmin-administration .adm-metric-card p { color:var(--adm-ink) !important; }
+.superadmin-administration .adm-metric-card p:first-child,
+.superadmin-administration .adm-metric-card p:last-child { color:var(--adm-muted) !important; }
+.superadmin-administration .adm-metric-card p.mt-2 { font-size:1.8rem; margin-top:5px; }
+.superadmin-administration .adm-metric-card p.mt-4 { margin-top:10px; }
+.superadmin-administration .adm-metric-card > div > div:last-child {
+  background:#ffede4 !important; color:var(--adm-coral) !important;
 }
-.superadmin-administration > .rounded-3xl button.bg-violet-500,
-.superadmin-administration > .rounded-3xl button.bg-fuchsia-500 {
-  background: var(--adm-ink) !important; color: #fff !important; box-shadow: none !important;
+.superadmin-administration .adm-filters { padding:16px !important; }
+.superadmin-administration .adm-filters input { color:var(--adm-ink) !important; }
+.superadmin-administration .adm-filters button.bg-violet-500,
+.superadmin-administration .adm-filters button.bg-fuchsia-500 {
+  background:var(--adm-ink) !important; color:white !important; box-shadow:none !important;
 }
-.superadmin-administration > .rounded-3xl button.bg-violet-50 {
-  background: #fff0e8 !important; border-color: #f4d2c4 !important; color: #ad5b47 !important;
+.superadmin-administration .adm-filters button.bg-violet-50 {
+  background:#fff0e8 !important; color:var(--adm-coral) !important; border-color:#efd6ca !important;
 }
-.superadmin-administration > .rounded-3xl p.text-violet-700 { color: #b45d49 !important; }
-.superadmin-administration button:focus-visible {
-  outline: 2px solid var(--adm-coral); outline-offset: 3px;
+.superadmin-administration .adm-directory { overflow:hidden; }
+.superadmin-administration .adm-directory h2 { color:var(--adm-ink) !important; }
+.superadmin-administration .adm-directory thead { background:#f4ede6 !important; color:#605d58 !important; }
+.superadmin-administration .adm-directory tbody tr { border-color:#eee6de !important; }
+.superadmin-administration .adm-directory tbody tr:hover { background:#fff4ec !important; }
+.superadmin-administration .adm-directory tbody td,
+.superadmin-administration .adm-directory tbody td p,
+.superadmin-administration .adm-directory article p { color:#333438 !important; }
+.superadmin-administration .adm-directory tbody td .text-slate-500,
+.superadmin-administration .adm-directory article .text-slate-500 { color:#6c625d !important; }
+.superadmin-administration .adm-directory .bg-fuchsia-50 { background:#f7e5e4 !important; color:#923c39 !important; border-color:#ebc7c3 !important; }
+.superadmin-administration .adm-directory .bg-violet-50 { background:#ede8f5 !important; color:#624b86 !important; border-color:#d7cae9 !important; }
+.superadmin-administration .adm-directory .bg-emerald-50 { background:#e4f3e9 !important; color:#246e45 !important; border-color:#b9dcc4 !important; }
+.superadmin-administration button:focus-visible,
+.superadmin-administration input:focus-visible { outline:2px solid var(--adm-coral); outline-offset:2px; }
+@media(max-width:900px) {
+ .superadmin-administration .adm-hero > .relative { align-items:stretch; }
 }
-@media (max-width: 640px) {
-  .superadmin-administration > header { padding: 20px !important; }
-  .superadmin-administration > header h1 { font-size: 1.75rem !important; }
-  .superadmin-administration > .grid { gap: 10px; }
-  .superadmin-administration > .grid > article { padding: 14px !important; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .superadmin-administration *, .superadmin-administration *::before,
-  .superadmin-administration *::after { scroll-behavior: auto !important; }
-}
-
-/* Segunda pasada: densidad, legibilidad y controles de una sola línea */
-.superadmin-administration { padding-top: 10px; }
-.superadmin-administration > header {
-  padding: 22px 26px !important;
-  overflow: visible !important;
-}
-.superadmin-administration > header > .relative { gap: 18px !important; align-items: center !important; }
-.superadmin-administration > header h1 { margin-top: 10px !important; font-size: clamp(1.5rem,2.2vw,2rem) !important; line-height: 1.15; }
-.superadmin-administration > header h1 + p { margin-top: 8px !important; font-size: 13px !important; line-height: 1.5 !important; }
-.superadmin-administration > header button { white-space: nowrap !important; min-width: max-content; padding: 10px 14px !important; min-height: 42px !important; }
-.superadmin-administration > .grid { gap: 12px !important; }
-.superadmin-administration > .grid > article { min-height: 116px; padding: 16px !important; }
-.superadmin-administration > .grid > article p.mt-2 { margin-top: 4px !important; font-size: 1.7rem !important; }
-.superadmin-administration > .grid > article p.mt-4 { margin-top: 9px !important; }
-.superadmin-administration > .rounded-3xl { padding-top: 14px; }
-.superadmin-administration > .rounded-3xl button { box-shadow: none !important; }
-.superadmin-administration > .rounded-3xl button.bg-slate-100 { background: #f4f0eb !important; color: #6c625e !important; }
-.superadmin-administration > .rounded-3xl button.bg-slate-100:hover { background: #fae6dd !important; color: #9a4b39 !important; }
-.superadmin-administration > .rounded-3xl .text-slate-950 { color: #292c30 !important; }
-@media (max-width: 900px) {
-  .superadmin-administration > header > .relative { align-items: stretch !important; }
-  .superadmin-administration > header button { flex: 1; }
-}
-@media (max-width: 640px) {
-  .superadmin-administration > header { padding: 18px !important; }
-  .superadmin-administration > header button { min-width: 0; white-space: normal !important; }
-}
-
-/* Tercera pasada: contraste real con el tema oscuro global del panel */
-.superadmin-administration > .rounded-3xl table tbody td,
-.superadmin-administration > .rounded-3xl table tbody td p,
-.superadmin-administration > .rounded-3xl .lg\:hidden p {
-  color: #3c3e42 !important;
-}
-.superadmin-administration > .rounded-3xl table tbody td p.text-xs,
-.superadmin-administration > .rounded-3xl .lg\:hidden p.text-xs { color: #706962 !important; }
-.superadmin-administration > .rounded-3xl table thead {
-  background: #f0e9e2 !important;
-  color: #625d58 !important;
-}
-.superadmin-administration > .rounded-3xl table tbody tr {
-  border-color: #eee7df !important;
-}
-.superadmin-administration > .rounded-3xl table tbody tr:hover { background: #fff3eb !important; }
-.superadmin-administration > .rounded-3xl table tbody td span.bg-fuchsia-50 {
-  background: #f9e6e2 !important; border-color: #f0c9c0 !important; color: #9c423a !important;
-}
-.superadmin-administration > .rounded-3xl table tbody td span.bg-violet-50 {
-  background: #ede8f6 !important; border-color: #d8cbed !important; color: #684d93 !important;
-}
-.superadmin-administration > .rounded-3xl table tbody td span.bg-emerald-50 {
-  background: #e3f4e9 !important; border-color: #b7dfc7 !important; color: #237449 !important;
-}
-.superadmin-administration > .rounded-3xl table tbody td button { color: #655d58 !important; }
-.superadmin-administration > .rounded-3xl table tbody td button:hover { color: #a64e3c !important; }
-.superadmin-administration > .rounded-3xl .lg\:hidden article { background: #fffaf5 !important; border-color: #eee1d7 !important; }
-/* La barra global permanece fija; el contenido conserva su flujo natural al desplazarse. */
-
-/* Tarjetas métricas uniformes: un mismo fondo y acento coral */
-.superadmin-administration > .grid > article,
-.superadmin-administration > .grid > article:nth-child(n) {
-  background: #fffaf5 !important;
-  border: 1px solid #e8ded4 !important;
-  box-shadow: 0 2px 9px rgba(43, 36, 31, .035) !important;
-}
-.superadmin-administration > .grid > article > div > div:last-child {
-  color: #b85843 !important;
-  background: #fff0e8 !important;
-}
-.superadmin-administration > .grid > article p.mt-2 {
-  color: #292c30 !important;
+@media(max-width:640px) {
+ .superadmin-administration .adm-hero { padding:18px !important; }
+ .superadmin-administration .adm-hero .adm-export,
+ .superadmin-administration .adm-hero .adm-create { min-width:0; white-space:normal; flex:1; }
+ .superadmin-administration .adm-metric-card { padding:14px; }
 }
