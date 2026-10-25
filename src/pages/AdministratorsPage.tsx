@@ -1260,28 +1260,28 @@ export default function AdministratorsPage() {
             value: totals.total,
             helper: "Cuentas administrativas",
             icon: ShieldCheck,
-            tone: "border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-400/15 dark:bg-violet-500/[0.07] dark:text-violet-300",
+            tone: "border-[#e8ded4] bg-[#fffaf5] text-[#292c30]",
           },
           {
             label: "Activos",
             value: totals.active,
             helper: "Acceso disponible",
             icon: UserRoundCheck,
-            tone: "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-400/15 dark:bg-emerald-500/[0.07] dark:text-emerald-300",
+            tone: "border-[#e8ded4] bg-[#fffaf5] text-[#292c30]",
           },
           {
             label: "Acceso restringido",
             value: totals.restricted,
             helper: "Suspendidos o deshabilitados",
             icon: ShieldOff,
-            tone: "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-400/15 dark:bg-amber-500/[0.07] dark:text-amber-300",
+            tone: "border-[#e8ded4] bg-[#fffaf5] text-[#292c30]",
           },
           {
             label: "Cuentas protegidas",
             value: totals.protected,
             helper: "Super Admin",
             icon: Crown,
-            tone: "border-fuchsia-200 bg-fuchsia-50 text-fuchsia-700 dark:border-fuchsia-400/15 dark:bg-fuchsia-500/[0.07] dark:text-fuchsia-300",
+            tone: "border-[#e8ded4] bg-[#fffaf5] text-[#292c30]",
           },
         ].map((item) => {
           const Icon = item.icon;
