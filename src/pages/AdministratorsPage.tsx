@@ -1152,7 +1152,7 @@ export default function AdministratorsPage() {
 
   return (
     <section className="superadmin-administration space-y-6 pb-10 text-slate-900 dark:text-white">
-      <header className="relative overflow-hidden rounded-[28px] border border-slate-200 bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.12),transparent_38%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(248,250,252,0.98))] p-6 shadow-xl shadow-slate-200/60 sm:p-8 dark:border-white/10 dark:bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.18),transparent_38%),linear-gradient(135deg,rgba(30,41,59,0.96),rgba(15,23,42,0.96))] dark:shadow-2xl dark:shadow-black/20">
+      <header className="adm-hero relative overflow-hidden rounded-[28px] border border-slate-200 bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.12),transparent_38%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(248,250,252,0.98))] p-6 shadow-xl shadow-slate-200/60 sm:p-8 dark:border-white/10 dark:bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.18),transparent_38%),linear-gradient(135deg,rgba(30,41,59,0.96),rgba(15,23,42,0.96))] dark:shadow-2xl dark:shadow-black/20">
         <div className="absolute -right-16 -top-20 h-52 w-52 rounded-full bg-fuchsia-300/20 blur-3xl dark:bg-fuchsia-500/10" />
         <div className="absolute -bottom-24 left-1/3 h-52 w-52 rounded-full bg-violet-300/20 blur-3xl dark:bg-violet-500/10" />
 
@@ -1178,7 +1178,7 @@ export default function AdministratorsPage() {
               type="button"
               onClick={() => void exportExcel()}
               disabled={filteredAdmins.length === 0 || exporting}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-45 dark:border-white/10 dark:bg-white/[0.055] dark:text-slate-200 dark:hover:border-white/15 dark:hover:bg-white/10"
+              className="adm-export inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-45 dark:border-white/10 dark:bg-white/[0.055] dark:text-slate-200 dark:hover:border-white/15 dark:hover:bg-white/10"
             >
               {exporting ? (
                 <RefreshCw size={17} className="animate-spin" />
@@ -1196,7 +1196,7 @@ export default function AdministratorsPage() {
                 resetCreateForm();
                 setShowCreateModal(true);
               }}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 transition hover:-translate-y-0.5 hover:brightness-110"
+              className="adm-create inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 transition hover:-translate-y-0.5 hover:brightness-110"
             >
               <UserPlus size={18} />
               Nuevo administrador
@@ -1253,7 +1253,7 @@ export default function AdministratorsPage() {
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="adm-metrics grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {[
           {
             label: "Total",
@@ -1289,7 +1289,7 @@ export default function AdministratorsPage() {
           return (
             <article
               key={item.label}
-              className={`rounded-2xl border p-5 ${item.tone}`}
+              className="adm-metric-card"
             >
               <div className="flex items-start justify-between">
                 <div>
@@ -1314,7 +1314,7 @@ export default function AdministratorsPage() {
         })}
       </div>
 
-      <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-xl shadow-slate-200/50 backdrop-blur-xl sm:p-5 dark:border-white/10 dark:bg-[#172033]/85 dark:shadow-black/10">
+      <div className="adm-filters rounded-3xl border border-slate-200 bg-white p-4 shadow-xl shadow-slate-200/50 backdrop-blur-xl sm:p-5 dark:border-white/10 dark:bg-[#172033]/85 dark:shadow-black/10">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
           <div className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 transition focus-within:border-violet-400 focus-within:bg-white dark:border-white/10 dark:bg-black/10 dark:focus-within:border-violet-400/35 dark:focus-within:bg-black/15">
             <Search size={18} className="shrink-0 text-slate-500" />
@@ -1386,7 +1386,7 @@ export default function AdministratorsPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-white/10 dark:bg-[#172033]/85 dark:shadow-black/10">
+      <div className="adm-directory overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-white/10 dark:bg-[#172033]/85 dark:shadow-black/10">
         <div className="flex flex-col gap-3 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:border-white/10">
           <div>
             <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">
