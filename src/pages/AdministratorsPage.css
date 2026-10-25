@@ -27,9 +27,11 @@
   background: #fffaf5 !important; border-color: var(--adm-line) !important;
   border-radius: 18px !important; padding: 18px !important;
 }
-.superadmin-administration > .grid > article:nth-child(2) { background: #f3f6ef !important; }
-.superadmin-administration > .grid > article:nth-child(3) { background: #fff3e8 !important; }
-.superadmin-administration > .grid > article:nth-child(4) { background: #f9ecea !important; }
+.superadmin-administration > .grid > article:nth-child(2),
+.superadmin-administration > .grid > article:nth-child(3),
+.superadmin-administration > .grid > article:nth-child(4) {
+  background: #fffaf5 !important;
+}
 .superadmin-administration > .grid > article p { color: var(--adm-ink) !important; }
 .superadmin-administration > .grid > article p:first-child,
 .superadmin-administration > .grid > article p:last-child { color: #786e66 !important; }
@@ -125,3 +127,18 @@
 .superadmin-administration > .rounded-3xl table tbody td button:hover { color: #a64e3c !important; }
 .superadmin-administration > .rounded-3xl .lg\:hidden article { background: #fffaf5 !important; border-color: #eee1d7 !important; }
 /* La barra global permanece fija; el contenido conserva su flujo natural al desplazarse. */
+
+/* Tarjetas métricas uniformes: un mismo fondo y acento coral */
+.superadmin-administration > .grid > article,
+.superadmin-administration > .grid > article:nth-child(n) {
+  background: #fffaf5 !important;
+  border: 1px solid #e8ded4 !important;
+  box-shadow: 0 2px 9px rgba(43, 36, 31, .035) !important;
+}
+.superadmin-administration > .grid > article > div > div:last-child {
+  color: #b85843 !important;
+  background: #fff0e8 !important;
+}
+.superadmin-administration > .grid > article p.mt-2 {
+  color: #292c30 !important;
+}
