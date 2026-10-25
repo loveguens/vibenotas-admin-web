@@ -95,3 +95,33 @@
   .superadmin-administration > header { padding: 18px !important; }
   .superadmin-administration > header button { min-width: 0; white-space: normal !important; }
 }
+
+/* Tercera pasada: contraste real con el tema oscuro global del panel */
+.superadmin-administration > .rounded-3xl table tbody td,
+.superadmin-administration > .rounded-3xl table tbody td p,
+.superadmin-administration > .rounded-3xl .lg\:hidden p {
+  color: #3c3e42 !important;
+}
+.superadmin-administration > .rounded-3xl table tbody td p.text-xs,
+.superadmin-administration > .rounded-3xl .lg\:hidden p.text-xs { color: #706962 !important; }
+.superadmin-administration > .rounded-3xl table thead {
+  background: #f0e9e2 !important;
+  color: #625d58 !important;
+}
+.superadmin-administration > .rounded-3xl table tbody tr {
+  border-color: #eee7df !important;
+}
+.superadmin-administration > .rounded-3xl table tbody tr:hover { background: #fff3eb !important; }
+.superadmin-administration > .rounded-3xl table tbody td span.bg-fuchsia-50 {
+  background: #f9e6e2 !important; border-color: #f0c9c0 !important; color: #9c423a !important;
+}
+.superadmin-administration > .rounded-3xl table tbody td span.bg-violet-50 {
+  background: #ede8f6 !important; border-color: #d8cbed !important; color: #684d93 !important;
+}
+.superadmin-administration > .rounded-3xl table tbody td span.bg-emerald-50 {
+  background: #e3f4e9 !important; border-color: #b7dfc7 !important; color: #237449 !important;
+}
+.superadmin-administration > .rounded-3xl table tbody td button { color: #655d58 !important; }
+.superadmin-administration > .rounded-3xl table tbody td button:hover { color: #a64e3c !important; }
+.superadmin-administration > .rounded-3xl .lg\:hidden article { background: #fffaf5 !important; border-color: #eee1d7 !important; }
+/* La barra global permanece fija; el contenido conserva su flujo natural al desplazarse. */
