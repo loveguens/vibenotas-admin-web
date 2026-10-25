@@ -455,6 +455,8 @@ function AdminAvatar({
   admin: AdminUser;
   large?: boolean;
 }) {
+  const [imageFailed, setImageFailed] = useState(false);
+
   return (
     <div
       className={`flex shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br from-violet-500 via-violet-600 to-fuchsia-600 font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 ${
@@ -463,10 +465,11 @@ function AdminAvatar({
           : "h-11 w-11 rounded-2xl text-sm"
       }`}
     >
-      {admin.foto_perfil ? (
+      {admin.foto_perfil && !imageFailed ? (
         <img
           src={admin.foto_perfil}
           alt={admin.nombre}
+          onError={() => setImageFailed(true)}
           className="h-full w-full object-cover"
         />
       ) : (
