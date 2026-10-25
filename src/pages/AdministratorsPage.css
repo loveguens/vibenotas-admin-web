@@ -67,3 +67,31 @@
   .superadmin-administration *, .superadmin-administration *::before,
   .superadmin-administration *::after { scroll-behavior: auto !important; }
 }
+
+/* Segunda pasada: densidad, legibilidad y controles de una sola línea */
+.superadmin-administration { padding-top: 10px; }
+.superadmin-administration > header {
+  padding: 22px 26px !important;
+  overflow: visible !important;
+}
+.superadmin-administration > header > .relative { gap: 18px !important; align-items: center !important; }
+.superadmin-administration > header h1 { margin-top: 10px !important; font-size: clamp(1.5rem,2.2vw,2rem) !important; line-height: 1.15; }
+.superadmin-administration > header h1 + p { margin-top: 8px !important; font-size: 13px !important; line-height: 1.5 !important; }
+.superadmin-administration > header button { white-space: nowrap !important; min-width: max-content; padding: 10px 14px !important; min-height: 42px !important; }
+.superadmin-administration > .grid { gap: 12px !important; }
+.superadmin-administration > .grid > article { min-height: 116px; padding: 16px !important; }
+.superadmin-administration > .grid > article p.mt-2 { margin-top: 4px !important; font-size: 1.7rem !important; }
+.superadmin-administration > .grid > article p.mt-4 { margin-top: 9px !important; }
+.superadmin-administration > .rounded-3xl { padding-top: 14px; }
+.superadmin-administration > .rounded-3xl button { box-shadow: none !important; }
+.superadmin-administration > .rounded-3xl button.bg-slate-100 { background: #f4f0eb !important; color: #6c625e !important; }
+.superadmin-administration > .rounded-3xl button.bg-slate-100:hover { background: #fae6dd !important; color: #9a4b39 !important; }
+.superadmin-administration > .rounded-3xl .text-slate-950 { color: #292c30 !important; }
+@media (max-width: 900px) {
+  .superadmin-administration > header > .relative { align-items: stretch !important; }
+  .superadmin-administration > header button { flex: 1; }
+}
+@media (max-width: 640px) {
+  .superadmin-administration > header { padding: 18px !important; }
+  .superadmin-administration > header button { min-width: 0; white-space: normal !important; }
+}
