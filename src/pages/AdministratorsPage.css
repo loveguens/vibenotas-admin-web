@@ -186,3 +186,64 @@ html.dark .vn-admin .superadmin-administration .adm-directory button {
 html.dark .vn-admin .superadmin-administration .adm-directory .text-violet-700 {
   color:#ff9d86 !important;
 }
+
+/* Diálogos de Administración: identidad grafito/coral y campos legibles */
+html.dark .vn-admin .superadmin-administration .adm-dialog {
+ background:#202327 !important; border:1px solid #414449 !important;
+ color:#f5f1eb !important; box-shadow:0 26px 70px rgba(0,0,0,.42) !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-dialog .bg-\[\#101827\],
+html.dark .vn-admin .superadmin-administration .adm-dialog .bg-\[\#172033\] {
+ background:#26292e !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-dialog input {
+ background:#292c31 !important; border-color:#4b4f55 !important;
+ color:#f6f2eb !important; caret-color:#ff957f !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-dialog input::placeholder {
+ color:#b1aaa4 !important; opacity:1;
+}
+html.dark .vn-admin .superadmin-administration .adm-dialog input:focus {
+ background:#30343a !important; border-color:#ff957f !important;
+ outline:2px solid #ff957f !important; outline-offset:1px;
+ box-shadow:0 0 0 4px rgba(255,149,127,.12) !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-dialog label > span,
+html.dark .vn-admin .superadmin-administration .adm-dialog .text-slate-500,
+html.dark .vn-admin .superadmin-administration .adm-dialog .text-slate-400 {
+ color:#bfc1c4 !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-dialog :is(h2,h3),
+html.dark .vn-admin .superadmin-administration .adm-dialog .text-slate-950 {
+ color:#faf6f0 !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-dialog .text-violet-700,
+html.dark .vn-admin .superadmin-administration .adm-dialog .text-violet-300,
+html.dark .vn-admin .superadmin-administration .adm-dialog .text-sky-300 {
+ color:#ffa18c !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-create-dialog > div:first-child {
+ background:#26292e !important; border-color:#414449 !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-dialog .bg-slate-50,
+html.dark .vn-admin .superadmin-administration .adm-dialog .bg-\[\#172033\]\/85 {
+ background:#292c31 !important; border-color:#414449 !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-dialog .bg-violet-50 {
+ background:#3a2c31 !important; border-color:#634147 !important;
+ color:#ffb09d !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-dialog .text-violet-200,
+html.dark .vn-admin .superadmin-administration .adm-dialog .text-violet-100 {
+ color:#ffb09d !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-dialog .text-amber-200 {
+ color:#f4d394 !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-dialog button:focus-visible {
+ outline:2px solid #ff957f; outline-offset:2px;
+}
+@media(max-width:640px) {
+ .superadmin-administration .adm-create-dialog {max-height:calc(100dvh - 24px);}
+ .superadmin-administration .adm-details {max-height:100dvh;}
+}
