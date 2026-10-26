@@ -1588,7 +1588,7 @@ export default function AdministratorsPage() {
             aria-label="Cerrar acciones"
           />
 
-          <div className="relative z-10 w-full max-w-md rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
+          <div className="adm-dialog adm-actions relative z-10 w-full max-w-md rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
             <div className="flex items-start gap-3">
               <AdminAvatar admin={adminForActions} />
 
@@ -1735,7 +1735,7 @@ export default function AdministratorsPage() {
             aria-label="Cerrar panel"
           />
 
-          <aside className="relative z-10 flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#101827] dark:shadow-black/60">
+          <aside className="adm-dialog adm-details relative z-10 flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#101827] dark:shadow-black/60">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.14em] text-violet-700 dark:text-violet-300">
@@ -2053,7 +2053,7 @@ export default function AdministratorsPage() {
             aria-label="Cerrar edición"
           />
 
-          <div className="relative z-10 w-full max-w-lg rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
+          <div className="adm-dialog adm-edit relative z-10 w-full max-w-lg rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.14em] text-sky-700 dark:text-sky-300">
@@ -2167,7 +2167,7 @@ export default function AdministratorsPage() {
             aria-label="Cerrar creación"
           />
 
-          <div className="relative z-10 w-full max-w-2xl overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-2xl shadow-slate-400/30 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
+          <div className="adm-dialog adm-create-dialog relative z-10 w-full max-w-2xl overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-2xl shadow-slate-400/30 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
             <div className="border-b border-slate-200 bg-[radial-gradient(circle_at_top_right,rgba(217,70,239,0.12),transparent_42%),rgba(248,250,252,0.9)] p-5 sm:p-6 dark:border-white/10 dark:bg-[radial-gradient(circle_at_top_right,rgba(217,70,239,0.18),transparent_42%),rgba(15,23,42,0.45)]">
               <div className="flex items-start justify-between gap-4">
                 <div>
