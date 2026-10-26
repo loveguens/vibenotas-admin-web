@@ -95,3 +95,94 @@
  .superadmin-administration .adm-hero .adm-create { min-width:0; white-space:normal; flex:1; }
  .superadmin-administration .adm-metric-card { padding:14px; }
 }
+
+/* Tema oscuro nativo de Administración: grafito + coral.
+   Alcance limitado a esta pantalla, sin cambiar los modales de seguridad. */
+html.dark .vn-admin .superadmin-administration {
+  --adm-bg: #222529;
+  --adm-surface: #1e2125;
+  --adm-ink: #f5f1eb;
+  --adm-muted: #b9b5b1;
+  --adm-border: #3b3e42;
+  --adm-coral: #ff957f;
+}
+html.dark .vn-admin .superadmin-administration .adm-hero,
+html.dark .vn-admin .superadmin-administration .adm-filters,
+html.dark .vn-admin .superadmin-administration .adm-directory {
+  background: var(--adm-surface) !important;
+  border-color: var(--adm-border) !important;
+  box-shadow: 0 10px 28px rgba(0,0,0,.16) !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-hero {
+  background: linear-gradient(120deg,#24272b,#202226) !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-hero .rounded-full {
+  background:#3c2928 !important; border-color:#67413b !important; color:#ffb09d !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-hero .adm-export {
+  background:#303338 !important; color:#f4f0ec !important; border-color:#4a4d52 !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-hero .adm-create {
+  background:#f4775f !important; color:#191b1e !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-metric-card {
+  background:var(--adm-bg) !important;
+  border-color:var(--adm-border) !important;
+  box-shadow:none !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-metric-card p,
+html.dark .vn-admin .superadmin-administration .adm-metric-card p.mt-2 {
+  color:var(--adm-ink) !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-metric-card p:first-child,
+html.dark .vn-admin .superadmin-administration .adm-metric-card p:last-child {
+  color:var(--adm-muted) !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-metric-card > div > div:last-child {
+  background:#3b2c2b !important; color:#ff9d86 !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-filters input { color:var(--adm-ink) !important; }
+html.dark .vn-admin .superadmin-administration .adm-filters button.bg-violet-500,
+html.dark .vn-admin .superadmin-administration .adm-filters button.bg-fuchsia-500 {
+  background:#f4775f !important; color:#1b1c1e !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-filters button.bg-violet-50 {
+  background:#3c2928 !important; border-color:#684039 !important; color:#ffb09d !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-directory h2,
+html.dark .vn-admin .superadmin-administration .adm-directory tbody td,
+html.dark .vn-admin .superadmin-administration .adm-directory tbody td p,
+html.dark .vn-admin .superadmin-administration .adm-directory article p {
+  color:var(--adm-ink) !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-directory tbody td .text-slate-500,
+html.dark .vn-admin .superadmin-administration .adm-directory article .text-slate-500 {
+  color:var(--adm-muted) !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-directory thead {
+  background:#292c30 !important; color:#c4c0bc !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-directory tbody tr {
+  border-color:#36393d !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-directory tbody tr:hover {
+  background:#292c31 !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-directory .bg-fuchsia-50 {
+  background:#4a2d30 !important; color:#ffc0b5 !important; border-color:#744247 !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-directory .bg-violet-50 {
+  background:#373044 !important; color:#d8c5f4 !important; border-color:#564769 !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-directory .bg-emerald-50 {
+  background:#253d35 !important; color:#a3e4bd !important; border-color:#3e6451 !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-directory .lg\\:hidden article {
+  background:#25282c !important; border-color:var(--adm-border) !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-directory button {
+  color:#c8c4be !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-directory .text-violet-700 {
+  color:#ff9d86 !important;
+}
