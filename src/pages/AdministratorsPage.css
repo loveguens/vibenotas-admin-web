@@ -177,7 +177,7 @@ html.dark .vn-admin .superadmin-administration .adm-directory .bg-violet-50 {
 html.dark .vn-admin .superadmin-administration .adm-directory .bg-emerald-50 {
   background:#253d35 !important; color:#a3e4bd !important; border-color:#3e6451 !important;
 }
-html.dark .vn-admin .superadmin-administration .adm-directory .lg\\:hidden article {
+html.dark .vn-admin .superadmin-administration .adm-directory [class~="lg:hidden"] article {
   background:#25282c !important; border-color:var(--adm-border) !important;
 }
 html.dark .vn-admin .superadmin-administration .adm-directory button {
