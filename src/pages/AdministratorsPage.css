@@ -20,12 +20,12 @@
 .superadmin-administration .adm-hero {
   padding: 24px !important;
   overflow: hidden;
-  background: linear-gradient(115deg,#fffaf2,#f8eee5) !important;
+  background: linear-gradient(110deg,#fffbf6,#f7eee7) !important;
 }
 .superadmin-administration .adm-hero > .absolute { display:none; }
 .superadmin-administration .adm-hero > .relative { align-items:center; gap:18px; }
 .superadmin-administration .adm-hero h1 {
-  font-size:clamp(1.65rem,2.3vw,2.1rem) !important;
+  font-size:clamp(1.65rem,2.3vw,2.05rem) !important;
   line-height:1.17; margin-top:10px !important;
   color:var(--adm-ink) !important;
 }
@@ -45,11 +45,11 @@
   background:#fffdfa !important; border-color:var(--adm-border) !important; color:var(--adm-ink) !important;
 }
 .superadmin-administration .adm-hero .adm-create {
-  background:var(--adm-ink) !important; color:white !important;
+  background:var(--adm-coral) !important; color:white !important;
 }
 .superadmin-administration .adm-metrics { gap:12px; }
 .superadmin-administration .adm-metric-card {
-  padding:18px; border:1px solid var(--adm-border) !important;
+  padding:17px 19px; border:1px solid var(--adm-border) !important;
   border-radius:18px; background:var(--adm-bg) !important;
   box-shadow:0 2px 8px rgba(43,36,31,.035);
   color:var(--adm-ink) !important;
@@ -96,6 +96,58 @@
  .superadmin-administration .adm-metric-card { padding:14px; }
 }
 
+/* Barra de búsqueda, filtros y jerarquía visual compartida */
+.superadmin-administration .adm-search {
+  background:var(--adm-surface) !important;
+  border:1px solid var(--adm-border) !important;
+  border-radius:12px !important;
+  min-height:46px;
+}
+.superadmin-administration .adm-search:focus-within {
+  border-color:var(--adm-coral) !important;
+  box-shadow:0 0 0 3px rgba(244,119,95,.1);
+}
+.superadmin-administration .adm-filters .adm-refresh {
+  border:1px solid var(--adm-border) !important;
+  background:var(--adm-surface) !important;
+  color:var(--adm-coral) !important;
+  box-shadow:none !important;
+}
+.superadmin-administration .adm-filter-groups button {
+  border-radius:11px !important;
+  font-weight:600;
+}
+.superadmin-administration .adm-filter-groups button:not(.bg-violet-500):not(.bg-fuchsia-500) {
+  color:var(--adm-muted) !important;
+  background:#f2eee9 !important;
+}
+.superadmin-administration .adm-directory > div:first-child p.text-violet-700 {
+  color:var(--adm-coral) !important;
+}
+.superadmin-administration .adm-metric-card p.mt-2 {
+  font-weight:800 !important;
+  font-variant-numeric:tabular-nums;
+}
+html.dark .vn-admin .superadmin-administration .adm-search {
+  background:#292c31 !important;
+  border-color:#43474d !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-filters .adm-refresh {
+  background:#2d3035 !important;
+  color:#ffae9b !important;
+  border-color:#484b51 !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-filter-groups button:not(.bg-violet-500):not(.bg-fuchsia-500) {
+  background:#2c3035 !important;
+  color:#d0cbca !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-directory > div:first-child p.text-violet-700 {
+  color:#ffa18c !important;
+}
+@media (min-width:1024px) {
+  .superadmin-administration .adm-hero { padding:23px 25px !important; }
+  .superadmin-administration .adm-hero > .relative > div:first-child { max-width:590px; }
+}
 /* Tema oscuro nativo de Administración: grafito + coral.
    Alcance limitado a esta pantalla, sin cambiar los modales de seguridad. */
 html.dark .vn-admin .superadmin-administration {
