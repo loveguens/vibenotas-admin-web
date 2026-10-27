@@ -299,3 +299,38 @@ html.dark .vn-admin .superadmin-administration .adm-dialog button:focus-visible 
  .superadmin-administration .adm-create-dialog {max-height:calc(100dvh - 24px);}
  .superadmin-administration .adm-details {max-height:100dvh;}
 }
+
+/* Acabado profesional — ritmo vertical y densidad de información */
+.superadmin-administration { gap:18px !important; }
+.superadmin-administration .adm-hero { padding:20px 24px !important; }
+.superadmin-administration .adm-hero h1 { margin-top:8px !important; }
+.superadmin-administration .adm-hero h1 + p { max-width:55ch; }
+.superadmin-administration .adm-metrics { gap:12px !important; }
+.superadmin-administration .adm-metric-card {
+  min-height:108px; padding:15px 17px !important;
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+@media (hover:hover) and (prefers-reduced-motion:no-preference) {
+ .superadmin-administration .adm-metric-card:hover {
+  transform:translateY(-2px); box-shadow:0 7px 18px rgba(43,36,31,.08);
+ }
+}
+.superadmin-administration .adm-metric-card p.mt-2 { margin-top:3px !important; font-size:1.85rem; line-height:1.1; }
+.superadmin-administration .adm-metric-card p.mt-4 { margin-top:7px !important; }
+.superadmin-administration .adm-filters { padding:14px 16px !important; }
+.superadmin-administration .adm-filters .adm-search { min-height:44px; padding:9px 13px !important; }
+.superadmin-administration .adm-filters .adm-refresh { min-height:44px; }
+.superadmin-administration .adm-filter-groups { margin-top:10px !important; gap:8px !important; }
+.superadmin-administration .adm-filter-groups > div { gap:7px !important; }
+.superadmin-administration .adm-filter-groups button { padding:8px 12px !important; line-height:1.2 !important; }
+.superadmin-administration .adm-directory > div:first-child { padding-top:16px !important; padding-bottom:16px !important; }
+.superadmin-administration .adm-directory table th { padding-top:13px !important; padding-bottom:13px !important; }
+.superadmin-administration .adm-directory table td { padding-top:13px !important; padding-bottom:13px !important; }
+.superadmin-administration .adm-directory table tbody tr { transition:background-color .16s ease; }
+@media(max-width:640px) {
+ .superadmin-administration { gap:14px !important; }
+ .superadmin-administration .adm-hero { padding:18px !important; }
+ .superadmin-administration .adm-filters { padding:12px !important; }
+ .superadmin-administration .adm-metric-card { min-height:100px; padding:13px !important; }
+ .superadmin-administration .adm-filter-groups button { padding:9px 11px !important; }
+}
