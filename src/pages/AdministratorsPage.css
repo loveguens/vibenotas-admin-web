@@ -369,3 +369,43 @@ html.dark .vn-admin .superadmin-administration .adm-directory tbody td p.text-xs
 html.dark .vn-admin .superadmin-administration .adm-hero p,
 html.dark .vn-admin .superadmin-administration .adm-metric-card p:first-child,
 html.dark .vn-admin .superadmin-administration .adm-metric-card p:last-child {color:#c9c3bc !important;}
+
+/* Toolbar compacta: diseño de contenido, sin límites artificiales de ancho */
+.superadmin-administration .adm-filters {padding:12px 14px !important;}
+.superadmin-administration .adm-filters .adm-toolbar-top {
+  display:flex; flex-wrap:wrap; align-items:center; gap:10px; width:100%; max-width:none;
+}
+.superadmin-administration .adm-filters .adm-search {
+  flex:1 1 320px; max-width:560px; min-width:180px;
+  min-height:42px; padding:8px 12px !important;
+}
+.superadmin-administration .adm-filters .adm-refresh {
+  flex:0 0 auto; min-height:42px; padding:8px 13px !important; white-space:nowrap;
+}
+.superadmin-administration .adm-filters .adm-filter-groups {
+  display:flex; flex-wrap:wrap; align-items:center; gap:8px 16px;
+  max-width:none; margin-top:10px !important;
+}
+.superadmin-administration .adm-filters .adm-chip-group {
+  display:flex; flex-wrap:wrap; gap:6px;
+}
+.superadmin-administration .adm-filters .adm-chip-group button {
+  padding:7px 11px !important; font-size:12px !important;
+  color:#514b47 !important; background:#f2eeea !important;
+}
+.superadmin-administration .adm-filters .adm-chip-group button.bg-violet-500,
+.superadmin-administration .adm-filters .adm-chip-group button.bg-fuchsia-500 {
+  color:#fff !important; background:#292c30 !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-filters .adm-chip-group button {
+  color:#e5e0db !important; background:#303339 !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-filters .adm-chip-group button.bg-violet-500,
+html.dark .vn-admin .superadmin-administration .adm-filters .adm-chip-group button.bg-fuchsia-500 {
+  color:#211c1b !important; background:#f4775f !important;
+}
+@media(max-width:640px) {
+ .superadmin-administration .adm-filters .adm-search {flex:1 1 100%;max-width:none;}
+ .superadmin-administration .adm-filters .adm-refresh {flex:0 0 auto;}
+ .superadmin-administration .adm-filters .adm-filter-groups {gap:8px;}
+}
