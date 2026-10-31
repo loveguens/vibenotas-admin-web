@@ -334,3 +334,38 @@ html.dark .vn-admin .superadmin-administration .adm-dialog button:focus-visible 
  .superadmin-administration .adm-metric-card { min-height:100px; padding:13px !important; }
  .superadmin-administration .adm-filter-groups button { padding:9px 11px !important; }
 }
+
+/* Legibilidad final: sin tipografía lavada */
+.superadmin-administration .adm-hero h1,
+.superadmin-administration .adm-directory h2 {color:#25272b !important;}
+.superadmin-administration .adm-hero p,
+.superadmin-administration .adm-metric-card p:first-child,
+.superadmin-administration .adm-metric-card p:last-child {color:#625c57 !important;}
+.superadmin-administration .adm-filters input,
+.superadmin-administration .adm-filters input::placeholder {color:#615b57 !important;opacity:1;}
+.superadmin-administration .adm-directory tbody td p,
+.superadmin-administration .adm-directory article p {color:#303237 !important;}
+.superadmin-administration .adm-directory tbody td p.text-xs,
+.superadmin-administration .adm-directory article p.text-xs {color:#655e59 !important;}
+.superadmin-administration .adm-directory article {
+ background:#fffdf9 !important; border-color:#e9ded4 !important;
+}
+.superadmin-administration .adm-directory article .text-slate-600 {color:#575451 !important;}
+/* Los filtros no tienen por qué consumir todo el ancho visual */
+@media(min-width:1024px) {
+ .superadmin-administration .adm-filters > .flex:first-child {max-width:850px;}
+ .superadmin-administration .adm-filter-groups {max-width:max-content;}
+}
+.superadmin-administration .adm-filter-groups button {font-size:13px !important;}
+html.dark .vn-admin .superadmin-administration .adm-filters input,
+html.dark .vn-admin .superadmin-administration .adm-filters input::placeholder {color:#e4dfd9 !important;opacity:1;}
+html.dark .vn-admin .superadmin-administration .adm-directory article {
+ background:#25282c !important;border-color:#42454a !important;
+}
+html.dark .vn-admin .superadmin-administration .adm-directory article p,
+html.dark .vn-admin .superadmin-administration .adm-directory tbody td p {color:#f2eee8 !important;}
+html.dark .vn-admin .superadmin-administration .adm-directory article p.text-xs,
+html.dark .vn-admin .superadmin-administration .adm-directory tbody td p.text-xs {color:#c8c1ba !important;}
+html.dark .vn-admin .superadmin-administration .adm-hero p,
+html.dark .vn-admin .superadmin-administration .adm-metric-card p:first-child,
+html.dark .vn-admin .superadmin-administration .adm-metric-card p:last-child {color:#c9c3bc !important;}
