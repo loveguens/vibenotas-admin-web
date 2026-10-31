@@ -1315,8 +1315,8 @@ export default function AdministratorsPage() {
       </div>
 
       <div className="adm-filters rounded-3xl border border-slate-200 bg-white p-4 shadow-xl shadow-slate-200/50 backdrop-blur-xl sm:p-5 dark:border-white/10 dark:bg-[#172033]/85 dark:shadow-black/10">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-          <div className="adm-search flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 transition focus-within:border-violet-400 focus-within:bg-white dark:border-white/10 dark:bg-black/10 dark:focus-within:border-violet-400/35 dark:focus-within:bg-black/15">
+        <div className="adm-toolbar-top flex flex-wrap items-center gap-2.5">
+          <div className="adm-search flex min-w-[220px] flex-[1_1_320px] items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 transition focus-within:border-violet-400 focus-within:bg-white dark:border-white/10 dark:bg-black/10 dark:focus-within:border-violet-400/35 dark:focus-within:bg-black/15">
             <Search size={18} className="shrink-0 text-slate-500" />
 
             <input
@@ -1349,8 +1349,8 @@ export default function AdministratorsPage() {
           </button>
         </div>
 
-        <div className="adm-filter-groups mt-4 space-y-3">
-          <div className="flex flex-wrap gap-2">
+        <div className="adm-filter-groups mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <div className="adm-chip-group flex flex-wrap items-center gap-1.5">
             {STATUS_FILTERS.map((filter) => (
               <button
                 key={filter.key}
@@ -1367,7 +1367,7 @@ export default function AdministratorsPage() {
             ))}
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="adm-chip-group flex flex-wrap items-center gap-1.5">
             {ROLE_FILTERS.map((filter) => (
               <button
                 key={filter.key}
