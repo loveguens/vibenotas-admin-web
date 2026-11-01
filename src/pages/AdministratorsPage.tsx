@@ -450,21 +450,54 @@ function RoleBadge({ role }: { role: AdminRoleSlug }) {
 
 function resolveAdminAvatarUrl(value?: string | null): string | null {
   const path = value?.trim();
-  if (!path) return null;
-  if (/^(https?:\/\/|data:|blob:)/i.test(path)) return path;
+
+  if (!path) {
+    return null;
+  }
+
+  if (/^(https?:\/\/|data:|blob:)/i.test(path)) {
+    return path;
+  }
+
   try {
-    const origin = new URL(String(api.defaults.baseURL || window.location.origin),window.location.origin).origin;
+    const origin = new URL(
+      String(api.defaults.baseURL || window.location.origin),
+      window.location.origin,
+    ).origin;
+
     return new URL(path, `${origin}/`).toString();
-  } catch { return path; }
+  } catch {
+    return path;
+  }
 }
-function AdminAvatar({admin,large=false}:{admin:AdminUser;large?:boolean}) {
-  const [failedUrl,setFailedUrl] = useState<string | null>(null);
+
+function AdminAvatar({
+  admin,
+  large = false,
+}: {
+  admin: AdminUser;
+  large?: boolean;
+}) {
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
   const url = resolveAdminAvatarUrl(admin.foto_perfil);
+
   return (
-    <div className={`vn-superadmin-avatar adm-avatar flex shrink-0 items-center justify-center overflow-hidden rounded-xl font-extrabold text-white ${large ? "h-20 w-20 text-xl" : "h-11 w-11 text-sm"}`}>
+    <div
+      className={`vn-superadmin-avatar adm-avatar flex shrink-0 items-center justify-center overflow-hidden rounded-xl font-extrabold text-white ${
+        large ? "h-20 w-20 text-xl" : "h-11 w-11 text-sm"
+      }`}
+    >
       {url && failedUrl !== url ? (
-        <img src={url} alt={`Foto de ${admin.nombre}`} loading="lazy" className="h-full w-full object-cover" onError={() => setFailedUrl(url)}/>
-      ) : getInitials(admin.nombre || "Admin")}
+        <img
+          src={url}
+          alt={`Foto de ${admin.nombre}`}
+          loading="lazy"
+          className="h-full w-full object-cover"
+          onError={() => setFailedUrl(url)}
+        />
+      ) : (
+        getInitials(admin.nombre || "Admin")
+      )}
     </div>
   );
 }
