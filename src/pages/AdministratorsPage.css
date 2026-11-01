@@ -1,447 +1,252 @@
-/* Administración: estilos estructurales propios. Sin parches por nth-child. */
-.superadmin-administration {
-  --adm-bg: #fffaf5;
-  --adm-surface: #fffdf9;
-  --adm-ink: #292c30;
-  --adm-muted: #6c625d;
-  --adm-border: #e8ded4;
-  --adm-coral: #b85843;
-  color: var(--adm-ink);
-  padding-top: 12px;
+/* VibeNotas · Administración.
+   Usa los mismos tokens y superficies compartidos del Dashboard Super Admin.
+   No reintroducir parches para colores individuales de cada tarjeta. */
+.vn-admin .superadmin-administration {
+  --adm-ink:var(--vn-ink);
+  --adm-muted:var(--vn-muted);
+  --adm-surface:var(--vn-surface);
+  --adm-line:var(--vn-line);
+  --adm-soft:var(--vn-surface-hover);
+  --adm-coral:var(--vn-coral);
+  --adm-coral-strong:var(--vn-coral-strong);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  min-width:0;
+  color:var(--adm-ink);
+  padding-bottom:32px;
 }
-.superadmin-administration .adm-hero,
-.superadmin-administration .adm-filters,
-.superadmin-administration .adm-directory {
-  background: var(--adm-surface) !important;
-  border: 1px solid var(--adm-border) !important;
-  box-shadow: 0 5px 24px rgba(43,36,31,.045) !important;
-  border-radius: 20px !important;
+.vn-admin .superadmin-administration .adm-hero {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  padding:23px 26px;
+  border:1px solid color-mix(in srgb,var(--adm-coral) 26%,var(--adm-line));
+  border-radius:22px;
+  background:linear-gradient(115deg,var(--adm-surface),color-mix(in srgb,var(--vn-coral-soft) 64%,var(--adm-surface)));
+  color:var(--adm-ink);
+  box-shadow:var(--vn-elevation);
 }
-.superadmin-administration .adm-hero {
-  padding: 24px !important;
-  overflow: hidden;
-  background: linear-gradient(110deg,#fffbf6,#f7eee7) !important;
+.vn-admin .superadmin-administration .adm-heading {min-width:0;max-width:620px;}
+.vn-admin .superadmin-administration .adm-eyebrow {
+  margin:0 0 7px;
+  color:var(--adm-coral-strong);
+  font-size:11px;font-weight:750;letter-spacing:.12em;
 }
-.superadmin-administration .adm-hero > .absolute { display:none; }
-.superadmin-administration .adm-hero > .relative { align-items:center; gap:18px; }
-.superadmin-administration .adm-hero h1 {
-  font-size:clamp(1.65rem,2.3vw,2.05rem) !important;
-  line-height:1.17; margin-top:10px !important;
-  color:var(--adm-ink) !important;
+.vn-admin .superadmin-administration .adm-heading h1 {
+  margin:0;
+  color:var(--adm-ink);
+  font-size:clamp(23px,2.4vw,31px);
+  line-height:1.15;
+  letter-spacing:-.035em;
+  font-weight:800;
 }
-.superadmin-administration .adm-hero p { color:var(--adm-muted) !important; }
-.superadmin-administration .adm-hero h1 + p {
-  font-size:13px !important; line-height:1.55 !important; margin-top:8px !important;
+.vn-admin .superadmin-administration .adm-description {
+  margin:9px 0 0;color:var(--adm-muted);
+  font-size:13px;line-height:1.55;
 }
-.superadmin-administration .adm-hero .rounded-full {
-  background:#fce9de !important; border-color:#f0d4c6 !important; color:#9b4d3b !important;
+.vn-admin .superadmin-administration .adm-header-actions {
+  display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px;flex-shrink:0;
 }
-.superadmin-administration .adm-hero .adm-export,
-.superadmin-administration .adm-hero .adm-create {
-  white-space:nowrap; min-height:42px; min-width:max-content;
-  padding:10px 14px !important; box-shadow:none !important;
+.vn-admin .superadmin-administration .adm-header-actions button {
+  min-height:44px;padding:10px 15px;
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  border:1px solid var(--adm-line);border-radius:12px;
+  font-size:13px;font-weight:750;white-space:nowrap;
+  transition:background .18s,border-color .18s,transform .18s;
 }
-.superadmin-administration .adm-hero .adm-export {
-  background:#fffdfa !important; border-color:var(--adm-border) !important; color:var(--adm-ink) !important;
+.vn-admin .superadmin-administration .adm-export {
+  background:var(--adm-surface);color:var(--adm-ink);
 }
-.superadmin-administration .adm-hero .adm-create {
-  background:var(--adm-coral) !important; color:white !important;
+.vn-admin .superadmin-administration .adm-export:hover:not(:disabled) {background:var(--adm-soft);}
+.vn-admin .superadmin-administration .adm-create {
+  color:white;background:var(--adm-coral);border-color:var(--adm-coral) !important;
 }
-.superadmin-administration .adm-metrics { gap:12px; }
-.superadmin-administration .adm-metric-card {
-  padding:17px 19px; border:1px solid var(--adm-border) !important;
-  border-radius:18px; background:var(--adm-bg) !important;
-  box-shadow:0 2px 8px rgba(43,36,31,.035);
-  color:var(--adm-ink) !important;
+.vn-admin .superadmin-administration .adm-create:hover {background:var(--adm-coral-strong);transform:translateY(-1px);}
+.vn-admin .superadmin-administration button:disabled {opacity:.55;cursor:not-allowed;}
+
+/* Métricas: reproducen las tarjetas reales del Dashboard */
+.vn-admin .superadmin-administration .adm-metrics {
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;
 }
-.superadmin-administration .adm-metric-card p { color:var(--adm-ink) !important; }
-.superadmin-administration .adm-metric-card p:first-child,
-.superadmin-administration .adm-metric-card p:last-child { color:var(--adm-muted) !important; }
-.superadmin-administration .adm-metric-card p.mt-2 { font-size:1.8rem; margin-top:5px; }
-.superadmin-administration .adm-metric-card p.mt-4 { margin-top:10px; }
-.superadmin-administration .adm-metric-card > div > div:last-child {
-  background:#ffede4 !important; color:var(--adm-coral) !important;
+.vn-admin .superadmin-administration .adm-metric-card {
+  min-width:0;min-height:194px;padding:19px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  border:1px solid var(--adm-line);border-radius:23px;
+  color:var(--adm-ink);
+  background:var(--adm-surface);
+  box-shadow:var(--vn-elevation);
 }
-.superadmin-administration .adm-filters { padding:16px !important; }
-.superadmin-administration .adm-filters input { color:var(--adm-ink) !important; }
-.superadmin-administration .adm-filters button.bg-violet-500,
-.superadmin-administration .adm-filters button.bg-fuchsia-500 {
-  background:var(--adm-ink) !important; color:white !important; box-shadow:none !important;
+.vn-admin .superadmin-administration .adm-metric-main {display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.vn-admin .superadmin-administration .adm-metric-label {
+  color:var(--adm-muted);font-size:13px;line-height:1.35;font-weight:650;
+  text-transform:none;letter-spacing:0;
 }
-.superadmin-administration .adm-filters button.bg-violet-50 {
-  background:#fff0e8 !important; color:var(--adm-coral) !important; border-color:#efd6ca !important;
+.vn-admin .superadmin-administration .adm-metric-value {
+  margin-top:12px;color:var(--adm-ink);font-size:32px;font-weight:800;
+  line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums;
 }
-.superadmin-administration .adm-directory { overflow:hidden; }
-.superadmin-administration .adm-directory h2 { color:var(--adm-ink) !important; }
-.superadmin-administration .adm-directory thead { background:#f4ede6 !important; color:#605d58 !important; }
-.superadmin-administration .adm-directory tbody tr { border-color:#eee6de !important; }
-.superadmin-administration .adm-directory tbody tr:hover { background:#fff4ec !important; }
-.superadmin-administration .adm-directory tbody td,
-.superadmin-administration .adm-directory tbody td p,
-.superadmin-administration .adm-directory article p { color:#333438 !important; }
-.superadmin-administration .adm-directory tbody td .text-slate-500,
-.superadmin-administration .adm-directory article .text-slate-500 { color:#6c625d !important; }
-.superadmin-administration .adm-directory .bg-fuchsia-50 { background:#f7e5e4 !important; color:#923c39 !important; border-color:#ebc7c3 !important; }
-.superadmin-administration .adm-directory .bg-violet-50 { background:#ede8f5 !important; color:#624b86 !important; border-color:#d7cae9 !important; }
-.superadmin-administration .adm-directory .bg-emerald-50 { background:#e4f3e9 !important; color:#246e45 !important; border-color:#b9dcc4 !important; }
-.superadmin-administration button:focus-visible,
-.superadmin-administration input:focus-visible { outline:2px solid var(--adm-coral); outline-offset:2px; }
-@media(max-width:900px) {
- .superadmin-administration .adm-hero > .relative { align-items:stretch; }
+.vn-admin .superadmin-administration .adm-metric-helper {
+  margin-top:12px;color:var(--adm-muted);font-size:12px;line-height:1.4;
+}
+.vn-admin .superadmin-administration .adm-metric-icon {
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  width:49px;height:49px;padding:0;border:0;border-radius:15px;
+  background:var(--vn-icon-bg);color:var(--adm-coral-strong);
+}
+.vn-admin .superadmin-administration .adm-metric-foot {
+  display:flex;align-items:end;justify-content:space-between;gap:7px;
+  padding-top:10px;
+}
+.vn-admin .superadmin-administration .adm-metric-detail {
+  display:inline-flex;align-items:center;min-height:26px;max-width:75%;
+  padding:6px 11px;border-radius:999px;
+  background:color-mix(in srgb,var(--vn-petroleum) 13%,var(--adm-surface));
+  color:var(--vn-petroleum);font-size:11px;font-weight:700;line-height:1.3;
+}
+.vn-admin .superadmin-administration .adm-metric-bars {
+  display:flex;align-items:end;gap:4px;height:28px;flex-shrink:0;
+}
+.vn-admin .superadmin-administration .adm-metric-bars i {
+  display:block;width:4px;height:11px;border-radius:3px;
+  background:var(--adm-coral);opacity:.7;
+}
+.vn-admin .superadmin-administration .adm-metric-bars i:nth-child(2) {height:20px;opacity:.55;}
+.vn-admin .superadmin-administration .adm-metric-bars i:nth-child(3) {height:15px;}
+.vn-admin .superadmin-administration .adm-metric-bars i:nth-child(4) {height:26px;opacity:1;}
+.vn-admin .superadmin-administration .adm-metric-bars i:nth-child(5) {height:18px;}
+
+/* Búsqueda y filtros agrupados como barra de herramientas */
+.vn-admin .superadmin-administration .adm-filters,
+.vn-admin .superadmin-administration .adm-directory {
+  min-width:0;background:var(--adm-surface);
+  border:1px solid var(--adm-line);
+  border-radius:22px;box-shadow:var(--vn-elevation);
+}
+.vn-admin .superadmin-administration .adm-filters {padding:16px 19px;}
+.vn-admin .superadmin-administration .adm-toolbar-top {display:flex;flex-wrap:wrap;align-items:center;gap:10px;}
+.vn-admin .superadmin-administration .adm-search {
+  display:flex;align-items:center;gap:10px;
+  min-height:43px;max-width:560px;flex:1 1 340px;min-width:190px;
+  padding:9px 13px;border:1px solid var(--adm-line);
+  border-radius:12px;background:var(--adm-surface);
+  color:var(--adm-muted);
+}
+.vn-admin .superadmin-administration .adm-search:focus-within {
+  border-color:var(--adm-coral);box-shadow:0 0 0 3px color-mix(in srgb,var(--adm-coral) 14%,transparent);
+}
+.vn-admin .superadmin-administration .adm-search input {min-width:0;color:var(--adm-ink);font-size:13px;}
+.vn-admin .superadmin-administration .adm-search input::placeholder {color:var(--adm-muted);opacity:1;}
+.vn-admin .superadmin-administration .adm-refresh {
+  min-height:43px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:9px 13px;border:1px solid var(--adm-line);border-radius:12px;
+  background:var(--vn-coral-soft);color:var(--adm-coral-strong);
+  font-size:13px;font-weight:700;
+}
+.vn-admin .superadmin-administration .adm-refresh:hover:not(:disabled) {border-color:var(--adm-coral);}
+.vn-admin .superadmin-administration .adm-filter-groups {
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;
+  margin-top:13px;
+}
+.vn-admin .superadmin-administration .adm-chip-group {display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+.vn-admin .superadmin-administration .adm-filter-label {
+  color:var(--adm-muted);font-size:11px;font-weight:800;
+  letter-spacing:.065em;text-transform:uppercase;margin-right:3px;
+}
+.vn-admin .superadmin-administration .adm-chip-group button {
+  min-height:32px;padding:7px 11px;border:1px solid transparent;
+  border-radius:9px;background:var(--adm-soft);color:var(--adm-ink);
+  font-size:12px;font-weight:650;line-height:1.1;box-shadow:none;
+}
+.vn-admin .superadmin-administration .adm-chip-group button.bg-violet-500,
+.vn-admin .superadmin-administration .adm-chip-group button.bg-fuchsia-500 {
+  color:#fff;background:var(--adm-coral);border-color:var(--adm-coral);
+}
+.vn-admin .superadmin-administration .adm-chip-group button:hover:not(.bg-violet-500):not(.bg-fuchsia-500) {
+  border-color:var(--adm-line);background:var(--vn-coral-soft);
+}
+
+/* Listado: tipografía y colores del Dashboard */
+.vn-admin .superadmin-administration .adm-directory {overflow:hidden;}
+.vn-admin .superadmin-administration .adm-directory > div:first-child {padding:18px 21px;border-bottom:1px solid var(--adm-line);}
+.vn-admin .superadmin-administration .adm-directory h2 {
+  color:var(--adm-ink);font-size:19px;font-weight:800;letter-spacing:-.02em;
+}
+.vn-admin .superadmin-administration .adm-directory thead {
+  color:var(--adm-muted);background:var(--adm-soft);font-size:11px;
+}
+.vn-admin .superadmin-administration .adm-directory thead th {padding:13px 20px;}
+.vn-admin .superadmin-administration .adm-directory tbody tr {border-color:var(--adm-line);}
+.vn-admin .superadmin-administration .adm-directory tbody tr:hover {background:var(--adm-soft);}
+.vn-admin .superadmin-administration .adm-directory tbody td {padding:14px 20px;color:var(--adm-muted);}
+.vn-admin .superadmin-administration .adm-directory tbody td p,
+.vn-admin .superadmin-administration .adm-directory .adm-mobile-user p {
+  color:var(--adm-ink);
+}
+.vn-admin .superadmin-administration .adm-directory .text-slate-500,
+.vn-admin .superadmin-administration .adm-directory .text-slate-600 {
+  color:var(--adm-muted);
+}
+.vn-admin .superadmin-administration .adm-directory .adm-mobile-user {
+  background:var(--adm-soft);border:1px solid var(--adm-line);border-radius:16px;
+}
+.vn-admin .superadmin-administration .adm-role-badge.bg-fuchsia-50 {
+  color:var(--adm-coral-strong);background:var(--vn-coral-soft);
+  border-color:color-mix(in srgb,var(--adm-coral) 26%,var(--adm-line));
+}
+.vn-admin .superadmin-administration .adm-role-badge.bg-violet-50 {
+  color:var(--vn-petroleum);background:color-mix(in srgb,var(--vn-petroleum) 10%,var(--adm-surface));
+  border-color:color-mix(in srgb,var(--vn-petroleum) 28%,var(--adm-line));
+}
+.vn-admin .superadmin-administration .adm-avatar {
+  color:white;background:var(--adm-coral);box-shadow:none;border-radius:13px;
+}
+
+/* Ventanas existentes: conservar interacciones, igualar las superficies y textos. */
+.vn-admin .superadmin-administration .adm-dialog {
+  background:var(--adm-surface);border:1px solid var(--adm-line);
+  color:var(--adm-ink);box-shadow:var(--vn-elevation);
+}
+.vn-admin .superadmin-administration .adm-dialog h2,
+.vn-admin .superadmin-administration .adm-dialog h3,
+.vn-admin .superadmin-administration .adm-dialog .text-slate-950 {color:var(--adm-ink);}
+.vn-admin .superadmin-administration .adm-dialog .text-slate-500,
+.vn-admin .superadmin-administration .adm-dialog .text-slate-400 {color:var(--adm-muted);}
+.vn-admin .superadmin-administration .adm-dialog input {
+  color:var(--adm-ink);background:var(--adm-soft);
+  border-color:var(--adm-line);caret-color:var(--adm-coral);
+}
+.vn-admin .superadmin-administration .adm-dialog input::placeholder {color:var(--adm-muted);opacity:1;}
+.vn-admin .superadmin-administration .adm-dialog input:focus {
+  outline:2px solid var(--adm-coral);outline-offset:1px;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--adm-coral) 13%,transparent);
+}
+.vn-admin .superadmin-administration button:focus-visible {
+  outline:2px solid var(--adm-coral);outline-offset:3px;
+}
+@media(max-width:1200px) {
+  .vn-admin .superadmin-administration .adm-metrics {grid-template-columns:repeat(2,minmax(0,1fr));}
+  .vn-admin .superadmin-administration .adm-hero {align-items:flex-start;flex-direction:column;gap:15px;}
 }
 @media(max-width:640px) {
- .superadmin-administration .adm-hero { padding:18px !important; }
- .superadmin-administration .adm-hero .adm-export,
- .superadmin-administration .adm-hero .adm-create { min-width:0; white-space:normal; flex:1; }
- .superadmin-administration .adm-metric-card { padding:14px; }
-}
-
-/* Barra de búsqueda, filtros y jerarquía visual compartida */
-.superadmin-administration .adm-search {
-  background:var(--adm-surface) !important;
-  border:1px solid var(--adm-border) !important;
-  border-radius:12px !important;
-  min-height:46px;
-}
-.superadmin-administration .adm-search:focus-within {
-  border-color:var(--adm-coral) !important;
-  box-shadow:0 0 0 3px rgba(244,119,95,.1);
-}
-.superadmin-administration .adm-filters .adm-refresh {
-  border:1px solid var(--adm-border) !important;
-  background:var(--adm-surface) !important;
-  color:var(--adm-coral) !important;
-  box-shadow:none !important;
-}
-.superadmin-administration .adm-filter-groups button {
-  border-radius:11px !important;
-  font-weight:600;
-}
-.superadmin-administration .adm-filter-groups button:not(.bg-violet-500):not(.bg-fuchsia-500) {
-  color:var(--adm-muted) !important;
-  background:#f2eee9 !important;
-}
-.superadmin-administration .adm-directory > div:first-child p.text-violet-700 {
-  color:var(--adm-coral) !important;
-}
-.superadmin-administration .adm-metric-card p.mt-2 {
-  font-weight:800 !important;
-  font-variant-numeric:tabular-nums;
-}
-html.dark .vn-admin .superadmin-administration .adm-search {
-  background:#292c31 !important;
-  border-color:#43474d !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-filters .adm-refresh {
-  background:#2d3035 !important;
-  color:#ffae9b !important;
-  border-color:#484b51 !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-filter-groups button:not(.bg-violet-500):not(.bg-fuchsia-500) {
-  background:#2c3035 !important;
-  color:#d0cbca !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-directory > div:first-child p.text-violet-700 {
-  color:#ffa18c !important;
-}
-@media (min-width:1024px) {
-  .superadmin-administration .adm-hero { padding:23px 25px !important; }
-  .superadmin-administration .adm-hero > .relative > div:first-child { max-width:590px; }
-}
-/* Tema oscuro nativo de Administración: grafito + coral.
-   Alcance limitado a esta pantalla, sin cambiar los modales de seguridad. */
-html.dark .vn-admin .superadmin-administration {
-  --adm-bg: #222529;
-  --adm-surface: #1e2125;
-  --adm-ink: #f5f1eb;
-  --adm-muted: #b9b5b1;
-  --adm-border: #3b3e42;
-  --adm-coral: #ff957f;
-}
-html.dark .vn-admin .superadmin-administration .adm-hero,
-html.dark .vn-admin .superadmin-administration .adm-filters,
-html.dark .vn-admin .superadmin-administration .adm-directory {
-  background: var(--adm-surface) !important;
-  border-color: var(--adm-border) !important;
-  box-shadow: 0 10px 28px rgba(0,0,0,.16) !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-hero {
-  background: linear-gradient(120deg,#24272b,#202226) !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-hero .rounded-full {
-  background:#3c2928 !important; border-color:#67413b !important; color:#ffb09d !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-hero .adm-export {
-  background:#303338 !important; color:#f4f0ec !important; border-color:#4a4d52 !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-hero .adm-create {
-  background:#f4775f !important; color:#191b1e !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-metric-card {
-  background:var(--adm-bg) !important;
-  border-color:var(--adm-border) !important;
-  box-shadow:none !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-metric-card p,
-html.dark .vn-admin .superadmin-administration .adm-metric-card p.mt-2 {
-  color:var(--adm-ink) !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-metric-card p:first-child,
-html.dark .vn-admin .superadmin-administration .adm-metric-card p:last-child {
-  color:var(--adm-muted) !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-metric-card > div > div:last-child {
-  background:#3b2c2b !important; color:#ff9d86 !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-filters input { color:var(--adm-ink) !important; }
-html.dark .vn-admin .superadmin-administration .adm-filters button.bg-violet-500,
-html.dark .vn-admin .superadmin-administration .adm-filters button.bg-fuchsia-500 {
-  background:#f4775f !important; color:#1b1c1e !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-filters button.bg-violet-50 {
-  background:#3c2928 !important; border-color:#684039 !important; color:#ffb09d !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-directory h2,
-html.dark .vn-admin .superadmin-administration .adm-directory tbody td,
-html.dark .vn-admin .superadmin-administration .adm-directory tbody td p,
-html.dark .vn-admin .superadmin-administration .adm-directory article p {
-  color:var(--adm-ink) !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-directory tbody td .text-slate-500,
-html.dark .vn-admin .superadmin-administration .adm-directory article .text-slate-500 {
-  color:var(--adm-muted) !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-directory thead {
-  background:#292c30 !important; color:#c4c0bc !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-directory tbody tr {
-  border-color:#36393d !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-directory tbody tr:hover {
-  background:#292c31 !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-directory .bg-fuchsia-50 {
-  background:#4a2d30 !important; color:#ffc0b5 !important; border-color:#744247 !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-directory .bg-violet-50 {
-  background:#373044 !important; color:#d8c5f4 !important; border-color:#564769 !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-directory .bg-emerald-50 {
-  background:#253d35 !important; color:#a3e4bd !important; border-color:#3e6451 !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-directory [class~="lg:hidden"] article {
-  background:#25282c !important; border-color:var(--adm-border) !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-directory button {
-  color:#c8c4be !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-directory .text-violet-700 {
-  color:#ff9d86 !important;
-}
-
-/* Diálogos de Administración: identidad grafito/coral y campos legibles */
-html.dark .vn-admin .superadmin-administration .adm-dialog {
- background:#202327 !important; border:1px solid #414449 !important;
- color:#f5f1eb !important; box-shadow:0 26px 70px rgba(0,0,0,.42) !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-dialog .bg-\[\#101827\],
-html.dark .vn-admin .superadmin-administration .adm-dialog .bg-\[\#172033\] {
- background:#26292e !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-dialog input {
- background:#292c31 !important; border-color:#4b4f55 !important;
- color:#f6f2eb !important; caret-color:#ff957f !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-dialog input::placeholder {
- color:#b1aaa4 !important; opacity:1;
-}
-html.dark .vn-admin .superadmin-administration .adm-dialog input:focus {
- background:#30343a !important; border-color:#ff957f !important;
- outline:2px solid #ff957f !important; outline-offset:1px;
- box-shadow:0 0 0 4px rgba(255,149,127,.12) !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-dialog label > span,
-html.dark .vn-admin .superadmin-administration .adm-dialog .text-slate-500,
-html.dark .vn-admin .superadmin-administration .adm-dialog .text-slate-400 {
- color:#bfc1c4 !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-dialog :is(h2,h3),
-html.dark .vn-admin .superadmin-administration .adm-dialog .text-slate-950 {
- color:#faf6f0 !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-dialog .text-violet-700,
-html.dark .vn-admin .superadmin-administration .adm-dialog .text-violet-300,
-html.dark .vn-admin .superadmin-administration .adm-dialog .text-sky-300 {
- color:#ffa18c !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-create-dialog > div:first-child {
- background:#26292e !important; border-color:#414449 !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-dialog .bg-slate-50,
-html.dark .vn-admin .superadmin-administration .adm-dialog .bg-\[\#172033\]\/85 {
- background:#292c31 !important; border-color:#414449 !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-dialog .bg-violet-50 {
- background:#3a2c31 !important; border-color:#634147 !important;
- color:#ffb09d !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-dialog .text-violet-200,
-html.dark .vn-admin .superadmin-administration .adm-dialog .text-violet-100 {
- color:#ffb09d !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-dialog .text-amber-200 {
- color:#f4d394 !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-dialog button:focus-visible {
- outline:2px solid #ff957f; outline-offset:2px;
-}
-@media(max-width:640px) {
- .superadmin-administration .adm-create-dialog {max-height:calc(100dvh - 24px);}
- .superadmin-administration .adm-details {max-height:100dvh;}
-}
-
-/* Acabado profesional — ritmo vertical y densidad de información */
-.superadmin-administration { gap:18px !important; }
-.superadmin-administration .adm-hero { padding:20px 24px !important; }
-.superadmin-administration .adm-hero h1 { margin-top:8px !important; }
-.superadmin-administration .adm-hero h1 + p { max-width:55ch; }
-.superadmin-administration .adm-metrics { gap:12px !important; }
-.superadmin-administration .adm-metric-card {
-  min-height:108px; padding:15px 17px !important;
-  transition:transform .18s ease, box-shadow .18s ease;
-}
-@media (hover:hover) and (prefers-reduced-motion:no-preference) {
- .superadmin-administration .adm-metric-card:hover {
-  transform:translateY(-2px); box-shadow:0 7px 18px rgba(43,36,31,.08);
- }
-}
-.superadmin-administration .adm-metric-card p.mt-2 { margin-top:3px !important; font-size:1.85rem; line-height:1.1; }
-.superadmin-administration .adm-metric-card p.mt-4 { margin-top:7px !important; }
-.superadmin-administration .adm-filters { padding:14px 16px !important; }
-.superadmin-administration .adm-filters .adm-search { min-height:44px; padding:9px 13px !important; }
-.superadmin-administration .adm-filters .adm-refresh { min-height:44px; }
-.superadmin-administration .adm-filter-groups { margin-top:10px !important; gap:8px !important; }
-.superadmin-administration .adm-filter-groups > div { gap:7px !important; }
-.superadmin-administration .adm-filter-groups button { padding:8px 12px !important; line-height:1.2 !important; }
-.superadmin-administration .adm-directory > div:first-child { padding-top:16px !important; padding-bottom:16px !important; }
-.superadmin-administration .adm-directory table th { padding-top:13px !important; padding-bottom:13px !important; }
-.superadmin-administration .adm-directory table td { padding-top:13px !important; padding-bottom:13px !important; }
-.superadmin-administration .adm-directory table tbody tr { transition:background-color .16s ease; }
-@media(max-width:640px) {
- .superadmin-administration { gap:14px !important; }
- .superadmin-administration .adm-hero { padding:18px !important; }
- .superadmin-administration .adm-filters { padding:12px !important; }
- .superadmin-administration .adm-metric-card { min-height:100px; padding:13px !important; }
- .superadmin-administration .adm-filter-groups button { padding:9px 11px !important; }
-}
-
-/* Legibilidad final: sin tipografía lavada */
-.superadmin-administration .adm-hero h1,
-.superadmin-administration .adm-directory h2 {color:#25272b !important;}
-.superadmin-administration .adm-hero p,
-.superadmin-administration .adm-metric-card p:first-child,
-.superadmin-administration .adm-metric-card p:last-child {color:#625c57 !important;}
-.superadmin-administration .adm-filters input,
-.superadmin-administration .adm-filters input::placeholder {color:#615b57 !important;opacity:1;}
-.superadmin-administration .adm-directory tbody td p,
-.superadmin-administration .adm-directory article p {color:#303237 !important;}
-.superadmin-administration .adm-directory tbody td p.text-xs,
-.superadmin-administration .adm-directory article p.text-xs {color:#655e59 !important;}
-.superadmin-administration .adm-directory article {
- background:#fffdf9 !important; border-color:#e9ded4 !important;
-}
-.superadmin-administration .adm-directory article .text-slate-600 {color:#575451 !important;}
-/* Los filtros no tienen por qué consumir todo el ancho visual */
-@media(min-width:1024px) {
- .superadmin-administration .adm-filters > .flex:first-child {max-width:850px;}
- .superadmin-administration .adm-filter-groups {max-width:max-content;}
-}
-.superadmin-administration .adm-filter-groups button {font-size:13px !important;}
-html.dark .vn-admin .superadmin-administration .adm-filters input,
-html.dark .vn-admin .superadmin-administration .adm-filters input::placeholder {color:#e4dfd9 !important;opacity:1;}
-html.dark .vn-admin .superadmin-administration .adm-directory article {
- background:#25282c !important;border-color:#42454a !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-directory article p,
-html.dark .vn-admin .superadmin-administration .adm-directory tbody td p {color:#f2eee8 !important;}
-html.dark .vn-admin .superadmin-administration .adm-directory article p.text-xs,
-html.dark .vn-admin .superadmin-administration .adm-directory tbody td p.text-xs {color:#c8c1ba !important;}
-html.dark .vn-admin .superadmin-administration .adm-hero p,
-html.dark .vn-admin .superadmin-administration .adm-metric-card p:first-child,
-html.dark .vn-admin .superadmin-administration .adm-metric-card p:last-child {color:#c9c3bc !important;}
-
-/* Toolbar compacta: diseño de contenido, sin límites artificiales de ancho */
-.superadmin-administration .adm-filters {padding:12px 14px !important;}
-.superadmin-administration .adm-filters .adm-toolbar-top {
-  display:flex; flex-wrap:wrap; align-items:center; gap:10px; width:100%; max-width:none;
-}
-.superadmin-administration .adm-filters .adm-search {
-  flex:1 1 320px; max-width:560px; min-width:180px;
-  min-height:42px; padding:8px 12px !important;
-}
-.superadmin-administration .adm-filters .adm-refresh {
-  flex:0 0 auto; min-height:42px; padding:8px 13px !important; white-space:nowrap;
-}
-.superadmin-administration .adm-filters .adm-filter-groups {
-  display:flex; flex-wrap:wrap; align-items:center; gap:8px 16px;
-  max-width:none; margin-top:10px !important;
-}
-.superadmin-administration .adm-filters .adm-chip-group {
-  display:flex; flex-wrap:wrap; gap:6px;
-}
-.superadmin-administration .adm-filters .adm-chip-group button {
-  padding:7px 11px !important; font-size:12px !important;
-  color:#514b47 !important; background:#f2eeea !important;
-}
-.superadmin-administration .adm-filters .adm-chip-group button.bg-violet-500,
-.superadmin-administration .adm-filters .adm-chip-group button.bg-fuchsia-500 {
-  color:#fff !important; background:#292c30 !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-filters .adm-chip-group button {
-  color:#e5e0db !important; background:#303339 !important;
-}
-html.dark .vn-admin .superadmin-administration .adm-filters .adm-chip-group button.bg-violet-500,
-html.dark .vn-admin .superadmin-administration .adm-filters .adm-chip-group button.bg-fuchsia-500 {
-  color:#211c1b !important; background:#f4775f !important;
-}
-@media(max-width:640px) {
- .superadmin-administration .adm-filters .adm-search {flex:1 1 100%;max-width:none;}
- .superadmin-administration .adm-filters .adm-refresh {flex:0 0 auto;}
- .superadmin-administration .adm-filters .adm-filter-groups {gap:8px;}
-}
-
-/* Administración V3: composición definitiva de superficies y controles */
-.superadmin-administration {display:flex;flex-direction:column;gap:14px !important;}
-.superadmin-administration .adm-hero {padding:18px 22px !important;border-radius:18px !important;}
-.superadmin-administration .adm-hero h1 {font-size:1.8rem !important;letter-spacing:-.035em;}
-.superadmin-administration .adm-metrics {gap:10px !important;}
-.superadmin-administration .adm-metric-card {min-height:100px !important;padding:13px 16px !important;border-radius:14px !important;}
-.superadmin-administration .adm-metric-card p.mt-2 {font-size:1.75rem !important;}
-.superadmin-administration .adm-filters {padding:12px 15px !important;border-radius:16px !important;}
-.superadmin-administration .adm-toolbar-top {gap:9px !important;}
-.superadmin-administration .adm-search {max-width:490px !important;min-height:40px !important;}
-.superadmin-administration .adm-refresh {min-height:40px !important;}
-.superadmin-administration .adm-filter-groups {margin-top:9px !important;gap:8px 22px !important;align-items:center;}
-.superadmin-administration .adm-filter-label {
- display:inline-flex;align-items:center;margin-right:3px;flex:none;
- color:#635c56;font-size:11px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;
-}
-.superadmin-administration .adm-chip-group {gap:5px !important;}
-.superadmin-administration .adm-chip-group button {padding:7px 10px !important;font-size:12px !important;border-radius:9px !important;}
-.superadmin-administration .adm-directory {border-radius:17px !important;}
-.superadmin-administration .adm-directory > div:first-child {padding:13px 20px !important;}
-.superadmin-administration .adm-directory h2 {font-size:1.12rem !important;margin-top:3px !important;}
-.superadmin-administration .adm-directory table th {padding:11px 17px !important;font-size:10px;}
-.superadmin-administration .adm-directory table td {padding:12px 17px !important;}
-html.dark .vn-admin .superadmin-administration .adm-filter-label {color:#c8c0b9;}
-@media(max-width:900px) {
- .superadmin-administration .adm-filter-groups {align-items:flex-start;gap:9px !important;}
- .superadmin-administration .adm-chip-group {width:100%;}
- .superadmin-administration .adm-filter-label {min-width:44px;}
- .superadmin-administration .adm-search {max-width:none !important;}
-}
-@media(max-width:640px) {
- .superadmin-administration .adm-hero {padding:16px !important;}
- .superadmin-administration .adm-directory > div:first-child {padding:14px !important;}
- .superadmin-administration .adm-chip-group {gap:5px !important;}
+  .vn-admin .superadmin-administration {gap:13px;}
+  .vn-admin .superadmin-administration .adm-hero {padding:18px;border-radius:17px;}
+  .vn-admin .superadmin-administration .adm-header-actions {width:100%;justify-content:stretch;}
+  .vn-admin .superadmin-administration .adm-header-actions button {flex:1;white-space:normal;padding:10px 9px;}
+  .vn-admin .superadmin-administration .adm-metrics {gap:9px;}
+  .vn-admin .superadmin-administration .adm-metric-card {min-height:165px;padding:13px;border-radius:16px;}
+  .vn-admin .superadmin-administration .adm-metric-icon {width:39px;height:39px;}
+  .vn-admin .superadmin-administration .adm-metric-label {font-size:11px;}
+  .vn-admin .superadmin-administration .adm-metric-value {font-size:27px;}
+  .vn-admin .superadmin-administration .adm-metric-detail {font-size:10px;}
+  .vn-admin .superadmin-administration .adm-metric-bars {display:none;}
+  .vn-admin .superadmin-administration .adm-filters {padding:12px;border-radius:16px;}
+  .vn-admin .superadmin-administration .adm-search {max-width:none;flex:1 1 100%;}
+  .vn-admin .superadmin-administration .adm-filter-groups {gap:10px;}
+  .vn-admin .superadmin-administration .adm-chip-group {width:100%;}
+  .vn-admin .superadmin-administration .adm-directory > div:first-child {padding:15px;}
+}
+@media(prefers-reduced-motion:reduce) {
+  .vn-admin .superadmin-administration * {transition:none !important;}
 }
