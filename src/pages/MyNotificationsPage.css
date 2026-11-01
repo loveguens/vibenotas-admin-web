@@ -1,7 +1,6 @@
-/* Mis notificaciones · Superadmin
-   Sistema visual compartido con Dashboard y Administración.
-   Aislado para no modificar el rol Administrador ni campañas. */
-.vn-admin.vn-superadmin-layout.vn-my-notifications-superadmin {
+/* VibeNotas · Mis notificaciones (solo Superadmin).
+   Componentes con la misma identidad del Dashboard, sin cascadas históricas. */
+.vn-my-notifications-superadmin {
   --myn-ink:var(--vn-ink);
   --myn-muted:var(--vn-muted);
   --myn-surface:var(--vn-surface);
@@ -9,223 +8,222 @@
   --myn-line:var(--vn-line);
   --myn-coral:var(--vn-coral);
   --myn-strong:var(--vn-coral-strong);
-  min-width:0;
   color:var(--myn-ink);
   background:var(--vn-bg);
+  min-width:0;
 }
 .vn-my-notifications-superadmin .vn-myn-main {
-  padding:20px clamp(14px,2.4vw,30px) 34px;
+  padding:16px clamp(12px,2.4vw,30px) 30px;
 }
 .vn-my-notifications-superadmin .vn-myn-page {
-  display:flex;flex-direction:column;gap:18px;
-  max-width:1320px;min-width:0;margin:0 auto;
+  display:flex;flex-direction:column;gap:13px;min-width:0;
+  width:100%;max-width:1320px;margin-inline:auto;
 }
-/* El hero y las métricas pasan a dos áreas distintas sin alterar datos ni carga. */
-.vn-my-notifications-superadmin .vn-myn-hero,
-.vn-my-notifications-superadmin .vn-myn-hero-content {
-  display:contents;
-}
-.vn-my-notifications-superadmin .vn-myn-hero > .pointer-events-none {
-  display:none;
-}
-.vn-my-notifications-superadmin .vn-myn-hero-content > div:first-child {
-  max-width:none;
+.vn-my-notifications-superadmin .vn-myn-hero {
+  padding:19px 23px;
   border:1px solid color-mix(in srgb,var(--myn-coral) 26%,var(--myn-line));
-  border-radius:22px;
+  border-radius:20px;
+  color:var(--myn-ink);
   background:linear-gradient(115deg,var(--myn-surface),color-mix(in srgb,var(--vn-coral-soft) 64%,var(--myn-surface)));
-  padding:25px 26px;
   box-shadow:var(--vn-elevation);
 }
 .vn-my-notifications-superadmin .vn-myn-eyebrow {
-  display:inline-flex;align-items:center;gap:8px;
-  border:0;border-radius:0;background:transparent;
-  padding:0;color:var(--myn-strong);
-  font-size:11px;font-weight:800;letter-spacing:.12em;
-  box-shadow:none;
+  color:var(--myn-strong);font-size:10px;font-weight:800;
+  letter-spacing:.12em;line-height:1.3;
 }
 .vn-my-notifications-superadmin .vn-myn-title {
-  margin-top:10px;color:var(--myn-ink);
-  font-size:clamp(23px,2.4vw,31px);
-  font-weight:800;letter-spacing:-.035em;line-height:1.15;
+  margin-top:8px;color:var(--myn-ink);font-size:clamp(21px,2.2vw,27px);
+  font-weight:800;line-height:1.2;letter-spacing:-.03em;
 }
 .vn-my-notifications-superadmin .vn-myn-subtitle {
-  max-width:70ch;margin-top:9px;
-  color:var(--myn-muted);font-size:13px;line-height:1.6;
+  margin-top:7px;max-width:75ch;color:var(--myn-muted);
+  font-size:12px;line-height:1.55;
 }
-/* KPIs del Dashboard: superficies uniformes, números y acentos coral. */
+/* KPIs: formato ejecutivo compacto, sin grandes huecos en móvil. */
 .vn-my-notifications-superadmin .vn-myn-kpi-grid {
   display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:16px;min-width:0;
+  min-width:0;gap:11px;
 }
 .vn-my-notifications-superadmin .vn-myn-kpi {
-  position:relative;display:flex;flex-direction:column;
-  justify-content:space-between;min-height:194px;min-width:0;
-  padding:19px;
-  border:1px solid var(--myn-line);border-radius:23px;
-  background:var(--myn-surface);color:var(--myn-ink);
-  box-shadow:var(--vn-elevation);
+  display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;min-width:0;min-height:143px;padding:16px 17px;
+  border:1px solid var(--myn-line);border-radius:17px;
+  background:var(--myn-surface);color:var(--myn-ink);box-shadow:var(--vn-elevation);
 }
 .vn-my-notifications-superadmin .vn-myn-kpi p:first-child {
-  padding-right:52px;color:var(--myn-muted);
-  font-size:13px;font-weight:650;letter-spacing:0;text-transform:none;
+  padding-right:42px;color:var(--myn-muted);font-size:12px;
+  font-weight:700;line-height:1.35;letter-spacing:0;text-transform:none;
 }
 .vn-my-notifications-superadmin .vn-myn-kpi p.text-3xl {
-  margin-top:12px;color:var(--myn-ink);
-  font-size:32px;font-weight:800;line-height:1;
-  letter-spacing:-.04em;font-variant-numeric:tabular-nums;
+  margin-top:7px;color:var(--myn-ink);
+  font-size:29px;font-weight:800;line-height:1.1;
+  letter-spacing:-.035em;font-variant-numeric:tabular-nums;
 }
 .vn-my-notifications-superadmin .vn-myn-kpi-icon {
-  position:absolute;right:19px;top:19px;
   display:flex;align-items:center;justify-content:center;
-  width:49px;height:49px;border-radius:15px;
+  position:absolute;top:14px;right:14px;
+  height:40px;width:40px;border-radius:12px;
   background:var(--vn-icon-bg);color:var(--myn-strong);
 }
 .vn-my-notifications-superadmin .vn-myn-kpi-footer {
   display:flex;align-items:end;justify-content:space-between;
-  gap:8px;margin-top:26px;
+  min-width:0;gap:8px;margin-top:12px;
 }
 .vn-my-notifications-superadmin .vn-myn-kpi-footer > span:first-child {
-  display:inline-flex;align-items:center;
-  max-width:75%;min-height:26px;padding:6px 11px;
-  border-radius:999px;
-  background:color-mix(in srgb,var(--vn-petroleum) 13%,var(--myn-surface));
-  color:var(--vn-petroleum);font-size:11px;font-weight:700;line-height:1.3;
+  display:inline-flex;align-items:center;min-height:24px;max-width:100%;
+  padding:5px 9px;border-radius:999px;
+  background:color-mix(in srgb,var(--vn-petroleum) 12%,var(--myn-surface));
+  color:var(--vn-petroleum);
+  font-size:10px;font-weight:700;line-height:1.3;
 }
 .vn-my-notifications-superadmin .vn-myn-kpi-bars {
-  display:flex;align-items:end;flex-shrink:0;gap:4px;height:28px;
+  display:flex;align-items:end;gap:3px;height:23px;flex-shrink:0;
 }
 .vn-my-notifications-superadmin .vn-myn-kpi-bars i {
-  display:block;width:4px;height:11px;border-radius:3px;
-  background:var(--myn-coral);opacity:.7;
+  width:3px;height:9px;border-radius:3px;background:var(--myn-coral);opacity:.7;
 }
-.vn-my-notifications-superadmin .vn-myn-kpi-bars i:nth-child(2){height:20px;opacity:.55;}
-.vn-my-notifications-superadmin .vn-myn-kpi-bars i:nth-child(3){height:15px;}
-.vn-my-notifications-superadmin .vn-myn-kpi-bars i:nth-child(4){height:26px;opacity:1;}
-.vn-my-notifications-superadmin .vn-myn-kpi-bars i:nth-child(5){height:18px;}
-/* Barra de búsqueda y filtros, con espacio aprovechado. */
+.vn-my-notifications-superadmin .vn-myn-kpi-bars i:nth-child(2) {height:16px;opacity:.55;}
+.vn-my-notifications-superadmin .vn-myn-kpi-bars i:nth-child(3) {height:13px;}
+.vn-my-notifications-superadmin .vn-myn-kpi-bars i:nth-child(4) {height:23px;opacity:1;}
+.vn-my-notifications-superadmin .vn-myn-kpi-bars i:nth-child(5) {height:15px;}
+/* Herramientas: buscador+actualizar juntos, filtros etiquetados debajo. */
 .vn-my-notifications-superadmin .vn-myn-filters,
 .vn-my-notifications-superadmin .vn-myn-pending,
 .vn-my-notifications-superadmin .vn-myn-list {
   min-width:0;border:1px solid var(--myn-line);
-  border-radius:22px;background:var(--myn-surface);
-  color:var(--myn-ink);box-shadow:var(--vn-elevation);
+  border-radius:19px;background:var(--myn-surface);color:var(--myn-ink);
+  box-shadow:var(--vn-elevation);
 }
-.vn-my-notifications-superadmin .vn-myn-filters {padding:16px 19px;}
-.vn-my-notifications-superadmin .vn-myn-filters > div:first-child {
-  display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+.vn-my-notifications-superadmin .vn-myn-filters {
+  padding:13px 16px;
 }
-.vn-my-notifications-superadmin .vn-myn-filters > div:first-child > div:first-child {
-  width:auto;min-width:220px;max-width:560px;
-  flex:1 1 320px;
+.vn-my-notifications-superadmin .vn-myn-controls {
+  display:flex;align-items:center;flex-wrap:nowrap;gap:9px;
+}
+.vn-my-notifications-superadmin .vn-myn-search-wrap {
+  flex:1 1 0%;max-width:560px;min-width:0;
 }
 .vn-my-notifications-superadmin .vn-myn-search {
-  min-height:43px;padding-top:9px;padding-bottom:9px;
-  border:1px solid var(--myn-line);border-radius:12px;
-  background:var(--myn-surface);color:var(--myn-ink);
-  font-size:13px;
+  min-height:41px;padding-top:8px;padding-bottom:8px;
+  border:1px solid var(--myn-line);border-radius:11px;
+  background:var(--myn-surface);color:var(--myn-ink);font-size:12px;
 }
 .vn-my-notifications-superadmin .vn-myn-search::placeholder {
   color:var(--myn-muted);opacity:1;
 }
 .vn-my-notifications-superadmin .vn-myn-search:focus {
   border-color:var(--myn-coral);background:var(--myn-surface);
-  box-shadow:0 0 0 3px color-mix(in srgb,var(--myn-coral) 13%,transparent);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--myn-coral) 12%,transparent);
+}
+.vn-my-notifications-superadmin .vn-myn-controls button[aria-label="Limpiar búsqueda"] {
+  color:var(--myn-muted);
+}
+.vn-my-notifications-superadmin .vn-myn-refresh {
+  flex-shrink:0;min-height:41px;padding:8px 12px;
+  border:1px solid color-mix(in srgb,var(--myn-coral) 24%,var(--myn-line));
+  border-radius:11px;background:var(--vn-coral-soft);color:var(--myn-strong);
+  font-size:12px;font-weight:750;
+}
+.vn-my-notifications-superadmin .vn-myn-refresh:hover:not(:disabled) {
+  border-color:var(--myn-coral);
+}
+.vn-my-notifications-superadmin .vn-myn-filter-row,
+.vn-my-notifications-superadmin .vn-myn-type-row {
+  display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+  margin-top:11px;
+}
+.vn-my-notifications-superadmin .vn-myn-type-row {
+  padding-top:10px;border-top:1px solid var(--myn-line);
+}
+.vn-my-notifications-superadmin .vn-myn-filter-label {
+  color:var(--myn-muted);font-size:10px;font-weight:800;
+  letter-spacing:.07em;text-transform:uppercase;
+  margin-right:5px;
 }
 .vn-my-notifications-superadmin .vn-myn-read-filter,
-.vn-my-notifications-superadmin .vn-myn-type-filter,
-.vn-my-notifications-superadmin .vn-myn-refresh {
+.vn-my-notifications-superadmin .vn-myn-type-filter {
   display:inline-flex;align-items:center;justify-content:center;
-  min-height:35px;padding:7px 11px;
-  border:1px solid transparent;border-radius:10px;
-  color:var(--myn-ink);background:var(--myn-soft);
-  font-size:12px;font-weight:700;box-shadow:none;
+  min-height:32px;padding:7px 10px;
+  border:1px solid transparent;border-radius:9px;
+  background:var(--myn-soft);color:var(--myn-ink);
+  font-size:11px;font-weight:700;white-space:nowrap;box-shadow:none;
 }
 .vn-my-notifications-superadmin .vn-myn-read-filter[aria-pressed="true"],
 .vn-my-notifications-superadmin .vn-myn-type-filter[aria-pressed="true"] {
-  background:var(--myn-coral);border-color:var(--myn-coral);color:#fff;
+  color:#fff;background:var(--myn-coral);border-color:var(--myn-coral);
 }
-.vn-my-notifications-superadmin .vn-myn-type-filter.border-violet-300 {
-  background:var(--myn-coral);border-color:var(--myn-coral);color:#fff;
-}
-.vn-my-notifications-superadmin .vn-myn-read-filter[aria-pressed="false"]:hover,
-.vn-my-notifications-superadmin .vn-myn-type-filter:hover:not(.border-violet-300),
-.vn-my-notifications-superadmin .vn-myn-refresh:hover:not(:disabled) {
+.vn-my-notifications-superadmin .vn-myn-read-filter:hover:not([aria-pressed="true"]),
+.vn-my-notifications-superadmin .vn-myn-type-filter:hover:not([aria-pressed="true"]) {
   background:var(--vn-coral-soft);color:var(--myn-strong);
-  border-color:var(--myn-line);
 }
-.vn-my-notifications-superadmin .vn-myn-refresh {min-height:43px;padding:9px 13px;}
-.vn-my-notifications-superadmin .vn-myn-filters > div:nth-child(2) {
-  border-color:var(--myn-line);
-  padding-top:11px;margin-top:12px;gap:6px;
-}
-/* Pendientes: una franja sencilla, sin competir con el listado. */
+/* Resumen pendiente y lista. */
 .vn-my-notifications-superadmin .vn-myn-pending {
-  gap:14px;padding:15px 19px;
-  align-items:center;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:12px 17px;
 }
 .vn-my-notifications-superadmin .vn-myn-pending p.font-bold {
-  color:var(--myn-ink);font-size:14px;
+  color:var(--myn-ink);font-size:13px;font-weight:750;
 }
 .vn-my-notifications-superadmin .vn-myn-pending p.text-sm {
-  color:var(--myn-muted);font-size:12px;line-height:1.5;
+  margin-top:4px;color:var(--myn-muted);font-size:11px;line-height:1.4;
 }
 .vn-my-notifications-superadmin .vn-myn-mark-all {
-  min-height:42px;padding:9px 14px;
-  border:1px solid color-mix(in srgb,var(--myn-coral) 28%,var(--myn-line));
-  border-radius:12px;
-  background:var(--vn-coral-soft);color:var(--myn-strong);
-  font-size:12px;font-weight:750;box-shadow:none;
+  min-height:39px;padding:8px 12px;flex-shrink:0;
+  border:1px solid color-mix(in srgb,var(--myn-coral) 27%,var(--myn-line));
+  border-radius:10px;background:var(--vn-coral-soft);color:var(--myn-strong);
+  font-size:11px;font-weight:750;box-shadow:none;
 }
 .vn-my-notifications-superadmin .vn-myn-mark-all:hover:not(:disabled) {
-  background:color-mix(in srgb,var(--vn-coral-soft) 78%,var(--myn-coral));
+  background:color-mix(in srgb,var(--vn-coral-soft) 75%,var(--myn-coral));
 }
-/* Bandeja de notificaciones */
 .vn-my-notifications-superadmin .vn-myn-list {overflow:hidden;}
 .vn-my-notifications-superadmin .vn-myn-list-header {
-  padding:17px 21px;gap:8px;border-color:var(--myn-line);
+  display:flex;align-items:center;justify-content:space-between;
+  gap:9px;padding:14px 18px;border-color:var(--myn-line);
 }
 .vn-my-notifications-superadmin .vn-myn-list-header p.font-black {
-  color:var(--myn-ink);font-size:18px;font-weight:800;
-  letter-spacing:-.02em;
+  color:var(--myn-ink);font-size:16px;font-weight:750;letter-spacing:-.02em;
 }
 .vn-my-notifications-superadmin .vn-myn-list-header p.text-xs {
-  color:var(--myn-muted);
+  color:var(--myn-muted);font-size:11px;
 }
 .vn-my-notifications-superadmin .vn-myn-list-header span.text-violet-600 {
   color:var(--myn-strong);
 }
 .vn-my-notifications-superadmin .vn-myn-notification {
-  min-height:88px;padding:16px 21px;gap:13px;
+  gap:11px;min-height:76px;padding:12px 17px;
   border-color:var(--myn-line);
   background:var(--myn-surface);color:var(--myn-ink);
 }
 .vn-my-notifications-superadmin .vn-myn-notification.vn-myn-unread {
-  background:color-mix(in srgb,var(--vn-coral-soft) 35%,var(--myn-surface));
+  background:color-mix(in srgb,var(--vn-coral-soft) 26%,var(--myn-surface));
 }
 .vn-my-notifications-superadmin .vn-myn-notification.vn-myn-unread > span.absolute {
-  background:var(--myn-coral);width:3px;
+  width:3px;background:var(--myn-coral);
 }
-.vn-my-notifications-superadmin .vn-myn-notification:hover,
-.vn-my-notifications-superadmin .vn-myn-notification:focus-visible {
+.vn-my-notifications-superadmin .vn-myn-notification:hover {
   background:var(--myn-soft);
-  outline:2px solid var(--myn-coral);outline-offset:-2px;
+}
+.vn-my-notifications-superadmin .vn-myn-notification:focus-visible {
+  outline:none !important;
+  box-shadow:inset 3px 0 0 var(--myn-coral);
+  background:var(--myn-soft);
 }
 .vn-my-notifications-superadmin .vn-myn-notification > div.pointer-events-none.absolute {
   display:none;
 }
 .vn-my-notifications-superadmin .vn-myn-notification > div.relative.flex.h-12.w-12 {
-  width:44px;height:44px;border-radius:13px;
+  width:42px;height:42px;border-radius:12px;
   background:var(--vn-icon-bg);color:var(--myn-strong);
 }
 .vn-my-notifications-superadmin .vn-myn-notification p.text-sm.font-black {
-  color:var(--myn-ink);font-size:14px;font-weight:800;
+  color:var(--myn-ink);font-size:13px;font-weight:750;
 }
 .vn-my-notifications-superadmin .vn-myn-notification p.line-clamp-2 {
-  margin-top:4px;color:var(--myn-muted);
-  font-size:13px;line-height:1.6;
+  margin-top:3px;color:var(--myn-muted);font-size:12px;line-height:1.45;
 }
 .vn-my-notifications-superadmin .vn-myn-notification div.mt-4 {
-  margin-top:10px;
+  margin-top:7px;
 }
 .vn-my-notifications-superadmin .vn-myn-notification span.bg-violet-500 {
   background:var(--myn-coral);color:#fff;
@@ -233,146 +231,83 @@
 .vn-my-notifications-superadmin .vn-myn-notification span.bg-violet-400 {
   background:var(--myn-coral);box-shadow:none;
 }
+.vn-my-notifications-superadmin .vn-myn-notification .vn-myn-type-badge {
+  border:1px solid color-mix(in srgb,var(--myn-coral) 22%,var(--myn-line));
+  border-radius:999px;background:var(--vn-coral-soft);color:var(--myn-strong);
+}
 .vn-my-notifications-superadmin .vn-myn-notification span.text-slate-500 {
   color:var(--myn-muted);
 }
-.vn-my-notifications-superadmin .vn-myn-list .divide-y {
-  border-color:var(--myn-line);
-}
-.vn-my-notifications-superadmin .vn-myn-type-badge {
-  border:1px solid color-mix(in srgb,var(--myn-coral) 26%,var(--myn-line));
-  border-radius:999px;background:var(--vn-coral-soft);
-  color:var(--myn-strong);
-}
-/* Detalle de notificación: compacto, consistente y sin altura vacía. */
+/* Detalle modal: conservar funciones, reducir altura. */
 .vn-my-notifications-superadmin .vn-myn-detail-overlay {
-  background:rgba(18,21,23,.58);
-  backdrop-filter:blur(5px);
+  background:rgba(18,21,23,.58);backdrop-filter:blur(5px);
 }
 .vn-my-notifications-superadmin .vn-myn-detail {
-  display:flex;
-  flex-direction:column;
-  width:min(100%,620px);
-  height:auto;
-  max-height:calc(100dvh - 32px);
-  border:1px solid var(--myn-line);
-  border-radius:20px;
-  background:var(--myn-surface);
-  color:var(--myn-ink);
+  display:flex;flex-direction:column;width:min(100%,620px);
+  height:auto;max-height:calc(100dvh - 32px);
+  border:1px solid var(--myn-line);border-radius:20px;
+  background:var(--myn-surface);color:var(--myn-ink);
   box-shadow:0 25px 70px rgba(20,22,24,.22);
 }
-.vn-my-notifications-superadmin .vn-myn-detail > .pointer-events-none {
-  display:none;
-}
+.vn-my-notifications-superadmin .vn-myn-detail > .pointer-events-none {display:none;}
 .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header,
 .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-footer {
-  flex:0 0 auto;
-  border-color:var(--myn-line);
-  background:var(--myn-surface);
+  flex:0 0 auto;border-color:var(--myn-line);background:var(--myn-surface);
 }
-.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header {
-  padding:18px 22px;
-}
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header {padding:17px 20px;}
 .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header .h-14.w-14 {
-  width:46px;
-  height:46px;
-  flex-shrink:0;
-  border-radius:13px;
-  background:var(--vn-icon-bg);
-  color:var(--myn-strong);
+  width:44px;height:44px;border-radius:12px;
+  background:var(--vn-icon-bg);color:var(--myn-strong);
 }
 .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header h2 {
-  margin-top:8px;
-  color:var(--myn-ink);
-  font-size:21px;
-  font-weight:800;
-  letter-spacing:-.025em;
-  line-height:1.25;
+  margin-top:7px;color:var(--myn-ink);
+  font-size:20px;font-weight:800;line-height:1.25;
 }
 .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header p {
-  margin-top:7px;
   color:var(--myn-muted);
 }
 .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header button {
-  width:36px;
-  height:36px;
-  padding:8px;
-  border:1px solid var(--myn-line);
-  border-radius:11px;
-  background:var(--myn-soft);
-  color:var(--myn-muted);
-}
-.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header button:hover {
-  color:var(--myn-ink);
-  background:var(--vn-coral-soft);
+  width:35px;height:35px;border-radius:10px;
+  border:1px solid var(--myn-line);background:var(--myn-soft);color:var(--myn-muted);
 }
 .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-body {
-  flex:0 1 auto;
-  min-height:0;
+  flex:0 1 auto;min-height:0;
   max-height:min(60dvh,540px);
-  overflow-y:auto;
-  overscroll-behavior:contain;
-  padding:18px 22px;
+  overflow-y:auto;overscroll-behavior:contain;
+  padding:16px 20px;
 }
 .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-message {
-  padding:16px 18px;
-  border:1px solid var(--myn-line);
-  border-radius:14px;
-  background:var(--myn-soft);
-  color:var(--myn-ink);
+  padding:15px 17px;border:1px solid var(--myn-line);
+  border-radius:14px;background:var(--myn-soft);
 }
 .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-message p {
-  color:var(--myn-ink);
-  font-size:13px;
-  line-height:1.6;
+  color:var(--myn-ink);font-size:13px;line-height:1.55;
 }
 .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-read-state {
-  margin-top:12px;
-  padding:12px 14px;
-  gap:11px;
-  border-radius:13px;
-}
-.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-read-state > div:first-child {
-  flex-shrink:0;
+  margin-top:12px;padding:11px 13px;gap:10px;border-radius:13px;
 }
 .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-read-state p.text-slate-500 {
   color:#42685c;
 }
 .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-footer {
-  display:flex;
-  justify-content:flex-end;
-  align-items:center;
-  gap:9px;
-  padding:12px 22px;
+  display:flex;align-items:center;justify-content:flex-end;gap:9px;
+  padding:11px 20px;
 }
 .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-footer button {
-  display:inline-flex;
-  justify-content:center;
-  align-items:center;
-  min-height:40px;
-  padding:9px 16px;
-  border:1px solid var(--myn-line);
-  border-radius:11px;
-  background:var(--myn-surface);
-  color:var(--myn-ink);
-  font-size:13px;
-  font-weight:700;
-  box-shadow:none;
-}
-.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-footer button:hover:not(:disabled) {
-  background:var(--myn-soft);
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:40px;padding:9px 16px;
+  border:1px solid var(--myn-line);border-radius:11px;
+  background:var(--myn-surface);color:var(--myn-ink);
+  font-size:12px;font-weight:700;box-shadow:none;
 }
 .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-footer button.bg-violet-500 {
-  background:var(--myn-coral);
-  border-color:var(--myn-coral);
-  color:#fff;
-}
-.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-footer button.bg-violet-500:hover:not(:disabled) {
-  background:var(--myn-strong);
+  background:var(--myn-coral);border-color:var(--myn-coral);color:#fff;
 }
 .vn-my-notifications-superadmin button:focus-visible {
-  outline:2px solid var(--myn-coral);
-  outline-offset:3px;
+  outline:2px solid var(--myn-coral);outline-offset:2px;
+}
+.vn-my-notifications-superadmin .vn-myn-notification:focus-visible {
+  outline:none !important;
 }
 html.dark .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-read-state p.text-slate-500 {
   color:#a2d1bf;
@@ -383,45 +318,57 @@ html.dark .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-read-sta
   }
 }
 @media(max-width:767px) {
-  .vn-my-notifications-superadmin .vn-myn-main {padding:13px 11px 24px;}
-  .vn-my-notifications-superadmin .vn-myn-page {gap:13px;}
-  .vn-my-notifications-superadmin .vn-myn-hero-content > div:first-child {
-    padding:18px;border-radius:17px;
-  }
-  .vn-my-notifications-superadmin .vn-myn-kpi-grid {gap:9px;}
+  .vn-my-notifications-superadmin .vn-myn-main {padding:10px 11px 22px;}
+  .vn-my-notifications-superadmin .vn-myn-page {gap:10px;}
+  .vn-my-notifications-superadmin .vn-myn-hero {padding:15px 16px;border-radius:16px;}
+  .vn-my-notifications-superadmin .vn-myn-title {font-size:22px;}
+  .vn-my-notifications-superadmin .vn-myn-subtitle {font-size:11px;}
+  .vn-my-notifications-superadmin .vn-myn-kpi-grid {gap:8px;}
   .vn-my-notifications-superadmin .vn-myn-kpi {
-    min-height:160px;padding:13px;border-radius:16px;
+    min-height:116px;padding:12px;border-radius:14px;
   }
-  .vn-my-notifications-superadmin .vn-myn-kpi p:first-child {font-size:11px;padding-right:36px;}
-  .vn-my-notifications-superadmin .vn-myn-kpi p.text-3xl {font-size:27px;}
+  .vn-my-notifications-superadmin .vn-myn-kpi p:first-child {
+    padding-right:32px;font-size:11px;
+  }
+  .vn-my-notifications-superadmin .vn-myn-kpi p.text-3xl {
+    margin-top:5px;font-size:25px;
+  }
   .vn-my-notifications-superadmin .vn-myn-kpi-icon {
-    width:38px;height:38px;top:13px;right:13px;border-radius:12px;
+    top:11px;right:11px;width:34px;height:34px;border-radius:10px;
   }
-  .vn-my-notifications-superadmin .vn-myn-kpi-footer > span:first-child {font-size:10px;}
+  .vn-my-notifications-superadmin .vn-myn-kpi-icon svg {width:17px;height:17px;}
+  .vn-my-notifications-superadmin .vn-myn-kpi-footer {margin-top:8px;}
+  .vn-my-notifications-superadmin .vn-myn-kpi-footer > span:first-child {
+    min-height:20px;padding:4px 8px;font-size:9px;
+  }
   .vn-my-notifications-superadmin .vn-myn-kpi-bars {display:none;}
-  .vn-my-notifications-superadmin .vn-myn-filters {padding:12px;border-radius:16px;}
-  .vn-my-notifications-superadmin .vn-myn-filters > div:first-child > div:first-child {
-    max-width:none;flex:1 1 100%;
+  .vn-my-notifications-superadmin .vn-myn-filters {padding:11px;}
+  .vn-my-notifications-superadmin .vn-myn-controls {gap:8px;}
+  .vn-my-notifications-superadmin .vn-myn-search {font-size:12px;}
+  .vn-my-notifications-superadmin .vn-myn-refresh {padding:8px 10px;}
+  .vn-my-notifications-superadmin .vn-myn-filter-label {min-width:42px;}
+  .vn-my-notifications-superadmin .vn-myn-pending {
+    padding:11px 12px;gap:9px;flex-wrap:wrap;
   }
-  .vn-my-notifications-superadmin .vn-myn-pending {padding:13px;}
-  .vn-my-notifications-superadmin .vn-myn-list-header {padding:14px;}
-  .vn-my-notifications-superadmin .vn-myn-notification {padding:13px;gap:10px;}
+  .vn-my-notifications-superadmin .vn-myn-mark-all {
+    min-height:35px;padding:7px 11px;font-size:11px;
+  }
+  .vn-my-notifications-superadmin .vn-myn-list-header {padding:12px 14px;}
+  .vn-my-notifications-superadmin .vn-myn-notification {padding:11px 13px;gap:9px;}
   .vn-my-notifications-superadmin .vn-myn-detail {
-    width:100%;
-    max-height:100dvh;
-    border-radius:17px 17px 0 0;
+    max-height:100dvh;border-radius:17px 17px 0 0;
   }
-  .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header {
-    padding:15px 16px;
-  }
+  .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header {padding:15px 16px;}
   .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-body {
-    padding:14px 16px;
-    max-height:calc(100dvh - 180px);
+    padding:14px 16px;max-height:calc(100dvh - 180px);
   }
   .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-footer {
-    padding:11px 16px;
-    flex-wrap:wrap;
+    padding:11px 16px;flex-wrap:wrap;
   }
+}
+@media(max-width:380px) {
+  .vn-my-notifications-superadmin .vn-myn-controls {flex-wrap:wrap;}
+  .vn-my-notifications-superadmin .vn-myn-search-wrap {flex:1 1 100%;max-width:none;}
 }
 @media(prefers-reduced-motion:reduce) {
   .vn-my-notifications-superadmin * {transition:none !important;}
