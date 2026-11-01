@@ -1595,10 +1595,15 @@ export default function MyNotificationsPage() {
               aria-label="Cerrar detalle de notificación"
             />
 
-            <section role="dialog" aria-modal="true" aria-label="Detalle de notificación" className="vn-dashboard-panel vn-myn-detail relative w-full overflow-hidden rounded-t-[34px] border border-slate-200 bg-white shadow-2xl shadow-slate-500/30 sm:max-w-2xl sm:rounded-[34px] dark:border-white/10 dark:bg-[#0F172A] dark:shadow-black/50">
+            <section
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="vn-myn-detail-title"
+              className="vn-dashboard-panel vn-myn-detail relative w-full overflow-hidden rounded-t-[34px] border border-slate-200 bg-white shadow-2xl shadow-slate-500/30 sm:max-w-2xl sm:rounded-[34px] dark:border-white/10 dark:bg-[#0F172A] dark:shadow-black/50"
+            >
               <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-violet-500/10 blur-3xl" />
 
-              <header className="relative border-b border-slate-200 p-6 sm:p-7 dark:border-white/10">
+              <header className="vn-myn-detail-header relative border-b border-slate-200 p-6 sm:p-7 dark:border-white/10">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex min-w-0 items-start gap-4">
                     <div
@@ -1625,7 +1630,7 @@ export default function MyNotificationsPage() {
                         )}
                       </div>
 
-                      <h2 className="mt-3 break-words text-2xl font-black tracking-tight text-slate-950 dark:text-white">
+                      <h2 id="vn-myn-detail-title" className="mt-3 break-words text-2xl font-black tracking-tight text-slate-950 dark:text-white">
                         {selectedNotification.titulo}
                       </h2>
 
@@ -1654,13 +1659,13 @@ export default function MyNotificationsPage() {
               </header>
 
               <div className="vn-myn-detail-body relative max-h-[55vh] overflow-y-auto p-6 sm:p-7">
-                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5 dark:border-white/10 dark:bg-white/[0.04]">
+                <div className="vn-myn-detail-message rounded-3xl border border-slate-200 bg-slate-50 p-5 dark:border-white/10 dark:bg-white/[0.04]">
                   <p className="whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-200">
                     {selectedNotification.mensaje}
                   </p>
                 </div>
 
-                <div className="mt-5 flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-400/15 dark:bg-emerald-500/[0.06]">
+                <div className="vn-myn-detail-read-state mt-5 flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-400/15 dark:bg-emerald-500/[0.06]">
                   <div className="rounded-xl bg-emerald-100 p-2 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
                     <CheckCheck
                       size={18}
@@ -1683,7 +1688,7 @@ export default function MyNotificationsPage() {
                 </div>
               </div>
 
-              <footer className="relative flex flex-col-reverse gap-3 border-t border-slate-200 p-5 sm:flex-row sm:justify-end sm:p-6 dark:border-white/10">
+              <footer className="vn-myn-detail-footer relative flex flex-col-reverse gap-3 border-t border-slate-200 p-5 sm:flex-row sm:justify-end sm:p-6 dark:border-white/10">
                 <button
                   type="button"
                   onClick={() =>
