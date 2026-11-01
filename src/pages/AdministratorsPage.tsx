@@ -2015,8 +2015,7 @@ export default function AdministratorsPage() {
                   Editar administrador
                 </h2>
                 <p className="mt-1 text-sm leading-5 text-slate-500">
-                  Actualiza solo datos compatibles con el endpoint
-                  administrativo actual.
+                  Modifica el nombre visible y el correo de esta cuenta.
                 </p>
               </div>
 
@@ -2133,9 +2132,8 @@ export default function AdministratorsPage() {
                   </h2>
 
                   <p className="mt-2 max-w-xl text-sm leading-6 text-slate-400">
-                    Crea la identidad, registra sus credenciales y asigna
-                    dinámicamente el rol Administrador configurado en el
-                    backend.
+                    Registra una nueva cuenta y asígnale acceso administrativo
+                    de forma segura.
                   </p>
                 </div>
 
@@ -2259,8 +2257,8 @@ export default function AdministratorsPage() {
                         Rol: Administrador
                       </p>
                       <p className="mt-1 text-xs leading-5 text-violet-700 dark:text-violet-200/55">
-                        El ID del rol no está escrito a mano: se obtiene desde
-                        /roles y se asigna por slug admin.
+                        El rol Administrador se asignará automáticamente
+                        al registrar la cuenta.
                       </p>
                     </div>
                   </div>
@@ -2277,10 +2275,9 @@ export default function AdministratorsPage() {
                         Verificación de correo
                       </p>
                       <p className="mt-1 text-xs leading-5 text-amber-700 dark:text-amber-200/60">
-                        En desarrollo, si el backend devuelve el token de
-                        verificación de desarrollo, la cuenta se activa
-                        automáticamente. En producción queda pendiente de
-                        verificación.
+                        En producción, la cuenta deberá verificar su correo
+                        para activarse. En desarrollo puede verificarse
+                        automáticamente.
                       </p>
                     </div>
                   </div>
