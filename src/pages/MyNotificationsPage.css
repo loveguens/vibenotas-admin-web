@@ -244,56 +244,138 @@
   border-radius:999px;background:var(--vn-coral-soft);
   color:var(--myn-strong);
 }
-/* Detalle: superficies y campos del Dashboard. */
+/* Detalle de notificación: compacto, consistente y sin altura vacía. */
 .vn-my-notifications-superadmin .vn-myn-detail-overlay {
-  background:rgba(18,21,23,.58);backdrop-filter:blur(5px);
+  background:rgba(18,21,23,.58);
+  backdrop-filter:blur(5px);
 }
 .vn-my-notifications-superadmin .vn-myn-detail {
-  width:100%;max-height:calc(100dvh - 24px);
-  display:flex;flex-direction:column;
-  border:1px solid var(--myn-line);border-radius:22px;
-  background:var(--myn-surface);color:var(--myn-ink);
+  display:flex;
+  flex-direction:column;
+  width:min(100%,620px);
+  height:auto;
+  max-height:calc(100dvh - 32px);
+  border:1px solid var(--myn-line);
+  border-radius:20px;
+  background:var(--myn-surface);
+  color:var(--myn-ink);
   box-shadow:0 25px 70px rgba(20,22,24,.22);
 }
-.vn-my-notifications-superadmin .vn-myn-detail > .pointer-events-none {display:none;}
-.vn-my-notifications-superadmin .vn-myn-detail header,
-.vn-my-notifications-superadmin .vn-myn-detail footer {
-  border-color:var(--myn-line);flex-shrink:0;
+.vn-my-notifications-superadmin .vn-myn-detail > .pointer-events-none {
+  display:none;
+}
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header,
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-footer {
+  flex:0 0 auto;
+  border-color:var(--myn-line);
   background:var(--myn-surface);
 }
-.vn-my-notifications-superadmin .vn-myn-detail h2 {
-  color:var(--myn-ink);font-size:24px;font-weight:800;
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header {
+  padding:18px 22px;
 }
-.vn-my-notifications-superadmin .vn-myn-detail header .h-14.w-14 {
-  background:var(--vn-icon-bg);color:var(--myn-strong);
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header .h-14.w-14 {
+  width:46px;
+  height:46px;
+  flex-shrink:0;
+  border-radius:13px;
+  background:var(--vn-icon-bg);
+  color:var(--myn-strong);
 }
-.vn-my-notifications-superadmin .vn-myn-detail header button {
-  border-color:var(--myn-line);color:var(--myn-muted);
-  background:var(--myn-soft);
-}
-.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-body {
-  min-height:0;max-height:none;flex:1 1 auto;overflow-y:auto;
-}
-.vn-my-notifications-superadmin .vn-myn-detail .rounded-3xl.bg-slate-50 {
-  background:var(--myn-soft);border-color:var(--myn-line);
-}
-.vn-my-notifications-superadmin .vn-myn-detail .text-slate-700,
-.vn-my-notifications-superadmin .vn-myn-detail .text-slate-900 {
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header h2 {
+  margin-top:8px;
   color:var(--myn-ink);
+  font-size:21px;
+  font-weight:800;
+  letter-spacing:-.025em;
+  line-height:1.25;
 }
-.vn-my-notifications-superadmin .vn-myn-detail .text-slate-500,
-.vn-my-notifications-superadmin .vn-myn-detail .text-slate-600 {
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header p {
+  margin-top:7px;
   color:var(--myn-muted);
 }
-.vn-my-notifications-superadmin .vn-myn-detail footer button.bg-violet-500 {
-  background:var(--myn-coral);border-color:var(--myn-coral);
-  color:#fff;box-shadow:none;
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header button {
+  width:36px;
+  height:36px;
+  padding:8px;
+  border:1px solid var(--myn-line);
+  border-radius:11px;
+  background:var(--myn-soft);
+  color:var(--myn-muted);
 }
-.vn-my-notifications-superadmin .vn-myn-detail footer button.bg-violet-500:hover {
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header button:hover {
+  color:var(--myn-ink);
+  background:var(--vn-coral-soft);
+}
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-body {
+  flex:0 1 auto;
+  min-height:0;
+  max-height:min(60dvh,540px);
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  padding:18px 22px;
+}
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-message {
+  padding:16px 18px;
+  border:1px solid var(--myn-line);
+  border-radius:14px;
+  background:var(--myn-soft);
+  color:var(--myn-ink);
+}
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-message p {
+  color:var(--myn-ink);
+  font-size:13px;
+  line-height:1.6;
+}
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-read-state {
+  margin-top:12px;
+  padding:12px 14px;
+  gap:11px;
+  border-radius:13px;
+}
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-read-state > div:first-child {
+  flex-shrink:0;
+}
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-read-state p.text-slate-500 {
+  color:#42685c;
+}
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-footer {
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:9px;
+  padding:12px 22px;
+}
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-footer button {
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  min-height:40px;
+  padding:9px 16px;
+  border:1px solid var(--myn-line);
+  border-radius:11px;
+  background:var(--myn-surface);
+  color:var(--myn-ink);
+  font-size:13px;
+  font-weight:700;
+  box-shadow:none;
+}
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-footer button:hover:not(:disabled) {
+  background:var(--myn-soft);
+}
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-footer button.bg-violet-500 {
+  background:var(--myn-coral);
+  border-color:var(--myn-coral);
+  color:#fff;
+}
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-footer button.bg-violet-500:hover:not(:disabled) {
   background:var(--myn-strong);
 }
 .vn-my-notifications-superadmin button:focus-visible {
-  outline:2px solid var(--myn-coral);outline-offset:3px;
+  outline:2px solid var(--myn-coral);
+  outline-offset:3px;
+}
+html.dark .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-read-state p.text-slate-500 {
+  color:#a2d1bf;
 }
 @media(max-width:1100px) {
   .vn-my-notifications-superadmin .vn-myn-kpi-grid {
@@ -325,7 +407,20 @@
   .vn-my-notifications-superadmin .vn-myn-list-header {padding:14px;}
   .vn-my-notifications-superadmin .vn-myn-notification {padding:13px;gap:10px;}
   .vn-my-notifications-superadmin .vn-myn-detail {
-    max-height:100dvh;border-radius:17px 17px 0 0;
+    width:100%;
+    max-height:100dvh;
+    border-radius:17px 17px 0 0;
+  }
+  .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-header {
+    padding:15px 16px;
+  }
+  .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-body {
+    padding:14px 16px;
+    max-height:calc(100dvh - 180px);
+  }
+  .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-footer {
+    padding:11px 16px;
+    flex-wrap:wrap;
   }
 }
 @media(prefers-reduced-motion:reduce) {
