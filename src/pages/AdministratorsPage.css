@@ -1,0 +1,501 @@
+/* VibeNotas · Administración.
+   Usa los mismos tokens y superficies compartidos del Dashboard Super Admin.
+   No reintroducir parches para colores individuales de cada tarjeta. */
+.vn-admin .superadmin-administration {
+  --adm-ink:var(--vn-ink);
+  --adm-muted:var(--vn-muted);
+  --adm-surface:var(--vn-surface);
+  --adm-line:var(--vn-line);
+  --adm-soft:var(--vn-surface-hover);
+  --adm-coral:var(--vn-coral);
+  --adm-coral-strong:var(--vn-coral-strong);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  min-width:0;
+  color:var(--adm-ink);
+  padding-bottom:32px;
+}
+.vn-admin .superadmin-administration .adm-hero {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  padding:23px 26px;
+  border:1px solid color-mix(in srgb,var(--adm-coral) 26%,var(--adm-line));
+  border-radius:22px;
+  background:linear-gradient(115deg,var(--adm-surface),color-mix(in srgb,var(--vn-coral-soft) 64%,var(--adm-surface)));
+  color:var(--adm-ink);
+  box-shadow:var(--vn-elevation);
+}
+.vn-admin .superadmin-administration .adm-heading {min-width:0;max-width:620px;}
+.vn-admin .superadmin-administration .adm-eyebrow {
+  margin:0 0 7px;
+  color:var(--adm-coral-strong);
+  font-size:11px;font-weight:750;letter-spacing:.12em;
+}
+.vn-admin .superadmin-administration .adm-heading h1 {
+  margin:0;
+  color:var(--adm-ink);
+  font-size:clamp(23px,2.4vw,31px);
+  line-height:1.15;
+  letter-spacing:-.035em;
+  font-weight:800;
+}
+.vn-admin .superadmin-administration .adm-description {
+  margin:9px 0 0;color:var(--adm-muted);
+  font-size:13px;line-height:1.55;
+}
+.vn-admin .superadmin-administration .adm-header-actions {
+  display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px;flex-shrink:0;
+}
+.vn-admin .superadmin-administration .adm-header-actions button {
+  min-height:44px;padding:10px 15px;
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  border:1px solid var(--adm-line);border-radius:12px;
+  font-size:13px;font-weight:750;white-space:nowrap;
+  transition:background .18s,border-color .18s,transform .18s;
+}
+.vn-admin .superadmin-administration .adm-export {
+  background:var(--adm-surface);color:var(--adm-ink);
+}
+.vn-admin .superadmin-administration .adm-export:hover:not(:disabled) {background:var(--adm-soft);}
+.vn-admin .superadmin-administration .adm-create {
+  color:white;background:var(--adm-coral);border-color:var(--adm-coral) !important;
+}
+.vn-admin .superadmin-administration .adm-create:hover {background:var(--adm-coral-strong);transform:translateY(-1px);}
+.vn-admin .superadmin-administration button:disabled {opacity:.55;cursor:not-allowed;}
+
+/* Métricas: reproducen las tarjetas reales del Dashboard */
+.vn-admin .superadmin-administration .adm-metrics {
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;
+}
+.vn-admin .superadmin-administration .adm-metric-card {
+  min-width:0;min-height:194px;padding:19px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  border:1px solid var(--adm-line);border-radius:23px;
+  color:var(--adm-ink);
+  background:var(--adm-surface);
+  box-shadow:var(--vn-elevation);
+}
+.vn-admin .superadmin-administration .adm-metric-main {display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.vn-admin .superadmin-administration .adm-metric-label {
+  color:var(--adm-muted);font-size:13px;line-height:1.35;font-weight:650;
+  text-transform:none;letter-spacing:0;
+}
+.vn-admin .superadmin-administration .adm-metric-value {
+  margin-top:12px;color:var(--adm-ink);font-size:32px;font-weight:800;
+  line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums;
+}
+.vn-admin .superadmin-administration .adm-metric-helper {
+  margin-top:12px;color:var(--adm-muted);font-size:12px;line-height:1.4;
+}
+.vn-admin .superadmin-administration .adm-metric-icon {
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  width:49px;height:49px;padding:0;border:0;border-radius:15px;
+  background:var(--vn-icon-bg);color:var(--adm-coral-strong);
+}
+.vn-admin .superadmin-administration .adm-metric-foot {
+  display:flex;align-items:end;justify-content:space-between;gap:7px;
+  padding-top:10px;
+}
+.vn-admin .superadmin-administration .adm-metric-detail {
+  display:inline-flex;align-items:center;min-height:26px;max-width:75%;
+  padding:6px 11px;border-radius:999px;
+  background:color-mix(in srgb,var(--vn-petroleum) 13%,var(--adm-surface));
+  color:var(--vn-petroleum);font-size:11px;font-weight:700;line-height:1.3;
+}
+.vn-admin .superadmin-administration .adm-metric-bars {
+  display:flex;align-items:end;gap:4px;height:28px;flex-shrink:0;
+}
+.vn-admin .superadmin-administration .adm-metric-bars i {
+  display:block;width:4px;height:11px;border-radius:3px;
+  background:var(--adm-coral);opacity:.7;
+}
+.vn-admin .superadmin-administration .adm-metric-bars i:nth-child(2) {height:20px;opacity:.55;}
+.vn-admin .superadmin-administration .adm-metric-bars i:nth-child(3) {height:15px;}
+.vn-admin .superadmin-administration .adm-metric-bars i:nth-child(4) {height:26px;opacity:1;}
+.vn-admin .superadmin-administration .adm-metric-bars i:nth-child(5) {height:18px;}
+
+/* Búsqueda y filtros agrupados como barra de herramientas */
+.vn-admin .superadmin-administration .adm-filters,
+.vn-admin .superadmin-administration .adm-directory {
+  min-width:0;background:var(--adm-surface);
+  border:1px solid var(--adm-line);
+  border-radius:22px;box-shadow:var(--vn-elevation);
+}
+.vn-admin .superadmin-administration .adm-filters {padding:16px 19px;}
+.vn-admin .superadmin-administration .adm-toolbar-top {display:flex;flex-wrap:wrap;align-items:center;gap:10px;}
+.vn-admin .superadmin-administration .adm-search {
+  display:flex;align-items:center;gap:10px;
+  min-height:43px;max-width:560px;flex:1 1 340px;min-width:190px;
+  padding:9px 13px;border:1px solid var(--adm-line);
+  border-radius:12px;background:var(--adm-surface);
+  color:var(--adm-muted);
+}
+.vn-admin .superadmin-administration .adm-search:focus-within {
+  border-color:var(--adm-coral);box-shadow:0 0 0 3px color-mix(in srgb,var(--adm-coral) 14%,transparent);
+}
+.vn-admin .superadmin-administration .adm-search input {min-width:0;color:var(--adm-ink);font-size:13px;}
+.vn-admin .superadmin-administration .adm-search input::placeholder {color:var(--adm-muted);opacity:1;}
+.vn-admin .superadmin-administration .adm-refresh {
+  min-height:43px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:9px 13px;border:1px solid var(--adm-line);border-radius:12px;
+  background:var(--vn-coral-soft);color:var(--adm-coral-strong);
+  font-size:13px;font-weight:700;
+}
+.vn-admin .superadmin-administration .adm-refresh:hover:not(:disabled) {border-color:var(--adm-coral);}
+.vn-admin .superadmin-administration .adm-filter-groups {
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;
+  margin-top:13px;
+}
+.vn-admin .superadmin-administration .adm-chip-group {display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+.vn-admin .superadmin-administration .adm-filter-label {
+  color:var(--adm-muted);font-size:11px;font-weight:800;
+  letter-spacing:.065em;text-transform:uppercase;margin-right:3px;
+}
+.vn-admin .superadmin-administration .adm-chip-group button {
+  min-height:32px;padding:7px 11px;border:1px solid transparent;
+  border-radius:9px;background:var(--adm-soft);color:var(--adm-ink);
+  font-size:12px;font-weight:650;line-height:1.1;box-shadow:none;
+}
+.vn-admin .superadmin-administration .adm-chip-group button.bg-violet-500,
+.vn-admin .superadmin-administration .adm-chip-group button.bg-fuchsia-500 {
+  color:#fff;background:var(--adm-coral);border-color:var(--adm-coral);
+}
+.vn-admin .superadmin-administration .adm-chip-group button:hover:not(.bg-violet-500):not(.bg-fuchsia-500) {
+  border-color:var(--adm-line);background:var(--vn-coral-soft);
+}
+
+/* Listado: tipografía y colores del Dashboard */
+.vn-admin .superadmin-administration .adm-directory {overflow:hidden;}
+.vn-admin .superadmin-administration .adm-directory > div:first-child {padding:18px 21px;border-bottom:1px solid var(--adm-line);}
+.vn-admin .superadmin-administration .adm-directory h2 {
+  color:var(--adm-ink);font-size:19px;font-weight:800;letter-spacing:-.02em;
+}
+.vn-admin .superadmin-administration .adm-directory thead {
+  color:var(--adm-muted);background:var(--adm-soft);font-size:11px;
+}
+.vn-admin .superadmin-administration .adm-directory thead th {padding:13px 20px;}
+.vn-admin .superadmin-administration .adm-directory tbody tr {border-color:var(--adm-line);}
+.vn-admin .superadmin-administration .adm-directory tbody tr:hover {background:var(--adm-soft);}
+.vn-admin .superadmin-administration .adm-directory tbody td {padding:14px 20px;color:var(--adm-muted);}
+.vn-admin .superadmin-administration .adm-directory tbody td p,
+.vn-admin .superadmin-administration .adm-directory .adm-mobile-user p {
+  color:var(--adm-ink);
+}
+.vn-admin .superadmin-administration .adm-directory .text-slate-500,
+.vn-admin .superadmin-administration .adm-directory .text-slate-600 {
+  color:var(--adm-muted);
+}
+.vn-admin .superadmin-administration .adm-directory .adm-mobile-user {
+  background:var(--adm-soft);border:1px solid var(--adm-line);border-radius:16px;
+}
+.vn-admin .superadmin-administration .adm-role-badge.bg-fuchsia-50 {
+  color:var(--adm-coral-strong);background:var(--vn-coral-soft);
+  border-color:color-mix(in srgb,var(--adm-coral) 26%,var(--adm-line));
+}
+.vn-admin .superadmin-administration .adm-role-badge.bg-violet-50 {
+  color:var(--vn-petroleum);background:color-mix(in srgb,var(--vn-petroleum) 10%,var(--adm-surface));
+  border-color:color-mix(in srgb,var(--vn-petroleum) 28%,var(--adm-line));
+}
+.vn-admin .superadmin-administration .adm-avatar {
+  color:white;background:var(--adm-coral);box-shadow:none;border-radius:13px;
+}
+
+/* Ventanas administrativas — misma identidad del Dashboard Super Admin.
+   Variables compartidas: --vn-surface, --vn-surface-hover, --vn-ink,
+   --vn-muted, --vn-line, --vn-coral y --vn-coral-soft. */
+.vn-admin .superadmin-administration .adm-modal-overlay {
+  background:rgba(18,21,23,.58);
+  backdrop-filter:blur(5px);
+}
+.vn-admin .superadmin-administration .adm-dialog {
+  min-width:0;
+  background:var(--vn-surface);
+  color:var(--vn-ink);
+  border:1px solid var(--vn-line);
+  border-radius:22px;
+  box-shadow:0 24px 64px rgba(20,22,24,.20);
+}
+.vn-admin .superadmin-administration .adm-actions,
+.vn-admin .superadmin-administration .adm-edit {
+  max-height:calc(100dvh - 32px);
+  overflow-y:auto;
+}
+.vn-admin .superadmin-administration .adm-actions {max-width:480px;}
+.vn-admin .superadmin-administration .adm-edit {max-width:540px;}
+.vn-admin .superadmin-administration .adm-details {
+  width:min(100%,470px);
+  max-width:470px;
+  height:100dvh;
+  overflow-y:auto;
+  border-radius:22px 0 0 22px;
+  box-shadow:-14px 0 45px rgba(20,22,24,.18);
+}
+.vn-admin .superadmin-administration .adm-create-dialog {
+  display:flex;
+  flex-direction:column;
+  max-width:720px;
+  max-height:calc(100dvh - 32px);
+  overflow:hidden;
+}
+.vn-admin .superadmin-administration .adm-dialog-header {
+  flex-shrink:0;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--vn-line);
+  color:var(--vn-ink);
+}
+.vn-admin .superadmin-administration .adm-create-dialog > .adm-dialog-header {
+  padding:20px 24px;
+  margin:0;
+  border-color:var(--vn-line);
+  background:linear-gradient(115deg,var(--vn-surface),color-mix(in srgb,var(--vn-coral-soft) 52%,var(--vn-surface)));
+}
+.vn-admin .superadmin-administration .adm-details > .adm-dialog-header {
+  position:sticky;
+  top:-24px;
+  z-index:2;
+  background:var(--vn-surface);
+  padding:13px 0 17px;
+}
+.vn-admin .superadmin-administration .adm-dialog-kicker {
+  color:var(--vn-coral-strong);
+  letter-spacing:.1em;
+  font-size:11px;
+  font-weight:800;
+}
+.vn-admin .superadmin-administration .adm-create-dialog .adm-dialog-kicker {
+  border:1px solid color-mix(in srgb,var(--vn-coral) 28%,var(--vn-line));
+  background:var(--vn-coral-soft);
+  padding:6px 11px;
+  border-radius:999px;
+}
+.vn-admin .superadmin-administration .adm-dialog :is(h2,h3),
+.vn-admin .superadmin-administration .adm-dialog .text-slate-950,
+.vn-admin .superadmin-administration .adm-dialog .text-slate-900,
+.vn-admin .superadmin-administration .adm-dialog .text-slate-800,
+.vn-admin .superadmin-administration .adm-dialog .text-slate-700 {
+  color:var(--vn-ink);
+}
+.vn-admin .superadmin-administration .adm-dialog .text-slate-500,
+.vn-admin .superadmin-administration .adm-dialog .text-slate-400,
+.vn-admin .superadmin-administration .adm-dialog .text-slate-600,
+.vn-admin .superadmin-administration .adm-dialog label > span {
+  color:var(--vn-muted);
+}
+.vn-admin .superadmin-administration .adm-dialog h2 {
+  font-weight:800;
+  letter-spacing:-.025em;
+}
+.vn-admin .superadmin-administration .adm-dialog-close {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:36px;
+  height:36px;
+  padding:7px;
+  flex-shrink:0;
+  border:1px solid transparent;
+  border-radius:11px;
+  background:transparent;
+  color:var(--vn-muted);
+}
+.vn-admin .superadmin-administration .adm-dialog-close:hover {
+  border-color:var(--vn-line);
+  color:var(--vn-ink);
+  background:var(--vn-surface-hover);
+}
+/* Campos con contraste idéntico en modo claro y oscuro. */
+.vn-admin .superadmin-administration .adm-dialog input {
+  min-height:46px;
+  color:var(--vn-ink);
+  background:var(--vn-surface-hover);
+  border:1px solid var(--vn-line);
+  border-radius:12px;
+  caret-color:var(--vn-coral-strong);
+}
+.vn-admin .superadmin-administration .adm-dialog input::placeholder {
+  color:var(--vn-muted);
+  opacity:.85;
+}
+.vn-admin .superadmin-administration .adm-dialog input:focus {
+  outline:2px solid var(--vn-coral);
+  outline-offset:1px;
+  border-color:var(--vn-coral);
+  background:var(--vn-surface);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--vn-coral) 13%,transparent);
+}
+.vn-admin .superadmin-administration .adm-create-dialog > form {
+  min-height:0;
+  max-height:none;
+  flex:1 1 auto;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-info-card,
+.vn-admin .superadmin-administration .adm-dialog .adm-profile-summary {
+  background:var(--vn-surface-hover);
+  border:1px solid var(--vn-line);
+  border-radius:15px;
+  color:var(--vn-ink);
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-info-card {
+  padding:15px;
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-info-card p.font-semibold {
+  color:var(--vn-ink);
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-info-card p.text-slate-400,
+.vn-admin .superadmin-administration .adm-dialog .adm-info-card p.text-slate-500 {
+  color:var(--vn-muted);
+}
+.vn-admin .superadmin-administration .adm-details .adm-profile-summary {
+  margin-top:18px;
+  padding:24px 16px;
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-profile-summary .adm-avatar {
+  background:var(--vn-coral);
+  color:#fff;
+}
+/* Roles en coral y petróleo, estados funcionales conservan su significado. */
+.vn-admin .superadmin-administration .adm-dialog .adm-role-badge.bg-fuchsia-50,
+.vn-admin .superadmin-administration .adm-dialog .adm-role-badge.bg-violet-50 {
+  border-color:color-mix(in srgb,var(--vn-coral) 26%,var(--vn-line));
+  color:var(--vn-coral-strong);
+  background:var(--vn-coral-soft);
+}
+.vn-admin .superadmin-administration .adm-dialog .text-violet-700,
+.vn-admin .superadmin-administration .adm-dialog .text-violet-300,
+.vn-admin .superadmin-administration .adm-dialog .text-sky-700,
+.vn-admin .superadmin-administration .adm-dialog .text-sky-300 {
+  color:var(--vn-coral-strong);
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-action-list {
+  gap:9px;
+  margin-top:19px;
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-action-row {
+  border:1px solid var(--vn-line);
+  background:var(--vn-surface-hover);
+  color:var(--vn-ink);
+  border-radius:13px;
+  padding:13px 14px;
+  text-align:left;
+  transition:background .16s,border-color .16s;
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-action-row:hover:not(:disabled) {
+  border-color:color-mix(in srgb,var(--vn-coral) 32%,var(--vn-line));
+  background:color-mix(in srgb,var(--vn-coral-soft) 28%,var(--vn-surface));
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-action-row p.font-semibold,
+.vn-admin .superadmin-administration .adm-dialog .adm-action-row p.text-xs {
+  color:var(--vn-ink);
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-action-row p.text-xs {
+  color:var(--vn-muted);
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-action-row[class*="border-red-"] {
+  border-color:color-mix(in srgb,#b83c38 24%,var(--vn-line));
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-action-row[class*="border-red-"] p.font-semibold {
+  color:#bf4840;
+}
+/* Advertencias visibles, sin convertir todo el modal en otro tema. */
+.vn-admin .superadmin-administration .adm-dialog .adm-protection,
+.vn-admin .superadmin-administration .adm-dialog .adm-notice-role {
+  background:var(--vn-coral-soft);
+  border:1px solid color-mix(in srgb,var(--vn-coral) 25%,var(--vn-line));
+  border-radius:15px;
+  color:var(--vn-ink);
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-protection p,
+.vn-admin .superadmin-administration .adm-dialog .adm-notice-role p {
+  color:var(--vn-ink);
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-notice-warning {
+  border:1px solid color-mix(in srgb,#c08c4b 32%,var(--vn-line));
+  background:color-mix(in srgb,#f0ca8f 16%,var(--vn-surface));
+  color:var(--vn-ink);
+  border-radius:15px;
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-notice-warning p {
+  color:var(--vn-ink);
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-form-footer {
+  position:sticky;
+  bottom:0;
+  z-index:1;
+  border-top:1px solid var(--vn-line);
+  padding:14px 0 0;
+  background:var(--vn-surface);
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-btn-primary,
+.vn-admin .superadmin-administration .adm-dialog .adm-btn-secondary {
+  min-height:44px;
+  border-radius:12px;
+  padding:10px 17px;
+  font-size:13px;
+  font-weight:750;
+  box-shadow:none;
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-btn-primary {
+  color:#fff;
+  background:var(--vn-coral);
+  border:1px solid var(--vn-coral);
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-btn-primary:hover:not(:disabled) {
+  background:var(--vn-coral-strong);
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-btn-secondary {
+  background:var(--vn-surface-hover);
+  color:var(--vn-ink);
+  border:1px solid var(--vn-line);
+}
+.vn-admin .superadmin-administration .adm-dialog .adm-btn-secondary:hover {
+  background:var(--vn-coral-soft);
+}
+.vn-admin .superadmin-administration .adm-dialog button:focus-visible {
+  outline:2px solid var(--vn-coral);
+  outline-offset:2px;
+}
+@media(max-width:640px) {
+  .vn-admin .superadmin-administration .adm-modal-overlay {padding:8px;}
+  .vn-admin .superadmin-administration .adm-drawer-overlay {padding:0;}
+  .vn-admin .superadmin-administration .adm-dialog {border-radius:17px;}
+  .vn-admin .superadmin-administration .adm-actions,
+  .vn-admin .superadmin-administration .adm-edit {max-height:calc(100dvh - 16px);}
+  .vn-admin .superadmin-administration .adm-create-dialog {max-height:calc(100dvh - 16px);}
+  .vn-admin .superadmin-administration .adm-create-dialog > .adm-dialog-header {padding:16px;}
+  .vn-admin .superadmin-administration .adm-details {
+    width:100%;max-width:none;border-radius:0;padding:17px;
+  }
+}
+.vn-admin .superadmin-administration button:focus-visible {
+  outline:2px solid var(--adm-coral);outline-offset:3px;
+}
+@media(max-width:1200px) {
+  .vn-admin .superadmin-administration .adm-metrics {grid-template-columns:repeat(2,minmax(0,1fr));}
+  .vn-admin .superadmin-administration .adm-hero {align-items:flex-start;flex-direction:column;gap:15px;}
+}
+@media(max-width:640px) {
+  .vn-admin .superadmin-administration {gap:13px;}
+  .vn-admin .superadmin-administration .adm-hero {padding:18px;border-radius:17px;}
+  .vn-admin .superadmin-administration .adm-header-actions {width:100%;justify-content:stretch;}
+  .vn-admin .superadmin-administration .adm-header-actions button {flex:1;white-space:normal;padding:10px 9px;}
+  .vn-admin .superadmin-administration .adm-metrics {gap:9px;}
+  .vn-admin .superadmin-administration .adm-metric-card {min-height:165px;padding:13px;border-radius:16px;}
+  .vn-admin .superadmin-administration .adm-metric-icon {width:39px;height:39px;}
+  .vn-admin .superadmin-administration .adm-metric-label {font-size:11px;}
+  .vn-admin .superadmin-administration .adm-metric-value {font-size:27px;}
+  .vn-admin .superadmin-administration .adm-metric-detail {font-size:10px;}
+  .vn-admin .superadmin-administration .adm-metric-bars {display:none;}
+  .vn-admin .superadmin-administration .adm-filters {padding:12px;border-radius:16px;}
+  .vn-admin .superadmin-administration .adm-search {max-width:none;flex:1 1 100%;}
+  .vn-admin .superadmin-administration .adm-filter-groups {gap:10px;}
+  .vn-admin .superadmin-administration .adm-chip-group {width:100%;}
+  .vn-admin .superadmin-administration .adm-directory > div:first-child {padding:15px;}
+}
+@media(prefers-reduced-motion:reduce) {
+  .vn-admin .superadmin-administration * {transition:none !important;}
+}

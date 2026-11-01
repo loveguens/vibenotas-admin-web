@@ -1,4 +1,5 @@
-﻿import { useEffect, useMemo, useState } from "react";
+import "./AdministratorsPage.css";
+import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import axios from "axios";
 import {
@@ -434,7 +435,7 @@ function RoleBadge({ role }: { role: AdminRoleSlug }) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
+      className={`adm-role-badge inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
         superAdmin
           ? "border-fuchsia-200 bg-fuchsia-50 text-fuchsia-700 dark:border-fuchsia-400/15 dark:bg-fuchsia-500/10 dark:text-fuchsia-300"
           : "border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-400/15 dark:bg-violet-500/10 dark:text-violet-300"
@@ -447,6 +448,29 @@ function RoleBadge({ role }: { role: AdminRoleSlug }) {
   );
 }
 
+function resolveAdminAvatarUrl(value?: string | null): string | null {
+  const path = value?.trim();
+
+  if (!path) {
+    return null;
+  }
+
+  if (/^(https?:\/\/|data:|blob:)/i.test(path)) {
+    return path;
+  }
+
+  try {
+    const origin = new URL(
+      String(api.defaults.baseURL || window.location.origin),
+      window.location.origin,
+    ).origin;
+
+    return new URL(path, `${origin}/`).toString();
+  } catch {
+    return path;
+  }
+}
+
 function AdminAvatar({
   admin,
   large = false,
@@ -454,19 +478,22 @@ function AdminAvatar({
   admin: AdminUser;
   large?: boolean;
 }) {
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const url = resolveAdminAvatarUrl(admin.foto_perfil);
+
   return (
     <div
-      className={`flex shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br from-violet-500 via-violet-600 to-fuchsia-600 font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 ${
-        large
-          ? "h-20 w-20 rounded-3xl text-xl"
-          : "h-11 w-11 rounded-2xl text-sm"
+      className={`vn-superadmin-avatar adm-avatar flex shrink-0 items-center justify-center overflow-hidden rounded-xl font-extrabold text-white ${
+        large ? "h-20 w-20 text-xl" : "h-11 w-11 text-sm"
       }`}
     >
-      {admin.foto_perfil ? (
+      {url && failedUrl !== url ? (
         <img
-          src={admin.foto_perfil}
-          alt={admin.nombre}
+          src={url}
+          alt={`Foto de ${admin.nombre}`}
+          loading="lazy"
           className="h-full w-full object-cover"
+          onError={() => setFailedUrl(url)}
         />
       ) : (
         getInitials(admin.nombre || "Admin")
@@ -1147,57 +1174,21 @@ export default function AdministratorsPage() {
   }
 
   return (
-    <section className="space-y-6 pb-10 text-slate-900 dark:text-white">
-      <header className="relative overflow-hidden rounded-[28px] border border-slate-200 bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.12),transparent_38%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(248,250,252,0.98))] p-6 shadow-xl shadow-slate-200/60 sm:p-8 dark:border-white/10 dark:bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.18),transparent_38%),linear-gradient(135deg,rgba(30,41,59,0.96),rgba(15,23,42,0.96))] dark:shadow-2xl dark:shadow-black/20">
-        <div className="absolute -right-16 -top-20 h-52 w-52 rounded-full bg-fuchsia-300/20 blur-3xl dark:bg-fuchsia-500/10" />
-        <div className="absolute -bottom-24 left-1/3 h-52 w-52 rounded-full bg-violet-300/20 blur-3xl dark:bg-violet-500/10" />
-
-        <div className="relative flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-violet-700 dark:border-violet-400/15 dark:bg-violet-500/10 dark:text-violet-200">
-              <ShieldCheck size={14} />
-              Control de privilegios
-            </div>
-
-            <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-950 dark:text-white sm:text-4xl">
-              Administradores
-            </h1>
-
-            <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600 dark:text-slate-400 sm:text-base">
-              Gestiona accesos elevados, revisa el estado de cada cuenta y
-              mantén protegida la jerarquía administrativa de VibeNotas.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <button
-              type="button"
-              onClick={() => void exportExcel()}
-              disabled={filteredAdmins.length === 0 || exporting}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-45 dark:border-white/10 dark:bg-white/[0.055] dark:text-slate-200 dark:hover:border-white/15 dark:hover:bg-white/10"
-            >
-              {exporting ? (
-                <RefreshCw size={17} className="animate-spin" />
-              ) : (
-                <FileSpreadsheet size={18} />
-              )}
-              {exporting ? "Generando..." : "Exportar Excel"}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setError("");
-                setSuccess("");
-                resetCreateForm();
-                setShowCreateModal(true);
-              }}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 transition hover:-translate-y-0.5 hover:brightness-110"
-            >
-              <UserPlus size={18} />
-              Nuevo administrador
-            </button>
-          </div>
+    <section className="superadmin-administration space-y-6 pb-10 text-slate-900 dark:text-white">
+      <header className="vn-dashboard-hero adm-hero">
+        <div className="adm-heading">
+          <p className="vn-dashboard-hero-kicker adm-eyebrow">CONTROL ADMINISTRATIVO</p>
+          <h1>Gestión de accesos</h1>
+          <p className="adm-description">Administra el equipo, sus permisos y la seguridad de las cuentas.</p>
+        </div>
+        <div className="adm-header-actions">
+          <button type="button" onClick={() => void exportExcel()} disabled={filteredAdmins.length === 0 || exporting} className="adm-export">
+            {exporting ? <RefreshCw size={17} className="animate-spin"/> : <FileSpreadsheet size={18}/>}
+            {exporting ? "Generando..." : "Exportar Excel"}
+          </button>
+          <button type="button" className="adm-create" onClick={() => {
+            setError("");setSuccess("");resetCreateForm();setShowCreateModal(true);
+          }}><UserPlus size={18}/>Nuevo administrador</button>
         </div>
       </header>
 
@@ -1249,70 +1240,33 @@ export default function AdministratorsPage() {
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="adm-metrics">
         {[
-          {
-            label: "Total",
-            value: totals.total,
-            helper: "Cuentas administrativas",
-            icon: ShieldCheck,
-            tone: "border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-400/15 dark:bg-violet-500/[0.07] dark:text-violet-300",
-          },
-          {
-            label: "Activos",
-            value: totals.active,
-            helper: "Acceso disponible",
-            icon: UserRoundCheck,
-            tone: "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-400/15 dark:bg-emerald-500/[0.07] dark:text-emerald-300",
-          },
-          {
-            label: "Acceso restringido",
-            value: totals.restricted,
-            helper: "Suspendidos o deshabilitados",
-            icon: ShieldOff,
-            tone: "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-400/15 dark:bg-amber-500/[0.07] dark:text-amber-300",
-          },
-          {
-            label: "Cuentas protegidas",
-            value: totals.protected,
-            helper: "Super Admin",
-            icon: Crown,
-            tone: "border-fuchsia-200 bg-fuchsia-50 text-fuchsia-700 dark:border-fuchsia-400/15 dark:bg-fuchsia-500/[0.07] dark:text-fuchsia-300",
-          },
-        ].map((item) => {
+          {label:"Total",value:totals.total,helper:"Cuentas administrativas",detail:"Equipo registrado",icon:ShieldCheck},
+          {label:"Activos",value:totals.active,helper:"Acceso disponible",detail:"Con acceso",icon:UserRoundCheck},
+          {label:"Acceso restringido",value:totals.restricted,helper:"Suspendidos o deshabilitados",detail:totals.restricted > 0 ? "Requieren revisión" : "Sin restricciones",icon:ShieldOff},
+          {label:"Cuentas protegidas",value:totals.protected,helper:"Superadministradores",detail:"Jerarquía protegida",icon:Crown},
+        ].map(item => {
           const Icon = item.icon;
-
-          return (
-            <article
-              key={item.label}
-              className={`rounded-2xl border p-5 ${item.tone}`}
-            >
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
-                    {item.label}
-                  </p>
-                  <p className="mt-2 text-3xl font-bold text-slate-950 dark:text-white">
-                    {item.value}
-                  </p>
-                </div>
-
-                <div className="rounded-xl bg-white/70 p-2.5 ring-1 ring-black/5 dark:bg-white/[0.055] dark:ring-0">
-                  <Icon size={19} />
-                </div>
+          return <article key={item.label} className="vn-admin-stat-card adm-metric-card">
+            <div className="adm-metric-main">
+              <div>
+                <p className="vn-admin-stat-card-title adm-metric-label">{item.label}</p>
+                <p className="vn-admin-stat-card-value adm-metric-value">{item.value}</p>
+                <p className="vn-admin-stat-card-description adm-metric-helper">{item.helper}</p>
               </div>
-
-              <p className="mt-4 text-xs font-medium text-slate-500">
-                {item.helper}
-              </p>
-            </article>
-          );
+              <div className="vn-admin-stat-card-icon adm-metric-icon"><Icon size={22}/></div>
+            </div>
+            <div className="adm-metric-foot"><span className="adm-metric-detail">{item.detail}</span>
+              <span className="adm-metric-bars" aria-hidden="true"><i/><i/><i/><i/><i/></span>
+            </div>
+          </article>;
         })}
       </div>
 
-      <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-xl shadow-slate-200/50 backdrop-blur-xl sm:p-5 dark:border-white/10 dark:bg-[#172033]/85 dark:shadow-black/10">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-          <div className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 transition focus-within:border-violet-400 focus-within:bg-white dark:border-white/10 dark:bg-black/10 dark:focus-within:border-violet-400/35 dark:focus-within:bg-black/15">
+      <div className="adm-filters rounded-3xl border border-slate-200 bg-white p-4 shadow-xl shadow-slate-200/50 backdrop-blur-xl sm:p-5 dark:border-white/10 dark:bg-[#172033]/85 dark:shadow-black/10">
+        <div className="adm-toolbar-top flex flex-wrap items-center gap-2.5">
+          <div className="adm-search flex min-w-[220px] flex-[1_1_320px] items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 transition focus-within:border-violet-400 focus-within:bg-white dark:border-white/10 dark:bg-black/10 dark:focus-within:border-violet-400/35 dark:focus-within:bg-black/15">
             <Search size={18} className="shrink-0 text-slate-500" />
 
             <input
@@ -1338,15 +1292,16 @@ export default function AdministratorsPage() {
             type="button"
             onClick={() => void loadAdmins()}
             disabled={loading}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-4 py-2.5 text-sm font-semibold text-violet-700 transition hover:bg-violet-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-violet-400/15 dark:bg-violet-500/10 dark:text-violet-200 dark:hover:bg-violet-500/15"
+            className="adm-refresh inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-4 py-2.5 text-sm font-semibold text-violet-700 transition hover:bg-violet-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-violet-400/15 dark:bg-violet-500/10 dark:text-violet-200 dark:hover:bg-violet-500/15"
           >
             <RefreshCw size={17} className={loading ? "animate-spin" : ""} />
             Actualizar
           </button>
         </div>
 
-        <div className="mt-4 space-y-3">
-          <div className="flex flex-wrap gap-2">
+        <div className="adm-filter-groups mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <div className="adm-chip-group flex flex-wrap items-center gap-1.5">
+            <span className="adm-filter-label">Estado</span>
             {STATUS_FILTERS.map((filter) => (
               <button
                 key={filter.key}
@@ -1363,7 +1318,8 @@ export default function AdministratorsPage() {
             ))}
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="adm-chip-group flex flex-wrap items-center gap-1.5">
+            <span className="adm-filter-label">Rol</span>
             {ROLE_FILTERS.map((filter) => (
               <button
                 key={filter.key}
@@ -1382,10 +1338,10 @@ export default function AdministratorsPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-white/10 dark:bg-[#172033]/85 dark:shadow-black/10">
+      <div className="vn-dashboard-panel adm-directory overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-white/10 dark:bg-[#172033]/85 dark:shadow-black/10">
         <div className="flex flex-col gap-3 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:border-white/10">
           <div>
-            <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">
+            <p className="vn-dashboard-kicker text-sm font-semibold">
               Equipo administrativo
             </p>
             <h2 className="mt-1 text-xl font-bold text-slate-950 dark:text-white">
@@ -1520,7 +1476,7 @@ export default function AdministratorsPage() {
               {filteredAdmins.map((admin) => (
                 <article
                   key={admin.id}
-                  className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]"
+                  className="vn-superadmin-recent-user adm-mobile-user rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]"
                 >
                   <div className="flex items-start gap-3">
                     <AdminAvatar admin={admin} />
@@ -1576,7 +1532,7 @@ export default function AdministratorsPage() {
       </div>
 
       {showActionsModal && adminForActions && (
-        <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/70 p-3 backdrop-blur-sm sm:items-center sm:p-4">
+        <div className="adm-modal-overlay fixed inset-0 z-[80] flex items-end justify-center bg-black/70 p-3 backdrop-blur-sm sm:items-center sm:p-4">
           <button
             type="button"
             onClick={closeActionsModal}
@@ -1584,8 +1540,8 @@ export default function AdministratorsPage() {
             aria-label="Cerrar acciones"
           />
 
-          <div className="relative z-10 w-full max-w-md rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
-            <div className="flex items-start gap-3">
+          <div role="dialog" aria-modal="true" aria-label="Acciones del administrador" className="vn-dashboard-panel adm-dialog adm-actions relative z-10 w-full max-w-md rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
+            <div className="adm-dialog-header flex items-start gap-3">
               <AdminAvatar admin={adminForActions} />
 
               <div className="min-w-0 flex-1">
@@ -1605,21 +1561,21 @@ export default function AdministratorsPage() {
               <button
                 type="button"
                 onClick={closeActionsModal}
-                className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
+                className="adm-dialog-close rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
                 aria-label="Cerrar"
               >
                 <X size={19} />
               </button>
             </div>
 
-            <div className="mt-6 grid gap-2.5">
+            <div className="adm-action-list mt-6 grid gap-2.5">
               <button
                 type="button"
                 onClick={() => {
                   setSelectedAdmin(adminForActions);
                   closeActionsModal();
                 }}
-                className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-left text-slate-800 transition hover:bg-slate-100 dark:border-white/10 dark:bg-white/[0.035] dark:text-slate-200 dark:hover:bg-white/[0.07]"
+                className="adm-action-row flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-left text-slate-800 transition hover:bg-slate-100 dark:border-white/10 dark:bg-white/[0.035] dark:text-slate-200 dark:hover:bg-white/[0.07]"
               >
                 <UserRound
                   size={19}
@@ -1641,7 +1597,7 @@ export default function AdministratorsPage() {
                       closeActionsModal();
                       openEditModal(adminForActions);
                     }}
-                    className="flex items-center gap-3 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-left text-sky-900 transition hover:bg-sky-100 dark:border-sky-400/15 dark:bg-sky-500/[0.07] dark:text-sky-100 dark:hover:bg-sky-500/10"
+                    className="adm-action-row flex items-center gap-3 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-left text-sky-900 transition hover:bg-sky-100 dark:border-sky-400/15 dark:bg-sky-500/[0.07] dark:text-sky-100 dark:hover:bg-sky-500/10"
                   >
                     <Pencil
                       size={19}
@@ -1659,7 +1615,7 @@ export default function AdministratorsPage() {
                     type="button"
                     disabled={saving}
                     onClick={() => void changeStatus(adminForActions)}
-                    className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3.5 text-left text-amber-900 transition hover:bg-amber-100 disabled:opacity-50 dark:border-amber-400/15 dark:bg-amber-500/[0.07] dark:text-amber-100 dark:hover:bg-amber-500/10"
+                    className="adm-action-row flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3.5 text-left text-amber-900 transition hover:bg-amber-100 disabled:opacity-50 dark:border-amber-400/15 dark:bg-amber-500/[0.07] dark:text-amber-100 dark:hover:bg-amber-500/10"
                   >
                     {adminForActions.estado === "ACTIVE" ? (
                       <ShieldOff
@@ -1689,7 +1645,7 @@ export default function AdministratorsPage() {
                       type="button"
                       disabled={saving}
                       onClick={() => void disableAdmin(adminForActions)}
-                      className="flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3.5 text-left text-red-900 transition hover:bg-red-100 disabled:opacity-50 dark:border-red-400/15 dark:bg-red-500/[0.07] dark:text-red-100 dark:hover:bg-red-500/10"
+                      className="adm-action-row flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3.5 text-left text-red-900 transition hover:bg-red-100 disabled:opacity-50 dark:border-red-400/15 dark:bg-red-500/[0.07] dark:text-red-100 dark:hover:bg-red-500/10"
                     >
                       <UserRoundX
                         size={19}
@@ -1705,7 +1661,7 @@ export default function AdministratorsPage() {
                   )}
                 </>
               ) : (
-                <div className="flex items-start gap-3 rounded-2xl border border-fuchsia-200 bg-fuchsia-50 p-4 text-sm text-fuchsia-900 dark:border-fuchsia-400/15 dark:bg-fuchsia-500/[0.06] dark:text-fuchsia-100">
+                <div className="adm-protection flex items-start gap-3 rounded-2xl border border-fuchsia-200 bg-fuchsia-50 p-4 text-sm text-fuchsia-900 dark:border-fuchsia-400/15 dark:bg-fuchsia-500/[0.06] dark:text-fuchsia-100">
                   <LockKeyhole
                     size={18}
                     className="mt-0.5 shrink-0 text-fuchsia-700 dark:text-fuchsia-300"
@@ -1723,7 +1679,7 @@ export default function AdministratorsPage() {
       )}
 
       {selectedAdmin && (
-        <div className="fixed inset-0 z-[75] flex justify-end bg-black/70 backdrop-blur-sm">
+        <div className="adm-modal-overlay adm-drawer-overlay fixed inset-0 z-[75] flex justify-end bg-black/70 backdrop-blur-sm">
           <button
             type="button"
             onClick={() => setSelectedAdmin(null)}
@@ -1731,10 +1687,10 @@ export default function AdministratorsPage() {
             aria-label="Cerrar panel"
           />
 
-          <aside className="relative z-10 flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#101827] dark:shadow-black/60">
-            <div className="flex items-start justify-between gap-4">
+          <aside role="dialog" aria-modal="true" aria-label="Perfil administrativo" className="vn-dashboard-panel adm-dialog adm-details relative z-10 flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#101827] dark:shadow-black/60">
+            <div className="adm-dialog-header flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-violet-700 dark:text-violet-300">
+                <p className="adm-dialog-kicker text-xs font-bold uppercase tracking-[0.14em]">
                   Perfil administrativo
                 </p>
                 <h2 className="mt-2 text-2xl font-bold text-slate-950 dark:text-white">
@@ -1748,14 +1704,14 @@ export default function AdministratorsPage() {
               <button
                 type="button"
                 onClick={() => setSelectedAdmin(null)}
-                className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
+                className="adm-dialog-close rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
                 aria-label="Cerrar"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <div className="mt-7 rounded-3xl border border-slate-200 bg-slate-50 p-6 text-center dark:border-white/10 dark:bg-white/[0.03]">
+            <div className="adm-profile-summary mt-7 rounded-3xl border border-slate-200 bg-slate-50 p-6 text-center dark:border-white/10 dark:bg-white/[0.03]">
               <div className="flex justify-center">
                 <AdminAvatar admin={selectedAdmin} large />
               </div>
@@ -1767,7 +1723,7 @@ export default function AdministratorsPage() {
             </div>
 
             <div className="mt-5 grid gap-3">
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+              <div className="adm-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500">
                   <CalendarDays size={15} />
                   Fecha de registro
@@ -1777,7 +1733,7 @@ export default function AdministratorsPage() {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+              <div className="adm-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Última actividad
                 </p>
@@ -1786,7 +1742,7 @@ export default function AdministratorsPage() {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+              <div className="adm-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Identificador
                 </p>
@@ -1796,7 +1752,7 @@ export default function AdministratorsPage() {
               </div>
 
               {isProtectedRole(selectedAdmin.rol) && (
-                <div className="flex items-start gap-3 rounded-2xl border border-fuchsia-400/15 bg-fuchsia-500/[0.06] p-4">
+                <div className="adm-protection flex items-start gap-3 rounded-2xl border border-fuchsia-400/15 bg-fuchsia-500/[0.06] p-4">
                   <LockKeyhole
                     size={18}
                     className="mt-0.5 shrink-0 text-fuchsia-700 dark:text-fuchsia-300"
@@ -1817,7 +1773,7 @@ export default function AdministratorsPage() {
             <div className="mt-6 border-t border-slate-200 pt-5 dark:border-white/10">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-violet-700 dark:text-violet-300">
+                  <p className="adm-dialog-kicker text-xs font-bold uppercase tracking-[0.14em]">
                     Seguridad
                   </p>
 
@@ -1862,7 +1818,7 @@ export default function AdministratorsPage() {
               ) : securityDetail ? (
                 <div className="mt-4 space-y-4">
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                    <div className="adm-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                       <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                         MFA
                       </p>
@@ -1884,7 +1840,7 @@ export default function AdministratorsPage() {
                       </p>
                     </div>
 
-                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                    <div className="adm-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                       <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                         Bloqueo
                       </p>
@@ -1906,7 +1862,7 @@ export default function AdministratorsPage() {
                       </p>
                     </div>
 
-                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                    <div className="adm-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                       <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                         Sesiones
                       </p>
@@ -1920,7 +1876,7 @@ export default function AdministratorsPage() {
                       </p>
                     </div>
 
-                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                    <div className="adm-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                       <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                         Dispositivos
                       </p>
@@ -1935,7 +1891,7 @@ export default function AdministratorsPage() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                  <div className="adm-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                     <div className="flex items-center justify-between gap-4">
                       <div>
                         <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
@@ -1954,7 +1910,7 @@ export default function AdministratorsPage() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                  <div className="adm-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                       Correo electrónico
                     </p>
@@ -1975,7 +1931,7 @@ export default function AdministratorsPage() {
                     )}
                   </div>
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                  <div className="adm-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                       Roles efectivos
                     </p>
@@ -1992,7 +1948,7 @@ export default function AdministratorsPage() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                  <div className="adm-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                     <div className="flex items-center justify-between gap-3">
                       <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                         Actividad
@@ -2026,7 +1982,7 @@ export default function AdministratorsPage() {
                 <button
                   type="button"
                   onClick={() => openEditModal(selectedAdmin)}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-700 transition hover:bg-sky-100 dark:border-sky-400/15 dark:bg-sky-500/[0.08] dark:text-sky-200 dark:hover:bg-sky-500/15"
+                  className="adm-btn-primary flex w-full items-center justify-center gap-2 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-700 transition hover:bg-sky-100 dark:border-sky-400/15 dark:bg-sky-500/[0.08] dark:text-sky-200 dark:hover:bg-sky-500/15"
                 >
                   <Pencil size={17} />
                   Editar identidad
@@ -2038,7 +1994,7 @@ export default function AdministratorsPage() {
       )}
 
       {showEditModal && adminToEdit && (
-        <div className="fixed inset-0 z-[90] flex items-end justify-center bg-black/70 p-3 backdrop-blur-sm sm:items-center sm:p-4">
+        <div className="adm-modal-overlay fixed inset-0 z-[90] flex items-end justify-center bg-black/70 p-3 backdrop-blur-sm sm:items-center sm:p-4">
           <button
             type="button"
             onClick={() => {
@@ -2049,18 +2005,17 @@ export default function AdministratorsPage() {
             aria-label="Cerrar edición"
           />
 
-          <div className="relative z-10 w-full max-w-lg rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
-            <div className="flex items-start justify-between gap-4">
+          <div role="dialog" aria-modal="true" aria-label="Editar administrador" className="vn-dashboard-panel adm-dialog adm-edit relative z-10 w-full max-w-lg rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
+            <div className="adm-dialog-header flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-sky-700 dark:text-sky-300">
+                <p className="adm-dialog-kicker text-xs font-bold uppercase tracking-[0.14em]">
                   Identidad
                 </p>
                 <h2 className="mt-2 text-xl font-bold text-slate-950 dark:text-white">
                   Editar administrador
                 </h2>
                 <p className="mt-1 text-sm leading-5 text-slate-500">
-                  Actualiza solo datos compatibles con el endpoint
-                  administrativo actual.
+                  Modifica el nombre visible y el correo de esta cuenta.
                 </p>
               </div>
 
@@ -2070,7 +2025,7 @@ export default function AdministratorsPage() {
                   setShowEditModal(false);
                   setAdminToEdit(null);
                 }}
-                className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
+                className="adm-dialog-close rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
                 aria-label="Cerrar"
               >
                 <X size={20} />
@@ -2107,7 +2062,7 @@ export default function AdministratorsPage() {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.03]">
+              <div className="adm-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.03]">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Rol actual
                 </p>
@@ -2120,14 +2075,14 @@ export default function AdministratorsPage() {
                 </p>
               </div>
 
-              <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+              <div className="adm-form-footer flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                 <button
                   type="button"
                   onClick={() => {
                     setShowEditModal(false);
                     setAdminToEdit(null);
                   }}
-                  className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 dark:hover:bg-white/[0.08] dark:hover:text-white"
+                  className="adm-btn-secondary rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 dark:hover:bg-white/[0.08] dark:hover:text-white"
                 >
                   Cancelar
                 </button>
@@ -2135,7 +2090,7 @@ export default function AdministratorsPage() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55"
+                  className="adm-btn-primary inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55"
                 >
                   {saving ? (
                     <RefreshCw size={17} className="animate-spin" />
@@ -2151,7 +2106,7 @@ export default function AdministratorsPage() {
       )}
 
       {showCreateModal && (
-        <div className="fixed inset-0 z-[95] flex items-end justify-center bg-black/70 p-3 backdrop-blur-sm sm:items-center sm:p-4">
+        <div className="adm-modal-overlay fixed inset-0 z-[95] flex items-end justify-center bg-black/70 p-3 backdrop-blur-sm sm:items-center sm:p-4">
           <button
             type="button"
             onClick={() => {
@@ -2163,11 +2118,11 @@ export default function AdministratorsPage() {
             aria-label="Cerrar creación"
           />
 
-          <div className="relative z-10 w-full max-w-2xl overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-2xl shadow-slate-400/30 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
-            <div className="border-b border-slate-200 bg-[radial-gradient(circle_at_top_right,rgba(217,70,239,0.12),transparent_42%),rgba(248,250,252,0.9)] p-5 sm:p-6 dark:border-white/10 dark:bg-[radial-gradient(circle_at_top_right,rgba(217,70,239,0.18),transparent_42%),rgba(15,23,42,0.45)]">
+          <div role="dialog" aria-modal="true" aria-label="Crear administrador" className="vn-dashboard-panel adm-dialog adm-create-dialog relative z-10 w-full max-w-2xl overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-2xl shadow-slate-400/30 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
+            <div className="adm-dialog-header border-b border-slate-200 bg-[radial-gradient(circle_at_top_right,rgba(217,70,239,0.12),transparent_42%),rgba(248,250,252,0.9)] p-5 sm:p-6 dark:border-white/10 dark:bg-[radial-gradient(circle_at_top_right,rgba(217,70,239,0.18),transparent_42%),rgba(15,23,42,0.45)]">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <div className="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-700 dark:border-violet-400/15 dark:bg-violet-500/10 dark:text-violet-200">
+                  <div className="adm-dialog-kicker inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-700 dark:border-violet-400/15 dark:bg-violet-500/10 dark:text-violet-200">
                     <UserPlus size={14} />
                     Nuevo acceso administrativo
                   </div>
@@ -2177,9 +2132,8 @@ export default function AdministratorsPage() {
                   </h2>
 
                   <p className="mt-2 max-w-xl text-sm leading-6 text-slate-400">
-                    Crea la identidad, registra sus credenciales y asigna
-                    dinámicamente el rol Administrador configurado en el
-                    backend.
+                    Registra una nueva cuenta y asígnale acceso administrativo
+                    de forma segura.
                   </p>
                 </div>
 
@@ -2187,7 +2141,7 @@ export default function AdministratorsPage() {
                   type="button"
                   disabled={creating}
                   onClick={() => setShowCreateModal(false)}
-                  className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-40 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
+                  className="adm-dialog-close rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-40 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
                   aria-label="Cerrar"
                 >
                   <X size={20} />
@@ -2292,8 +2246,8 @@ export default function AdministratorsPage() {
                 </span>
               </label>
 
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl border border-violet-200 bg-violet-50 p-4 dark:border-violet-400/15 dark:bg-violet-500/[0.07]">
+              <div className="adm-notices mt-5 grid gap-3 sm:grid-cols-2">
+                <div className="adm-notice adm-notice-role rounded-2xl border border-violet-200 bg-violet-50 p-4 dark:border-violet-400/15 dark:bg-violet-500/[0.07]">
                   <div className="flex items-center gap-3">
                     <div className="rounded-xl bg-violet-100 p-2 text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">
                       <ShieldCheck size={18} />
@@ -2303,14 +2257,14 @@ export default function AdministratorsPage() {
                         Rol: Administrador
                       </p>
                       <p className="mt-1 text-xs leading-5 text-violet-700 dark:text-violet-200/55">
-                        El ID del rol no está escrito a mano: se obtiene desde
-                        /roles y se asigna por slug admin.
+                        El rol Administrador se asignará automáticamente
+                        al registrar la cuenta.
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-400/15 dark:bg-amber-500/[0.06]">
+                <div className="adm-notice adm-notice-warning rounded-2xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-400/15 dark:bg-amber-500/[0.06]">
                   <div className="flex items-start gap-3">
                     <Info
                       size={18}
@@ -2321,22 +2275,21 @@ export default function AdministratorsPage() {
                         Verificación de correo
                       </p>
                       <p className="mt-1 text-xs leading-5 text-amber-700 dark:text-amber-200/60">
-                        En desarrollo, si el backend devuelve el token de
-                        verificación de desarrollo, la cuenta se activa
-                        automáticamente. En producción queda pendiente de
-                        verificación.
+                        En producción, la cuenta deberá verificar su correo
+                        para activarse. En desarrollo puede verificarse
+                        automáticamente.
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-col-reverse gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:justify-end dark:border-white/10">
+              <div className="adm-form-footer mt-6 flex flex-col-reverse gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:justify-end dark:border-white/10">
                 <button
                   type="button"
                   disabled={creating}
                   onClick={() => setShowCreateModal(false)}
-                  className="rounded-xl bg-slate-100 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-200 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-45 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:bg-white/10"
+                  className="adm-btn-secondary rounded-xl bg-slate-100 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-200 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-45 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:bg-white/10"
                 >
                   Cancelar
                 </button>
@@ -2344,7 +2297,7 @@ export default function AdministratorsPage() {
                 <button
                   type="submit"
                   disabled={creating}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55"
+                  className="adm-btn-primary inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55"
                 >
                   {creating ? (
                     <RefreshCw size={17} className="animate-spin" />

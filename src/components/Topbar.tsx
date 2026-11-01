@@ -255,9 +255,9 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
         ? "Super Admin"
         : "Administrador";
 
-  const fotoPerfil = usuario.foto_perfil ?? usuario.avatarUrl ?? null;
+  const fotoPerfil = usuario.foto_perfil || usuario.avatarUrl || null;
 
-  const nombreUsuario = usuario.nombre || roleLabel;
+  const nombreUsuario = usuario.nombre?.trim() || roleLabel;
 
   const iniciales =
     nombreUsuario
@@ -960,7 +960,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                     : "border-slate-200 bg-white hover:bg-slate-100"
                 }`}
               >
-                <div className="vn-admin-topbar-avatar flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-sm font-bold text-white shadow-lg shadow-violet-900/30 md:h-10 md:w-10">
+                <div className="vn-admin-topbar-avatar flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#bd624d] text-sm font-bold text-white shadow-sm md:h-10 md:w-10">
                   {fotoPerfil && !profilePhotoError ? (
                     <img
                       src={getPhotoUrl(fotoPerfil)}
@@ -982,7 +982,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
                     {nombreUsuario}
                   </p>
 
-                  <p className="vn-admin-topbar-profile-role text-xs text-violet-400">
+                  <p className="vn-admin-topbar-profile-role text-xs font-medium text-[#b85843] dark:text-[#ffad99]">
                     {role === "owner" ? "Owner" : role === "superadmin" ? "Acceso total" : "Administrador"}
                   </p>
                 </div>
