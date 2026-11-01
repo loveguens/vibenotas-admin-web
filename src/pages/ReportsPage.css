@@ -1,0 +1,364 @@
+/* Reportes · Superadmin: comparte la identidad visual del Dashboard.
+   Solo aplica a Superadmin; el panel Administrador conserva su presentación. */
+.vn-admin .vn-superadmin-reports {
+  --rep-ink:var(--vn-ink);
+  --rep-muted:var(--vn-muted);
+  --rep-surface:var(--vn-surface);
+  --rep-soft:var(--vn-surface-hover);
+  --rep-line:var(--vn-line);
+  --rep-coral:var(--vn-coral);
+  --rep-coral-strong:var(--vn-coral-strong);
+  min-height:0;
+  overflow:visible;
+  padding:0 0 32px;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:var(--rep-ink);
+  box-shadow:none;
+}
+.vn-admin .vn-superadmin-reports > .pointer-events-none {display:none;}
+.vn-admin .vn-superadmin-reports .vn-reports-content {
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  min-width:0;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-content > * {margin-top:0;}
+/* Cabecera: mismo marfil/coral que el Dashboard */
+.vn-admin .vn-superadmin-reports .vn-reports-hero {
+  padding:23px 26px;
+  border:1px solid color-mix(in srgb,var(--rep-coral) 26%,var(--rep-line));
+  border-radius:22px;
+  background:linear-gradient(115deg,var(--rep-surface),color-mix(in srgb,var(--vn-coral-soft) 64%,var(--rep-surface)));
+  color:var(--rep-ink);
+  box-shadow:var(--vn-elevation);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-hero > div {
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-hero-icon {
+  width:49px;height:49px;border:0;border-radius:15px;flex-shrink:0;
+  background:var(--vn-icon-bg);color:var(--rep-coral-strong);box-shadow:none;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-kicker {
+  color:var(--rep-coral-strong);
+  font-size:11px;font-weight:800;letter-spacing:.13em;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-kicker + span {
+  color:var(--rep-muted);
+  border:1px solid var(--rep-line);
+  background:var(--rep-surface);
+  box-shadow:none;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-title {
+  margin-top:8px;
+  color:var(--rep-ink);
+  font-size:clamp(23px,2.4vw,31px);
+  font-weight:800;letter-spacing:-.035em;line-height:1.15;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-title + p {
+  margin-top:9px;
+  color:var(--rep-muted);
+  font-size:13px;line-height:1.6;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-hero-actions {
+  display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px;flex-shrink:0;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-hero-actions button {
+  min-height:44px;
+  padding:10px 15px;
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  border-radius:12px;border:1px solid var(--rep-line);
+  box-shadow:none;
+  font-size:13px;font-weight:750;white-space:nowrap;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-export {
+  color:var(--rep-ink);background:var(--rep-surface);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-export:hover:not(:disabled) {
+  color:var(--rep-ink);background:var(--rep-soft);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-refresh {
+  background:var(--rep-coral);
+  border-color:var(--rep-coral);
+  color:#fff;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-refresh:hover:not(:disabled) {
+  color:#fff;background:var(--rep-coral-strong);
+}
+/* Métricas: estructura y tamaños aprobados en Dashboard Superadmin. */
+.vn-admin .vn-superadmin-reports .vn-reports-kpi-grid {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-stat-card {
+  position:relative;
+  display:flex;flex-direction:column;justify-content:space-between;
+  min-width:0;min-height:194px;
+  padding:19px;
+  border:1px solid var(--rep-line);
+  border-radius:23px;
+  background:var(--rep-surface);
+  color:var(--rep-ink);
+  box-shadow:var(--vn-elevation);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-stat-main {
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-stat-title {
+  color:var(--rep-muted);
+  font-size:13px;font-weight:650;line-height:1.35;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-stat-value {
+  margin-top:12px;
+  color:var(--rep-ink);
+  font-size:32px;font-weight:800;line-height:1;
+  letter-spacing:-.04em;font-variant-numeric:tabular-nums;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-stat-description {
+  margin-top:12px;
+  color:var(--rep-muted);
+  font-size:12px;line-height:1.4;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-stat-icon {
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  width:49px;height:49px;padding:0;border:0;border-radius:15px;
+  background:var(--vn-icon-bg);color:var(--rep-coral-strong);box-shadow:none;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-stat-footer {
+  display:flex;align-items:end;justify-content:space-between;gap:8px;padding-top:10px;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-stat-note {
+  display:inline-flex;align-items:center;min-height:26px;max-width:76%;
+  padding:6px 11px;border-radius:999px;
+  background:color-mix(in srgb,var(--vn-petroleum) 13%,var(--rep-surface));
+  color:var(--vn-petroleum);
+  font-size:11px;font-weight:700;line-height:1.3;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-bars {
+  display:flex;align-items:end;gap:4px;height:28px;flex-shrink:0;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-bars i {
+  display:block;width:4px;height:11px;border-radius:3px;
+  background:var(--rep-coral);opacity:.7;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-bars i:nth-child(2) {height:20px;opacity:.55;}
+.vn-admin .vn-superadmin-reports .vn-reports-bars i:nth-child(3) {height:15px;}
+.vn-admin .vn-superadmin-reports .vn-reports-bars i:nth-child(4) {height:26px;opacity:1;}
+.vn-admin .vn-superadmin-reports .vn-reports-bars i:nth-child(5) {height:18px;}
+/* Filtros: controles compactos y agrupados. */
+.vn-admin .vn-superadmin-reports .vn-reports-filters,
+.vn-admin .vn-superadmin-reports .vn-reports-list {
+  border:1px solid var(--rep-line);
+  border-radius:22px;
+  background:var(--rep-surface);
+  color:var(--rep-ink);
+  box-shadow:var(--vn-elevation);
+  min-width:0;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-filters {padding:16px 19px;}
+.vn-admin .vn-superadmin-reports .vn-reports-filters > div:first-child {
+  display:grid;
+  grid-template-columns:minmax(220px,560px) minmax(160px,190px) minmax(150px,180px);
+  justify-content:start;
+  gap:10px;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-search,
+.vn-admin .vn-superadmin-reports .vn-reports-filters details > summary {
+  display:flex;align-items:center;
+  min-height:43px;
+  border:1px solid var(--rep-line);
+  border-radius:12px;
+  background:var(--rep-surface);
+  color:var(--rep-ink);
+  box-shadow:none;
+  font-size:13px;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-search {
+  padding:9px 13px;gap:10px;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-search input {
+  color:var(--rep-ink);font-size:13px;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-search input::placeholder {
+  color:var(--rep-muted);opacity:1;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-search:focus-within,
+.vn-admin .vn-superadmin-reports .vn-reports-filters details > summary:focus-visible {
+  border-color:var(--rep-coral);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--rep-coral) 13%,transparent);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-filters details[open] > div {
+  background:var(--rep-surface);
+  border-color:var(--rep-line);
+  box-shadow:var(--vn-elevation);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-filters details[open] button {
+  color:var(--rep-ink);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-filters details[open] button:hover {
+  background:var(--rep-soft);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-filters details[open] button.bg-violet-50 {
+  color:var(--rep-coral-strong);
+  background:var(--vn-coral-soft);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-filter-pills {
+  display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;padding:0;overflow:visible;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-status-filter {
+  display:inline-flex;align-items:center;gap:7px;
+  min-height:34px;padding:7px 10px;
+  border:1px solid transparent;
+  border-radius:10px;
+  color:var(--rep-ink);
+  background:var(--rep-soft);
+  font-size:12px;font-weight:700;box-shadow:none;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-status-filter:hover {
+  background:var(--vn-coral-soft);border-color:var(--rep-line);color:var(--rep-ink);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-status-filter[aria-pressed="true"] {
+  background:var(--rep-coral);
+  border-color:var(--rep-coral);
+  color:#fff;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-status-filter > span {
+  border-radius:999px;background:color-mix(in srgb,var(--rep-muted) 12%,var(--rep-surface));
+  color:var(--rep-muted);
+  font-size:10px;font-weight:800;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-status-filter[aria-pressed="true"] > span {
+  color:#fff;background:rgba(255,255,255,.2);
+}
+/* Bandeja: texto oscuro/alto contraste, filas respiradas. */
+.vn-admin .vn-superadmin-reports .vn-reports-list {overflow:hidden;}
+.vn-admin .vn-superadmin-reports .vn-reports-list-heading {
+  padding:18px 21px;border-color:var(--rep-line);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-list-heading p.text-violet-700 {
+  color:var(--rep-coral-strong);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-list-heading h2 {
+  color:var(--rep-ink);font-size:19px;font-weight:800;letter-spacing:-.02em;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-list-heading > div:last-child {
+  color:var(--rep-muted);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-list thead {
+  background:var(--rep-soft);
+  color:var(--rep-muted);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-list thead th {
+  padding-top:13px;padding-bottom:13px;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-row {
+  border-color:var(--rep-line);
+  color:var(--rep-ink);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-row:hover,
+.vn-admin .vn-superadmin-reports .vn-reports-list .lg\\:hidden article:hover {
+  background:var(--rep-soft);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-row .text-slate-500,
+.vn-admin .vn-superadmin-reports .vn-reports-list .text-slate-500,
+.vn-admin .vn-superadmin-reports .vn-reports-list .text-slate-600 {
+  color:var(--rep-muted);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-list .text-slate-900,
+.vn-admin .vn-superadmin-reports .vn-reports-list .text-slate-950 {
+  color:var(--rep-ink);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-list .vn-reports-status-filter {
+  color:var(--rep-ink);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-list button.bg-violet-50 {
+  color:var(--rep-coral-strong);
+  border-color:color-mix(in srgb,var(--rep-coral) 26%,var(--rep-line));
+  background:var(--vn-coral-soft);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-list .bg-slate-50,
+.vn-admin .vn-superadmin-reports .vn-reports-list .bg-slate-100 {
+  background:var(--rep-soft);
+  border-color:var(--rep-line);
+}
+/* Modales de detalle: conservan estados de riesgo y acciones semánticas. */
+.vn-admin .vn-superadmin-reports .vn-reports-detail {
+  background:var(--rep-surface);
+  color:var(--rep-ink);
+  border:1px solid var(--rep-line);
+  border-radius:22px;
+  box-shadow:0 25px 70px rgba(22,24,28,.24);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-detail :is(h2,h3),
+.vn-admin .vn-superadmin-reports .vn-reports-detail .text-slate-900,
+.vn-admin .vn-superadmin-reports .vn-reports-detail .text-slate-950 {
+  color:var(--rep-ink);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-detail :is(.text-slate-400,.text-slate-500,.text-slate-600) {
+  color:var(--rep-muted);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-detail .bg-slate-50,
+.vn-admin .vn-superadmin-reports .vn-reports-detail .bg-white {
+  background:var(--rep-soft);
+  border-color:var(--rep-line);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-detail textarea {
+  color:var(--rep-ink);
+  border-color:var(--rep-line);
+  background:var(--rep-soft);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-detail textarea::placeholder {color:var(--rep-muted);opacity:1;}
+.vn-admin .vn-superadmin-reports .vn-reports-detail textarea:focus {
+  outline:2px solid var(--rep-coral);
+  outline-offset:2px;
+  border-color:var(--rep-coral);
+  background:var(--rep-surface);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-detail button:focus-visible {
+  outline:2px solid var(--rep-coral);outline-offset:2px;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-alert {
+  color:var(--rep-ink);border-color:var(--rep-line);box-shadow:none;
+}
+.vn-admin .vn-superadmin-reports .vn-reports-error {background:color-mix(in srgb,#fce4e0 72%,var(--rep-surface));}
+.vn-admin .vn-superadmin-reports .vn-reports-success {background:color-mix(in srgb,#e1f3e7 72%,var(--rep-surface));}
+.vn-admin .vn-superadmin-reports .vn-reports-alert p {color:var(--rep-ink);}
+@media(max-width:1200px) {
+  .vn-admin .vn-superadmin-reports .vn-reports-kpi-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .vn-admin .vn-superadmin-reports .vn-reports-hero > div {
+    flex-direction:column;align-items:flex-start;gap:16px;
+  }
+  .vn-admin .vn-superadmin-reports .vn-reports-filters > div:first-child {
+    grid-template-columns:minmax(220px,1fr) minmax(155px,190px) minmax(155px,180px);
+  }
+}
+@media(max-width:767px) {
+  .vn-admin .vn-superadmin-reports .vn-reports-content {gap:13px;}
+  .vn-admin .vn-superadmin-reports .vn-reports-hero {padding:17px;border-radius:17px;}
+  .vn-admin .vn-superadmin-reports .vn-reports-hero-icon {height:40px;width:40px;border-radius:12px;}
+  .vn-admin .vn-superadmin-reports .vn-reports-hero-actions {width:100%;justify-content:stretch;}
+  .vn-admin .vn-superadmin-reports .vn-reports-hero-actions button {flex:1;white-space:normal;padding:10px 9px;}
+  .vn-admin .vn-superadmin-reports .vn-reports-kpi-grid {gap:9px;}
+  .vn-admin .vn-superadmin-reports .vn-reports-stat-card {min-height:164px;padding:13px;border-radius:16px;}
+  .vn-admin .vn-superadmin-reports .vn-reports-stat-title {font-size:11px;}
+  .vn-admin .vn-superadmin-reports .vn-reports-stat-value {font-size:27px;}
+  .vn-admin .vn-superadmin-reports .vn-reports-stat-icon {height:39px;width:39px;border-radius:12px;}
+  .vn-admin .vn-superadmin-reports .vn-reports-stat-note {font-size:10px;}
+  .vn-admin .vn-superadmin-reports .vn-reports-bars {display:none;}
+  .vn-admin .vn-superadmin-reports .vn-reports-filters {padding:12px;border-radius:16px;}
+  .vn-admin .vn-superadmin-reports .vn-reports-filters > div:first-child {grid-template-columns:minmax(0,1fr);}
+  .vn-admin .vn-superadmin-reports .vn-reports-list-heading {padding:15px;}
+  .vn-admin .vn-superadmin-reports .vn-reports-detail {max-height:calc(100dvh - 16px);border-radius:17px;}
+}
+@media(max-width:359px) {
+  .vn-admin .vn-superadmin-reports .vn-reports-kpi-grid {grid-template-columns:1fr;}
+}
+@media(prefers-reduced-motion:reduce) {
+  .vn-admin .vn-superadmin-reports * {transition:none !important;}
+}
