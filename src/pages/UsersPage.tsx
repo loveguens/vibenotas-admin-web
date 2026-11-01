@@ -351,7 +351,7 @@ function StatusBadge({
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
+      className={`vn-users-status-badge inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
         active
           ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-400/15 dark:bg-emerald-500/10 dark:text-emerald-300"
           : pending
@@ -363,6 +363,8 @@ function StatusBadge({
     >
       {active ? (
         <UserRoundCheck size={13} />
+      ) : pending ? (
+        <MailCheck size={13} />
       ) : (
         <UserRoundX size={13} />
       )}
@@ -378,7 +380,7 @@ function VerificationBadge({
 }) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
+      className={`vn-users-verification-badge inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
         verified
           ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-400/15 dark:bg-emerald-500/10 dark:text-emerald-300"
           : "border-slate-200 bg-slate-100 text-slate-600 dark:border-slate-400/10 dark:bg-slate-500/10 dark:text-slate-400"
@@ -1343,7 +1345,7 @@ export default function UsersPage({
       </div>
 
       <div className="vn-dashboard-panel vn-users-directory overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-white/10 dark:bg-[#172033]/85 dark:shadow-black/10">
-        <div className="flex flex-col gap-3 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:border-white/10">
+        <div className="vn-users-list-header flex flex-col gap-3 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:border-white/10">
           <div>
             <p className="vn-dashboard-kicker text-sm font-semibold">
               Comunidad
@@ -1496,7 +1498,7 @@ export default function UsersPage({
               </table>
             </div>
 
-            <div className="grid gap-3 p-4 lg:hidden">
+            <div className="vn-users-mobile-list grid gap-3 p-4 lg:hidden">
               {filteredUsers.map(
                 (user) => (
                   <article
@@ -1618,7 +1620,7 @@ export default function UsersPage({
                 </button>
               </div>
 
-              <div className="vn-users-action-list mt-6 grid gap-2.5">
+              <div className="vn-users-action-list mt-5 grid gap-2">
                 <button
                   type="button"
                   onClick={() =>
@@ -1626,7 +1628,7 @@ export default function UsersPage({
                       userForActions,
                     )
                   }
-                  className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-left text-slate-800 transition hover:bg-slate-100 dark:border-white/10 dark:bg-white/[0.035] dark:text-slate-200 dark:hover:bg-white/[0.07]"
+                  className="vn-users-action-row flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-left text-slate-800 transition hover:bg-slate-100 dark:border-white/10 dark:bg-white/[0.035] dark:text-slate-200 dark:hover:bg-white/[0.07]"
                 >
                   <UserRound
                     size={19}
@@ -1649,7 +1651,7 @@ export default function UsersPage({
                       userForActions,
                     )
                   }
-                  className="flex items-center gap-3 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-left text-sky-900 transition hover:bg-sky-100 dark:border-sky-400/15 dark:bg-sky-500/[0.07] dark:text-sky-100 dark:hover:bg-sky-500/10"
+                  className="vn-users-action-row flex items-center gap-3 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-left text-sky-900 transition hover:bg-sky-100 dark:border-sky-400/15 dark:bg-sky-500/[0.07] dark:text-sky-100 dark:hover:bg-sky-500/10"
                 >
                   <Pencil
                     size={19}
@@ -1673,7 +1675,7 @@ export default function UsersPage({
                       userForActions,
                     )
                   }
-                  className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3.5 text-left text-amber-900 transition hover:bg-amber-100 disabled:opacity-50 dark:border-amber-400/15 dark:bg-amber-500/[0.07] dark:text-amber-100 dark:hover:bg-amber-500/10"
+                  className="vn-users-action-row flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3.5 text-left text-amber-900 transition hover:bg-amber-100 disabled:opacity-50 dark:border-amber-400/15 dark:bg-amber-500/[0.07] dark:text-amber-100 dark:hover:bg-amber-500/10"
                 >
                   {userForActions.estado ===
                   "ACTIVE" ? (
@@ -1710,7 +1712,7 @@ export default function UsersPage({
                         userForActions,
                       )
                     }
-                    className="flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3.5 text-left text-red-900 transition hover:bg-red-100 disabled:opacity-50 dark:border-red-400/15 dark:bg-red-500/[0.07] dark:text-red-100 dark:hover:bg-red-500/10"
+                    className="vn-users-action-row flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3.5 text-left text-red-900 transition hover:bg-red-100 disabled:opacity-50 dark:border-red-400/15 dark:bg-red-500/[0.07] dark:text-red-100 dark:hover:bg-red-500/10"
                   >
                     <UserRoundX
                       size={19}
@@ -1745,7 +1747,7 @@ export default function UsersPage({
           <aside role="dialog" aria-modal="true" aria-label="Perfil de usuario" className="vn-dashboard-panel vn-users-dialog vn-users-details-dialog relative z-10 flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#101827] dark:shadow-black/60">
             <div className="vn-users-dialog-header flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-sky-700 dark:text-sky-300">
+                <p className="vn-users-modal-kicker text-xs font-bold uppercase tracking-[0.14em] text-sky-700 dark:text-sky-300">
                   Perfil de usuario
                 </p>
                 <h2 className="mt-2 text-2xl font-bold text-slate-950 dark:text-white">
@@ -1790,8 +1792,8 @@ export default function UsersPage({
               </div>
             </div>
 
-            <div className="mt-5 grid gap-3">
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+            <div className="vn-users-profile-info mt-4 grid gap-2.5">
+              <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500">
                   <CalendarDays size={15} />
                   Fecha de registro
@@ -1803,7 +1805,7 @@ export default function UsersPage({
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+              <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Último acceso
                 </p>
@@ -1814,7 +1816,7 @@ export default function UsersPage({
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+              <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   MFA
                 </p>
@@ -1825,7 +1827,7 @@ export default function UsersPage({
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+              <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Roles activos
                 </p>
@@ -1842,7 +1844,7 @@ export default function UsersPage({
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+              <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Identificador
                 </p>
@@ -1855,7 +1857,7 @@ export default function UsersPage({
             <div className="mt-6 border-t border-slate-200 pt-6 dark:border-white/10">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-violet-700 dark:text-violet-300">
+                  <p className="vn-users-modal-kicker text-xs font-bold uppercase tracking-[0.14em] text-violet-700 dark:text-violet-300">
                     Actividad en VibeNotas
                   </p>
 
@@ -1904,7 +1906,7 @@ export default function UsersPage({
               ) : activitySummary ? (
                 <div className="mt-4 space-y-4">
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                  <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                     <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">
                       Contenido
                     </p>
@@ -1953,7 +1955,7 @@ export default function UsersPage({
                   </div>
 
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                  <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                     <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">
                       Productividad
                     </p>
@@ -2001,7 +2003,7 @@ export default function UsersPage({
                   </div>
 
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                  <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                     <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">
                       Social
                     </p>
@@ -2037,7 +2039,7 @@ export default function UsersPage({
                   </div>
 
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                  <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                     <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">
                       Comunicación
                     </p>
@@ -2097,14 +2099,14 @@ export default function UsersPage({
             <div role="dialog" aria-modal="true" aria-label="Editar usuario" className="vn-dashboard-panel vn-users-dialog vn-users-edit-dialog relative z-10 w-full max-w-lg rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
               <div className="vn-users-dialog-header flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-sky-700 dark:text-sky-300">
+                  <p className="vn-users-modal-kicker text-xs font-bold uppercase tracking-[0.14em] text-sky-700 dark:text-sky-300">
                     Identidad
                   </p>
                   <h2 className="mt-2 text-xl font-bold text-slate-950 dark:text-white">
                     Editar usuario
                   </h2>
                   <p className="mt-1 text-sm leading-5 text-slate-500">
-                    Actualiza nombre o correo con los campos admitidos por el backend.
+                    Actualiza el nombre visible o el correo electrónico de esta cuenta.
                   </p>
                 </div>
 
@@ -2161,14 +2163,14 @@ export default function UsersPage({
                   </p>
                 </div>
 
-                <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                <div className="vn-users-form-footer flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                   <button
                     type="button"
                     onClick={() => {
                       setShowEditModal(false);
                       setUserToEdit(null);
                     }}
-                    className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 dark:hover:bg-white/[0.08] dark:hover:text-white"
+                    className="vn-users-secondary rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 dark:hover:bg-white/[0.08] dark:hover:text-white"
                   >
                     Cancelar
                   </button>
@@ -2213,7 +2215,7 @@ export default function UsersPage({
             <div className="vn-users-dialog-header border-b border-slate-200 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.12),transparent_42%),rgba(248,250,252,0.9)] p-5 sm:p-6 dark:border-white/10 dark:bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.18),transparent_42%),rgba(15,23,42,0.45)]">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1.5 text-xs font-bold text-sky-700 dark:border-sky-400/15 dark:bg-sky-500/10 dark:text-sky-200">
+                  <div className="vn-users-modal-kicker inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1.5 text-xs font-bold text-sky-700 dark:border-sky-400/15 dark:bg-sky-500/10 dark:text-sky-200">
                     <UserPlus size={14} />
                     Nueva cuenta
                   </div>
@@ -2223,7 +2225,7 @@ export default function UsersPage({
                   </h2>
 
                   <p className="mt-2 max-w-xl text-sm leading-6 text-slate-400">
-                    Registra una cuenta real usando el flujo de autenticación actual de VibeNotas.
+                    Crea una cuenta de usuario y establece sus datos de acceso.
                   </p>
                 </div>
 
@@ -2354,7 +2356,7 @@ export default function UsersPage({
                 />
               </label>
 
-              <div className="mt-5 flex items-start gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 dark:border-sky-400/15 dark:bg-sky-500/[0.06]">
+              <div className="vn-users-info-notice mt-5 flex items-start gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 dark:border-sky-400/15 dark:bg-sky-500/[0.06]">
                 <Info
                   size={18}
                   className="mt-0.5 shrink-0 text-sky-300"
@@ -2369,14 +2371,14 @@ export default function UsersPage({
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-col-reverse gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:justify-end dark:border-white/10">
+              <div className="vn-users-form-footer mt-6 flex flex-col-reverse gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:justify-end dark:border-white/10">
                 <button
                   type="button"
                   disabled={creating}
                   onClick={() =>
                     setShowCreateModal(false)
                   }
-                  className="rounded-xl bg-slate-100 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-200 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-45 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:bg-white/10"
+                  className="vn-users-secondary rounded-xl bg-slate-100 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-200 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-45 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:bg-white/10"
                 >
                   Cancelar
                 </button>
