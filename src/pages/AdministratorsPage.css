@@ -409,3 +409,39 @@ html.dark .vn-admin .superadmin-administration .adm-filters .adm-chip-group butt
  .superadmin-administration .adm-filters .adm-refresh {flex:0 0 auto;}
  .superadmin-administration .adm-filters .adm-filter-groups {gap:8px;}
 }
+
+/* Administración V3: composición definitiva de superficies y controles */
+.superadmin-administration {display:flex;flex-direction:column;gap:14px !important;}
+.superadmin-administration .adm-hero {padding:18px 22px !important;border-radius:18px !important;}
+.superadmin-administration .adm-hero h1 {font-size:1.8rem !important;letter-spacing:-.035em;}
+.superadmin-administration .adm-metrics {gap:10px !important;}
+.superadmin-administration .adm-metric-card {min-height:100px !important;padding:13px 16px !important;border-radius:14px !important;}
+.superadmin-administration .adm-metric-card p.mt-2 {font-size:1.75rem !important;}
+.superadmin-administration .adm-filters {padding:12px 15px !important;border-radius:16px !important;}
+.superadmin-administration .adm-toolbar-top {gap:9px !important;}
+.superadmin-administration .adm-search {max-width:490px !important;min-height:40px !important;}
+.superadmin-administration .adm-refresh {min-height:40px !important;}
+.superadmin-administration .adm-filter-groups {margin-top:9px !important;gap:8px 22px !important;align-items:center;}
+.superadmin-administration .adm-filter-label {
+ display:inline-flex;align-items:center;margin-right:3px;flex:none;
+ color:#635c56;font-size:11px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;
+}
+.superadmin-administration .adm-chip-group {gap:5px !important;}
+.superadmin-administration .adm-chip-group button {padding:7px 10px !important;font-size:12px !important;border-radius:9px !important;}
+.superadmin-administration .adm-directory {border-radius:17px !important;}
+.superadmin-administration .adm-directory > div:first-child {padding:13px 20px !important;}
+.superadmin-administration .adm-directory h2 {font-size:1.12rem !important;margin-top:3px !important;}
+.superadmin-administration .adm-directory table th {padding:11px 17px !important;font-size:10px;}
+.superadmin-administration .adm-directory table td {padding:12px 17px !important;}
+html.dark .vn-admin .superadmin-administration .adm-filter-label {color:#c8c0b9;}
+@media(max-width:900px) {
+ .superadmin-administration .adm-filter-groups {align-items:flex-start;gap:9px !important;}
+ .superadmin-administration .adm-chip-group {width:100%;}
+ .superadmin-administration .adm-filter-label {min-width:44px;}
+ .superadmin-administration .adm-search {max-width:none !important;}
+}
+@media(max-width:640px) {
+ .superadmin-administration .adm-hero {padding:16px !important;}
+ .superadmin-administration .adm-directory > div:first-child {padding:14px !important;}
+ .superadmin-administration .adm-chip-group {gap:5px !important;}
+}
