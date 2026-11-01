@@ -184,3 +184,126 @@
 @media(prefers-reduced-motion:reduce) {
   .vn-admin .vn-users-page * {transition:none !important;}
 }
+
+
+/* Las cuatro ventanas de Usuarios comparten superficies y contraste con Dashboard. */
+.vn-admin .vn-users-page .vn-users-modal-overlay {
+  background:rgba(18,21,23,.58);
+  backdrop-filter:blur(5px);
+}
+.vn-admin .vn-users-page .vn-users-dialog {
+  min-width:0;
+  background:var(--vn-surface);
+  border:1px solid var(--vn-line);
+  color:var(--vn-ink);
+  border-radius:22px;
+  box-shadow:0 24px 64px rgba(20,22,24,.20);
+}
+.vn-admin .vn-users-page .vn-users-actions-dialog,
+.vn-admin .vn-users-page .vn-users-edit-dialog {
+  max-height:calc(100dvh - 32px);
+  overflow-y:auto;
+}
+.vn-admin .vn-users-page .vn-users-details-dialog {
+  width:min(100%,470px);
+  max-width:470px;
+  height:100dvh;
+  border-radius:22px 0 0 22px;
+  overflow-y:auto;
+}
+.vn-admin .vn-users-page .vn-users-create-dialog {
+  max-height:calc(100dvh - 32px);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.vn-admin .vn-users-page .vn-users-dialog-header {
+  border-bottom:1px solid var(--vn-line);
+  color:var(--vn-ink);
+  padding-bottom:14px;
+}
+.vn-admin .vn-users-page .vn-users-create-dialog > .vn-users-dialog-header {
+  padding:20px 24px;
+  background:linear-gradient(115deg,var(--vn-surface),color-mix(in srgb,var(--vn-coral-soft) 55%,var(--vn-surface)));
+}
+.vn-admin .vn-users-page .vn-users-dialog :is(h2,h3),
+.vn-admin .vn-users-page .vn-users-dialog .text-slate-950,
+.vn-admin .vn-users-page .vn-users-dialog .text-slate-900,
+.vn-admin .vn-users-page .vn-users-dialog .text-slate-800,
+.vn-admin .vn-users-page .vn-users-dialog .text-slate-700 {
+  color:var(--vn-ink);
+}
+.vn-admin .vn-users-page .vn-users-dialog :is(.text-slate-400,.text-slate-500,.text-slate-600),
+.vn-admin .vn-users-page .vn-users-dialog label > span {
+  color:var(--vn-muted);
+}
+.vn-admin .vn-users-page .vn-users-dialog :is(.text-sky-700,.text-sky-300,.text-violet-700,.text-violet-300,.text-fuchsia-700,.text-fuchsia-300) {
+  color:var(--vn-coral-strong);
+}
+.vn-admin .vn-users-page .vn-users-dialog h2 {font-weight:800;letter-spacing:-.025em;}
+.vn-admin .vn-users-page .vn-users-dialog-close {
+  display:inline-flex;align-items:center;justify-content:center;
+  height:36px;width:36px;flex-shrink:0;
+  padding:7px;border:1px solid transparent;border-radius:11px;
+  background:transparent;color:var(--vn-muted);
+}
+.vn-admin .vn-users-page .vn-users-dialog-close:hover {
+  color:var(--vn-ink);background:var(--vn-surface-hover);border-color:var(--vn-line);
+}
+.vn-admin .vn-users-page .vn-users-dialog input {
+  min-height:46px;color:var(--vn-ink);
+  background:var(--vn-surface-hover);border:1px solid var(--vn-line);
+  border-radius:12px;caret-color:var(--vn-coral-strong);
+}
+.vn-admin .vn-users-page .vn-users-dialog input::placeholder {color:var(--vn-muted);opacity:.85;}
+.vn-admin .vn-users-page .vn-users-dialog input:focus {
+  outline:2px solid var(--vn-coral);
+  outline-offset:1px;
+  background:var(--vn-surface);
+  border-color:var(--vn-coral);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--vn-coral) 13%,transparent);
+}
+.vn-admin .vn-users-page .vn-users-dialog .bg-slate-50,
+.vn-admin .vn-users-page .vn-users-dialog .bg-white {
+  background:var(--vn-surface-hover);border-color:var(--vn-line);
+}
+.vn-admin .vn-users-page .vn-users-profile-summary {
+  background:var(--vn-surface-hover);
+  border:1px solid var(--vn-line);
+  border-radius:16px;
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-submit {
+  min-height:44px;padding:10px 17px;
+  color:#fff;background:var(--vn-coral);
+  border:1px solid var(--vn-coral);border-radius:12px;
+  box-shadow:none;font-size:13px;font-weight:750;
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-submit:hover:not(:disabled) {
+  background:var(--vn-coral-strong);
+}
+.vn-admin .vn-users-page .vn-users-action-list {gap:9px;margin-top:19px;}
+.vn-admin .vn-users-page .vn-users-action-list > button {
+  border-radius:13px;border:1px solid var(--vn-line);
+  background:var(--vn-surface-hover);
+  color:var(--vn-ink);
+}
+.vn-admin .vn-users-page .vn-users-action-list > button:hover:not(:disabled) {
+  background:color-mix(in srgb,var(--vn-coral-soft) 30%,var(--vn-surface));
+  border-color:color-mix(in srgb,var(--vn-coral) 32%,var(--vn-line));
+}
+.vn-admin .vn-users-page .vn-users-action-list > button .text-xs {color:var(--vn-muted);}
+.vn-admin .vn-users-page .vn-users-dialog button:focus-visible {
+  outline:2px solid var(--vn-coral);outline-offset:2px;
+}
+@media(max-width:640px) {
+  .vn-admin .vn-users-page .vn-users-modal-overlay {padding:8px;}
+  .vn-admin .vn-users-page .vn-users-dialog {border-radius:17px;}
+  .vn-admin .vn-users-page .vn-users-details-dialog {
+    max-width:none;width:100%;height:100dvh;
+    border-radius:0;
+  }
+  .vn-admin .vn-users-page .vn-users-actions-dialog,
+  .vn-admin .vn-users-page .vn-users-edit-dialog,
+  .vn-admin .vn-users-page .vn-users-create-dialog {max-height:calc(100dvh - 16px);}
+  .vn-admin .vn-users-page .vn-users-create-dialog > .vn-users-dialog-header {padding:16px;}
+}
