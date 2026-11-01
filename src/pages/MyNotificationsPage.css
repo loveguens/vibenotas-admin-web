@@ -1,0 +1,328 @@
+/* Mis notificaciones · Superadmin
+   Sistema visual compartido con Dashboard y Administración.
+   Aislado para no modificar el rol Administrador ni campañas. */
+.vn-admin.vn-superadmin-layout.vn-my-notifications-superadmin {
+  --myn-ink:var(--vn-ink);
+  --myn-muted:var(--vn-muted);
+  --myn-surface:var(--vn-surface);
+  --myn-soft:var(--vn-surface-hover);
+  --myn-line:var(--vn-line);
+  --myn-coral:var(--vn-coral);
+  --myn-strong:var(--vn-coral-strong);
+  min-width:0;
+  color:var(--myn-ink);
+  background:var(--vn-bg);
+}
+.vn-my-notifications-superadmin .vn-myn-main {
+  padding:20px clamp(14px,2.4vw,30px) 34px;
+}
+.vn-my-notifications-superadmin .vn-myn-page {
+  display:flex;flex-direction:column;gap:18px;
+  max-width:1320px;min-width:0;margin:0 auto;
+}
+/* El hero y las métricas pasan a dos áreas distintas sin alterar datos ni carga. */
+.vn-my-notifications-superadmin .vn-myn-hero,
+.vn-my-notifications-superadmin .vn-myn-hero-content {
+  display:contents;
+}
+.vn-my-notifications-superadmin .vn-myn-hero > .pointer-events-none {
+  display:none;
+}
+.vn-my-notifications-superadmin .vn-myn-hero-content > div:first-child {
+  max-width:none;
+  border:1px solid color-mix(in srgb,var(--myn-coral) 26%,var(--myn-line));
+  border-radius:22px;
+  background:linear-gradient(115deg,var(--myn-surface),color-mix(in srgb,var(--vn-coral-soft) 64%,var(--myn-surface)));
+  padding:25px 26px;
+  box-shadow:var(--vn-elevation);
+}
+.vn-my-notifications-superadmin .vn-myn-eyebrow {
+  display:inline-flex;align-items:center;gap:8px;
+  border:0;border-radius:0;background:transparent;
+  padding:0;color:var(--myn-strong);
+  font-size:11px;font-weight:800;letter-spacing:.12em;
+  box-shadow:none;
+}
+.vn-my-notifications-superadmin .vn-myn-title {
+  margin-top:10px;color:var(--myn-ink);
+  font-size:clamp(23px,2.4vw,31px);
+  font-weight:800;letter-spacing:-.035em;line-height:1.15;
+}
+.vn-my-notifications-superadmin .vn-myn-subtitle {
+  max-width:70ch;margin-top:9px;
+  color:var(--myn-muted);font-size:13px;line-height:1.6;
+}
+/* KPIs del Dashboard: superficies uniformes, números y acentos coral. */
+.vn-my-notifications-superadmin .vn-myn-kpi-grid {
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;min-width:0;
+}
+.vn-my-notifications-superadmin .vn-myn-kpi {
+  position:relative;display:flex;flex-direction:column;
+  justify-content:space-between;min-height:194px;min-width:0;
+  padding:19px;
+  border:1px solid var(--myn-line);border-radius:23px;
+  background:var(--myn-surface);color:var(--myn-ink);
+  box-shadow:var(--vn-elevation);
+}
+.vn-my-notifications-superadmin .vn-myn-kpi p:first-child {
+  padding-right:52px;color:var(--myn-muted);
+  font-size:13px;font-weight:650;letter-spacing:0;text-transform:none;
+}
+.vn-my-notifications-superadmin .vn-myn-kpi p.text-3xl {
+  margin-top:12px;color:var(--myn-ink);
+  font-size:32px;font-weight:800;line-height:1;
+  letter-spacing:-.04em;font-variant-numeric:tabular-nums;
+}
+.vn-my-notifications-superadmin .vn-myn-kpi-icon {
+  position:absolute;right:19px;top:19px;
+  display:flex;align-items:center;justify-content:center;
+  width:49px;height:49px;border-radius:15px;
+  background:var(--vn-icon-bg);color:var(--myn-strong);
+}
+.vn-my-notifications-superadmin .vn-myn-kpi-footer {
+  display:flex;align-items:end;justify-content:space-between;
+  gap:8px;margin-top:26px;
+}
+.vn-my-notifications-superadmin .vn-myn-kpi-footer > span:first-child {
+  display:inline-flex;align-items:center;
+  max-width:75%;min-height:26px;padding:6px 11px;
+  border-radius:999px;
+  background:color-mix(in srgb,var(--vn-petroleum) 13%,var(--myn-surface));
+  color:var(--vn-petroleum);font-size:11px;font-weight:700;line-height:1.3;
+}
+.vn-my-notifications-superadmin .vn-myn-kpi-bars {
+  display:flex;align-items:end;flex-shrink:0;gap:4px;height:28px;
+}
+.vn-my-notifications-superadmin .vn-myn-kpi-bars i {
+  display:block;width:4px;height:11px;border-radius:3px;
+  background:var(--myn-coral);opacity:.7;
+}
+.vn-my-notifications-superadmin .vn-myn-kpi-bars i:nth-child(2){height:20px;opacity:.55;}
+.vn-my-notifications-superadmin .vn-myn-kpi-bars i:nth-child(3){height:15px;}
+.vn-my-notifications-superadmin .vn-myn-kpi-bars i:nth-child(4){height:26px;opacity:1;}
+.vn-my-notifications-superadmin .vn-myn-kpi-bars i:nth-child(5){height:18px;}
+/* Barra de búsqueda y filtros, con espacio aprovechado. */
+.vn-my-notifications-superadmin .vn-myn-filters,
+.vn-my-notifications-superadmin .vn-myn-pending,
+.vn-my-notifications-superadmin .vn-myn-list {
+  min-width:0;border:1px solid var(--myn-line);
+  border-radius:22px;background:var(--myn-surface);
+  color:var(--myn-ink);box-shadow:var(--vn-elevation);
+}
+.vn-my-notifications-superadmin .vn-myn-filters {padding:16px 19px;}
+.vn-my-notifications-superadmin .vn-myn-filters > div:first-child {
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+}
+.vn-my-notifications-superadmin .vn-myn-filters > div:first-child > div:first-child {
+  width:auto;min-width:220px;max-width:560px;
+  flex:1 1 320px;
+}
+.vn-my-notifications-superadmin .vn-myn-search {
+  min-height:43px;padding-top:9px;padding-bottom:9px;
+  border:1px solid var(--myn-line);border-radius:12px;
+  background:var(--myn-surface);color:var(--myn-ink);
+  font-size:13px;
+}
+.vn-my-notifications-superadmin .vn-myn-search::placeholder {
+  color:var(--myn-muted);opacity:1;
+}
+.vn-my-notifications-superadmin .vn-myn-search:focus {
+  border-color:var(--myn-coral);background:var(--myn-surface);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--myn-coral) 13%,transparent);
+}
+.vn-my-notifications-superadmin .vn-myn-read-filter,
+.vn-my-notifications-superadmin .vn-myn-type-filter,
+.vn-my-notifications-superadmin .vn-myn-refresh {
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:35px;padding:7px 11px;
+  border:1px solid transparent;border-radius:10px;
+  color:var(--myn-ink);background:var(--myn-soft);
+  font-size:12px;font-weight:700;box-shadow:none;
+}
+.vn-my-notifications-superadmin .vn-myn-read-filter[aria-pressed="true"],
+.vn-my-notifications-superadmin .vn-myn-type-filter[aria-pressed="true"] {
+  background:var(--myn-coral);border-color:var(--myn-coral);color:#fff;
+}
+.vn-my-notifications-superadmin .vn-myn-type-filter.border-violet-300 {
+  background:var(--myn-coral);border-color:var(--myn-coral);color:#fff;
+}
+.vn-my-notifications-superadmin .vn-myn-read-filter[aria-pressed="false"]:hover,
+.vn-my-notifications-superadmin .vn-myn-type-filter:hover:not(.border-violet-300),
+.vn-my-notifications-superadmin .vn-myn-refresh:hover:not(:disabled) {
+  background:var(--vn-coral-soft);color:var(--myn-strong);
+  border-color:var(--myn-line);
+}
+.vn-my-notifications-superadmin .vn-myn-refresh {min-height:43px;padding:9px 13px;}
+.vn-my-notifications-superadmin .vn-myn-filters > div:nth-child(2) {
+  border-color:var(--myn-line);
+  padding-top:11px;margin-top:12px;gap:6px;
+}
+/* Pendientes: una franja sencilla, sin competir con el listado. */
+.vn-my-notifications-superadmin .vn-myn-pending {
+  gap:14px;padding:15px 19px;
+  align-items:center;
+}
+.vn-my-notifications-superadmin .vn-myn-pending p.font-bold {
+  color:var(--myn-ink);font-size:14px;
+}
+.vn-my-notifications-superadmin .vn-myn-pending p.text-sm {
+  color:var(--myn-muted);font-size:12px;line-height:1.5;
+}
+.vn-my-notifications-superadmin .vn-myn-mark-all {
+  min-height:42px;padding:9px 14px;
+  border:1px solid color-mix(in srgb,var(--myn-coral) 28%,var(--myn-line));
+  border-radius:12px;
+  background:var(--vn-coral-soft);color:var(--myn-strong);
+  font-size:12px;font-weight:750;box-shadow:none;
+}
+.vn-my-notifications-superadmin .vn-myn-mark-all:hover:not(:disabled) {
+  background:color-mix(in srgb,var(--vn-coral-soft) 78%,var(--myn-coral));
+}
+/* Bandeja de notificaciones */
+.vn-my-notifications-superadmin .vn-myn-list {overflow:hidden;}
+.vn-my-notifications-superadmin .vn-myn-list-header {
+  padding:17px 21px;gap:8px;border-color:var(--myn-line);
+}
+.vn-my-notifications-superadmin .vn-myn-list-header p.font-black {
+  color:var(--myn-ink);font-size:18px;font-weight:800;
+  letter-spacing:-.02em;
+}
+.vn-my-notifications-superadmin .vn-myn-list-header p.text-xs {
+  color:var(--myn-muted);
+}
+.vn-my-notifications-superadmin .vn-myn-list-header span.text-violet-600 {
+  color:var(--myn-strong);
+}
+.vn-my-notifications-superadmin .vn-myn-notification {
+  min-height:88px;padding:16px 21px;gap:13px;
+  border-color:var(--myn-line);
+  background:var(--myn-surface);color:var(--myn-ink);
+}
+.vn-my-notifications-superadmin .vn-myn-notification.vn-myn-unread {
+  background:color-mix(in srgb,var(--vn-coral-soft) 35%,var(--myn-surface));
+}
+.vn-my-notifications-superadmin .vn-myn-notification.vn-myn-unread > span.absolute {
+  background:var(--myn-coral);width:3px;
+}
+.vn-my-notifications-superadmin .vn-myn-notification:hover,
+.vn-my-notifications-superadmin .vn-myn-notification:focus-visible {
+  background:var(--myn-soft);
+  outline:2px solid var(--myn-coral);outline-offset:-2px;
+}
+.vn-my-notifications-superadmin .vn-myn-notification > div.pointer-events-none.absolute {
+  display:none;
+}
+.vn-my-notifications-superadmin .vn-myn-notification > div.relative.flex.h-12.w-12 {
+  width:44px;height:44px;border-radius:13px;
+  background:var(--vn-icon-bg);color:var(--myn-strong);
+}
+.vn-my-notifications-superadmin .vn-myn-notification p.text-sm.font-black {
+  color:var(--myn-ink);font-size:14px;font-weight:800;
+}
+.vn-my-notifications-superadmin .vn-myn-notification p.line-clamp-2 {
+  margin-top:4px;color:var(--myn-muted);
+  font-size:13px;line-height:1.6;
+}
+.vn-my-notifications-superadmin .vn-myn-notification div.mt-4 {
+  margin-top:10px;
+}
+.vn-my-notifications-superadmin .vn-myn-notification span.bg-violet-500 {
+  background:var(--myn-coral);color:#fff;
+}
+.vn-my-notifications-superadmin .vn-myn-notification span.bg-violet-400 {
+  background:var(--myn-coral);box-shadow:none;
+}
+.vn-my-notifications-superadmin .vn-myn-notification span.text-slate-500 {
+  color:var(--myn-muted);
+}
+.vn-my-notifications-superadmin .vn-myn-list .divide-y {
+  border-color:var(--myn-line);
+}
+/* Detalle: superficies y campos del Dashboard. */
+.vn-my-notifications-superadmin .vn-myn-detail-overlay {
+  background:rgba(18,21,23,.58);backdrop-filter:blur(5px);
+}
+.vn-my-notifications-superadmin .vn-myn-detail {
+  width:100%;max-height:calc(100dvh - 24px);
+  display:flex;flex-direction:column;
+  border:1px solid var(--myn-line);border-radius:22px;
+  background:var(--myn-surface);color:var(--myn-ink);
+  box-shadow:0 25px 70px rgba(20,22,24,.22);
+}
+.vn-my-notifications-superadmin .vn-myn-detail > .pointer-events-none {display:none;}
+.vn-my-notifications-superadmin .vn-myn-detail header,
+.vn-my-notifications-superadmin .vn-myn-detail footer {
+  border-color:var(--myn-line);flex-shrink:0;
+  background:var(--myn-surface);
+}
+.vn-my-notifications-superadmin .vn-myn-detail h2 {
+  color:var(--myn-ink);font-size:24px;font-weight:800;
+}
+.vn-my-notifications-superadmin .vn-myn-detail header .h-14.w-14 {
+  background:var(--vn-icon-bg);color:var(--myn-strong);
+}
+.vn-my-notifications-superadmin .vn-myn-detail header button {
+  border-color:var(--myn-line);color:var(--myn-muted);
+  background:var(--myn-soft);
+}
+.vn-my-notifications-superadmin .vn-myn-detail .max-h-\\[55vh\\] {
+  min-height:0;max-height:none;flex:1 1 auto;overflow-y:auto;
+}
+.vn-my-notifications-superadmin .vn-myn-detail .rounded-3xl.bg-slate-50 {
+  background:var(--myn-soft);border-color:var(--myn-line);
+}
+.vn-my-notifications-superadmin .vn-myn-detail .text-slate-700,
+.vn-my-notifications-superadmin .vn-myn-detail .text-slate-900 {
+  color:var(--myn-ink);
+}
+.vn-my-notifications-superadmin .vn-myn-detail .text-slate-500,
+.vn-my-notifications-superadmin .vn-myn-detail .text-slate-600 {
+  color:var(--myn-muted);
+}
+.vn-my-notifications-superadmin .vn-myn-detail footer button.bg-violet-500 {
+  background:var(--myn-coral);border-color:var(--myn-coral);
+  color:#fff;box-shadow:none;
+}
+.vn-my-notifications-superadmin .vn-myn-detail footer button.bg-violet-500:hover {
+  background:var(--myn-strong);
+}
+.vn-my-notifications-superadmin button:focus-visible {
+  outline:2px solid var(--myn-coral);outline-offset:3px;
+}
+@media(max-width:1100px) {
+  .vn-my-notifications-superadmin .vn-myn-kpi-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media(max-width:767px) {
+  .vn-my-notifications-superadmin .vn-myn-main {padding:13px 11px 24px;}
+  .vn-my-notifications-superadmin .vn-myn-page {gap:13px;}
+  .vn-my-notifications-superadmin .vn-myn-hero-content > div:first-child {
+    padding:18px;border-radius:17px;
+  }
+  .vn-my-notifications-superadmin .vn-myn-kpi-grid {gap:9px;}
+  .vn-my-notifications-superadmin .vn-myn-kpi {
+    min-height:160px;padding:13px;border-radius:16px;
+  }
+  .vn-my-notifications-superadmin .vn-myn-kpi p:first-child {font-size:11px;padding-right:36px;}
+  .vn-my-notifications-superadmin .vn-myn-kpi p.text-3xl {font-size:27px;}
+  .vn-my-notifications-superadmin .vn-myn-kpi-icon {
+    width:38px;height:38px;top:13px;right:13px;border-radius:12px;
+  }
+  .vn-my-notifications-superadmin .vn-myn-kpi-footer > span:first-child {font-size:10px;}
+  .vn-my-notifications-superadmin .vn-myn-kpi-bars {display:none;}
+  .vn-my-notifications-superadmin .vn-myn-filters {padding:12px;border-radius:16px;}
+  .vn-my-notifications-superadmin .vn-myn-filters > div:first-child > div:first-child {
+    max-width:none;flex:1 1 100%;
+  }
+  .vn-my-notifications-superadmin .vn-myn-pending {padding:13px;}
+  .vn-my-notifications-superadmin .vn-myn-list-header {padding:14px;}
+  .vn-my-notifications-superadmin .vn-myn-notification {padding:13px;gap:10px;}
+  .vn-my-notifications-superadmin .vn-myn-detail {
+    max-height:100dvh;border-radius:17px 17px 0 0;
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  .vn-my-notifications-superadmin * {transition:none !important;}
+}
