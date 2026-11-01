@@ -343,7 +343,7 @@ function TypeBadge({ type }: { type: string }) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${tone}`}
+      className={`vn-reports-type-badge inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${tone}`}
     >
       <Icon size={13} />
       {meta.label}
@@ -1653,7 +1653,7 @@ export default function ReportsPage({
 
       {selectedReport && (
         <div
-          className="fixed inset-0 z-[100] flex items-end justify-center bg-slate-950/45 p-0 backdrop-blur-md sm:items-center sm:p-5 dark:bg-slate-950/80"
+          className="vn-reports-modal-backdrop fixed inset-0 z-[100] flex items-end justify-center bg-slate-950/45 p-0 backdrop-blur-md sm:items-center sm:p-5 dark:bg-slate-950/80"
           role="dialog"
           aria-modal="true"
           aria-labelledby="report-dialog-title"
@@ -1665,7 +1665,7 @@ export default function ReportsPage({
             aria-label="Cerrar modal"
           />
 
-          <div className="relative max-h-[94vh] w-full overflow-hidden rounded-t-[32px] border border-slate-200 bg-white shadow-2xl shadow-slate-500/30 sm:max-w-3xl sm:rounded-[32px] dark:border-white/10 dark:bg-[#111827] dark:shadow-black/60">
+          <div className="vn-reports-detail relative max-h-[94vh] w-full overflow-hidden rounded-t-[32px] border border-slate-200 bg-white shadow-2xl shadow-slate-500/30 sm:max-w-3xl sm:rounded-[32px] dark:border-white/10 dark:bg-[#111827] dark:shadow-black/60">
             <div className="pointer-events-none absolute right-0 top-0 h-60 w-60 rounded-full bg-violet-300/20 blur-[90px] dark:bg-violet-600/10" />
 
             <div className="relative flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-5 sm:px-7 dark:border-white/[0.08]">
