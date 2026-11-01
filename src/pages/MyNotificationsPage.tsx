@@ -1541,7 +1541,7 @@ export default function MyNotificationsPage() {
 
                             <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
                               <span
-                                className={`inline-flex items-center rounded-full border px-2.5 py-1 font-bold ${style.badgeClassName}`}
+                                className={`vn-myn-type-badge inline-flex items-center rounded-full border px-2.5 py-1 font-bold ${style.badgeClassName}`}
                               >
                                 {style.label}
                               </span>
@@ -1610,7 +1610,7 @@ export default function MyNotificationsPage() {
                     <div className="min-w-0">
                       <div className="flex flex-wrap gap-2">
                         <span
-                          className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-bold ${selectedStyle.badgeClassName}`}
+                          className={`vn-myn-type-badge inline-flex rounded-full border px-2.5 py-1 text-xs font-bold ${selectedStyle.badgeClassName}`}
                         >
                           {selectedStyle.label}
                         </span>
