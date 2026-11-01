@@ -260,7 +260,7 @@
   color:var(--rep-ink);
 }
 .vn-admin .vn-superadmin-reports .vn-reports-row:hover,
-.vn-admin .vn-superadmin-reports .vn-reports-list .lg\\:hidden article:hover {
+.vn-admin .vn-superadmin-reports .vn-reports-mobile-list > article:hover {
   background:var(--rep-soft);
 }
 .vn-admin .vn-superadmin-reports .vn-reports-row .text-slate-500,
@@ -327,6 +327,36 @@
 .vn-admin .vn-superadmin-reports .vn-reports-error {background:color-mix(in srgb,#fce4e0 72%,var(--rep-surface));}
 .vn-admin .vn-superadmin-reports .vn-reports-success {background:color-mix(in srgb,#e1f3e7 72%,var(--rep-surface));}
 .vn-admin .vn-superadmin-reports .vn-reports-alert p {color:var(--rep-ink);}
+
+/* Referencias de tipo con acentos coral; estados de moderación mantienen sus colores. */
+.vn-admin .vn-superadmin-reports .vn-reports-type-badge {
+  background:var(--vn-coral-soft);
+  color:var(--rep-coral-strong);
+  border-color:color-mix(in srgb,var(--rep-coral) 26%,var(--rep-line));
+}
+.vn-admin .vn-superadmin-reports .vn-reports-mobile-list > article {
+  border-color:var(--rep-line);
+  color:var(--rep-ink);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-mobile-list > article > div {
+  border-color:var(--rep-line);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-modal-backdrop {
+  background:rgba(18,21,23,.6);
+  backdrop-filter:blur(5px);
+}
+.vn-admin .vn-superadmin-reports .vn-reports-detail > .pointer-events-none {
+  display:none;
+}
+html.dark .vn-admin .vn-superadmin-reports .vn-reports-stat-note {
+  color:#a9dbce;
+}
+html.dark .vn-admin .vn-superadmin-reports .vn-reports-error {
+  background:#3d292b;
+}
+html.dark .vn-admin .vn-superadmin-reports .vn-reports-success {
+  background:#22372e;
+}
 @media(max-width:1200px) {
   .vn-admin .vn-superadmin-reports .vn-reports-kpi-grid {
     grid-template-columns:repeat(2,minmax(0,1fr));
@@ -335,7 +365,12 @@
     flex-direction:column;align-items:flex-start;gap:16px;
   }
   .vn-admin .vn-superadmin-reports .vn-reports-filters > div:first-child {
-    grid-template-columns:minmax(220px,1fr) minmax(155px,190px) minmax(155px,180px);
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media(min-width:768px) and (max-width:1200px) {
+  .vn-admin .vn-superadmin-reports .vn-reports-filters > div:first-child > :first-child {
+    grid-column:1 / -1;
   }
 }
 @media(max-width:767px) {
