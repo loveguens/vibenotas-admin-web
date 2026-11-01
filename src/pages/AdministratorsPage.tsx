@@ -1351,6 +1351,7 @@ export default function AdministratorsPage() {
 
         <div className="adm-filter-groups mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
           <div className="adm-chip-group flex flex-wrap items-center gap-1.5">
+            <span className="adm-filter-label">Estado</span>
             {STATUS_FILTERS.map((filter) => (
               <button
                 key={filter.key}
@@ -1368,6 +1369,7 @@ export default function AdministratorsPage() {
           </div>
 
           <div className="adm-chip-group flex flex-wrap items-center gap-1.5">
+            <span className="adm-filter-label">Rol</span>
             {ROLE_FILTERS.map((filter) => (
               <button
                 key={filter.key}
