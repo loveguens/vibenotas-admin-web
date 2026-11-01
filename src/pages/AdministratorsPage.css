@@ -461,6 +461,7 @@
 }
 @media(max-width:640px) {
   .vn-admin .superadmin-administration .adm-modal-overlay {padding:8px;}
+  .vn-admin .superadmin-administration .adm-drawer-overlay {padding:0;}
   .vn-admin .superadmin-administration .adm-dialog {border-radius:17px;}
   .vn-admin .superadmin-administration .adm-actions,
   .vn-admin .superadmin-administration .adm-edit {max-height:calc(100dvh - 16px);}
