@@ -1679,7 +1679,7 @@ export default function AdministratorsPage() {
       )}
 
       {selectedAdmin && (
-        <div className="adm-modal-overlay fixed inset-0 z-[75] flex justify-end bg-black/70 backdrop-blur-sm">
+        <div className="adm-modal-overlay adm-drawer-overlay fixed inset-0 z-[75] flex justify-end bg-black/70 backdrop-blur-sm">
           <button
             type="button"
             onClick={() => setSelectedAdmin(null)}
