@@ -266,7 +266,7 @@
   border-color:var(--myn-line);color:var(--myn-muted);
   background:var(--myn-soft);
 }
-.vn-my-notifications-superadmin .vn-myn-detail .max-h-\\[55vh\\] {
+.vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-body {
   min-height:0;max-height:none;flex:1 1 auto;overflow-y:auto;
 }
 .vn-my-notifications-superadmin .vn-myn-detail .rounded-3xl.bg-slate-50 {
