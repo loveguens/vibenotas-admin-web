@@ -27,6 +27,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import api from "../services/api";
+import "./MyNotificationsPage.css";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 
@@ -1054,7 +1055,7 @@ export default function MyNotificationsPage() {
 
         <main className="vn-myn-main px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
           <section className="vn-myn-page mx-auto max-w-6xl space-y-6">
-            <div className="vn-myn-hero relative overflow-hidden rounded-[30px] border border-slate-200 bg-gradient-to-br from-violet-50 via-white to-sky-50 p-6 shadow-xl shadow-slate-200/60 sm:p-8 dark:border-white/10 dark:from-[#131A2D] dark:via-[#111827] dark:to-[#10243A] dark:shadow-2xl dark:shadow-black/25">
+            <div className="vn-dashboard-hero vn-myn-hero relative overflow-hidden rounded-[30px] border border-slate-200 bg-gradient-to-br from-violet-50 via-white to-sky-50 p-6 shadow-xl shadow-slate-200/60 sm:p-8 dark:border-white/10 dark:from-[#131A2D] dark:via-[#111827] dark:to-[#10243A] dark:shadow-2xl dark:shadow-black/25">
               <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-violet-300/25 blur-3xl dark:bg-violet-500/10" />
               <div className="pointer-events-none absolute -bottom-28 left-10 h-72 w-72 rounded-full bg-sky-300/25 blur-3xl dark:bg-sky-500/10" />
 
@@ -1075,40 +1076,76 @@ export default function MyNotificationsPage() {
                 </div>
 
                 <div className="vn-myn-kpi-grid grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  <article className="vn-myn-kpi vn-myn-kpi-total rounded-3xl border border-slate-200 bg-white/80 p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.045] dark:shadow-none">
+                  <article className="vn-admin-stat-card vn-myn-kpi vn-myn-kpi-total rounded-3xl border border-slate-200 bg-white/80 p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.045] dark:shadow-none">
                     <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Total
                     </p>
                     <p className="mt-2 text-3xl font-black text-slate-950 dark:text-white">
                       {totalNotifications}
                     </p>
+                    {userRole === "superadmin" && (
+                      <>
+                        <span className="vn-myn-kpi-icon" aria-hidden="true"><Bell size={21} /></span>
+                        <span className="vn-myn-kpi-footer">
+                          <span>Resumen general</span>
+                          <span className="vn-myn-kpi-bars" aria-hidden="true"><i/><i/><i/><i/><i/></span>
+                        </span>
+                      </>
+                    )}
                   </article>
 
-                  <article className="vn-myn-kpi vn-myn-kpi-unread rounded-3xl border border-violet-200 bg-violet-50 p-5 dark:border-violet-400/20 dark:bg-violet-500/[0.08]">
+                  <article className="vn-admin-stat-card vn-myn-kpi vn-myn-kpi-unread rounded-3xl border border-violet-200 bg-violet-50 p-5 dark:border-violet-400/20 dark:bg-violet-500/[0.08]">
                     <p className="text-xs font-semibold uppercase tracking-wide text-violet-700 dark:text-violet-300">
                       Sin leer
                     </p>
                     <p className="mt-2 text-3xl font-black text-violet-900 dark:text-violet-100">
                       {unreadCount}
                     </p>
+                    {userRole === "superadmin" && (
+                      <>
+                        <span className="vn-myn-kpi-icon" aria-hidden="true"><Inbox size={21} /></span>
+                        <span className="vn-myn-kpi-footer">
+                          <span>Por revisar</span>
+                          <span className="vn-myn-kpi-bars" aria-hidden="true"><i/><i/><i/><i/><i/></span>
+                        </span>
+                      </>
+                    )}
                   </article>
 
-                  <article className="vn-myn-kpi vn-myn-kpi-read rounded-3xl border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-400/20 dark:bg-emerald-500/[0.08]">
+                  <article className="vn-admin-stat-card vn-myn-kpi vn-myn-kpi-read rounded-3xl border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-400/20 dark:bg-emerald-500/[0.08]">
                     <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">
                       Leídas
                     </p>
                     <p className="mt-2 text-3xl font-black text-emerald-900 dark:text-emerald-100">
                       {readCount}
                     </p>
+                    {userRole === "superadmin" && (
+                      <>
+                        <span className="vn-myn-kpi-icon" aria-hidden="true"><CheckCheck size={21} /></span>
+                        <span className="vn-myn-kpi-footer">
+                          <span>Actividad revisada</span>
+                          <span className="vn-myn-kpi-bars" aria-hidden="true"><i/><i/><i/><i/><i/></span>
+                        </span>
+                      </>
+                    )}
                   </article>
 
-                  <article className="vn-myn-kpi vn-myn-kpi-priority rounded-3xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-400/20 dark:bg-amber-500/[0.08]">
+                  <article className="vn-admin-stat-card vn-myn-kpi vn-myn-kpi-priority rounded-3xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-400/20 dark:bg-amber-500/[0.08]">
                     <p className="text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300">
                       Prioridad
                     </p>
                     <p className="mt-2 text-3xl font-black text-amber-900 dark:text-amber-100">
                       {highPriorityCount}
                     </p>
+                    {userRole === "superadmin" && (
+                      <>
+                        <span className="vn-myn-kpi-icon" aria-hidden="true"><Zap size={21} /></span>
+                        <span className="vn-myn-kpi-footer">
+                          <span>Avisos importantes</span>
+                          <span className="vn-myn-kpi-bars" aria-hidden="true"><i/><i/><i/><i/><i/></span>
+                        </span>
+                      </>
+                    )}
                   </article>
                 </div>
               </div>
@@ -1336,7 +1373,7 @@ export default function MyNotificationsPage() {
               </div>
             )}
 
-            <div className="vn-myn-list overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-xl shadow-slate-200/50 dark:border-white/10 dark:bg-[#101827] dark:shadow-black/15">
+            <div className="vn-dashboard-panel vn-myn-list overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-xl shadow-slate-200/50 dark:border-white/10 dark:bg-[#101827] dark:shadow-black/15">
               <div className="vn-myn-list-header flex flex-col gap-2 border-b border-slate-100 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:border-white/[0.07]">
                 <div>
                   <p className="text-sm font-black text-slate-900 dark:text-white">
@@ -1558,7 +1595,7 @@ export default function MyNotificationsPage() {
               aria-label="Cerrar detalle de notificación"
             />
 
-            <section className="vn-myn-detail relative w-full overflow-hidden rounded-t-[34px] border border-slate-200 bg-white shadow-2xl shadow-slate-500/30 sm:max-w-2xl sm:rounded-[34px] dark:border-white/10 dark:bg-[#0F172A] dark:shadow-black/50">
+            <section role="dialog" aria-modal="true" aria-label="Detalle de notificación" className="vn-dashboard-panel vn-myn-detail relative w-full overflow-hidden rounded-t-[34px] border border-slate-200 bg-white shadow-2xl shadow-slate-500/30 sm:max-w-2xl sm:rounded-[34px] dark:border-white/10 dark:bg-[#0F172A] dark:shadow-black/50">
               <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-violet-500/10 blur-3xl" />
 
               <header className="relative border-b border-slate-200 p-6 sm:p-7 dark:border-white/10">
