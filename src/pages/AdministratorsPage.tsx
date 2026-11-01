@@ -435,7 +435,7 @@ function RoleBadge({ role }: { role: AdminRoleSlug }) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
+      className={`adm-role-badge inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
         superAdmin
           ? "border-fuchsia-200 bg-fuchsia-50 text-fuchsia-700 dark:border-fuchsia-400/15 dark:bg-fuchsia-500/10 dark:text-fuchsia-300"
           : "border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-400/15 dark:bg-violet-500/10 dark:text-violet-300"
@@ -448,33 +448,23 @@ function RoleBadge({ role }: { role: AdminRoleSlug }) {
   );
 }
 
-function AdminAvatar({
-  admin,
-  large = false,
-}: {
-  admin: AdminUser;
-  large?: boolean;
-}) {
-  const [imageFailed, setImageFailed] = useState(false);
-
+function resolveAdminAvatarUrl(value?: string | null): string | null {
+  const path = value?.trim();
+  if (!path) return null;
+  if (/^(https?:\/\/|data:|blob:)/i.test(path)) return path;
+  try {
+    const origin = new URL(String(api.defaults.baseURL || window.location.origin),window.location.origin).origin;
+    return new URL(path, `${origin}/`).toString();
+  } catch { return path; }
+}
+function AdminAvatar({admin,large=false}:{admin:AdminUser;large?:boolean}) {
+  const [failedUrl,setFailedUrl] = useState<string | null>(null);
+  const url = resolveAdminAvatarUrl(admin.foto_perfil);
   return (
-    <div
-      className={`flex shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br from-violet-500 via-violet-600 to-fuchsia-600 font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 ${
-        large
-          ? "h-20 w-20 rounded-3xl text-xl"
-          : "h-11 w-11 rounded-2xl text-sm"
-      }`}
-    >
-      {admin.foto_perfil && !imageFailed ? (
-        <img
-          src={admin.foto_perfil}
-          alt={admin.nombre}
-          onError={() => setImageFailed(true)}
-          className="h-full w-full object-cover"
-        />
-      ) : (
-        getInitials(admin.nombre || "Admin")
-      )}
+    <div className={`vn-superadmin-avatar adm-avatar flex shrink-0 items-center justify-center overflow-hidden rounded-xl font-extrabold text-white ${large ? "h-20 w-20 text-xl" : "h-11 w-11 text-sm"}`}>
+      {url && failedUrl !== url ? (
+        <img src={url} alt={`Foto de ${admin.nombre}`} loading="lazy" className="h-full w-full object-cover" onError={() => setFailedUrl(url)}/>
+      ) : getInitials(admin.nombre || "Admin")}
     </div>
   );
 }
@@ -1152,56 +1142,20 @@ export default function AdministratorsPage() {
 
   return (
     <section className="superadmin-administration space-y-6 pb-10 text-slate-900 dark:text-white">
-      <header className="adm-hero relative overflow-hidden rounded-[28px] border border-slate-200 bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.12),transparent_38%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(248,250,252,0.98))] p-6 shadow-xl shadow-slate-200/60 sm:p-8 dark:border-white/10 dark:bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.18),transparent_38%),linear-gradient(135deg,rgba(30,41,59,0.96),rgba(15,23,42,0.96))] dark:shadow-2xl dark:shadow-black/20">
-        <div className="absolute -right-16 -top-20 h-52 w-52 rounded-full bg-fuchsia-300/20 blur-3xl dark:bg-fuchsia-500/10" />
-        <div className="absolute -bottom-24 left-1/3 h-52 w-52 rounded-full bg-violet-300/20 blur-3xl dark:bg-violet-500/10" />
-
-        <div className="relative flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-violet-700 dark:border-violet-400/15 dark:bg-violet-500/10 dark:text-violet-200">
-              <ShieldCheck size={14} />
-              Control de privilegios
-            </div>
-
-            <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-950 dark:text-white sm:text-4xl">
-              Gestión de accesos
-            </h1>
-
-            <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600 dark:text-slate-400 sm:text-base">
-              Gestiona accesos elevados, revisa el estado de cada cuenta y
-              mantén protegida la jerarquía administrativa de VibeNotas.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <button
-              type="button"
-              onClick={() => void exportExcel()}
-              disabled={filteredAdmins.length === 0 || exporting}
-              className="adm-export inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-45 dark:border-white/10 dark:bg-white/[0.055] dark:text-slate-200 dark:hover:border-white/15 dark:hover:bg-white/10"
-            >
-              {exporting ? (
-                <RefreshCw size={17} className="animate-spin" />
-              ) : (
-                <FileSpreadsheet size={18} />
-              )}
-              {exporting ? "Generando..." : "Exportar Excel"}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setError("");
-                setSuccess("");
-                resetCreateForm();
-                setShowCreateModal(true);
-              }}
-              className="adm-create inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 transition hover:-translate-y-0.5 hover:brightness-110"
-            >
-              <UserPlus size={18} />
-              Nuevo administrador
-            </button>
-          </div>
+      <header className="vn-dashboard-hero adm-hero">
+        <div className="adm-heading">
+          <p className="vn-dashboard-hero-kicker adm-eyebrow">CONTROL ADMINISTRATIVO</p>
+          <h1>Gestión de accesos</h1>
+          <p className="adm-description">Administra el equipo, sus permisos y la seguridad de las cuentas.</p>
+        </div>
+        <div className="adm-header-actions">
+          <button type="button" onClick={() => void exportExcel()} disabled={filteredAdmins.length === 0 || exporting} className="adm-export">
+            {exporting ? <RefreshCw size={17} className="animate-spin"/> : <FileSpreadsheet size={18}/>}
+            {exporting ? "Generando..." : "Exportar Excel"}
+          </button>
+          <button type="button" className="adm-create" onClick={() => {
+            setError("");setSuccess("");resetCreateForm();setShowCreateModal(true);
+          }}><UserPlus size={18}/>Nuevo administrador</button>
         </div>
       </header>
 
@@ -1253,64 +1207,27 @@ export default function AdministratorsPage() {
         </div>
       )}
 
-      <div className="adm-metrics grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="adm-metrics">
         {[
-          {
-            label: "Total",
-            value: totals.total,
-            helper: "Cuentas administrativas",
-            icon: ShieldCheck,
-            tone: "border-[#e8ded4] bg-[#fffaf5] text-[#292c30]",
-          },
-          {
-            label: "Activos",
-            value: totals.active,
-            helper: "Acceso disponible",
-            icon: UserRoundCheck,
-            tone: "border-[#e8ded4] bg-[#fffaf5] text-[#292c30]",
-          },
-          {
-            label: "Acceso restringido",
-            value: totals.restricted,
-            helper: "Suspendidos o deshabilitados",
-            icon: ShieldOff,
-            tone: "border-[#e8ded4] bg-[#fffaf5] text-[#292c30]",
-          },
-          {
-            label: "Cuentas protegidas",
-            value: totals.protected,
-            helper: "Super Admin",
-            icon: Crown,
-            tone: "border-[#e8ded4] bg-[#fffaf5] text-[#292c30]",
-          },
-        ].map((item) => {
+          {label:"Total",value:totals.total,helper:"Cuentas administrativas",detail:"Equipo registrado",icon:ShieldCheck},
+          {label:"Activos",value:totals.active,helper:"Acceso disponible",detail:"Con acceso",icon:UserRoundCheck},
+          {label:"Acceso restringido",value:totals.restricted,helper:"Suspendidos o deshabilitados",detail:totals.restricted > 0 ? "Requieren revisión" : "Sin restricciones",icon:ShieldOff},
+          {label:"Cuentas protegidas",value:totals.protected,helper:"Superadministradores",detail:"Jerarquía protegida",icon:Crown},
+        ].map(item => {
           const Icon = item.icon;
-
-          return (
-            <article
-              key={item.label}
-              className="adm-metric-card"
-            >
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
-                    {item.label}
-                  </p>
-                  <p className="mt-2 text-3xl font-bold text-slate-950 dark:text-white">
-                    {item.value}
-                  </p>
-                </div>
-
-                <div className="rounded-xl bg-white/70 p-2.5 ring-1 ring-black/5 dark:bg-white/[0.055] dark:ring-0">
-                  <Icon size={19} />
-                </div>
+          return <article key={item.label} className="vn-admin-stat-card adm-metric-card">
+            <div className="adm-metric-main">
+              <div>
+                <p className="vn-admin-stat-card-title adm-metric-label">{item.label}</p>
+                <p className="vn-admin-stat-card-value adm-metric-value">{item.value}</p>
+                <p className="vn-admin-stat-card-description adm-metric-helper">{item.helper}</p>
               </div>
-
-              <p className="mt-4 text-xs font-medium text-slate-500">
-                {item.helper}
-              </p>
-            </article>
-          );
+              <div className="vn-admin-stat-card-icon adm-metric-icon"><Icon size={22}/></div>
+            </div>
+            <div className="adm-metric-foot"><span className="adm-metric-detail">{item.detail}</span>
+              <span className="adm-metric-bars" aria-hidden="true"><i/><i/><i/><i/><i/></span>
+            </div>
+          </article>;
         })}
       </div>
 
@@ -1388,10 +1305,10 @@ export default function AdministratorsPage() {
         </div>
       </div>
 
-      <div className="adm-directory overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-white/10 dark:bg-[#172033]/85 dark:shadow-black/10">
+      <div className="vn-dashboard-panel adm-directory overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-white/10 dark:bg-[#172033]/85 dark:shadow-black/10">
         <div className="flex flex-col gap-3 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:border-white/10">
           <div>
-            <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">
+            <p className="vn-dashboard-kicker text-sm font-semibold">
               Equipo administrativo
             </p>
             <h2 className="mt-1 text-xl font-bold text-slate-950 dark:text-white">
@@ -1526,7 +1443,7 @@ export default function AdministratorsPage() {
               {filteredAdmins.map((admin) => (
                 <article
                   key={admin.id}
-                  className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]"
+                  className="vn-superadmin-recent-user adm-mobile-user rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]"
                 >
                   <div className="flex items-start gap-3">
                     <AdminAvatar admin={admin} />
