@@ -239,6 +239,11 @@
 .vn-my-notifications-superadmin .vn-myn-list .divide-y {
   border-color:var(--myn-line);
 }
+.vn-my-notifications-superadmin .vn-myn-type-badge {
+  border:1px solid color-mix(in srgb,var(--myn-coral) 26%,var(--myn-line));
+  border-radius:999px;background:var(--vn-coral-soft);
+  color:var(--myn-strong);
+}
 /* Detalle: superficies y campos del Dashboard. */
 .vn-my-notifications-superadmin .vn-myn-detail-overlay {
   background:rgba(18,21,23,.58);backdrop-filter:blur(5px);
