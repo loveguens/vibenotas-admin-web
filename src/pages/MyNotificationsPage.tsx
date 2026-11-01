@@ -1653,7 +1653,7 @@ export default function MyNotificationsPage() {
                 </div>
               </header>
 
-              <div className="relative max-h-[55vh] overflow-y-auto p-6 sm:p-7">
+              <div className="vn-myn-detail-body relative max-h-[55vh] overflow-y-auto p-6 sm:p-7">
                 <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5 dark:border-white/10 dark:bg-white/[0.04]">
                   <p className="whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-200">
                     {selectedNotification.mensaje}
