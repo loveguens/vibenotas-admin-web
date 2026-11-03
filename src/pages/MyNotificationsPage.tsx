@@ -1037,7 +1037,7 @@ export default function MyNotificationsPage() {
         />
 
         <main className="vn-myn-main px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-          <section className="vn-myn-page mx-auto max-w-6xl space-y-6">
+          <section className={`vn-myn-page mx-auto max-w-6xl${userRole === "superadmin" ? "" : " space-y-6"}`}>
             <header className="vn-dashboard-hero vn-myn-hero rounded-[22px] border border-slate-200 bg-white px-6 py-5 dark:border-white/10">
               <p className="vn-myn-eyebrow inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
                 <Sparkles size={15} />
