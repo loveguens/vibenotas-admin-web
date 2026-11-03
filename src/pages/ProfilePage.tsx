@@ -644,7 +644,7 @@ export default function ProfilePage() {
         </div>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-[340px_minmax(0,1fr)]">
+      <div className="vn-profile-body grid gap-6 lg:grid-cols-[340px_minmax(0,1fr)]">
         <aside className="vn-profile-sidebar space-y-6">
           <div className="vn-dashboard-panel vn-profile-identity overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-xl shadow-slate-200/50 dark:border-white/10 dark:bg-[#111827] dark:shadow-black/15">
             <div className="vn-profile-cover relative h-28 overflow-hidden bg-gradient-to-r from-violet-600/30 via-fuchsia-600/20 to-sky-500/20">
