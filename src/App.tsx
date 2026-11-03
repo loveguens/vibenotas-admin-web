@@ -396,7 +396,7 @@ function App() {
 
             <Route path="/superadmin/analytics" element={<AnalyticsPage />} />
 
-            <Route path="/superadmin/profile" element={<ProfilePage />} />
+            <Route path="/superadmin/profile" element={<ProfilePage superadmin />} />
 
             <Route path="/superadmin/chat" element={<ChatPage />} />
 
