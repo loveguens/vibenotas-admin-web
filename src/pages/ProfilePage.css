@@ -1,0 +1,579 @@
+/* Mi perfil · Superadmin
+   Sistema marfil/coral/carbón del Dashboard. Otros roles no cambian. */
+.vn-admin.vn-superadmin-layout .vn-profile-page {
+  --pf-surface:var(--vn-surface);
+  --pf-soft:var(--vn-surface-hover);
+  --pf-bg:var(--vn-bg);
+  --pf-ink:var(--vn-ink);
+  --pf-muted:var(--vn-muted);
+  --pf-line:var(--vn-line);
+  --pf-coral:var(--vn-coral);
+  --pf-strong:var(--vn-coral-strong);
+  width:100%;
+  max-width:1320px;
+  min-width:0;
+  margin:0 auto;
+  color:var(--pf-ink);
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page:not(.vn-profile-error) {
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page > * {margin-top:0;}
+/* Cabecera con el mismo lenguaje que la portada de Superadmin. */
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-hero {
+  min-width:0;
+  overflow:hidden;
+  padding:23px 26px;
+  border:1px solid color-mix(in srgb,var(--pf-coral) 25%,var(--pf-line));
+  border-radius:22px;
+  color:var(--pf-ink);
+  background:linear-gradient(115deg,var(--pf-surface),color-mix(in srgb,var(--vn-coral-soft) 64%,var(--pf-surface)));
+  box-shadow:var(--vn-elevation);
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-hero > .pointer-events-none {
+  display:none;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-hero > div:last-child {
+  gap:24px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-eyebrow {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:var(--pf-strong);
+  font-size:11px;
+  font-weight:800;
+  line-height:1.3;
+  letter-spacing:.12em;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-title {
+  margin-top:9px;
+  font-size:clamp(23px,2.4vw,31px);
+  font-weight:800;
+  line-height:1.15;
+  letter-spacing:-.035em;
+  color:var(--pf-ink);
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-subtitle {
+  margin-top:9px;
+  max-width:70ch;
+  color:var(--pf-muted);
+  font-size:13px;
+  line-height:1.6;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-hero-person {
+  min-width:195px;
+  max-width:290px;
+  padding:12px 15px;
+  gap:12px;
+  flex-shrink:1;
+  border:1px solid var(--pf-line);
+  border-radius:15px;
+  background:var(--pf-surface);
+  color:var(--pf-ink);
+  box-shadow:none;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-hero-avatar {
+  width:45px;
+  height:45px;
+  flex-shrink:0;
+  border-radius:13px;
+  background:var(--pf-coral);
+  color:#fff;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-hero-person p.font-black {
+  color:var(--pf-ink);
+  font-size:13px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-hero-person p.text-slate-600 {
+  color:var(--pf-muted);
+  font-size:11px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-body {
+  display:grid;
+  align-items:start;
+  grid-template-columns:minmax(275px,310px) minmax(0,1fr);
+  gap:16px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-sidebar,
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form {
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  gap:16px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-sidebar > *,
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form > * {
+  margin-top:0;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page :is(
+  .vn-profile-identity,.vn-profile-completion,.vn-profile-activity,.vn-profile-section
+) {
+  min-width:0;
+  border:1px solid var(--pf-line);
+  border-radius:20px;
+  background:var(--pf-surface);
+  color:var(--pf-ink);
+  box-shadow:var(--vn-elevation);
+}
+/* Identidad y foto de perfil. */
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-identity {
+  overflow:hidden;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-cover {
+  height:86px;
+  background:linear-gradient(115deg,var(--vn-coral-soft),color-mix(in srgb,var(--pf-coral) 24%,var(--pf-surface)));
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-cover img {
+  opacity:.07;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-identity > div:last-child {
+  margin-top:-36px;
+  padding:0 19px 19px;
+  position:relative;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-avatar-button {
+  width:78px;
+  height:78px;
+  border:4px solid var(--pf-surface);
+  border-radius:20px;
+  background:var(--pf-coral);
+  box-shadow:0 7px 20px rgba(32,30,28,.12);
+  color:#fff;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-avatar-button:focus-visible {
+  outline:2px solid var(--pf-coral);
+  outline-offset:3px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-avatar-button span.absolute {
+  opacity:0;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-avatar-button:hover span.absolute,
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-avatar-button:focus-visible span.absolute {
+  opacity:1;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-identity h2 {
+  margin-top:11px;
+  color:var(--pf-ink);
+  font-size:19px;
+  line-height:1.25;
+  font-weight:800;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-identity h2 + p {
+  margin-top:5px;
+  color:var(--pf-muted);
+  font-size:12px;
+  overflow-wrap:anywhere;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-identity .mt-4.flex.flex-wrap {
+  margin-top:12px;
+  gap:6px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-identity .mt-4.flex.flex-wrap > span {
+  min-height:27px;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:750;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-identity .mt-4.flex.flex-wrap > span:first-child {
+  border:1px solid color-mix(in srgb,var(--pf-coral) 25%,var(--pf-line));
+  background:var(--vn-coral-soft);
+  color:var(--pf-strong);
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-identity .mt-4.flex.flex-wrap > span:nth-child(2) {
+  border:1px solid #c5e9d8;
+  background:#edf8f1;
+  color:#096846;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-avatar-action {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  margin-top:15px;
+  min-height:41px;
+  padding:9px 13px;
+  border:1px solid color-mix(in srgb,var(--pf-coral) 27%,var(--pf-line));
+  border-radius:11px;
+  background:var(--vn-coral-soft);
+  color:var(--pf-strong);
+  font-size:12px;
+  box-shadow:none;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-avatar-action:hover:not(:disabled) {
+  background:color-mix(in srgb,var(--vn-coral-soft) 76%,var(--pf-coral));
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-identity .text-center.text-xs {
+  color:var(--pf-muted);
+  font-size:11px;
+  line-height:1.5;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-completion,
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-activity {
+  padding:18px 19px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-completion p.font-bold,
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-activity > p:first-child {
+  color:var(--pf-ink);
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:0;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-completion span.font-black {
+  color:var(--pf-strong);
+  font-size:14px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-completion .h-2 {
+  height:8px;
+  background:var(--pf-soft);
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-progress-fill {
+  background:var(--pf-coral);
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-completion > p:last-child {
+  color:var(--pf-muted);
+  font-size:11px;
+  line-height:1.55;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-activity > div {
+  margin-top:13px;
+  gap:13px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-activity > div > div {
+  gap:10px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-activity > div > div > div:first-child {
+  border:0;
+  border-radius:10px;
+  background:var(--vn-icon-bg);
+  color:var(--pf-strong);
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-activity p.text-xs {
+  color:var(--pf-muted);
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-activity p.font-semibold {
+  margin-top:4px;
+  color:var(--pf-ink);
+  font-size:12px;
+  overflow-wrap:anywhere;
+}
+/* Formularios: mismos paneles, jerarquía y foco accesible. */
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-section {
+  padding:21px 24px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-section > div:first-child {
+  gap:12px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-section-icon {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:43px;
+  height:43px;
+  padding:0;
+  flex-shrink:0;
+  border:0;
+  border-radius:13px;
+  background:var(--vn-icon-bg);
+  color:var(--pf-strong);
+  box-shadow:none;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-section-kicker {
+  color:var(--pf-strong);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.1em;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-section h2 {
+  margin-top:4px;
+  color:var(--pf-ink);
+  font-size:18px;
+  font-weight:800;
+  line-height:1.2;
+  letter-spacing:-.025em;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-section h2 + p {
+  margin-top:5px;
+  color:var(--pf-muted);
+  font-size:12px;
+  line-height:1.55;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-section > div:nth-child(2) {
+  margin-top:18px;
+  gap:15px 17px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form label > span:first-child,
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form div > span.text-sm.font-semibold {
+  color:var(--pf-ink);
+  font-size:12px;
+  font-weight:700;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form input,
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form textarea,
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form .vn-profile-personal div.relative > div.w-full {
+  min-height:43px;
+  border:1px solid var(--pf-line);
+  border-radius:11px;
+  color:var(--pf-ink);
+  background:var(--pf-soft);
+  font-size:13px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form input {
+  padding-top:10px;
+  padding-bottom:10px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form input::placeholder,
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form textarea::placeholder {
+  color:var(--pf-muted);
+  opacity:.8;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form input:focus,
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form textarea:focus {
+  border-color:var(--pf-coral);
+  background:var(--pf-surface);
+  outline:2px solid var(--pf-coral);
+  outline-offset:1px;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--pf-coral) 12%,transparent);
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form .vn-profile-personal div.relative > div.w-full {
+  cursor:not-allowed;
+  color:var(--pf-muted);
+  background:color-mix(in srgb,var(--pf-soft) 75%,var(--pf-surface));
+  overflow-wrap:anywhere;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form textarea {
+  min-height:108px;
+  padding:11px 14px;
+  resize:vertical;
+  line-height:1.6;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form label p,
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form label .text-right {
+  color:var(--pf-muted);
+  font-size:11px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-save-bar {
+  position:sticky;
+  bottom:12px;
+  z-index:15;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:13px 17px;
+  border:1px solid var(--pf-line);
+  border-radius:17px;
+  background:color-mix(in srgb,var(--pf-surface) 95%,transparent);
+  color:var(--pf-ink);
+  box-shadow:0 10px 34px rgba(25,26,27,.13);
+  backdrop-filter:blur(10px);
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-save-bar p {
+  color:var(--pf-muted);
+  font-size:12px;
+  line-height:1.45;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-save-button {
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+  flex-shrink:0;
+  min-height:43px;
+  padding:10px 16px;
+  border:1px solid var(--pf-coral);
+  border-radius:11px;
+  background:var(--pf-coral);
+  color:#fff;
+  font-size:13px;
+  font-weight:750;
+  box-shadow:none;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-save-button:hover:not(:disabled) {
+  background:var(--pf-strong);
+  border-color:var(--pf-strong);
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page button:focus-visible {
+  outline:2px solid var(--pf-coral);
+  outline-offset:3px;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page button:disabled {
+  opacity:.55;
+  cursor:not-allowed;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page.vn-profile-error .vn-profile-retry {
+  background:var(--pf-coral);
+  color:#fff;
+}
+html.dark .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-identity .mt-4.flex.flex-wrap > span:nth-child(2) {
+  border-color:#2d6f58;
+  background:#1d392e;
+  color:#a9ebcd;
+}
+html.dark .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-save-bar {
+  background:color-mix(in srgb,var(--pf-surface) 95%,transparent);
+}
+@media(max-width:1080px) {
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-body {
+    grid-template-columns: minmax(0,1fr);
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-sidebar {
+    display:grid;
+    grid-template-columns:minmax(250px,1.3fr) minmax(200px,1fr);
+    align-items:stretch;
+    gap:12px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-identity {
+    grid-row:span 2;
+  }
+}
+@media(max-width:670px) {
+  .vn-admin.vn-superadmin-layout .vn-profile-page:not(.vn-profile-error) {gap:12px;}
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-hero {
+    padding:17px;
+    border-radius:17px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-hero > div:last-child {
+    gap:14px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-title {font-size:24px;}
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-subtitle {font-size:12px;}
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-hero-person {
+    max-width:100%;
+    min-width:0;
+    width:100%;
+    padding:10px 12px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-sidebar {
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form {gap:12px;}
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-identity .vn-profile-cover {height:65px;}
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-identity > div:last-child {
+    margin-top:-28px;
+    padding:0 15px 15px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-avatar-button {
+    width:70px;height:70px;border-radius:17px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-completion,
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-activity {
+    padding:15px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-section {
+    padding:16px;
+    border-radius:17px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-section > div:nth-child(2) {
+    margin-top:15px;
+    gap:13px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-save-bar {
+    bottom:9px;
+    flex-wrap:wrap;
+    padding:12px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-save-button {
+    width:100%;
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  .vn-admin.vn-superadmin-layout .vn-profile-page * {
+    transition:none !important;
+  }
+}
+
+/* Ajustes tras revisión visual.
+   Mantiene el resumen de cuenta a la vista cuando la columna del formulario es larga. */
+@media (min-width:1081px) and (min-height:600px) {
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-sidebar {
+    position:sticky;
+    top:108px;
+    align-self:start;
+    max-height:calc(100dvh - 128px);
+    padding:1px 5px 5px 1px;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    scrollbar-width:thin;
+    scrollbar-color:var(--pf-line) transparent;
+  }
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-timezone-hint {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  margin-top:15px;
+  padding:12px 14px;
+  border:1px solid color-mix(in srgb,var(--pf-coral) 28%,var(--pf-line));
+  border-radius:13px;
+  background:var(--vn-coral-soft);
+  color:var(--pf-ink);
+  font-size:12px;
+  line-height:1.55;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-timezone-hint > svg {
+  flex-shrink:0;
+  color:var(--pf-strong);
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-timezone-hint > p {
+  flex:1 1 auto;
+  min-width:0;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-timezone-hint > button {
+  flex-shrink:0;
+  min-height:34px;
+  padding:7px 10px;
+  border:1px solid color-mix(in srgb,var(--pf-coral) 34%,var(--pf-line));
+  border-radius:9px;
+  background:var(--pf-surface);
+  color:var(--pf-strong);
+  font-size:11px;
+  font-weight:750;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-timezone-hint > button:hover {
+  background:color-mix(in srgb,var(--vn-coral-soft) 65%,var(--pf-surface));
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-save-bar {
+  min-width:0;
+  max-width:100%;
+  box-shadow:0 9px 25px rgba(25,26,27,.1);
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form :is(input,textarea) {
+  scroll-margin-bottom:100px;
+}
+@media (max-width:670px) {
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-save-bar {
+    position:static;
+    bottom:auto;
+    z-index:auto;
+    flex-direction:column;
+    align-items:stretch;
+    gap:9px;
+    padding:13px;
+    box-shadow:var(--vn-elevation);
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-save-bar > p {
+    text-align:center;
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-timezone-hint {
+    align-items:flex-start;
+    flex-wrap:wrap;
+    gap:9px;
+    padding:11px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-timezone-hint > p {
+    flex:1 1 calc(100% - 34px);
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-timezone-hint > button {
+    margin-left:27px;
+  }
+}

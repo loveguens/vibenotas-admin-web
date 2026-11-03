@@ -30,6 +30,7 @@ import {
 import axios from "axios";
 
 import api from "../services/api";
+import "./ProfilePage.css";
 
 type ProfileDetails = {
   bio: string | null;
@@ -167,6 +168,16 @@ function getErrorMessage(error: unknown, fallback: string): string {
   return fallback;
 }
 
+function getAccountStatusLabel(value: string): string {
+  switch (value.trim().toUpperCase()) {
+    case "ACTIVE": return "Cuenta activa";
+    case "PENDING_VERIFICATION": return "Pendiente de verificación";
+    case "SUSPENDED": return "Cuenta suspendida";
+    case "DISABLED": return "Cuenta deshabilitada";
+    default: return value || "Estado sin confirmar";
+  }
+}
+
 function profileToForm(user: ProfileUser): ProfileForm {
   return {
     firstName: user.firstName ?? "",
@@ -249,7 +260,9 @@ function persistPublicProfile(updatedProfile: ProfileUser): void {
   }
 }
 
-export default function ProfilePage() {
+type ProfilePageProps = { superadmin?: boolean };
+
+export default function ProfilePage({ superadmin = false }: ProfilePageProps) {
   const avatarInputRef = useRef<HTMLInputElement | null>(null);
 
   const [user, setUser] = useState<ProfileUser | null>(null);
@@ -302,6 +315,20 @@ export default function ProfilePage() {
 
     return Math.round((complete / fields.length) * 100);
   }, [form]);
+
+  const hasUnsavedChanges = useMemo(() => {
+    if (!user) return false;
+
+    const savedForm = profileToForm(user);
+    return (Object.keys(savedForm) as Array<keyof ProfileForm>).some(
+      (key) => form[key] !== savedForm[key],
+    );
+  }, [form, user]);
+
+  const suggestChileTimezone =
+    superadmin &&
+    form.countryCode.trim().toUpperCase() === "CL" &&
+    form.timezone.trim() === "America/Sao_Paulo";
 
   const loadProfile = useCallback(async () => {
     try {
@@ -519,10 +546,10 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <section className="mx-auto max-w-6xl space-y-6 text-slate-900 dark:text-white">
+      <section className="vn-profile-page vn-profile-loading mx-auto max-w-6xl space-y-6 text-slate-900 dark:text-white">
         <div className="h-40 animate-pulse rounded-[30px] border border-slate-200 bg-slate-200/70 dark:border-white/10 dark:bg-white/[0.04]" />
 
-        <div className="grid gap-6 lg:grid-cols-[340px_minmax(0,1fr)]">
+        <div className="vn-profile-body grid gap-6 lg:grid-cols-[340px_minmax(0,1fr)]">
           <div className="h-[520px] animate-pulse rounded-[30px] border border-slate-200 bg-slate-200/70 dark:border-white/10 dark:bg-white/[0.04]" />
           <div className="h-[620px] animate-pulse rounded-[30px] border border-slate-200 bg-slate-200/70 dark:border-white/10 dark:bg-white/[0.04]" />
         </div>
@@ -532,7 +559,7 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <section className="mx-auto max-w-6xl text-slate-900 dark:text-white">
+      <section className="vn-profile-page vn-profile-error mx-auto max-w-6xl text-slate-900 dark:text-white">
         <div className="flex min-h-[360px] flex-col items-center justify-center rounded-[30px] border border-red-200 bg-red-50 p-8 text-center dark:border-red-500/20 dark:bg-red-500/[0.06]">
           <div className="rounded-2xl bg-red-100 p-4 text-red-700 dark:bg-red-500/10 dark:text-red-300">
             <TriangleAlert size={28} />
@@ -550,7 +577,7 @@ export default function ProfilePage() {
           <button
             type="button"
             onClick={() => void loadProfile()}
-            className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-violet-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-violet-400"
+            className="vn-profile-retry mt-6 inline-flex items-center gap-2 rounded-2xl bg-violet-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-violet-400"
           >
             <RefreshCw size={17} />
             Reintentar
@@ -561,30 +588,30 @@ export default function ProfilePage() {
   }
 
   return (
-    <section className="mx-auto max-w-6xl space-y-6 text-slate-900 dark:text-white">
-      <header className="relative overflow-hidden rounded-[30px] border border-slate-200 bg-gradient-to-br from-violet-50 via-white to-sky-50 p-6 shadow-xl shadow-slate-200/60 sm:p-8 dark:border-white/10 dark:from-[#151B31] dark:via-[#111827] dark:to-[#10253B] dark:shadow-2xl dark:shadow-black/20">
+    <section className="vn-profile-page mx-auto max-w-6xl space-y-6 text-slate-900 dark:text-white">
+      <header className="vn-dashboard-hero vn-profile-hero relative overflow-hidden rounded-[30px] border border-slate-200 bg-gradient-to-br from-violet-50 via-white to-sky-50 p-6 shadow-xl shadow-slate-200/60 sm:p-8 dark:border-white/10 dark:from-[#151B31] dark:via-[#111827] dark:to-[#10253B] dark:shadow-2xl dark:shadow-black/20">
         <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-violet-300/25 blur-3xl dark:bg-violet-500/10" />
         <div className="pointer-events-none absolute -bottom-28 left-20 h-72 w-72 rounded-full bg-sky-300/25 blur-3xl dark:bg-sky-500/10" />
 
         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-violet-700 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-200">
+            <div className="vn-profile-eyebrow inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-violet-700 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-200">
               <ShieldCheck size={15} />
               Cuenta administrativa
             </div>
 
-            <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-950 dark:text-white sm:text-4xl">
+            <h1 className="vn-profile-title mt-4 text-3xl font-black tracking-tight text-slate-950 dark:text-white sm:text-4xl">
               Mi perfil
             </h1>
 
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 dark:text-slate-400 sm:text-base">
+            <p className="vn-profile-subtitle mt-3 max-w-2xl text-sm leading-7 text-slate-600 dark:text-slate-400 sm:text-base">
               Administra tu identidad, información profesional y preferencias de
               cuenta desde un solo lugar.
             </p>
           </div>
 
-          <div className="flex items-center gap-4 rounded-3xl border border-slate-200 bg-white/80 p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.04] dark:shadow-none">
-            <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-lg font-black text-white">
+          <div className="vn-profile-hero-person flex items-center gap-4 rounded-3xl border border-slate-200 bg-white/80 p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.04] dark:shadow-none">
+            <div className="vn-profile-hero-avatar flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-lg font-black text-white">
               {displayedAvatarUrl && !avatarError ? (
                 <img
                   src={displayedAvatarUrl}
@@ -633,10 +660,10 @@ export default function ProfilePage() {
         </div>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-[340px_minmax(0,1fr)]">
-        <aside className="space-y-6">
-          <div className="overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-xl shadow-slate-200/50 dark:border-white/10 dark:bg-[#111827] dark:shadow-black/15">
-            <div className="relative h-28 overflow-hidden bg-gradient-to-r from-violet-600/30 via-fuchsia-600/20 to-sky-500/20">
+      <div className="vn-profile-body grid gap-6 lg:grid-cols-[340px_minmax(0,1fr)]">
+        <aside className="vn-profile-sidebar space-y-6">
+          <div className="vn-dashboard-panel vn-profile-identity overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-xl shadow-slate-200/50 dark:border-white/10 dark:bg-[#111827] dark:shadow-black/15">
+            <div className="vn-profile-cover relative h-28 overflow-hidden bg-gradient-to-r from-violet-600/30 via-fuchsia-600/20 to-sky-500/20">
               {displayedAvatarUrl && !avatarError && (
                 <img
                   src={displayedAvatarUrl}
@@ -652,7 +679,7 @@ export default function ProfilePage() {
                 type="button"
                 onClick={() => avatarInputRef.current?.click()}
                 disabled={uploadingAvatar}
-                className="group relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-[26px] border-4 border-white bg-gradient-to-br from-violet-500 to-fuchsia-600 text-2xl font-black text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-70 dark:border-[#111827]"
+                className="vn-profile-avatar-button group relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-[26px] border-4 border-white bg-gradient-to-br from-violet-500 to-fuchsia-600 text-2xl font-black text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-70 dark:border-[#111827]"
                 aria-label="Cambiar foto de perfil"
                 title="Cambiar foto de perfil"
               >
@@ -693,7 +720,7 @@ export default function ProfilePage() {
               <div className="mt-4 flex flex-wrap gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-700 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-200">
                   <ShieldCheck size={14} />
-                  {user.status}
+                  {getAccountStatusLabel(user.status)}
                 </span>
 
                 {user.emailVerifiedAt && (
@@ -708,7 +735,7 @@ export default function ProfilePage() {
                 type="button"
                 disabled={uploadingAvatar}
                 onClick={() => avatarInputRef.current?.click()}
-                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm font-bold text-violet-700 transition hover:bg-violet-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-200 dark:hover:bg-violet-500/20"
+                className="vn-profile-avatar-action mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm font-bold text-violet-700 transition hover:bg-violet-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-200 dark:hover:bg-violet-500/20"
               >
                 {uploadingAvatar ? (
                   <LoaderCircle size={18} className="animate-spin" />
@@ -725,7 +752,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div className="rounded-[30px] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#111827] dark:shadow-none">
+          <div className="vn-dashboard-panel vn-profile-completion rounded-[30px] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#111827] dark:shadow-none">
             <div className="flex items-center justify-between">
               <p className="font-bold text-slate-900 dark:text-white">Perfil completado</p>
               <span className="text-sm font-black text-violet-700 dark:text-violet-300">
@@ -735,7 +762,7 @@ export default function ProfilePage() {
 
             <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-white/10">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-all"
+                className="vn-profile-progress-fill h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-all"
                 style={{ width: `${profileCompletion}%` }}
               />
             </div>
@@ -746,7 +773,7 @@ export default function ProfilePage() {
             </p>
           </div>
 
-          <div className="rounded-[30px] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#111827] dark:shadow-none">
+          <div className="vn-dashboard-panel vn-profile-activity rounded-[30px] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-[#111827] dark:shadow-none">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-600 dark:text-slate-500">
               Actividad de la cuenta
             </p>
@@ -767,8 +794,8 @@ export default function ProfilePage() {
           </div>
         </aside>
 
-        <form onSubmit={saveProfile} className="space-y-6">
-          <div className="rounded-[30px] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/50 sm:p-7 dark:border-white/10 dark:bg-[#111827] dark:shadow-black/15">
+        <form onSubmit={saveProfile} className="vn-profile-form space-y-6">
+          <div className="vn-dashboard-panel vn-profile-section vn-profile-personal rounded-[30px] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/50 sm:p-7 dark:border-white/10 dark:bg-[#111827] dark:shadow-black/15">
             <SectionHeader
               icon={<UserRound size={20} />}
               eyebrow="Identidad"
@@ -808,7 +835,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div className="rounded-[30px] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/50 sm:p-7 dark:border-white/10 dark:bg-[#111827] dark:shadow-black/15">
+          <div className="vn-dashboard-panel vn-profile-section vn-profile-professional rounded-[30px] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/50 sm:p-7 dark:border-white/10 dark:bg-[#111827] dark:shadow-black/15">
             <SectionHeader
               icon={<BriefcaseBusiness size={20} />}
               eyebrow="Perfil público"
@@ -854,7 +881,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div className="rounded-[30px] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/50 sm:p-7 dark:border-white/10 dark:bg-[#111827] dark:shadow-black/15">
+          <div className="vn-dashboard-panel vn-profile-section vn-profile-region rounded-[30px] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/50 sm:p-7 dark:border-white/10 dark:bg-[#111827] dark:shadow-black/15">
             <SectionHeader
               icon={<Globe2 size={20} />}
               eyebrow="Localización"
@@ -890,17 +917,38 @@ export default function ProfilePage() {
                 placeholder="America/Santiago"
               />
             </div>
+
+            {suggestChileTimezone && (
+              <div className="vn-profile-timezone-hint" role="note">
+                <Clock3 size={18} aria-hidden="true" />
+                <p>
+                  El país indicado es Chile y la zona horaria actual es
+                  {" "}America/Sao_Paulo. Si utilizas el horario de Chile
+                  continental, puedes seleccionar America/Santiago.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => updateField("timezone", "America/Santiago")}
+                >
+                  Usar Santiago
+                </button>
+              </div>
+            )}
           </div>
 
-          <div className="sticky bottom-4 z-20 flex flex-col gap-3 rounded-[24px] border border-slate-200 bg-white/95 p-4 shadow-2xl shadow-slate-300/40 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between dark:border-white/10 dark:bg-[#0F172A]/95 dark:shadow-black/30">
-            <p className="text-sm text-slate-600 dark:text-slate-400">
-              Los cambios se aplicarán a tu perfil administrativo.
+          <div className="vn-profile-save-bar sticky bottom-4 z-20 flex flex-col gap-3 rounded-[24px] border border-slate-200 bg-white/95 p-4 shadow-2xl shadow-slate-300/40 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between dark:border-white/10 dark:bg-[#0F172A]/95 dark:shadow-black/30">
+            <p className="text-sm text-slate-600 dark:text-slate-400" aria-live="polite">
+              {superadmin
+                ? hasUnsavedChanges
+                  ? "Tienes cambios pendientes. Guárdalos para actualizar tu perfil."
+                  : "Tu información está actualizada. No hay cambios pendientes."
+                : "Los cambios se aplicarán a tu perfil administrativo."}
             </p>
 
             <button
               type="submit"
-              disabled={saving}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-violet-500 px-5 py-3 text-sm font-black text-white shadow-lg shadow-violet-500/20 transition hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={saving || (superadmin && !hasUnsavedChanges)}
+              className="vn-profile-save-button inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-violet-500 px-5 py-3 text-sm font-black text-white shadow-lg shadow-violet-500/20 transition hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {saving ? (
                 <LoaderCircle size={18} className="animate-spin" />
@@ -1015,12 +1063,12 @@ function SectionHeader({
 }: SectionHeaderProps) {
   return (
     <div className="flex items-start gap-3">
-      <div className="rounded-2xl bg-violet-100 p-3 text-violet-700 ring-1 ring-violet-200 dark:bg-violet-500/10 dark:text-violet-300 dark:ring-violet-400/10">
+      <div className="vn-profile-section-icon rounded-2xl bg-violet-100 p-3 text-violet-700 ring-1 ring-violet-200 dark:bg-violet-500/10 dark:text-violet-300 dark:ring-violet-400/10">
         {icon}
       </div>
 
       <div>
-        <p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-700 dark:text-violet-300">
+        <p className="vn-profile-section-kicker text-xs font-bold uppercase tracking-[0.16em] text-violet-700 dark:text-violet-300">
           {eyebrow}
         </p>
         <h2 className="mt-1 text-xl font-black text-slate-950 dark:text-white">{title}</h2>
