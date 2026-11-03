@@ -32,6 +32,7 @@ import {
   useState,
 } from "react";
 import api from "../services/api";
+import "./ReportsPage.css";
 
 type Role = "admin" | "superadmin";
 
@@ -342,7 +343,7 @@ function TypeBadge({ type }: { type: string }) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${tone}`}
+      className={`vn-reports-type-badge inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${tone}`}
     >
       <Icon size={13} />
       {meta.label}
@@ -357,6 +358,7 @@ function StatCard({
   icon: Icon,
   color,
   glow,
+  dashboard,
 }: {
   title: string;
   value: number;
@@ -364,34 +366,64 @@ function StatCard({
   icon: typeof Flag;
   color: string;
   glow: string;
+  dashboard: boolean;
 }) {
+  if (!dashboard) {
+    return (
+      <article className="vn-reports-stat-card group relative overflow-hidden rounded-[26px] border border-slate-200 bg-white p-5 shadow-lg shadow-slate-200/50 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl dark:border-white/[0.08] dark:bg-slate-900/70 dark:shadow-lg dark:shadow-black/20 dark:hover:border-white/[0.14]">
+        <div
+          className={`pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full blur-3xl ${glow}`}
+        />
+  
+        <div className="relative flex items-start justify-between gap-4">
+          <div>
+            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+              {title}
+            </p>
+  
+            <p className="mt-3 text-3xl font-black tracking-tight text-slate-950 dark:text-white">
+              {value.toLocaleString("es-CL")}
+            </p>
+          </div>
+  
+          <div
+            className={`flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 shadow-sm dark:border-white/10 dark:bg-white/[0.06] dark:shadow-none ${color}`}
+          >
+            <Icon size={21} />
+          </div>
+        </div>
+  
+        <p className="relative mt-4 text-xs leading-5 text-slate-500">
+          {description}
+        </p>
+      </article>
+    );
+  }
+
+  const detail =
+    title === "Pendientes" ? "Requieren atención" :
+    title === "En revisión" ? "En seguimiento" :
+    title === "Resueltos" ? "Casos cerrados" :
+    "Resumen general";
+
   return (
-    <article className="vn-reports-stat-card group relative overflow-hidden rounded-[26px] border border-slate-200 bg-white p-5 shadow-lg shadow-slate-200/50 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl dark:border-white/[0.08] dark:bg-slate-900/70 dark:shadow-lg dark:shadow-black/20 dark:hover:border-white/[0.14]">
-      <div
-        className={`pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full blur-3xl ${glow}`}
-      />
-
-      <div className="relative flex items-start justify-between gap-4">
-        <div>
-          <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-            {title}
-          </p>
-
-          <p className="mt-3 text-3xl font-black tracking-tight text-slate-950 dark:text-white">
+    <article className="vn-admin-stat-card vn-reports-stat-card">
+      <div className="vn-reports-stat-main">
+        <div className="min-w-0">
+          <p className="vn-admin-stat-card-title vn-reports-stat-title">{title}</p>
+          <p className="vn-admin-stat-card-value vn-reports-stat-value">
             {value.toLocaleString("es-CL")}
           </p>
+          <p className="vn-admin-stat-card-description vn-reports-stat-description">
+            {description}
+          </p>
         </div>
-
-        <div
-          className={`flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 shadow-sm dark:border-white/10 dark:bg-white/[0.06] dark:shadow-none ${color}`}
-        >
-          <Icon size={21} />
-        </div>
+        <div className="vn-admin-stat-card-icon vn-reports-stat-icon"><Icon size={22}/></div>
       </div>
-
-      <p className="relative mt-4 text-xs leading-5 text-slate-500">
-        {description}
-      </p>
+      <div className="vn-reports-stat-footer">
+        <span className="vn-reports-stat-note">{detail}</span>
+        <span className="vn-reports-bars" aria-hidden="true"><i/><i/><i/><i/><i/></span>
+      </div>
     </article>
   );
 }
@@ -419,7 +451,26 @@ function FilterSelect({
     options[0];
 
   return (
-    <details className="group relative w-full">
+    <details
+      className="vn-reports-select group relative w-full"
+      onToggle={(event) => {
+        if (!event.currentTarget.open) return;
+
+        // Solo un desplegable abierto a la vez: evita que se superpongan.
+        const current = event.currentTarget;
+        const filters = current.closest(".vn-reports-filters");
+        filters?.querySelectorAll("details.vn-reports-select[open]").forEach((other) => {
+          if (other !== current) other.removeAttribute("open");
+        });
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Escape" && event.currentTarget.open) {
+          event.preventDefault();
+          event.currentTarget.removeAttribute("open");
+          event.currentTarget.querySelector("summary")?.focus();
+        }
+      }}
+    >
       <summary
         aria-label={ariaLabel}
         className={
@@ -439,7 +490,7 @@ function FilterSelect({
         </span>
       </summary>
 
-      <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-2xl shadow-slate-300/40 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/50">
+      <div className="vn-reports-select-menu absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-2xl shadow-slate-300/40 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/50">
         <div className="max-h-64 overflow-y-auto">
           {options.map((option) => {
             const active = option.value === value;
@@ -1050,7 +1101,7 @@ export default function ReportsPage({
   );
 
   return (
-    <section className={`relative min-h-full overflow-hidden rounded-[32px] border border-slate-200 bg-slate-50 p-4 text-slate-900 shadow-xl shadow-slate-200/50 sm:p-6 xl:p-8 dark:border-white/[0.06] dark:bg-[#0b1120] dark:text-white dark:shadow-2xl dark:shadow-black/20 ${isSuperAdmin ? "vn-superadmin-reports" : ""}`}>
+    <section className={isSuperAdmin ? "vn-reports-page vn-superadmin-reports" : "relative min-h-full overflow-hidden rounded-[32px] border border-slate-200 bg-slate-50 p-4 text-slate-900 shadow-xl shadow-slate-200/50 sm:p-6 xl:p-8 dark:border-white/[0.06] dark:bg-[#0b1120] dark:text-white dark:shadow-2xl dark:shadow-black/20"}>
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-32 -top-32 h-80 w-80 rounded-full bg-violet-300/25 blur-[110px] dark:bg-violet-600/10" />
         <div className="absolute right-0 top-20 h-72 w-72 rounded-full bg-sky-300/20 blur-[110px] dark:bg-sky-500/[0.07]" />
@@ -1058,7 +1109,7 @@ export default function ReportsPage({
       </div>
 
       <div className="vn-reports-content relative space-y-6">
-        <header className="vn-reports-hero overflow-hidden rounded-[28px] border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-violet-50 p-5 shadow-xl shadow-slate-200/60 sm:p-7 dark:border-white/[0.08] dark:from-slate-900/95 dark:via-slate-900/80 dark:to-violet-950/30 dark:shadow-lg dark:shadow-black/25">
+        <header className="vn-dashboard-hero vn-reports-hero overflow-hidden rounded-[28px] border border-slate-200 bg-gradient-to-br from-white via-slate-50 to-violet-50 p-5 shadow-xl shadow-slate-200/60 sm:p-7 dark:border-white/[0.08] dark:from-slate-900/95 dark:via-slate-900/80 dark:to-violet-950/30 dark:shadow-lg dark:shadow-black/25">
           <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
             <div className="flex items-start gap-4">
               <div className="vn-reports-hero-icon flex h-14 w-14 shrink-0 items-center justify-center rounded-[20px] border border-violet-200 bg-violet-100 text-violet-700 shadow-lg shadow-violet-200/50 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-300 dark:shadow-violet-950/30">
@@ -1067,7 +1118,7 @@ export default function ReportsPage({
 
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <p className="vn-reports-kicker text-xs font-bold uppercase tracking-[0.22em] text-violet-700 dark:text-violet-300">
+                  <p className="vn-dashboard-hero-kicker vn-reports-kicker text-xs font-bold uppercase tracking-[0.22em] text-violet-700 dark:text-violet-300">
                     Centro de confianza
                   </p>
 
@@ -1122,7 +1173,7 @@ export default function ReportsPage({
         </header>
 
         {error && (
-          <div className="flex items-start gap-3 rounded-2xl border border-rose-500/20 bg-rose-500/10 p-4 text-rose-100 shadow-lg shadow-rose-950/10">
+          <div className="vn-reports-alert vn-reports-error flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-rose-900 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-100">
             <AlertCircle
               size={20}
               className="mt-0.5 shrink-0 text-rose-300"
@@ -1149,7 +1200,7 @@ export default function ReportsPage({
         )}
 
         {success && (
-          <div className="flex items-start gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-emerald-100 shadow-lg shadow-emerald-950/10">
+          <div className="vn-reports-alert vn-reports-success flex items-start gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-900 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-100">
             <CheckCircle2
               size={20}
               className="mt-0.5 shrink-0 text-emerald-300"
@@ -1179,8 +1230,9 @@ export default function ReportsPage({
           <StatCard
             title="Reportes totales"
             value={counts.total}
-            description="Todos los reportes registrados en la plataforma."
+            description="Incidentes registrados en la plataforma."
             icon={Flag}
+            dashboard={isSuperAdmin}
             color="text-violet-700 dark:text-violet-300"
             glow="bg-violet-300/35 dark:bg-violet-500/20"
           />
@@ -1188,8 +1240,9 @@ export default function ReportsPage({
           <StatCard
             title="Pendientes"
             value={counts.pendientes}
-            description="Reportes que todavía necesitan una primera revisión."
+            description="Casos pendientes de evaluación."
             icon={Clock3}
+            dashboard={isSuperAdmin}
             color="text-amber-700 dark:text-amber-300"
             glow="bg-amber-300/35 dark:bg-amber-500/20"
           />
@@ -1197,8 +1250,9 @@ export default function ReportsPage({
           <StatCard
             title="En revisión"
             value={counts.revision}
-            description="Casos que están siendo analizados por moderación."
+            description="Incidentes bajo análisis."
             icon={Eye}
+            dashboard={isSuperAdmin}
             color="text-sky-700 dark:text-sky-300"
             glow="bg-sky-300/35 dark:bg-sky-500/20"
           />
@@ -1206,8 +1260,9 @@ export default function ReportsPage({
           <StatCard
             title="Resueltos"
             value={counts.resueltos}
-            description="Casos cerrados con una decisión administrativa."
+            description="Casos con decisión registrada."
             icon={ClipboardCheck}
+            dashboard={isSuperAdmin}
             color="text-emerald-700 dark:text-emerald-300"
             glow="bg-emerald-300/35 dark:bg-emerald-500/20"
           />
@@ -1334,7 +1389,7 @@ export default function ReportsPage({
           </div>
         </div>
 
-        <div className="vn-reports-list overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-white/[0.08] dark:bg-slate-900/70 dark:shadow-lg dark:shadow-black/20">
+        <div className="vn-dashboard-panel vn-reports-list overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-white/[0.08] dark:bg-slate-900/70 dark:shadow-lg dark:shadow-black/20">
           <div className="vn-reports-list-heading flex flex-col gap-3 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:border-white/[0.07]">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-violet-700 dark:text-violet-300">
@@ -1659,7 +1714,7 @@ export default function ReportsPage({
 
       {selectedReport && (
         <div
-          className="fixed inset-0 z-[100] flex items-end justify-center bg-slate-950/45 p-0 backdrop-blur-md sm:items-center sm:p-5 dark:bg-slate-950/80"
+          className="vn-reports-modal-backdrop fixed inset-0 z-[100] flex items-end justify-center bg-slate-950/45 p-0 backdrop-blur-md sm:items-center sm:p-5 dark:bg-slate-950/80"
           role="dialog"
           aria-modal="true"
           aria-labelledby="report-dialog-title"
@@ -1671,7 +1726,7 @@ export default function ReportsPage({
             aria-label="Cerrar modal"
           />
 
-          <div className="relative max-h-[94vh] w-full overflow-hidden rounded-t-[32px] border border-slate-200 bg-white shadow-2xl shadow-slate-500/30 sm:max-w-3xl sm:rounded-[32px] dark:border-white/10 dark:bg-[#111827] dark:shadow-black/60">
+          <div className="vn-reports-detail relative max-h-[94vh] w-full overflow-hidden rounded-t-[32px] border border-slate-200 bg-white shadow-2xl shadow-slate-500/30 sm:max-w-3xl sm:rounded-[32px] dark:border-white/10 dark:bg-[#111827] dark:shadow-black/60">
             <div className="pointer-events-none absolute right-0 top-0 h-60 w-60 rounded-full bg-violet-300/20 blur-[90px] dark:bg-violet-600/10" />
 
             <div className="relative flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-5 sm:px-7 dark:border-white/[0.08]">
