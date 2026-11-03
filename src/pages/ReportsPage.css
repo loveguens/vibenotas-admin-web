@@ -1,3 +1,29 @@
+/* Desplegables de Tipo/Orden: el panel de filtros debe quedar por ENCIMA
+   de la bandeja siguiente, que usa backdrop-filter y crea su propia capa.
+   Corrección compartida por Administrador y Superadmin. */
+.vn-reports-content > .vn-reports-filters {
+  position:relative;
+  z-index:30;
+  overflow:visible;
+  isolation:isolate;
+}
+.vn-reports-content > .vn-reports-list {
+  position:relative;
+  z-index:0;
+}
+.vn-reports-filters .vn-reports-select[open] {
+  z-index:40;
+}
+.vn-reports-filters .vn-reports-select-menu {
+  z-index:50;
+  overflow:hidden;
+  box-shadow:0 18px 38px rgba(14,22,30,.2);
+}
+.vn-reports-filters .vn-reports-select-menu > div {
+  max-height:min(260px,45dvh);
+  overflow-y:auto;
+}
+
 /* Reportes · Superadmin: comparte la identidad visual del Dashboard.
    Solo aplica a Superadmin; el panel Administrador conserva su presentación. */
 .vn-admin .vn-superadmin-reports {

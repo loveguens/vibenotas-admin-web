@@ -451,7 +451,26 @@ function FilterSelect({
     options[0];
 
   return (
-    <details className="group relative w-full">
+    <details
+      className="vn-reports-select group relative w-full"
+      onToggle={(event) => {
+        if (!event.currentTarget.open) return;
+
+        // Solo un desplegable abierto a la vez: evita que se superpongan.
+        const current = event.currentTarget;
+        const filters = current.closest(".vn-reports-filters");
+        filters?.querySelectorAll("details.vn-reports-select[open]").forEach((other) => {
+          if (other !== current) other.removeAttribute("open");
+        });
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Escape" && event.currentTarget.open) {
+          event.preventDefault();
+          event.currentTarget.removeAttribute("open");
+          event.currentTarget.querySelector("summary")?.focus();
+        }
+      }}
+    >
       <summary
         aria-label={ariaLabel}
         className={
@@ -471,7 +490,7 @@ function FilterSelect({
         </span>
       </summary>
 
-      <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-2xl shadow-slate-300/40 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/50">
+      <div className="vn-reports-select-menu absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-2xl shadow-slate-300/40 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/50">
         <div className="max-h-64 overflow-y-auto">
           {options.map((option) => {
             const active = option.value === value;
