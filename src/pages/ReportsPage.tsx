@@ -356,12 +356,50 @@ function StatCard({
   value,
   description,
   icon: Icon,
+  color,
+  glow,
+  dashboard,
 }: {
   title: string;
   value: number;
   description: string;
   icon: typeof Flag;
+  color: string;
+  glow: string;
+  dashboard: boolean;
 }) {
+  if (!dashboard) {
+    return (
+      <article className="vn-reports-stat-card group relative overflow-hidden rounded-[26px] border border-slate-200 bg-white p-5 shadow-lg shadow-slate-200/50 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl dark:border-white/[0.08] dark:bg-slate-900/70 dark:shadow-lg dark:shadow-black/20 dark:hover:border-white/[0.14]">
+        <div
+          className={`pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full blur-3xl ${glow}`}
+        />
+  
+        <div className="relative flex items-start justify-between gap-4">
+          <div>
+            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+              {title}
+            </p>
+  
+            <p className="mt-3 text-3xl font-black tracking-tight text-slate-950 dark:text-white">
+              {value.toLocaleString("es-CL")}
+            </p>
+          </div>
+  
+          <div
+            className={`flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 shadow-sm dark:border-white/10 dark:bg-white/[0.06] dark:shadow-none ${color}`}
+          >
+            <Icon size={21} />
+          </div>
+        </div>
+  
+        <p className="relative mt-4 text-xs leading-5 text-slate-500">
+          {description}
+        </p>
+      </article>
+    );
+  }
+
   const detail =
     title === "Pendientes" ? "Requieren atención" :
     title === "En revisión" ? "En seguimiento" :
@@ -1175,8 +1213,9 @@ export default function ReportsPage({
             value={counts.total}
             description="Incidentes registrados en la plataforma."
             icon={Flag}
-            
-            
+            dashboard={isSuperAdmin}
+            color="text-violet-700 dark:text-violet-300"
+            glow="bg-violet-300/35 dark:bg-violet-500/20"
           />
 
           <StatCard
@@ -1184,8 +1223,9 @@ export default function ReportsPage({
             value={counts.pendientes}
             description="Casos pendientes de evaluación."
             icon={Clock3}
-            
-            
+            dashboard={isSuperAdmin}
+            color="text-amber-700 dark:text-amber-300"
+            glow="bg-amber-300/35 dark:bg-amber-500/20"
           />
 
           <StatCard
@@ -1193,8 +1233,9 @@ export default function ReportsPage({
             value={counts.revision}
             description="Incidentes bajo análisis."
             icon={Eye}
-            
-            
+            dashboard={isSuperAdmin}
+            color="text-sky-700 dark:text-sky-300"
+            glow="bg-sky-300/35 dark:bg-sky-500/20"
           />
 
           <StatCard
@@ -1202,8 +1243,9 @@ export default function ReportsPage({
             value={counts.resueltos}
             description="Casos con decisión registrada."
             icon={ClipboardCheck}
-            
-            
+            dashboard={isSuperAdmin}
+            color="text-emerald-700 dark:text-emerald-300"
+            glow="bg-emerald-300/35 dark:bg-emerald-500/20"
           />
         </div>
 
