@@ -314,6 +314,19 @@ export default function ProfilePage() {
     return Math.round((complete / fields.length) * 100);
   }, [form]);
 
+  const hasUnsavedChanges = useMemo(() => {
+    if (!user) return false;
+
+    const savedForm = profileToForm(user);
+    return (Object.keys(savedForm) as Array<keyof ProfileForm>).some(
+      (key) => form[key] !== savedForm[key],
+    );
+  }, [form, user]);
+
+  const suggestChileTimezone =
+    form.countryCode.trim().toUpperCase() === "CL" &&
+    form.timezone.trim() === "America/Sao_Paulo";
+
   const loadProfile = useCallback(async () => {
     try {
       setLoading(true);
@@ -901,16 +914,35 @@ export default function ProfilePage() {
                 placeholder="America/Santiago"
               />
             </div>
+
+            {suggestChileTimezone && (
+              <div className="vn-profile-timezone-hint" role="note">
+                <Clock3 size={18} aria-hidden="true" />
+                <p>
+                  El país indicado es Chile y la zona horaria actual es
+                  {" "}America/Sao_Paulo. Si utilizas el horario de Chile
+                  continental, puedes seleccionar America/Santiago.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => updateField("timezone", "America/Santiago")}
+                >
+                  Usar Santiago
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="vn-profile-save-bar sticky bottom-4 z-20 flex flex-col gap-3 rounded-[24px] border border-slate-200 bg-white/95 p-4 shadow-2xl shadow-slate-300/40 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between dark:border-white/10 dark:bg-[#0F172A]/95 dark:shadow-black/30">
-            <p className="text-sm text-slate-600 dark:text-slate-400">
-              Los cambios se aplicarán a tu perfil administrativo.
+            <p className="text-sm text-slate-600 dark:text-slate-400" aria-live="polite">
+              {hasUnsavedChanges
+                ? "Tienes cambios pendientes. Guárdalos para actualizar tu perfil."
+                : "Tu información está actualizada. No hay cambios pendientes."}
             </p>
 
             <button
               type="submit"
-              disabled={saving}
+              disabled={saving || !hasUnsavedChanges}
               className="vn-profile-save-button inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-violet-500 px-5 py-3 text-sm font-black text-white shadow-lg shadow-violet-500/20 transition hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {saving ? (
