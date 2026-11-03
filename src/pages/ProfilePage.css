@@ -491,3 +491,89 @@ html.dark .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-save-bar {
     transition:none !important;
   }
 }
+
+/* Ajustes tras revisión visual.
+   Mantiene el resumen de cuenta a la vista cuando la columna del formulario es larga. */
+@media (min-width:1081px) and (min-height:600px) {
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-sidebar {
+    position:sticky;
+    top:108px;
+    align-self:start;
+    max-height:calc(100dvh - 128px);
+    padding:1px 5px 5px 1px;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    scrollbar-width:thin;
+    scrollbar-color:var(--pf-line) transparent;
+  }
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-timezone-hint {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  margin-top:15px;
+  padding:12px 14px;
+  border:1px solid color-mix(in srgb,var(--pf-coral) 28%,var(--pf-line));
+  border-radius:13px;
+  background:var(--vn-coral-soft);
+  color:var(--pf-ink);
+  font-size:12px;
+  line-height:1.55;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-timezone-hint > svg {
+  flex-shrink:0;
+  color:var(--pf-strong);
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-timezone-hint > p {
+  flex:1 1 auto;
+  min-width:0;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-timezone-hint > button {
+  flex-shrink:0;
+  min-height:34px;
+  padding:7px 10px;
+  border:1px solid color-mix(in srgb,var(--pf-coral) 34%,var(--pf-line));
+  border-radius:9px;
+  background:var(--pf-surface);
+  color:var(--pf-strong);
+  font-size:11px;
+  font-weight:750;
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-timezone-hint > button:hover {
+  background:color-mix(in srgb,var(--vn-coral-soft) 65%,var(--pf-surface));
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-save-bar {
+  min-width:0;
+  max-width:100%;
+  box-shadow:0 9px 25px rgba(25,26,27,.1);
+}
+.vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-form :is(input,textarea) {
+  scroll-margin-bottom:100px;
+}
+@media (max-width:670px) {
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-save-bar {
+    position:static;
+    bottom:auto;
+    z-index:auto;
+    flex-direction:column;
+    align-items:stretch;
+    gap:9px;
+    padding:13px;
+    box-shadow:var(--vn-elevation);
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-save-bar > p {
+    text-align:center;
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-timezone-hint {
+    align-items:flex-start;
+    flex-wrap:wrap;
+    gap:9px;
+    padding:11px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-timezone-hint > p {
+    flex:1 1 calc(100% - 34px);
+  }
+  .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-timezone-hint > button {
+    margin-left:27px;
+  }
+}
