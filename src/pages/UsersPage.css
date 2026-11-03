@@ -1,0 +1,364 @@
+/* Usuarios de VibeNotas: misma identidad y tokens que Dashboard Superadmin.
+   Estilos locales para no modificar Administración ni el resto de la plataforma. */
+.vn-admin .vn-users-page {
+  --usr-surface:var(--vn-surface);
+  --usr-soft:var(--vn-surface-hover);
+  --usr-ink:var(--vn-ink);
+  --usr-muted:var(--vn-muted);
+  --usr-border:var(--vn-line);
+  --usr-coral:var(--vn-coral);
+  --usr-strong:var(--vn-coral-strong);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  min-width:0;
+  color:var(--usr-ink);
+}
+.vn-admin .vn-users-page .vn-users-hero {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  min-width:0;
+  padding:23px 26px;
+  border:1px solid color-mix(in srgb,var(--usr-coral) 26%,var(--usr-border));
+  border-radius:22px;
+  color:var(--usr-ink);
+  background:linear-gradient(115deg,var(--usr-surface),color-mix(in srgb,var(--vn-coral-soft) 64%,var(--usr-surface)));
+  box-shadow:var(--vn-elevation);
+}
+.vn-admin .vn-users-page .vn-users-heading {min-width:0;max-width:620px;}
+.vn-admin .vn-users-page .vn-users-eyebrow {
+  margin:0 0 8px;color:var(--usr-strong);
+  font-size:11px;font-weight:800;letter-spacing:.12em;
+}
+.vn-admin .vn-users-page .vn-users-heading h1 {
+  margin:0;color:var(--usr-ink);font-size:clamp(23px,2.4vw,31px);
+  line-height:1.15;letter-spacing:-.035em;font-weight:800;
+}
+.vn-admin .vn-users-page .vn-users-description {
+  margin:9px 0 0;color:var(--usr-muted);font-size:13px;line-height:1.6;
+}
+.vn-admin .vn-users-page .vn-users-actions {
+  flex-shrink:0;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px;
+}
+.vn-admin .vn-users-page .vn-users-actions button {
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:44px;padding:10px 15px;
+  border-radius:12px;border:1px solid var(--usr-border);
+  font-size:13px;font-weight:750;white-space:nowrap;
+  transition:background .18s,transform .18s,border-color .18s;
+}
+.vn-admin .vn-users-page .vn-users-export {color:var(--usr-ink);background:var(--usr-surface);}
+.vn-admin .vn-users-page .vn-users-export:hover:not(:disabled) {background:var(--usr-soft);}
+.vn-admin .vn-users-page .vn-users-create {
+  background:var(--usr-coral);border-color:var(--usr-coral) !important;color:white;
+}
+.vn-admin .vn-users-page .vn-users-create:hover {background:var(--usr-strong);transform:translateY(-1px);}
+.vn-admin .vn-users-page button:disabled {opacity:.55;cursor:not-allowed;}
+.vn-admin .vn-users-page button:focus-visible {outline:2px solid var(--usr-coral);outline-offset:3px;}
+/* Estadísticas: misma jerarquía visual y mini indicadores del Dashboard */
+.vn-admin .vn-users-page .vn-users-metrics {
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;
+}
+.vn-admin .vn-users-page .vn-users-metric {
+  display:flex;flex-direction:column;justify-content:space-between;
+  min-width:0;min-height:194px;padding:19px;
+  border:1px solid var(--usr-border);border-radius:23px;
+  background:var(--usr-surface);color:var(--usr-ink);box-shadow:var(--vn-elevation);
+}
+.vn-admin .vn-users-page .vn-users-metric-main {display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.vn-admin .vn-users-page .vn-users-metric-label {
+  font-size:13px;font-weight:650;line-height:1.35;letter-spacing:0;text-transform:none;color:var(--usr-muted);
+}
+.vn-admin .vn-users-page .vn-users-metric-value {
+  margin-top:12px;color:var(--usr-ink);font-size:32px;font-weight:800;
+  line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums;
+}
+.vn-admin .vn-users-page .vn-users-metric-helper {margin-top:12px;color:var(--usr-muted);font-size:12px;line-height:1.4;}
+.vn-admin .vn-users-page .vn-users-metric-icon {
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  height:49px;width:49px;border:0;border-radius:15px;padding:0;
+  color:var(--usr-strong);background:var(--vn-icon-bg);
+}
+.vn-admin .vn-users-page .vn-users-metric-footer {
+  display:flex;align-items:end;justify-content:space-between;gap:8px;padding-top:10px;
+}
+.vn-admin .vn-users-page .vn-users-metric-note {
+  display:inline-flex;align-items:center;min-height:26px;max-width:75%;
+  padding:6px 11px;border-radius:999px;
+  color:var(--vn-petroleum);background:color-mix(in srgb,var(--vn-petroleum) 13%,var(--usr-surface));
+  font-size:11px;font-weight:700;line-height:1.3;
+}
+.vn-admin .vn-users-page .vn-users-bars {display:flex;align-items:end;gap:4px;height:28px;flex-shrink:0;}
+.vn-admin .vn-users-page .vn-users-bars i {display:block;width:4px;height:11px;border-radius:3px;background:var(--usr-coral);opacity:.7;}
+.vn-admin .vn-users-page .vn-users-bars i:nth-child(2) {height:20px;opacity:.55;}
+.vn-admin .vn-users-page .vn-users-bars i:nth-child(3) {height:15px;}
+.vn-admin .vn-users-page .vn-users-bars i:nth-child(4) {height:26px;opacity:1;}
+.vn-admin .vn-users-page .vn-users-bars i:nth-child(5) {height:18px;}
+/* Barra de herramientas. Filtros sin grandes espacios vacíos. */
+.vn-admin .vn-users-page .vn-users-filters,
+.vn-admin .vn-users-page .vn-users-directory {
+  min-width:0;background:var(--usr-surface);
+  border:1px solid var(--usr-border);border-radius:22px;box-shadow:var(--vn-elevation);
+}
+.vn-admin .vn-users-page .vn-users-filters {padding:16px 19px;}
+.vn-admin .vn-users-page .vn-users-toolbar {display:flex;align-items:center;flex-wrap:wrap;gap:10px;}
+.vn-admin .vn-users-page .vn-users-search {
+  flex:1 1 340px;max-width:560px;min-width:190px;
+  display:flex;align-items:center;gap:10px;min-height:43px;
+  border:1px solid var(--usr-border);border-radius:12px;
+  padding:9px 13px;background:var(--usr-surface);color:var(--usr-muted);
+}
+.vn-admin .vn-users-page .vn-users-search input {color:var(--usr-ink);}
+.vn-admin .vn-users-page .vn-users-search input::placeholder {color:var(--usr-muted);opacity:1;}
+.vn-admin .vn-users-page .vn-users-search:focus-within {
+  border-color:var(--usr-coral);box-shadow:0 0 0 3px color-mix(in srgb,var(--usr-coral) 14%,transparent);
+}
+.vn-admin .vn-users-page .vn-users-refresh {
+  flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:43px;padding:9px 13px;border:1px solid var(--usr-border);
+  border-radius:12px;background:var(--vn-coral-soft);color:var(--usr-strong);
+  font-size:13px;font-weight:700;
+}
+.vn-admin .vn-users-page .vn-users-refresh:hover:not(:disabled) {border-color:var(--usr-coral);}
+.vn-admin .vn-users-page .vn-users-status-filters {
+  display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:13px;
+}
+.vn-admin .vn-users-page .vn-users-filter-label {
+  color:var(--usr-muted);font-size:11px;font-weight:800;letter-spacing:.065em;margin-right:6px;
+}
+.vn-admin .vn-users-page .vn-users-filter-chip {
+  border:1px solid transparent;border-radius:9px;
+  background:var(--usr-soft);color:var(--usr-ink);
+  padding:8px 11px;min-height:33px;font-size:12px;font-weight:650;
+}
+.vn-admin .vn-users-page .vn-users-filter-chip:hover:not(.is-active) {
+  border-color:var(--usr-border);background:var(--vn-coral-soft);
+}
+.vn-admin .vn-users-page .vn-users-filter-chip.is-active {
+  background:var(--usr-coral);color:#fff;border-color:var(--usr-coral);
+}
+/* Tabla y tarjetas móviles con contraste heredado del Dashboard */
+.vn-admin .vn-users-page .vn-users-directory {overflow:hidden;}
+.vn-admin .vn-users-page .vn-users-directory > div:first-child {
+  padding:18px 21px;border-color:var(--usr-border);
+}
+.vn-admin .vn-users-page .vn-users-directory h2 {color:var(--usr-ink);font-size:19px;font-weight:800;letter-spacing:-.02em;}
+.vn-admin .vn-users-page .vn-users-directory thead {background:var(--usr-soft);color:var(--usr-muted);}
+.vn-admin .vn-users-page .vn-users-directory th {padding:13px 20px;}
+.vn-admin .vn-users-page .vn-users-directory tbody tr {border-color:var(--usr-border);}
+.vn-admin .vn-users-page .vn-users-directory tbody tr:hover {background:var(--usr-soft);}
+.vn-admin .vn-users-page .vn-users-directory tbody td {padding:14px 20px;color:var(--usr-muted);}
+.vn-admin .vn-users-page .vn-users-directory tbody td p,
+.vn-admin .vn-users-page .vn-users-mobile-card p.font-semibold {color:var(--usr-ink);}
+.vn-admin .vn-users-page .vn-users-directory .text-slate-500,
+.vn-admin .vn-users-page .vn-users-directory .text-slate-600 {color:var(--usr-muted);}
+.vn-admin .vn-users-page .vn-users-mobile-card {
+  border:1px solid var(--usr-border);border-radius:16px;background:var(--usr-soft);
+}
+.vn-admin .vn-users-page .vn-users-avatar {
+  border-radius:13px;background:var(--usr-coral);color:#fff;box-shadow:none;
+}
+@media(max-width:1200px) {
+  .vn-admin .vn-users-page .vn-users-metrics {grid-template-columns:repeat(2,minmax(0,1fr));}
+  .vn-admin .vn-users-page .vn-users-hero {flex-direction:column;align-items:flex-start;gap:16px;}
+}
+@media(max-width:640px) {
+  .vn-admin .vn-users-page {gap:13px;}
+  .vn-admin .vn-users-page .vn-users-hero {padding:18px;border-radius:17px;}
+  .vn-admin .vn-users-page .vn-users-actions {width:100%;justify-content:stretch;}
+  .vn-admin .vn-users-page .vn-users-actions button {flex:1;white-space:normal;padding:10px 9px;}
+  .vn-admin .vn-users-page .vn-users-metrics {gap:9px;}
+  .vn-admin .vn-users-page .vn-users-metric {min-height:132px;padding:12px;border-radius:15px;}
+  .vn-admin .vn-users-page .vn-users-metric-label {font-size:11px;}
+  .vn-admin .vn-users-page .vn-users-metric-value {font-size:27px;}
+  .vn-admin .vn-users-page .vn-users-metric-icon {height:39px;width:39px;}
+  .vn-admin .vn-users-page .vn-users-metric-note {font-size:10px;}
+  .vn-admin .vn-users-page .vn-users-bars {display:none;}
+  .vn-admin .vn-users-page .vn-users-metric-note {min-height:22px;padding:5px 8px;font-size:10px;}
+  .vn-admin .vn-users-page .vn-users-filters {padding:12px;border-radius:16px;}
+  .vn-admin .vn-users-page .vn-users-search {max-width:none;flex:1 1 100%;}
+  .vn-admin .vn-users-page .vn-users-status-filters {gap:6px;}
+  .vn-admin .vn-users-page .vn-users-directory > div:first-child {padding:15px;}
+  .vn-admin .vn-users-page .vn-users-mobile-list {gap:9px;padding:11px;}
+  .vn-admin .vn-users-page .vn-users-mobile-card {padding:12px;}
+}
+@media(prefers-reduced-motion:reduce) {
+  .vn-admin .vn-users-page * {transition:none !important;}
+}
+
+
+
+/* Los cuatro diálogos comparten exactamente las superficies y tokens del Dashboard. */
+.vn-admin .vn-users-page .vn-users-modal-overlay {
+  background:rgba(18,21,23,.58);backdrop-filter:blur(5px);
+}
+.vn-admin .vn-users-page .vn-users-dialog {
+  min-width:0;max-height:calc(100dvh - 28px);
+  border:1px solid var(--usr-border);border-radius:20px;
+  color:var(--usr-ink);background:var(--usr-surface);
+  box-shadow:0 24px 64px rgba(20,22,24,.2);
+}
+.vn-admin .vn-users-page .vn-users-actions-dialog,
+.vn-admin .vn-users-page .vn-users-edit-dialog {
+  overflow-y:auto;overscroll-behavior:contain;
+}
+.vn-admin .vn-users-page .vn-users-details-dialog {
+  width:min(100%,470px);max-width:470px;
+  max-height:100dvh;height:100dvh;
+  overflow-y:auto;overscroll-behavior:contain;
+  border-radius:20px 0 0 20px;
+}
+.vn-admin .vn-users-page .vn-users-create-dialog {
+  display:flex;flex-direction:column;max-width:720px;
+  overflow:hidden;
+}
+.vn-admin .vn-users-page .vn-users-dialog-header {
+  flex:0 0 auto;border-bottom:1px solid var(--usr-border);
+  padding-bottom:14px;
+}
+.vn-admin .vn-users-page .vn-users-details-dialog .vn-users-dialog-header {
+  position:sticky;top:-24px;z-index:2;
+  padding-top:10px;background:var(--usr-surface);
+}
+.vn-admin .vn-users-page .vn-users-create-dialog > .vn-users-dialog-header {
+  padding:20px 24px;
+  background:linear-gradient(115deg,var(--usr-surface),color-mix(in srgb,var(--vn-coral-soft) 55%,var(--usr-surface)));
+}
+.vn-admin .vn-users-page .vn-users-modal-kicker {
+  color:var(--usr-strong);font-size:11px;font-weight:800;letter-spacing:.1em;
+}
+.vn-admin .vn-users-page .vn-users-create-dialog .vn-users-modal-kicker {
+  padding:6px 11px;border:1px solid color-mix(in srgb,var(--usr-coral) 28%,var(--usr-border));
+  border-radius:999px;background:var(--vn-coral-soft);
+}
+.vn-admin .vn-users-page .vn-users-dialog :is(h2,h3,.text-slate-950,.text-slate-900,.text-slate-800,.text-slate-700) {
+  color:var(--usr-ink);
+}
+.vn-admin .vn-users-page .vn-users-dialog :is(.text-slate-600,.text-slate-500,.text-slate-400),
+.vn-admin .vn-users-page .vn-users-dialog label > span {
+  color:var(--usr-muted);
+}
+.vn-admin .vn-users-page .vn-users-dialog h2 {
+  font-weight:800;letter-spacing:-.025em;
+}
+.vn-admin .vn-users-page .vn-users-dialog-close {
+  display:inline-flex;align-items:center;justify-content:center;
+  width:36px;height:36px;flex-shrink:0;padding:7px;
+  border:1px solid transparent;border-radius:11px;
+  background:transparent;color:var(--usr-muted);
+}
+.vn-admin .vn-users-page .vn-users-dialog-close:hover {
+  border-color:var(--usr-border);color:var(--usr-ink);background:var(--usr-soft);
+}
+.vn-admin .vn-users-page .vn-users-dialog input {
+  min-height:44px;border:1px solid var(--usr-border);
+  border-radius:12px;color:var(--usr-ink);
+  background:var(--usr-soft);caret-color:var(--usr-strong);
+}
+.vn-admin .vn-users-page .vn-users-dialog input::placeholder {
+  color:var(--usr-muted);opacity:.85;
+}
+.vn-admin .vn-users-page .vn-users-dialog input:focus {
+  border-color:var(--usr-coral);outline:2px solid var(--usr-coral);
+  outline-offset:1px;background:var(--usr-surface);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--usr-coral) 13%,transparent);
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-profile-summary,
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-profile-info-card {
+  border:1px solid var(--usr-border);border-radius:15px;
+  color:var(--usr-ink);background:var(--usr-soft);
+}
+.vn-admin .vn-users-page .vn-users-profile-summary {
+  margin-top:16px;padding:18px 14px;
+}
+.vn-admin .vn-users-page .vn-users-profile-info-card {padding:13px 15px;}
+.vn-admin .vn-users-page .vn-users-profile-info-card p.font-semibold,
+.vn-admin .vn-users-page .vn-users-profile-info-card p.text-slate-800 {
+  color:var(--usr-ink);
+}
+.vn-admin .vn-users-page .vn-users-profile-info-card p.text-slate-400 {
+  color:var(--usr-muted);
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-action-list {
+  margin-top:17px;gap:8px;
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-action-row {
+  display:flex;align-items:center;gap:12px;
+  padding:12px 13px;border:1px solid var(--usr-border);
+  border-radius:13px;background:var(--usr-soft);
+  color:var(--usr-ink);text-align:left;
+  transition:background .18s,border-color .18s;
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-action-row:hover:not(:disabled) {
+  border-color:color-mix(in srgb,var(--usr-coral) 31%,var(--usr-border));
+  background:color-mix(in srgb,var(--vn-coral-soft) 30%,var(--usr-surface));
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-action-row p.font-semibold {
+  color:var(--usr-ink);
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-action-row p.text-xs {
+  color:var(--usr-muted);
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-action-row svg.text-violet-700,
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-action-row svg.text-sky-700 {
+  color:var(--usr-strong);
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-action-row[class*="border-red-"] {
+  border-color:color-mix(in srgb,#ba4843 30%,var(--usr-border));
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-action-row[class*="border-red-"] :is(p.font-semibold,svg) {
+  color:#bb4943;
+}
+.vn-admin .vn-users-page .vn-users-create-dialog > form {
+  min-height:0;max-height:none;flex:1 1 auto;
+  overflow-y:auto;overscroll-behavior:contain;
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-info-notice {
+  border:1px solid color-mix(in srgb,var(--usr-coral) 26%,var(--usr-border));
+  border-radius:14px;padding:13px 15px;
+  background:var(--vn-coral-soft);
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-info-notice :is(p,svg) {
+  color:var(--usr-ink);
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-info-notice svg {
+  color:var(--usr-strong);
+}
+.vn-admin .vn-users-page .vn-users-form-footer {
+  padding-top:13px;border-top:1px solid var(--usr-border);
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-submit,
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-secondary {
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:43px;padding:9px 16px;border-radius:11px;
+  font-size:13px;font-weight:750;box-shadow:none;
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-submit {
+  color:#fff;background:var(--usr-coral);border:1px solid var(--usr-coral);
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-submit:hover:not(:disabled) {
+  background:var(--usr-strong);
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-secondary {
+  border:1px solid var(--usr-border);color:var(--usr-ink);background:var(--usr-soft);
+}
+.vn-admin .vn-users-page .vn-users-dialog .vn-users-secondary:hover:not(:disabled) {
+  background:var(--vn-coral-soft);
+}
+.vn-admin .vn-users-page .vn-users-dialog :is(button,input):focus-visible {
+  outline:2px solid var(--usr-coral);outline-offset:2px;
+}
+@media(max-width:640px) {
+  .vn-admin .vn-users-page .vn-users-modal-overlay {padding:8px;}
+  .vn-admin .vn-users-page .vn-users-dialog {
+    max-height:calc(100dvh - 16px);border-radius:17px;
+  }
+  .vn-admin .vn-users-page .vn-users-details-dialog {
+    width:100%;max-width:none;
+    max-height:100dvh;height:100dvh;border-radius:0;
+  }
+  .vn-admin .vn-users-page .vn-users-create-dialog > .vn-users-dialog-header {padding:16px;}
+  .vn-admin .vn-users-page .vn-users-profile-info-card {padding:12px;}
+}

@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 
 import api from "../services/api";
+import "./UsersPage.css";
 
 type Role = "admin" | "superadmin";
 
@@ -293,6 +294,21 @@ function getAxiosErrorMessage(
   );
 }
 
+function resolveUserAvatarUrl(value?: string | null): string | null {
+  const path = value?.trim();
+  if (!path) return null;
+  if (/^(https?:\/\/|blob:|data:)/i.test(path)) return path;
+  try {
+    const origin = new URL(
+      String(api.defaults.baseURL || window.location.origin),
+      window.location.origin,
+    ).origin;
+    return new URL(path, `${origin}/`).toString();
+  } catch {
+    return path;
+  }
+}
+
 function UserAvatar({
   user,
   large = false,
@@ -300,24 +316,23 @@ function UserAvatar({
   user: User;
   large?: boolean;
 }) {
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const url = resolveUserAvatarUrl(user.foto_perfil);
+
   return (
-    <div
-      className={`flex shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br from-sky-500 via-violet-600 to-fuchsia-600 font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 ${
-        large
-          ? "h-20 w-20 rounded-3xl text-xl"
-          : "h-11 w-11 rounded-2xl text-sm"
-      }`}
-    >
-      {user.foto_perfil ? (
+    <div className={`vn-superadmin-avatar vn-users-avatar flex shrink-0 items-center justify-center overflow-hidden rounded-xl font-extrabold text-white ${
+      large ? "h-20 w-20 text-xl" : "h-11 w-11 text-sm"
+    }`}>
+      {url && failedUrl !== url ? (
         <img
-          src={user.foto_perfil}
-          alt={user.nombre}
+          src={url}
+          alt={`Foto de ${user.nombre}`}
           className="h-full w-full object-cover"
+          loading="lazy"
+          onError={() => setFailedUrl(url)}
         />
       ) : (
-        getInitials(
-          user.nombre || "Usuario",
-        )
+        getInitials(user.nombre || "Usuario")
       )}
     </div>
   );
@@ -336,7 +351,7 @@ function StatusBadge({
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
+      className={`vn-users-status-badge inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
         active
           ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-400/15 dark:bg-emerald-500/10 dark:text-emerald-300"
           : pending
@@ -348,6 +363,8 @@ function StatusBadge({
     >
       {active ? (
         <UserRoundCheck size={13} />
+      ) : pending ? (
+        <MailCheck size={13} />
       ) : (
         <UserRoundX size={13} />
       )}
@@ -363,7 +380,7 @@ function VerificationBadge({
 }) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
+      className={`vn-users-verification-badge inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${
         verified
           ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-400/15 dark:bg-emerald-500/10 dark:text-emerald-300"
           : "border-slate-200 bg-slate-100 text-slate-600 dark:border-slate-400/10 dark:bg-slate-500/10 dark:text-slate-400"
@@ -1185,68 +1202,26 @@ export default function UsersPage({
   }
 
   return (
-    <section className="space-y-6 pb-10 text-slate-900 dark:text-white">
-      <header className="relative overflow-hidden rounded-[28px] border border-slate-200 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.12),transparent_38%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(248,250,252,0.98))] p-6 shadow-xl shadow-slate-200/60 sm:p-8 dark:border-white/10 dark:bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.16),transparent_38%),linear-gradient(135deg,rgba(30,41,59,0.96),rgba(15,23,42,0.96))] dark:shadow-2xl dark:shadow-black/20">
-        <div className="absolute -right-16 -top-20 h-52 w-52 rounded-full bg-sky-300/20 blur-3xl dark:bg-sky-500/10" />
-        <div className="absolute -bottom-24 left-1/3 h-52 w-52 rounded-full bg-violet-300/20 blur-3xl dark:bg-violet-500/10" />
-
-        <div className="relative flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-sky-700 dark:border-sky-400/15 dark:bg-sky-500/10 dark:text-sky-200">
-              <UsersRound size={14} />
-              Comunidad VibeNotas
-            </div>
-
-            <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-950 dark:text-white sm:text-4xl">
-              Usuarios
-            </h1>
-
-            <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600 dark:text-slate-400 sm:text-base">
-              Gestiona cuentas de usuario, verifica su estado de acceso y revisa información real de identidad y seguridad.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <button
-              type="button"
-              onClick={() =>
-                void exportExcel()
-              }
-              disabled={
-                filteredUsers.length ===
-                  0 || exporting
-              }
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-45 dark:border-white/10 dark:bg-white/[0.055] dark:text-slate-200 dark:hover:border-white/15 dark:hover:bg-white/10"
-            >
-              {exporting ? (
-                <RefreshCw
-                  size={17}
-                  className="animate-spin"
-                />
-              ) : (
-                <FileSpreadsheet
-                  size={18}
-                />
-              )}
-              {exporting
-                ? "Generando..."
-                : "Exportar Excel"}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setError("");
-                setSuccess("");
-                resetCreateForm();
-                setShowCreateModal(true);
-              }}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 transition hover:-translate-y-0.5 hover:brightness-110"
-            >
-              <UserPlus size={18} />
-              Nuevo usuario
-            </button>
-          </div>
+    <section className="vn-users-page pb-10 text-slate-900 dark:text-white">
+      <header className="vn-dashboard-hero vn-users-hero">
+        <div className="vn-users-heading">
+          <p className="vn-dashboard-hero-kicker vn-users-eyebrow">COMUNIDAD VIBENOTAS</p>
+          <h1>Gestión de usuarios</h1>
+          <p className="vn-users-description">
+            Supervisa la comunidad, consulta sus cuentas y gestiona el acceso con seguridad.
+          </p>
+        </div>
+        <div className="vn-users-actions">
+          <button type="button" className="vn-users-export"
+            onClick={() => void exportExcel()}
+            disabled={filteredUsers.length === 0 || exporting}>
+            {exporting ? <RefreshCw size={17} className="animate-spin"/> : <FileSpreadsheet size={18}/>}
+            {exporting ? "Generando..." : "Exportar Excel"}
+          </button>
+          <button type="button" className="vn-users-create"
+            onClick={() => {setError("");setSuccess("");resetCreateForm();setShowCreateModal(true);}}>
+            <UserPlus size={18}/> Nuevo usuario
+          </button>
         </div>
       </header>
 
@@ -1306,154 +1281,73 @@ export default function UsersPage({
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="vn-users-metrics">
         {[
-          {
-            label: "Usuarios totales",
-            value: totals.total,
-            helper: "Cuentas no administrativas",
-            icon: UsersRound,
-            tone:
-              "border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-400/15 dark:bg-violet-500/[0.07] dark:text-violet-300",
-          },
-          {
-            label: "Activos",
-            value: totals.active,
-            helper: "Acceso disponible",
-            icon: UserRoundCheck,
-            tone:
-              "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-400/15 dark:bg-emerald-500/[0.07] dark:text-emerald-300",
-          },
-          {
-            label: "Pendientes",
-            value: totals.pending,
-            helper: "Esperando verificación",
-            icon: MailCheck,
-            tone:
-              "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-400/15 dark:bg-sky-500/[0.07] dark:text-sky-300",
-          },
-          {
-            label: "Restringidos",
-            value: totals.restricted,
-            helper:
-              "Suspendidos o deshabilitados",
-            icon: ShieldOff,
-            tone:
-              "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-400/15 dark:bg-amber-500/[0.07] dark:text-amber-300",
-          },
-        ].map((item) => {
+          {label:"Usuarios totales",value:totals.total,helper:"Cuentas no administrativas",detail:"Comunidad registrada",icon:UsersRound},
+          {label:"Activos",value:totals.active,helper:"Acceso disponible",detail:"Cuentas habilitadas",icon:UserRoundCheck},
+          {label:"Pendientes",value:totals.pending,helper:"Esperando verificación",detail:totals.pending>0?"Requieren atención":"Al día",icon:MailCheck},
+          {label:"Restringidos",value:totals.restricted,helper:"Suspendidos o deshabilitados",detail:totals.restricted>0?"Revisar accesos":"Sin restricciones",icon:ShieldOff},
+        ].map(item => {
           const Icon = item.icon;
-
           return (
-            <article
-              key={item.label}
-              className={`rounded-2xl border p-5 ${item.tone}`}
-            >
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
-                    {item.label}
-                  </p>
-                  <p className="mt-2 text-3xl font-bold text-slate-950 dark:text-white">
-                    {item.value}
-                  </p>
+            <article key={item.label} className="vn-admin-stat-card vn-users-metric">
+              <div className="vn-users-metric-main">
+                <div className="min-w-0">
+                  <p className="vn-admin-stat-card-title vn-users-metric-label">{item.label}</p>
+                  <p className="vn-admin-stat-card-value vn-users-metric-value">{item.value}</p>
+                  <p className="vn-admin-stat-card-description vn-users-metric-helper">{item.helper}</p>
                 </div>
-
-                <div className="rounded-xl bg-white/70 p-2.5 ring-1 ring-black/5 dark:bg-white/[0.055] dark:ring-0">
-                  <Icon size={19} />
-                </div>
+                <div className="vn-admin-stat-card-icon vn-users-metric-icon"><Icon size={22}/></div>
               </div>
-
-              <p className="mt-4 text-xs font-medium text-slate-500">
-                {item.helper}
-              </p>
+              <div className="vn-users-metric-footer">
+                <span className="vn-users-metric-note">{item.detail}</span>
+                <span className="vn-users-bars" aria-hidden="true"><i/><i/><i/><i/><i/></span>
+              </div>
             </article>
           );
         })}
       </div>
 
-      <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-xl shadow-slate-200/50 backdrop-blur-xl sm:p-5 dark:border-white/10 dark:bg-[#172033]/85 dark:shadow-black/10">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-          <div className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 transition focus-within:border-violet-400 focus-within:bg-white dark:border-white/10 dark:bg-black/10 dark:focus-within:border-violet-400/35 dark:focus-within:bg-black/15">
-            <Search
-              size={18}
-              className="shrink-0 text-slate-500"
-            />
-
+      <div className="vn-users-filters">
+        <div className="vn-users-toolbar">
+          <div className="vn-users-search">
+            <Search size={18} className="shrink-0"/>
             <input
               value={search}
-              onChange={(event) =>
-                setSearch(
-                  event.target.value,
-                )
-              }
+              onChange={event => setSearch(event.target.value)}
               placeholder="Buscar por nombre, correo o ID"
-              className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-600"
+              aria-label="Buscar usuarios"
+              className="min-w-0 w-full bg-transparent text-sm outline-none"
             />
-
             {search && (
-              <button
-                type="button"
-                onClick={() =>
-                  setSearch("")
-                }
-                className="rounded-lg p-1 text-slate-500 transition hover:bg-slate-200 hover:text-slate-900 dark:hover:bg-white/10 dark:hover:text-white"
-                aria-label="Limpiar búsqueda"
-              >
-                <X size={16} />
+              <button type="button" onClick={() => setSearch("")} aria-label="Limpiar búsqueda">
+                <X size={16}/>
               </button>
             )}
           </div>
-
-          <button
-            type="button"
-            onClick={() =>
-              void loadUsers()
-            }
-            disabled={loading}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-4 py-2.5 text-sm font-semibold text-violet-700 transition hover:bg-violet-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-violet-400/15 dark:bg-violet-500/10 dark:text-violet-200 dark:hover:bg-violet-500/15"
-          >
-            <RefreshCw
-              size={17}
-              className={
-                loading
-                  ? "animate-spin"
-                  : ""
-              }
-            />
+          <button type="button" className="vn-users-refresh"
+            onClick={() => void loadUsers()} disabled={loading}>
+            <RefreshCw size={17} className={loading ? "animate-spin" : ""}/>
             Actualizar
           </button>
         </div>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {STATUS_FILTERS.map(
-            (filter) => (
-              <button
-                key={filter.key}
-                type="button"
-                onClick={() =>
-                  setStatusFilter(
-                    filter.key,
-                  )
-                }
-                className={`rounded-xl px-3.5 py-2 text-xs font-semibold transition sm:text-sm ${
-                  statusFilter ===
-                  filter.key
-                    ? "bg-violet-500 text-white shadow-lg shadow-violet-950/20"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-950 dark:bg-white/[0.045] dark:text-slate-400 dark:hover:bg-white/[0.08] dark:hover:text-white"
-                }`}
-              >
-                {filter.label}
-              </button>
-            ),
-          )}
+        <div className="vn-users-status-filters">
+          <span className="vn-users-filter-label">ESTADO</span>
+          {STATUS_FILTERS.map(filter => (
+            <button key={filter.key} type="button"
+              onClick={() => setStatusFilter(filter.key)}
+              aria-pressed={statusFilter === filter.key}
+              className={`vn-users-filter-chip ${statusFilter===filter.key ? "is-active" : ""}`}>
+              {filter.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-white/10 dark:bg-[#172033]/85 dark:shadow-black/10">
-        <div className="flex flex-col gap-3 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:border-white/10">
+      <div className="vn-dashboard-panel vn-users-directory overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-white/10 dark:bg-[#172033]/85 dark:shadow-black/10">
+        <div className="vn-users-list-header flex flex-col gap-3 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:border-white/10">
           <div>
-            <p className="text-sm font-semibold text-sky-700 dark:text-sky-300">
+            <p className="vn-dashboard-kicker text-sm font-semibold">
               Comunidad
             </p>
             <h2 className="mt-1 text-xl font-bold text-slate-950 dark:text-white">
@@ -1604,12 +1498,12 @@ export default function UsersPage({
               </table>
             </div>
 
-            <div className="grid gap-3 p-4 lg:hidden">
+            <div className="vn-users-mobile-list grid gap-3 p-4 lg:hidden">
               {filteredUsers.map(
                 (user) => (
                   <article
                     key={user.id}
-                    className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]"
+                    className="vn-superadmin-recent-user vn-users-mobile-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]"
                   >
                     <div className="flex items-start gap-3">
                       <UserAvatar
@@ -1685,7 +1579,7 @@ export default function UsersPage({
 
       {showActionsModal &&
         userForActions && (
-          <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/70 p-3 backdrop-blur-sm sm:items-center sm:p-4">
+          <div className="vn-users-modal-overlay fixed inset-0 z-[80] flex items-end justify-center bg-black/70 p-3 backdrop-blur-sm sm:items-center sm:p-4">
             <button
               type="button"
               onClick={closeActions}
@@ -1693,8 +1587,8 @@ export default function UsersPage({
               aria-label="Cerrar acciones"
             />
 
-            <div className="relative z-10 w-full max-w-md rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
-              <div className="flex items-start gap-3">
+            <div role="dialog" aria-modal="true" aria-label="Acciones de usuario" className="vn-dashboard-panel vn-users-dialog vn-users-actions-dialog relative z-10 w-full max-w-md rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
+              <div className="vn-users-dialog-header flex items-start gap-3">
                 <UserAvatar
                   user={userForActions}
                 />
@@ -1719,14 +1613,14 @@ export default function UsersPage({
                 <button
                   type="button"
                   onClick={closeActions}
-                  className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
+                  className="vn-users-dialog-close rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
                   aria-label="Cerrar"
                 >
                   <X size={19} />
                 </button>
               </div>
 
-              <div className="mt-6 grid gap-2.5">
+              <div className="vn-users-action-list mt-5 grid gap-2">
                 <button
                   type="button"
                   onClick={() =>
@@ -1734,7 +1628,7 @@ export default function UsersPage({
                       userForActions,
                     )
                   }
-                  className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-left text-slate-800 transition hover:bg-slate-100 dark:border-white/10 dark:bg-white/[0.035] dark:text-slate-200 dark:hover:bg-white/[0.07]"
+                  className="vn-users-action-row flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-left text-slate-800 transition hover:bg-slate-100 dark:border-white/10 dark:bg-white/[0.035] dark:text-slate-200 dark:hover:bg-white/[0.07]"
                 >
                   <UserRound
                     size={19}
@@ -1757,7 +1651,7 @@ export default function UsersPage({
                       userForActions,
                     )
                   }
-                  className="flex items-center gap-3 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-left text-sky-900 transition hover:bg-sky-100 dark:border-sky-400/15 dark:bg-sky-500/[0.07] dark:text-sky-100 dark:hover:bg-sky-500/10"
+                  className="vn-users-action-row flex items-center gap-3 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-left text-sky-900 transition hover:bg-sky-100 dark:border-sky-400/15 dark:bg-sky-500/[0.07] dark:text-sky-100 dark:hover:bg-sky-500/10"
                 >
                   <Pencil
                     size={19}
@@ -1781,7 +1675,7 @@ export default function UsersPage({
                       userForActions,
                     )
                   }
-                  className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3.5 text-left text-amber-900 transition hover:bg-amber-100 disabled:opacity-50 dark:border-amber-400/15 dark:bg-amber-500/[0.07] dark:text-amber-100 dark:hover:bg-amber-500/10"
+                  className="vn-users-action-row flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3.5 text-left text-amber-900 transition hover:bg-amber-100 disabled:opacity-50 dark:border-amber-400/15 dark:bg-amber-500/[0.07] dark:text-amber-100 dark:hover:bg-amber-500/10"
                 >
                   {userForActions.estado ===
                   "ACTIVE" ? (
@@ -1818,7 +1712,7 @@ export default function UsersPage({
                         userForActions,
                       )
                     }
-                    className="flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3.5 text-left text-red-900 transition hover:bg-red-100 disabled:opacity-50 dark:border-red-400/15 dark:bg-red-500/[0.07] dark:text-red-100 dark:hover:bg-red-500/10"
+                    className="vn-users-action-row flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3.5 text-left text-red-900 transition hover:bg-red-100 disabled:opacity-50 dark:border-red-400/15 dark:bg-red-500/[0.07] dark:text-red-100 dark:hover:bg-red-500/10"
                   >
                     <UserRoundX
                       size={19}
@@ -1840,7 +1734,7 @@ export default function UsersPage({
         )}
 
       {selectedUser && (
-        <div className="fixed inset-0 z-[75] flex justify-end bg-black/70 backdrop-blur-sm">
+        <div className="vn-users-modal-overlay fixed inset-0 z-[75] flex justify-end bg-black/70 backdrop-blur-sm">
           <button
             type="button"
             onClick={() =>
@@ -1850,10 +1744,10 @@ export default function UsersPage({
             aria-label="Cerrar panel"
           />
 
-          <aside className="relative z-10 flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#101827] dark:shadow-black/60">
-            <div className="flex items-start justify-between gap-4">
+          <aside role="dialog" aria-modal="true" aria-label="Perfil de usuario" className="vn-dashboard-panel vn-users-dialog vn-users-details-dialog relative z-10 flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#101827] dark:shadow-black/60">
+            <div className="vn-users-dialog-header flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-sky-700 dark:text-sky-300">
+                <p className="vn-users-modal-kicker text-xs font-bold uppercase tracking-[0.14em] text-sky-700 dark:text-sky-300">
                   Perfil de usuario
                 </p>
                 <h2 className="mt-2 text-2xl font-bold text-slate-950 dark:text-white">
@@ -1869,14 +1763,14 @@ export default function UsersPage({
                 onClick={() =>
                   setSelectedUser(null)
                 }
-                className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
+                className="vn-users-dialog-close rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
                 aria-label="Cerrar"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <div className="mt-7 rounded-3xl border border-slate-200 bg-slate-50 p-6 text-center dark:border-white/10 dark:bg-white/[0.03]">
+            <div className="vn-users-profile-summary mt-7 rounded-3xl border border-slate-200 bg-slate-50 p-6 text-center dark:border-white/10 dark:bg-white/[0.03]">
               <div className="flex justify-center">
                 <UserAvatar
                   user={selectedUser}
@@ -1898,8 +1792,8 @@ export default function UsersPage({
               </div>
             </div>
 
-            <div className="mt-5 grid gap-3">
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+            <div className="vn-users-profile-info mt-4 grid gap-2.5">
+              <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500">
                   <CalendarDays size={15} />
                   Fecha de registro
@@ -1911,7 +1805,7 @@ export default function UsersPage({
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+              <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Último acceso
                 </p>
@@ -1922,7 +1816,7 @@ export default function UsersPage({
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+              <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   MFA
                 </p>
@@ -1933,7 +1827,7 @@ export default function UsersPage({
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+              <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Roles activos
                 </p>
@@ -1950,7 +1844,7 @@ export default function UsersPage({
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+              <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Identificador
                 </p>
@@ -1963,7 +1857,7 @@ export default function UsersPage({
             <div className="mt-6 border-t border-slate-200 pt-6 dark:border-white/10">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-violet-700 dark:text-violet-300">
+                  <p className="vn-users-modal-kicker text-xs font-bold uppercase tracking-[0.14em] text-violet-700 dark:text-violet-300">
                     Actividad en VibeNotas
                   </p>
 
@@ -2012,7 +1906,7 @@ export default function UsersPage({
               ) : activitySummary ? (
                 <div className="mt-4 space-y-4">
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                  <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                     <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">
                       Contenido
                     </p>
@@ -2061,7 +1955,7 @@ export default function UsersPage({
                   </div>
 
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                  <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                     <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">
                       Productividad
                     </p>
@@ -2109,7 +2003,7 @@ export default function UsersPage({
                   </div>
 
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                  <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                     <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">
                       Social
                     </p>
@@ -2145,7 +2039,7 @@ export default function UsersPage({
                   </div>
 
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
+                  <div className="vn-users-profile-info-card rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.025]">
                     <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">
                       Comunicación
                     </p>
@@ -2191,7 +2085,7 @@ export default function UsersPage({
 
       {showEditModal &&
         userToEdit && (
-          <div className="fixed inset-0 z-[90] flex items-end justify-center bg-black/70 p-3 backdrop-blur-sm sm:items-center sm:p-4">
+          <div className="vn-users-modal-overlay fixed inset-0 z-[90] flex items-end justify-center bg-black/70 p-3 backdrop-blur-sm sm:items-center sm:p-4">
             <button
               type="button"
               onClick={() => {
@@ -2202,17 +2096,17 @@ export default function UsersPage({
               aria-label="Cerrar edición"
             />
 
-            <div className="relative z-10 w-full max-w-lg rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
-              <div className="flex items-start justify-between gap-4">
+            <div role="dialog" aria-modal="true" aria-label="Editar usuario" className="vn-dashboard-panel vn-users-dialog vn-users-edit-dialog relative z-10 w-full max-w-lg rounded-[28px] border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-400/30 sm:p-6 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
+              <div className="vn-users-dialog-header flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-sky-700 dark:text-sky-300">
+                  <p className="vn-users-modal-kicker text-xs font-bold uppercase tracking-[0.14em] text-sky-700 dark:text-sky-300">
                     Identidad
                   </p>
                   <h2 className="mt-2 text-xl font-bold text-slate-950 dark:text-white">
                     Editar usuario
                   </h2>
                   <p className="mt-1 text-sm leading-5 text-slate-500">
-                    Actualiza nombre o correo con los campos admitidos por el backend.
+                    Actualiza el nombre visible o el correo electrónico de esta cuenta.
                   </p>
                 </div>
 
@@ -2222,7 +2116,7 @@ export default function UsersPage({
                     setShowEditModal(false);
                     setUserToEdit(null);
                   }}
-                  className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
+                  className="vn-users-dialog-close rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
                   aria-label="Cerrar"
                 >
                   <X size={20} />
@@ -2269,14 +2163,14 @@ export default function UsersPage({
                   </p>
                 </div>
 
-                <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                <div className="vn-users-form-footer flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                   <button
                     type="button"
                     onClick={() => {
                       setShowEditModal(false);
                       setUserToEdit(null);
                     }}
-                    className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 dark:hover:bg-white/[0.08] dark:hover:text-white"
+                    className="vn-users-secondary rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 dark:hover:bg-white/[0.08] dark:hover:text-white"
                   >
                     Cancelar
                   </button>
@@ -2284,7 +2178,7 @@ export default function UsersPage({
                   <button
                     type="submit"
                     disabled={saving}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55"
+                    className="vn-users-submit inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55"
                   >
                     {saving ? (
                       <RefreshCw
@@ -2305,7 +2199,7 @@ export default function UsersPage({
         )}
 
       {showCreateModal && (
-        <div className="fixed inset-0 z-[95] flex items-end justify-center bg-black/70 p-3 backdrop-blur-sm sm:items-center sm:p-4">
+        <div className="vn-users-modal-overlay fixed inset-0 z-[95] flex items-end justify-center bg-black/70 p-3 backdrop-blur-sm sm:items-center sm:p-4">
           <button
             type="button"
             onClick={() => {
@@ -2317,11 +2211,11 @@ export default function UsersPage({
             aria-label="Cerrar creación"
           />
 
-          <div className="relative z-10 w-full max-w-2xl overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-2xl shadow-slate-400/30 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
-            <div className="border-b border-slate-200 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.12),transparent_42%),rgba(248,250,252,0.9)] p-5 sm:p-6 dark:border-white/10 dark:bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.18),transparent_42%),rgba(15,23,42,0.45)]">
+          <div role="dialog" aria-modal="true" aria-label="Crear usuario" className="vn-dashboard-panel vn-users-dialog vn-users-create-dialog relative z-10 w-full max-w-2xl overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-2xl shadow-slate-400/30 dark:border-white/10 dark:bg-[#172033] dark:shadow-black/60">
+            <div className="vn-users-dialog-header border-b border-slate-200 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.12),transparent_42%),rgba(248,250,252,0.9)] p-5 sm:p-6 dark:border-white/10 dark:bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.18),transparent_42%),rgba(15,23,42,0.45)]">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1.5 text-xs font-bold text-sky-700 dark:border-sky-400/15 dark:bg-sky-500/10 dark:text-sky-200">
+                  <div className="vn-users-modal-kicker inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1.5 text-xs font-bold text-sky-700 dark:border-sky-400/15 dark:bg-sky-500/10 dark:text-sky-200">
                     <UserPlus size={14} />
                     Nueva cuenta
                   </div>
@@ -2331,7 +2225,7 @@ export default function UsersPage({
                   </h2>
 
                   <p className="mt-2 max-w-xl text-sm leading-6 text-slate-400">
-                    Registra una cuenta real usando el flujo de autenticación actual de VibeNotas.
+                    Crea una cuenta de usuario y establece sus datos de acceso.
                   </p>
                 </div>
 
@@ -2341,7 +2235,7 @@ export default function UsersPage({
                   onClick={() =>
                     setShowCreateModal(false)
                   }
-                  className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-40 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
+                  className="vn-users-dialog-close rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-40 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
                   aria-label="Cerrar"
                 >
                   <X size={20} />
@@ -2462,7 +2356,7 @@ export default function UsersPage({
                 />
               </label>
 
-              <div className="mt-5 flex items-start gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 dark:border-sky-400/15 dark:bg-sky-500/[0.06]">
+              <div className="vn-users-info-notice mt-5 flex items-start gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 dark:border-sky-400/15 dark:bg-sky-500/[0.06]">
                 <Info
                   size={18}
                   className="mt-0.5 shrink-0 text-sky-300"
@@ -2477,14 +2371,14 @@ export default function UsersPage({
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-col-reverse gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:justify-end dark:border-white/10">
+              <div className="vn-users-form-footer mt-6 flex flex-col-reverse gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:justify-end dark:border-white/10">
                 <button
                   type="button"
                   disabled={creating}
                   onClick={() =>
                     setShowCreateModal(false)
                   }
-                  className="rounded-xl bg-slate-100 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-200 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-45 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:bg-white/10"
+                  className="vn-users-secondary rounded-xl bg-slate-100 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-200 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-45 dark:bg-white/[0.06] dark:text-slate-200 dark:hover:bg-white/10"
                 >
                   Cancelar
                 </button>
@@ -2492,7 +2386,7 @@ export default function UsersPage({
                 <button
                   type="submit"
                   disabled={creating}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55"
+                  className="vn-users-submit inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-300/30 dark:shadow-violet-950/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-55"
                 >
                   {creating ? (
                     <RefreshCw
