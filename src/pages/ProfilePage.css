@@ -408,9 +408,17 @@
   opacity:.55;
   cursor:not-allowed;
 }
-.vn-admin.vn-superadmin-layout .vn-profile-error .vn-profile-retry {
+.vn-admin.vn-superadmin-layout .vn-profile-page.vn-profile-error .vn-profile-retry {
   background:var(--pf-coral);
   color:#fff;
+}
+html.dark .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-identity .mt-4.flex.flex-wrap > span:nth-child(2) {
+  border-color:#2d6f58;
+  background:#1d392e;
+  color:#a9ebcd;
+}
+html.dark .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-save-bar {
+  background:color-mix(in srgb,var(--pf-surface) 95%,transparent);
 }
 @media(max-width:1080px) {
   .vn-admin.vn-superadmin-layout .vn-profile-page .vn-profile-body {
