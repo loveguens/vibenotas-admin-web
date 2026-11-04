@@ -1,0 +1,576 @@
+/* Etiquetas · panel Superadmin.
+   Estilos locales: no afectan Etiquetas de Admin ni las otras pantallas. */
+.vn-admin.vn-superadmin-layout .vn-tags-page {
+  --tag-surface:var(--vn-surface);
+  --tag-soft:var(--vn-surface-hover);
+  --tag-line:var(--vn-line);
+  --tag-ink:var(--vn-ink);
+  --tag-muted:var(--vn-muted);
+  --tag-coral:var(--vn-coral);
+  --tag-strong:var(--vn-coral-strong);
+  width:100%;
+  max-width:1320px;
+  margin:0 auto;
+  min-width:0;
+  color:var(--tag-ink);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-content {
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+  min-width:0;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-content > * {
+  margin-top:0;
+  margin-bottom:0;
+}
+/* Encabezado ejecutivo compacto, como Usuarios y Reportes. */
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-hero {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  padding:22px 25px;
+  border:1px solid color-mix(in srgb,var(--tag-coral) 26%,var(--tag-line));
+  border-radius:21px;
+  background:linear-gradient(115deg,var(--tag-surface),color-mix(in srgb,var(--vn-coral-soft) 64%,var(--tag-surface)));
+  box-shadow:var(--vn-elevation);
+  color:var(--tag-ink);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-hero > div:first-child {
+  min-width:0;
+  max-width:670px;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-eyebrow {
+  margin:0;
+  color:var(--tag-strong);
+  font-size:11px;
+  font-weight:800;
+  line-height:1.4;
+  letter-spacing:.115em;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-title {
+  margin-top:7px;
+  color:var(--tag-ink);
+  font-size:clamp(23px,2.5vw,31px);
+  font-weight:800;
+  line-height:1.2;
+  letter-spacing:-.035em;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-description {
+  margin-top:8px;
+  color:var(--tag-muted);
+  font-size:13px;
+  line-height:1.55;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-actions {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-end;
+  gap:9px;
+  flex-shrink:0;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-actions button {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-height:42px;
+  padding:9px 14px;
+  border-radius:11px;
+  border:1px solid var(--tag-line);
+  font-size:12px;
+  font-weight:750;
+  white-space:nowrap;
+  box-shadow:none;
+  transition:background .18s,border-color .18s;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-refresh {
+  color:var(--tag-ink);
+  background:var(--tag-surface);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-refresh:hover:not(:disabled) {
+  background:var(--tag-soft);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-create {
+  color:#fff;
+  border-color:var(--tag-coral) !important;
+  background:var(--tag-coral);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-create:hover:not(:disabled) {
+  background:var(--tag-strong);
+  border-color:var(--tag-strong) !important;
+}
+/* Buscador y filtros usan el ancho sin dejar columnas huecas. */
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-toolbar {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:10px;
+  padding:12px 14px;
+  border:1px solid var(--tag-line);
+  border-radius:18px;
+  background:var(--tag-surface);
+  box-shadow:var(--vn-elevation);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-toolbar:hover {
+  transform:none;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-search {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  flex:1 1 310px;
+  min-width:190px;
+  width:auto;
+  min-height:42px;
+  padding:9px 12px;
+  border:1px solid var(--tag-line);
+  border-radius:11px;
+  background:var(--tag-soft);
+  color:var(--tag-muted);
+  box-shadow:none;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-search:focus-within {
+  border-color:var(--tag-coral);
+  outline:2px solid color-mix(in srgb,var(--tag-coral) 25%,transparent);
+  outline-offset:1px;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-search input {
+  flex:1 1 auto;
+  min-width:0;
+  width:100%;
+  border:0;
+  padding:0;
+  background:transparent;
+  color:var(--tag-ink);
+  font-size:13px;
+  outline:none;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-search input::placeholder {
+  color:var(--tag-muted);
+  opacity:.9;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-clear {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  width:25px;
+  height:25px;
+  border-radius:7px;
+  color:var(--tag-muted);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-clear:hover {
+  background:var(--tag-surface);
+  color:var(--tag-ink);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-filters {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:6px;
+  flex:0 1 auto;
+  min-width:0;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-filters button {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  min-height:34px;
+  padding:7px 10px;
+  border:1px solid transparent;
+  border-radius:9px;
+  background:var(--tag-soft);
+  color:var(--tag-ink);
+  font-size:11px;
+  font-weight:750;
+  white-space:nowrap;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-filters button span {
+  padding:2px 6px;
+  border-radius:6px;
+  background:color-mix(in srgb,var(--tag-ink) 7%,transparent);
+  color:inherit;
+  font-variant-numeric:tabular-nums;
+  font-size:10px;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-filters button[aria-pressed="true"] {
+  background:var(--tag-coral);
+  color:#fff;
+  border-color:var(--tag-coral);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-filters button[aria-pressed="true"] span {
+  background:rgba(255,255,255,.18);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-filters button:hover:not([aria-pressed="true"]) {
+  background:var(--vn-coral-soft);
+  color:var(--tag-strong);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-visible {
+  flex:0 0 auto;
+  padding-left:2px;
+  color:var(--tag-muted);
+  font-size:11px;
+  font-weight:650;
+  white-space:nowrap;
+}
+/* Tarjetas de etiquetas: legibles, sin sombras ni huecos excesivos. */
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));
+  align-items:stretch;
+  gap:13px;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-item {
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  min-height:168px;
+  padding:17px 18px;
+  border:1px solid var(--tag-line);
+  border-radius:18px;
+  background:var(--tag-surface);
+  box-shadow:var(--vn-elevation);
+  color:var(--tag-ink);
+  transition:border-color .17s,background .17s;
+  transform:none;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-item:hover {
+  transform:none;
+  border-color:color-mix(in srgb,var(--tag-coral) 37%,var(--tag-line));
+  background:var(--tag-surface);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-swatch {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:41px;
+  height:41px;
+  flex:0 0 auto;
+  border-radius:12px;
+  color:white;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-swatch svg {
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.25));
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-item-actions {
+  align-items:center;
+  gap:4px;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page :is(.vn-tags-edit,.vn-tags-delete) {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:34px;
+  height:34px;
+  padding:0;
+  border:1px solid var(--tag-line);
+  border-radius:9px;
+  background:var(--tag-soft);
+  color:var(--tag-muted);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-edit:hover {
+  border-color:color-mix(in srgb,var(--tag-coral) 30%,var(--tag-line));
+  color:var(--tag-strong);
+  background:var(--vn-coral-soft);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-delete:hover {
+  color:#c13c35;
+  background:#fbe7e4;
+  border-color:#f2c3bd;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-item-name {
+  margin-top:12px;
+  color:var(--tag-ink);
+  font-size:16px;
+  line-height:1.25;
+  font-weight:800;
+  overflow-wrap:anywhere;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-item-count {
+  margin-top:4px;
+  color:var(--tag-muted);
+  font-size:12px;
+  line-height:1.4;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-item-footer {
+  margin-top:auto;
+  padding-top:15px;
+  gap:9px;
+  color:var(--tag-muted);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-item-footer code {
+  color:var(--tag-muted);
+  font-size:11px;
+  letter-spacing:.04em;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-item-footer > span {
+  border:1px solid color-mix(in srgb,var(--tag-ink) 9%,transparent);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-skeleton {
+  border:1px solid var(--tag-line);
+  border-radius:18px;
+  background:var(--tag-soft);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-empty {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:185px;
+  padding:26px;
+  border:1px dashed var(--tag-line);
+  border-radius:18px;
+  background:var(--tag-surface);
+  color:var(--tag-muted);
+  font-size:13px;
+  line-height:1.5;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-empty svg {
+  color:var(--tag-strong);
+}
+/* Estados y editor de etiquetas. */
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-feedback {
+  padding:14px 17px;
+  border-radius:14px;
+  font-size:12px;
+  line-height:1.5;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-error {
+  color:#a92d26;
+  border:1px solid #f0c5bd;
+  background:#fff0ed;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-error p,
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-success p {color:inherit;}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-success {
+  color:#176348;
+  border:1px solid #c6e4d2;
+  background:#ebf8ee;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-modal-overlay {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px;
+  background:rgba(12,16,18,.62);
+  backdrop-filter:blur(5px);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-modal {
+  width:min(100%,480px);
+  max-height:calc(100dvh - 28px);
+  overflow-y:auto;
+  padding:24px;
+  border:1px solid var(--tag-line);
+  border-radius:20px;
+  background:var(--tag-surface);
+  box-shadow:0 25px 75px rgba(0,0,0,.24);
+  color:var(--tag-ink);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-modal-eyebrow {
+  color:var(--tag-strong);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.04em;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-modal-title {
+  margin-top:4px;
+  color:var(--tag-ink);
+  font-size:23px;
+  font-weight:800;
+  letter-spacing:-.025em;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-modal-close {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:35px;
+  height:35px;
+  padding:0;
+  border:1px solid var(--tag-line);
+  border-radius:9px;
+  background:var(--tag-soft);
+  color:var(--tag-muted);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-modal-close:hover {
+  color:var(--tag-ink);
+  background:var(--tag-soft);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-form {
+  margin-top:23px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-form > * {
+  margin-top:0;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-form label {
+  color:var(--tag-ink);
+  font-size:12px;
+  font-weight:750;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-form input:not([type="color"]) {
+  display:block;
+  width:100%;
+  min-height:43px;
+  margin-top:7px;
+  padding:10px 13px;
+  border:1px solid var(--tag-line);
+  border-radius:11px;
+  background:var(--tag-soft);
+  color:var(--tag-ink);
+  font-size:13px;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-form input:not([type="color"])::placeholder {
+  color:var(--tag-muted);
+  opacity:.8;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-form input:focus-visible {
+  outline:2px solid var(--tag-coral);
+  outline-offset:1px;
+  border-color:var(--tag-coral);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-form input[type="color"] {
+  width:53px;
+  height:43px;
+  flex:0 0 auto;
+  margin-top:7px;
+  padding:3px;
+  border:1px solid var(--tag-line);
+  border-radius:10px;
+  background:var(--tag-soft);
+  cursor:pointer;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-form .flex.gap-3 {
+  align-items:center;
+  gap:11px;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-form .flex.gap-3 input:not([type="color"]) {
+  min-width:0;
+  flex:1 1 auto;
+  margin-top:7px;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-modal-error {
+  padding:10px 12px;
+  border:1px solid #edb9b1;
+  border-radius:11px;
+  background:#fff0ed;
+  color:#a52f25;
+  font-size:12px;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-save {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-height:43px;
+  margin-top:4px;
+  padding:10px 16px;
+  border:1px solid var(--tag-coral);
+  border-radius:11px;
+  background:var(--tag-coral);
+  color:#fff;
+  font-size:13px;
+  font-weight:800;
+  box-shadow:none;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-save:hover:not(:disabled) {
+  background:var(--tag-strong);
+  border-color:var(--tag-strong);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page button:focus-visible {
+  outline:2px solid var(--tag-coral);
+  outline-offset:2px;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page button:disabled {
+  opacity:.5;
+  cursor:not-allowed;
+}
+html.dark .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-error,
+html.dark .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-modal-error {
+  color:#ffb4a8;
+  border-color:#763c37;
+  background:#3b2929;
+}
+html.dark .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-success {
+  color:#a6e6c5;
+  border-color:#36644c;
+  background:#20362d;
+}
+html.dark .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-delete:hover {
+  color:#ffafa7;
+  border-color:#7e3f3b;
+  background:#3d2929;
+}
+@media(max-width:1050px) {
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-toolbar {
+    gap:8px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-search {
+    flex-basis:100%;
+  }
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-filters {
+    flex:1 1 auto;
+  }
+}
+@media(max-width:660px) {
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-content {
+    gap:12px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-hero {
+    align-items:stretch;
+    flex-direction:column;
+    gap:16px;
+    padding:17px;
+    border-radius:17px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-title {font-size:25px;}
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-description {font-size:12px;}
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-actions {
+    width:100%;
+    justify-content:stretch;
+  }
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-actions button {
+    flex:1 1 auto;
+  }
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-toolbar {
+    padding:11px;
+    border-radius:16px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-search {
+    min-width:0;
+  }
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-filters {
+    gap:5px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-filters button {
+    gap:4px;
+    min-height:33px;
+    padding:6px 8px;
+    font-size:10px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-visible {
+    margin-left:auto;
+  }
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-grid {
+    gap:10px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-item {
+    padding:15px;
+    min-height:156px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-modal {
+    padding:18px;
+    border-radius:17px;
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  .vn-admin.vn-superadmin-layout .vn-tags-page * {
+    transition:none !important;
+  }
+}
