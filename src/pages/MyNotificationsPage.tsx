@@ -1154,9 +1154,9 @@ export default function MyNotificationsPage() {
                   <span>Actualizar</span>
                 </button>
               </div>
-              <div className="vn-myn-filter-row">
+              <div className="vn-myn-filter-row flex flex-wrap items-center gap-2">
                 <span className="vn-myn-filter-label">Lectura</span>
-                <div className="vn-myn-filter-options" role="group" aria-label="Filtrar por lectura">
+                <div className="vn-myn-filter-options flex flex-wrap items-center gap-2" role="group" aria-label="Filtrar por lectura">
                   {READ_FILTERS.map((filter) => (
                     <button
                       key={filter.key}
@@ -1171,9 +1171,9 @@ export default function MyNotificationsPage() {
                 </div>
               </div>
               {availableTypes.length > 1 && (
-                <div className="vn-myn-type-row">
+                <div className="vn-myn-type-row flex flex-wrap items-center gap-2">
                   <span className="vn-myn-filter-label">Tipo</span>
-                  <div className="vn-myn-filter-options" role="group" aria-label="Filtrar por tipo">
+                  <div className="vn-myn-filter-options flex flex-wrap items-center gap-2" role="group" aria-label="Filtrar por tipo">
                     <button
                       type="button"
                       onClick={() => setTypeFilter("todos")}
