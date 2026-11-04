@@ -1154,7 +1154,8 @@ export default function MyNotificationsPage() {
                   <span>Actualizar</span>
                 </button>
               </div>
-              <div className="vn-myn-filter-row flex flex-wrap items-center gap-2">
+              <div className="vn-myn-filter-groups">
+                <div className="vn-myn-filter-row flex flex-wrap items-center gap-2">
                 <span className="vn-myn-filter-label">Lectura</span>
                 <div className="vn-myn-filter-options flex flex-wrap items-center gap-2" role="group" aria-label="Filtrar por lectura">
                   {READ_FILTERS.map((filter) => (
@@ -1196,6 +1197,7 @@ export default function MyNotificationsPage() {
                   </div>
                 </div>
               )}
+              </div>
             </div>
 
             <div className="vn-myn-pending flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-5 dark:border-white/10 dark:bg-[#101827] dark:shadow-none">
