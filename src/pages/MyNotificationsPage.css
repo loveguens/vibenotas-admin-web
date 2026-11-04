@@ -98,10 +98,16 @@
   padding:13px 16px;
 }
 .vn-my-notifications-superadmin .vn-myn-controls {
-  display:flex;align-items:center;flex-wrap:nowrap;gap:9px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:9px;
+  min-width:0;
 }
 .vn-my-notifications-superadmin .vn-myn-search-wrap {
-  flex:1 1 0%;max-width:560px;min-width:0;
+  width:100%;
+  min-width:0;
+  max-width:none;
 }
 .vn-my-notifications-superadmin .vn-myn-search {
   min-height:41px;padding-top:8px;padding-bottom:8px;
@@ -129,16 +135,32 @@
 }
 .vn-my-notifications-superadmin .vn-myn-filter-row,
 .vn-my-notifications-superadmin .vn-myn-type-row {
-  display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+  display:grid;
+  grid-template-columns:63px minmax(0,1fr);
+  align-items:start;
+  column-gap:10px;
+  min-width:0;
   margin-top:11px;
 }
 .vn-my-notifications-superadmin .vn-myn-type-row {
-  padding-top:10px;border-top:1px solid var(--myn-line);
+  padding-top:10px;
+  border-top:1px solid var(--myn-line);
 }
 .vn-my-notifications-superadmin .vn-myn-filter-label {
-  color:var(--myn-muted);font-size:10px;font-weight:800;
-  letter-spacing:.07em;text-transform:uppercase;
-  margin-right:5px;
+  padding-top:10px;
+  color:var(--myn-muted);
+  font-size:10px;
+  font-weight:800;
+  line-height:1.3;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+}
+.vn-my-notifications-superadmin .vn-myn-filter-options {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:6px;
+  min-width:0;
 }
 .vn-my-notifications-superadmin .vn-myn-read-filter,
 .vn-my-notifications-superadmin .vn-myn-type-filter {
@@ -346,7 +368,11 @@ html.dark .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-read-sta
   .vn-my-notifications-superadmin .vn-myn-controls {gap:8px;}
   .vn-my-notifications-superadmin .vn-myn-search {font-size:12px;}
   .vn-my-notifications-superadmin .vn-myn-refresh {padding:8px 10px;}
-  .vn-my-notifications-superadmin .vn-myn-filter-label {min-width:42px;}
+  .vn-my-notifications-superadmin .vn-myn-filter-row,
+  .vn-my-notifications-superadmin .vn-myn-type-row {
+    grid-template-columns:54px minmax(0,1fr);
+    column-gap:8px;
+  }
   .vn-my-notifications-superadmin .vn-myn-pending {
     padding:11px 12px;gap:9px;flex-wrap:wrap;
   }
@@ -367,8 +393,12 @@ html.dark .vn-my-notifications-superadmin .vn-myn-detail .vn-myn-detail-read-sta
   }
 }
 @media(max-width:380px) {
-  .vn-my-notifications-superadmin .vn-myn-controls {flex-wrap:wrap;}
-  .vn-my-notifications-superadmin .vn-myn-search-wrap {flex:1 1 100%;max-width:none;}
+  .vn-my-notifications-superadmin .vn-myn-controls {
+    grid-template-columns:minmax(0,1fr);
+  }
+  .vn-my-notifications-superadmin .vn-myn-refresh {
+    justify-self:start;
+  }
 }
 @media(prefers-reduced-motion:reduce) {
   .vn-my-notifications-superadmin * {transition:none !important;}
