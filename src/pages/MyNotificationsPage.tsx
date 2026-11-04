@@ -27,6 +27,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import api from "../services/api";
+import "./MyNotificationsPage.css";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 
@@ -563,42 +564,24 @@ export default function MyNotificationsPage() {
       [notifications],
     );
 
-  const availableTypes =
-    useMemo(() => {
-      const types = new Map<
-        string,
-        string
-      >();
+  // Agrupamos los tipos por la categoría visible. Por ejemplo, dos tipos
+  // internos que muestran "Aviso" deben aparecer como un solo filtro.
+  const availableTypes = useMemo(() => {
+    const labels = new Map<string, string>();
 
-      for (const notification of notifications) {
-        if (
-          !types.has(
-            notification.tipo,
-          )
-        ) {
-          types.set(
-            notification.tipo,
-            getNotificationStyle(
-              notification.tipo,
-            ).label,
-          );
-        }
+    for (const notification of notifications) {
+      const label = getNotificationStyle(notification.tipo).label;
+      const key = label.trim().toLocaleLowerCase("es-CL");
+      if (!labels.has(key)) {
+        labels.set(key, label);
       }
+    }
 
-      return Array.from(
-        types.entries(),
-      )
-        .map(([value, label]) => ({
-          value,
-          label,
-        }))
-        .sort((a, b) =>
-          a.label.localeCompare(
-            b.label,
-            "es",
-          ),
-        );
-    }, [notifications]);
+    return Array.from(labels, ([key, label]) => ({
+      value: `categoria:${key}`,
+      label,
+    })).sort((a, b) => a.label.localeCompare(b.label, "es"));
+  }, [notifications]);
 
   const filteredNotifications =
     useMemo(() => {
@@ -623,8 +606,9 @@ export default function MyNotificationsPage() {
 
           const matchesType =
             typeFilter === "todos" ||
-            notification.tipo ===
-              typeFilter;
+            typeFilter === `categoria:${getNotificationStyle(notification.tipo).label
+              .trim()
+              .toLocaleLowerCase("es-CL")}`;
 
           const matchesSearch =
             !query ||
@@ -1053,190 +1037,167 @@ export default function MyNotificationsPage() {
         />
 
         <main className="vn-myn-main px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-          <section className="vn-myn-page mx-auto max-w-6xl space-y-6">
-            <div className="vn-myn-hero relative overflow-hidden rounded-[30px] border border-slate-200 bg-gradient-to-br from-violet-50 via-white to-sky-50 p-6 shadow-xl shadow-slate-200/60 sm:p-8 dark:border-white/10 dark:from-[#131A2D] dark:via-[#111827] dark:to-[#10243A] dark:shadow-2xl dark:shadow-black/25">
-              <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-violet-300/25 blur-3xl dark:bg-violet-500/10" />
-              <div className="pointer-events-none absolute -bottom-28 left-10 h-72 w-72 rounded-full bg-sky-300/25 blur-3xl dark:bg-sky-500/10" />
-
-              <div className="vn-myn-hero-content relative flex flex-col gap-5">
-                <div className="max-w-2xl">
-                  <div className="vn-myn-eyebrow inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-violet-700 dark:border-violet-400/20 dark:bg-violet-500/10 dark:text-violet-200">
-                    <Sparkles size={15} />
-                    Centro de actividad
-                  </div>
-
-                  <h1 className="vn-myn-title mt-5 text-3xl font-black tracking-tight text-slate-950 dark:text-white sm:text-4xl">
-                    Mis notificaciones
-                  </h1>
-
-                  <p className="vn-myn-subtitle mt-3 max-w-xl text-sm leading-7 text-slate-600 dark:text-slate-400 sm:text-base">
-                    Mantente al día con mensajes, alertas de seguridad y avisos importantes. Las notificaciones nuevas se sincronizan automáticamente.
-                  </p>
-                </div>
+          <section className={`vn-myn-page mx-auto max-w-6xl${userRole === "superadmin" ? "" : " space-y-6"}`}>
+            <header className="vn-dashboard-hero vn-myn-hero rounded-[22px] border border-slate-200 bg-white px-6 py-5 dark:border-white/10">
+              <p className="vn-myn-eyebrow inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
+                <Sparkles size={15} />
+                Centro de actividad
+              </p>
+              <h1 className="vn-myn-title mt-2 text-2xl font-bold tracking-tight">
+                Actividad de tu cuenta
+              </h1>
+              <p className="vn-myn-subtitle mt-2 max-w-2xl text-sm">
+                Mensajes, avisos y alertas importantes. Las novedades se sincronizan automáticamente.
+              </p>
+            </header>
 
                 <div className="vn-myn-kpi-grid grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  <article className="vn-myn-kpi vn-myn-kpi-total rounded-3xl border border-slate-200 bg-white/80 p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.045] dark:shadow-none">
+                  <article className="vn-admin-stat-card vn-myn-kpi vn-myn-kpi-total rounded-3xl border border-slate-200 bg-white/80 p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.045] dark:shadow-none">
                     <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Total
                     </p>
                     <p className="mt-2 text-3xl font-black text-slate-950 dark:text-white">
                       {totalNotifications}
                     </p>
+                    {userRole === "superadmin" && (
+                      <>
+                        <span className="vn-myn-kpi-icon" aria-hidden="true"><Bell size={21} /></span>
+                        <span className="vn-myn-kpi-footer">
+                          <span>Resumen general</span>
+                          <span className="vn-myn-kpi-bars" aria-hidden="true"><i/><i/><i/><i/><i/></span>
+                        </span>
+                      </>
+                    )}
                   </article>
 
-                  <article className="vn-myn-kpi vn-myn-kpi-unread rounded-3xl border border-violet-200 bg-violet-50 p-5 dark:border-violet-400/20 dark:bg-violet-500/[0.08]">
+                  <article className="vn-admin-stat-card vn-myn-kpi vn-myn-kpi-unread rounded-3xl border border-violet-200 bg-violet-50 p-5 dark:border-violet-400/20 dark:bg-violet-500/[0.08]">
                     <p className="text-xs font-semibold uppercase tracking-wide text-violet-700 dark:text-violet-300">
                       Sin leer
                     </p>
                     <p className="mt-2 text-3xl font-black text-violet-900 dark:text-violet-100">
                       {unreadCount}
                     </p>
+                    {userRole === "superadmin" && (
+                      <>
+                        <span className="vn-myn-kpi-icon" aria-hidden="true"><Inbox size={21} /></span>
+                        <span className="vn-myn-kpi-footer">
+                          <span>Por revisar</span>
+                          <span className="vn-myn-kpi-bars" aria-hidden="true"><i/><i/><i/><i/><i/></span>
+                        </span>
+                      </>
+                    )}
                   </article>
 
-                  <article className="vn-myn-kpi vn-myn-kpi-read rounded-3xl border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-400/20 dark:bg-emerald-500/[0.08]">
+                  <article className="vn-admin-stat-card vn-myn-kpi vn-myn-kpi-read rounded-3xl border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-400/20 dark:bg-emerald-500/[0.08]">
                     <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">
                       Leídas
                     </p>
                     <p className="mt-2 text-3xl font-black text-emerald-900 dark:text-emerald-100">
                       {readCount}
                     </p>
+                    {userRole === "superadmin" && (
+                      <>
+                        <span className="vn-myn-kpi-icon" aria-hidden="true"><CheckCheck size={21} /></span>
+                        <span className="vn-myn-kpi-footer">
+                          <span>Actividad revisada</span>
+                          <span className="vn-myn-kpi-bars" aria-hidden="true"><i/><i/><i/><i/><i/></span>
+                        </span>
+                      </>
+                    )}
                   </article>
 
-                  <article className="vn-myn-kpi vn-myn-kpi-priority rounded-3xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-400/20 dark:bg-amber-500/[0.08]">
+                  <article className="vn-admin-stat-card vn-myn-kpi vn-myn-kpi-priority rounded-3xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-400/20 dark:bg-amber-500/[0.08]">
                     <p className="text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300">
                       Prioridad
                     </p>
                     <p className="mt-2 text-3xl font-black text-amber-900 dark:text-amber-100">
                       {highPriorityCount}
                     </p>
+                    {userRole === "superadmin" && (
+                      <>
+                        <span className="vn-myn-kpi-icon" aria-hidden="true"><Zap size={21} /></span>
+                        <span className="vn-myn-kpi-footer">
+                          <span>Avisos importantes</span>
+                          <span className="vn-myn-kpi-bars" aria-hidden="true"><i/><i/><i/><i/><i/></span>
+                        </span>
+                      </>
+                    )}
                   </article>
-                </div>
-              </div>
             </div>
 
-            <div className="vn-myn-filters rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 dark:border-white/10 dark:bg-[#101827] dark:shadow-none">
-              <div className="flex flex-col gap-4 xl:flex-row xl:items-center">
-                <div className="relative min-w-0 flex-1">
-                  <Search
-                    size={18}
-                    className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-                  />
-
+            <div className="vn-myn-filters rounded-3xl border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10">
+              <div className="vn-myn-controls flex flex-wrap items-center gap-3">
+                <div className="vn-myn-search-wrap relative min-w-0 flex-1">
+                  <Search size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                   <input
                     value={search}
-                    onChange={(event) =>
-                      setSearch(
-                        event.target.value,
-                      )
-                    }
-                    placeholder="Buscar por título o mensaje"
-                    className="vn-myn-search min-h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-11 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-300 focus:ring-4 focus:ring-violet-100 dark:border-white/10 dark:bg-white/[0.035] dark:text-white dark:placeholder:text-slate-600 dark:focus:border-violet-400/30 dark:focus:ring-violet-500/10"
+                    onChange={(event) => setSearch(event.target.value)}
+                    placeholder="Buscar notificaciones..."
+                    aria-label="Buscar notificaciones por título o mensaje"
+                    className="vn-myn-search min-h-11 w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-10 text-sm outline-none dark:border-white/10"
                   />
-
                   {search && (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setSearch("")
-                      }
-                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-200 hover:text-slate-900 dark:hover:bg-white/10 dark:hover:text-white"
-                      aria-label="Limpiar búsqueda"
-                    >
+                    <button type="button" onClick={() => setSearch("")}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-lg p-1.5"
+                      aria-label="Limpiar búsqueda">
                       <X size={15} />
                     </button>
                   )}
                 </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {READ_FILTERS.map(
-                    (filter) => (
-                      <button
-                        key={filter.key}
-                        type="button"
-                        onClick={() =>
-                          setReadFilter(
-                            filter.key,
-                          )
-                        }
-                        aria-pressed={readFilter === filter.key}
-                        className={`vn-myn-read-filter rounded-xl px-3.5 py-2.5 text-sm font-bold transition ${
-                          readFilter ===
-                          filter.key
-                            ? "bg-violet-600 text-white shadow-lg shadow-violet-500/20"
-                            : "border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-400 dark:hover:bg-white/[0.07] dark:hover:text-white"
-                        }`}
-                      >
-                        {filter.label}
-                      </button>
-                    ),
-                  )}
-                </div>
-
                 <button
                   type="button"
-                  onClick={() =>
-                    void loadNotifications({
-                      silent: true,
-                    })
-                  }
+                  onClick={() => void loadNotifications({silent:true})}
                   disabled={refreshing}
-                  className="vn-myn-refresh inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 dark:hover:bg-white/[0.08] dark:hover:text-white"
+                  className="vn-myn-refresh inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-semibold"
                 >
-                  <RefreshCw
-                    size={17}
-                    className={
-                      refreshing
-                        ? "animate-spin"
-                        : ""
-                    }
-                  />
-                  Actualizar
+                  <RefreshCw size={17} className={refreshing ? "animate-spin" : ""}/>
+                  <span>Actualizar</span>
                 </button>
               </div>
-
-              {availableTypes.length >
-                1 && (
-                <div className="mt-4 flex flex-wrap gap-2 border-t border-slate-100 pt-4 dark:border-white/[0.07]">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setTypeFilter(
-                        "todos",
-                      )
-                    }
-                    className={`vn-myn-type-filter rounded-full border px-3 py-1.5 text-xs font-bold transition ${
-                      typeFilter ===
-                      "todos"
-                        ? "border-violet-300 bg-violet-50 text-violet-700 dark:border-violet-400/25 dark:bg-violet-500/10 dark:text-violet-200"
-                        : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50 dark:border-white/10 dark:bg-transparent dark:text-slate-500 dark:hover:bg-white/[0.05]"
-                    }`}
-                  >
-                    Todos los tipos
-                  </button>
-
-                  {availableTypes.map(
-                    (type) => (
+              <div className="vn-myn-filter-groups">
+                <div className="vn-myn-filter-row flex flex-wrap items-center gap-2">
+                <span className="vn-myn-filter-label">Lectura</span>
+                <div className="vn-myn-filter-options flex flex-wrap items-center gap-2" role="group" aria-label="Filtrar por lectura">
+                  {READ_FILTERS.map((filter) => (
+                    <button
+                      key={filter.key}
+                      type="button"
+                      onClick={() => setReadFilter(filter.key)}
+                      aria-pressed={readFilter === filter.key}
+                      className="vn-myn-read-filter rounded-lg px-3 py-2 text-xs font-semibold"
+                    >
+                      {filter.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {availableTypes.length > 1 && (
+                <div className="vn-myn-type-row flex flex-wrap items-center gap-2">
+                  <span className="vn-myn-filter-label">Tipo</span>
+                  <div className="vn-myn-filter-options flex flex-wrap items-center gap-2" role="group" aria-label="Filtrar por tipo">
+                    <button
+                      type="button"
+                      onClick={() => setTypeFilter("todos")}
+                      aria-pressed={typeFilter === "todos"}
+                      className="vn-myn-type-filter rounded-lg px-3 py-2 text-xs font-semibold"
+                    >
+                      Todos los tipos
+                    </button>
+                    {availableTypes.map((type) => (
                       <button
                         key={type.value}
                         type="button"
-                        onClick={() =>
-                          setTypeFilter(
-                            type.value,
-                          )
-                        }
-                        className={`vn-myn-type-filter rounded-full border px-3 py-1.5 text-xs font-bold transition ${
-                          typeFilter ===
-                          type.value
-                            ? "border-violet-300 bg-violet-50 text-violet-700 dark:border-violet-400/25 dark:bg-violet-500/10 dark:text-violet-200"
-                            : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50 dark:border-white/10 dark:bg-transparent dark:text-slate-500 dark:hover:bg-white/[0.05]"
-                        }`}
+                        onClick={() => setTypeFilter(type.value)}
+                        aria-pressed={typeFilter === type.value}
+                        className="vn-myn-type-filter rounded-lg px-3 py-2 text-xs font-semibold"
                       >
                         {type.label}
                       </button>
-                    ),
-                  )}
+                    ))}
+                  </div>
                 </div>
               )}
+              </div>
             </div>
 
             <div className="vn-myn-pending flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-5 dark:border-white/10 dark:bg-[#101827] dark:shadow-none">
@@ -1336,7 +1297,7 @@ export default function MyNotificationsPage() {
               </div>
             )}
 
-            <div className="vn-myn-list overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-xl shadow-slate-200/50 dark:border-white/10 dark:bg-[#101827] dark:shadow-black/15">
+            <div className="vn-dashboard-panel vn-myn-list overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-xl shadow-slate-200/50 dark:border-white/10 dark:bg-[#101827] dark:shadow-black/15">
               <div className="vn-myn-list-header flex flex-col gap-2 border-b border-slate-100 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:border-white/[0.07]">
                 <div>
                   <p className="text-sm font-black text-slate-900 dark:text-white">
@@ -1504,7 +1465,7 @@ export default function MyNotificationsPage() {
 
                             <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
                               <span
-                                className={`inline-flex items-center rounded-full border px-2.5 py-1 font-bold ${style.badgeClassName}`}
+                                className={`vn-myn-type-badge inline-flex items-center rounded-full border px-2.5 py-1 font-bold ${style.badgeClassName}`}
                               >
                                 {style.label}
                               </span>
@@ -1558,10 +1519,15 @@ export default function MyNotificationsPage() {
               aria-label="Cerrar detalle de notificación"
             />
 
-            <section className="vn-myn-detail relative w-full overflow-hidden rounded-t-[34px] border border-slate-200 bg-white shadow-2xl shadow-slate-500/30 sm:max-w-2xl sm:rounded-[34px] dark:border-white/10 dark:bg-[#0F172A] dark:shadow-black/50">
+            <section
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="vn-myn-detail-title"
+              className="vn-dashboard-panel vn-myn-detail relative w-full overflow-hidden rounded-t-[34px] border border-slate-200 bg-white shadow-2xl shadow-slate-500/30 sm:max-w-2xl sm:rounded-[34px] dark:border-white/10 dark:bg-[#0F172A] dark:shadow-black/50"
+            >
               <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-violet-500/10 blur-3xl" />
 
-              <header className="relative border-b border-slate-200 p-6 sm:p-7 dark:border-white/10">
+              <header className="vn-myn-detail-header relative border-b border-slate-200 p-6 sm:p-7 dark:border-white/10">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex min-w-0 items-start gap-4">
                     <div
@@ -1573,7 +1539,7 @@ export default function MyNotificationsPage() {
                     <div className="min-w-0">
                       <div className="flex flex-wrap gap-2">
                         <span
-                          className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-bold ${selectedStyle.badgeClassName}`}
+                          className={`vn-myn-type-badge inline-flex rounded-full border px-2.5 py-1 text-xs font-bold ${selectedStyle.badgeClassName}`}
                         >
                           {selectedStyle.label}
                         </span>
@@ -1588,7 +1554,7 @@ export default function MyNotificationsPage() {
                         )}
                       </div>
 
-                      <h2 className="mt-3 break-words text-2xl font-black tracking-tight text-slate-950 dark:text-white">
+                      <h2 id="vn-myn-detail-title" className="mt-3 break-words text-2xl font-black tracking-tight text-slate-950 dark:text-white">
                         {selectedNotification.titulo}
                       </h2>
 
@@ -1616,14 +1582,14 @@ export default function MyNotificationsPage() {
                 </div>
               </header>
 
-              <div className="relative max-h-[55vh] overflow-y-auto p-6 sm:p-7">
-                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5 dark:border-white/10 dark:bg-white/[0.04]">
+              <div className="vn-myn-detail-body relative max-h-[55vh] overflow-y-auto p-6 sm:p-7">
+                <div className="vn-myn-detail-message rounded-3xl border border-slate-200 bg-slate-50 p-5 dark:border-white/10 dark:bg-white/[0.04]">
                   <p className="whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-200">
                     {selectedNotification.mensaje}
                   </p>
                 </div>
 
-                <div className="mt-5 flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-400/15 dark:bg-emerald-500/[0.06]">
+                <div className="vn-myn-detail-read-state mt-5 flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-400/15 dark:bg-emerald-500/[0.06]">
                   <div className="rounded-xl bg-emerald-100 p-2 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
                     <CheckCheck
                       size={18}
@@ -1646,7 +1612,7 @@ export default function MyNotificationsPage() {
                 </div>
               </div>
 
-              <footer className="relative flex flex-col-reverse gap-3 border-t border-slate-200 p-5 sm:flex-row sm:justify-end sm:p-6 dark:border-white/10">
+              <footer className="vn-myn-detail-footer relative flex flex-col-reverse gap-3 border-t border-slate-200 p-5 sm:flex-row sm:justify-end sm:p-6 dark:border-white/10">
                 <button
                   type="button"
                   onClick={() =>
