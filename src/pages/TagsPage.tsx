@@ -43,7 +43,8 @@ const initialForm: TagForm = {
 };
 
 function getTagColor(value: string | undefined): string {
-  return /^#[0-9a-f]{6}$/i.test(value ?? "") ? value! : "#8B5CF6";
+  if (value && /^#[0-9a-f]{6}$/i.test(value)) return value;
+  return "#8B5CF6";
 }
 function getTagNoteCount(tag: TagItem): number {
   return Math.max(0, Number(tag.total_notas ?? tag.notas_count ?? 0) || 0);
@@ -367,7 +368,12 @@ export default function TagsPage() {
         )}
 
         {modalOpen && (
-          <div className="vn-tags-modal-overlay fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+          <div
+            className="vn-tags-modal-overlay fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+            onKeyDown={(event) => {
+              if (event.key === "Escape" && !saving) setModalOpen(false);
+            }}
+          >
             <div role="dialog"
               aria-modal="true"
               aria-labelledby="vn-tags-modal-title"
