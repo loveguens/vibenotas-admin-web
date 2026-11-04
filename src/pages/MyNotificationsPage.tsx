@@ -1154,35 +1154,46 @@ export default function MyNotificationsPage() {
                   <span>Actualizar</span>
                 </button>
               </div>
-              <div className="vn-myn-filter-row flex flex-wrap items-center gap-2">
+              <div className="vn-myn-filter-row">
                 <span className="vn-myn-filter-label">Lectura</span>
-                {READ_FILTERS.map(filter => (
-                  <button
-                    key={filter.key} type="button"
-                    onClick={() => setReadFilter(filter.key)}
-                    aria-pressed={readFilter === filter.key}
-                    className="vn-myn-read-filter rounded-lg px-3 py-2 text-xs font-semibold"
-                  >
-                    {filter.label}
-                  </button>
-                ))}
-              </div>
-              {availableTypes.length > 1 && (
-                <div className="vn-myn-type-row flex flex-wrap items-center gap-2">
-                  <span className="vn-myn-filter-label">Tipo</span>
-                  <button type="button" onClick={() => setTypeFilter("todos")}
-                    aria-pressed={typeFilter === "todos"}
-                    className="vn-myn-type-filter rounded-lg px-3 py-2 text-xs font-semibold">
-                    Todos los tipos
-                  </button>
-                  {availableTypes.map(type => (
-                    <button key={type.value} type="button"
-                      onClick={() => setTypeFilter(type.value)}
-                      aria-pressed={typeFilter === type.value}
-                      className="vn-myn-type-filter rounded-lg px-3 py-2 text-xs font-semibold">
-                      {type.label}
+                <div className="vn-myn-filter-options" role="group" aria-label="Filtrar por lectura">
+                  {READ_FILTERS.map((filter) => (
+                    <button
+                      key={filter.key}
+                      type="button"
+                      onClick={() => setReadFilter(filter.key)}
+                      aria-pressed={readFilter === filter.key}
+                      className="vn-myn-read-filter rounded-lg px-3 py-2 text-xs font-semibold"
+                    >
+                      {filter.label}
                     </button>
                   ))}
+                </div>
+              </div>
+              {availableTypes.length > 1 && (
+                <div className="vn-myn-type-row">
+                  <span className="vn-myn-filter-label">Tipo</span>
+                  <div className="vn-myn-filter-options" role="group" aria-label="Filtrar por tipo">
+                    <button
+                      type="button"
+                      onClick={() => setTypeFilter("todos")}
+                      aria-pressed={typeFilter === "todos"}
+                      className="vn-myn-type-filter rounded-lg px-3 py-2 text-xs font-semibold"
+                    >
+                      Todos los tipos
+                    </button>
+                    {availableTypes.map((type) => (
+                      <button
+                        key={type.value}
+                        type="button"
+                        onClick={() => setTypeFilter(type.value)}
+                        aria-pressed={typeFilter === type.value}
+                        className="vn-myn-type-filter rounded-lg px-3 py-2 text-xs font-semibold"
+                      >
+                        {type.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
