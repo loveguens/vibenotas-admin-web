@@ -21,8 +21,7 @@
   min-width:0;
 }
 .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-content > * {
-  margin-top:0;
-  margin-bottom:0;
+  margin-block:0;
 }
 /* Encabezado ejecutivo compacto, como Usuarios y Reportes. */
 .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-hero {
@@ -407,7 +406,7 @@
   gap:14px;
 }
 .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-form > * {
-  margin-top:0;
+  margin-block:0;
 }
 .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-form label {
   color:var(--tag-ink);
