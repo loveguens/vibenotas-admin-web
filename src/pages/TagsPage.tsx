@@ -12,7 +12,7 @@ import api from "../services/api";
 import "./TagsPage.css";
 
 type TagItem = {
-  id: number;
+  id: string;
   nombre: string;
   color: string;
   total_notas?: number;
@@ -39,12 +39,12 @@ type TagForm = {
 
 const initialForm: TagForm = {
   nombre: "",
-  color: "#8B5CF6",
+  color: "#F06449",
 };
 
 function getTagColor(value: string | undefined): string {
   if (value && /^#[0-9a-f]{6}$/i.test(value)) return value;
-  return "#8B5CF6";
+  return "#F06449";
 }
 function getTagNoteCount(tag: TagItem): number {
   return Math.max(0, Number(tag.total_notas ?? tag.notas_count ?? 0) || 0);
@@ -67,7 +67,7 @@ export default function TagsPage() {
     setError("");
 
     try {
-      const response = await api.get<TagsResponse>("/tags");
+      const response = await api.get<TagsResponse>("/admin/tags");
 
       if (!response.data.success) {
         throw new Error(
@@ -145,11 +145,11 @@ export default function TagsPage() {
     setSuccess("");
     try {
       const response = editingTag
-        ? await api.put(`/tags/${editingTag.id}`, {
+        ? await api.put(`/admin/tags/${editingTag.id}`, {
             nombre,
             color: form.color,
           })
-        : await api.post("/tags", {
+        : await api.post("/admin/tags", {
             nombre,
             color: form.color,
           });
@@ -190,7 +190,7 @@ export default function TagsPage() {
     setSuccess("");
 
     try {
-      const response = await api.delete(`/tags/${tag.id}`);
+      const response = await api.delete(`/admin/tags/${tag.id}`);
 
       if (!response.data?.success) {
         throw new Error(
@@ -210,9 +210,9 @@ export default function TagsPage() {
   }
 
   return (
-    <section className="vn-tags-page vn-final-page">
+    <section className="vn-tags-page">
       <section className="vn-tags-content space-y-6">
-        <div className="vn-tags-hero vn-final-hero flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+        <div className="vn-tags-hero flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
           <div>
             <p className="vn-tags-eyebrow text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
               Organización de contenido
@@ -261,8 +261,8 @@ export default function TagsPage() {
           </div>
         )}
 
-        <div className="vn-tags-toolbar vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-4 shadow-xl shadow-black/10 backdrop-blur-xl">
-          <div className="vn-tags-search vn-final-search flex items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3">
+        <div className="vn-tags-toolbar rounded-3xl border border-white/10 bg-[#1E293B]/80 p-4 shadow-xl shadow-black/10 backdrop-blur-xl">
+          <div className="vn-tags-search flex items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3">
             <Search size={19} aria-hidden="true" className="text-slate-500" />
             <input
               value={search}
@@ -304,7 +304,7 @@ export default function TagsPage() {
               return (
                 <article
                   key={tag.id}
-                  className="vn-tags-item group vn-final-card rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10 transition hover:-translate-y-1 hover:border-violet-400/30 hover:bg-[#24334a]"
+                  className="vn-tags-item group rounded-3xl border border-white/10 bg-[#1E293B]/80 p-5 shadow-xl shadow-black/10 transition hover:-translate-y-1 hover:border-violet-400/30 hover:bg-[#24334a]"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div
@@ -434,7 +434,7 @@ export default function TagsPage() {
                       type="color"
                       id="vn-tags-color"
                       aria-label="Seleccionar color"
-                      value={/^#[0-9a-f]{6}$/i.test(form.color) ? form.color : "#8B5CF6"}
+                      value={/^#[0-9a-f]{6}$/i.test(form.color) ? form.color : "#F06449"}
                       onChange={(event) =>
                         setForm((current) => ({
                           ...current,
