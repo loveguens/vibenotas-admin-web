@@ -49,6 +49,16 @@ function getTagColor(value: string | undefined): string {
 }
 function getTagError(error: unknown, fallback: string): string {
   if (axios.isAxiosError(error)) {
+    const backendMessage = error.response?.data?.message;
+
+    if (
+      error.response?.status === 404 &&
+      typeof backendMessage === "string" &&
+      backendMessage.includes("Etiqueta no encontrada")
+    ) {
+      return backendMessage;
+    }
+
     if (error.response?.status === 404) {
       return "El servicio de Etiquetas aún no está disponible en el backend. Debe desplegarse el módulo de Etiquetas.";
     }
@@ -57,9 +67,11 @@ function getTagError(error: unknown, fallback: string): string {
       return "Tu cuenta no tiene permisos para administrar etiquetas.";
     }
 
-    const backendMessage = error.response?.data?.message;
     if (typeof backendMessage === "string" && backendMessage.trim()) {
       return backendMessage;
+    }
+    if (Array.isArray(backendMessage)) {
+      return backendMessage.filter((item): item is string => typeof item === "string").join(" ") || fallback;
     }
   }
 
