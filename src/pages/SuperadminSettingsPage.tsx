@@ -28,6 +28,19 @@ type PlatformSettings = {
   globalNotificationsEnabled: boolean;
 };
 
+// Solo para visualizar la maqueta cuando el backend no responde.
+ // Ninguno de estos valores procede de Supabase ni se puede guardar.
+const PREVIEW_VALUES: PlatformSettings = {
+  platformName: "VibeNotas (ejemplo)",
+  supportEmail: "",
+  maintenanceMode: false,
+  maintenanceMessage: "",
+  registrationEnabled: false,
+  pdfMaxSizeMb: 10,
+  trashRetentionDays: 30,
+  globalNotificationsEnabled: false,
+};
+
 type SettingsResponse = {
   values: PlatformSettings;
   updatedAt: string | null;
@@ -220,6 +233,7 @@ export default function SuperadminSettingsPage() {
   }
 
   const disabled = loading || saving || !form;
+  const displayForm = form ?? PREVIEW_VALUES;
 
   return (
     <section className="vn-settings-page">
@@ -287,16 +301,23 @@ export default function SuperadminSettingsPage() {
         </div>
       )}
 
+      {!loading && !form && (
+        <div className="vn-settings-preview" role="status">
+          <strong>Vista previa del diseño — sin datos reales</strong>
+          <p>
+            Las tarjetas muestran únicamente valores ilustrativos, no la configuración de
+            producción. Todos los controles están bloqueados y no se puede guardar hasta
+            que el servicio de Configuración global esté disponible.
+          </p>
+        </div>
+      )}
+
       {loading ? (
         <div className="vn-settings-grid" role="status" aria-live="polite">
           {[1, 2, 3, 4].map((item) => <div className="vn-settings-skeleton" key={item} />)}
         </div>
-      ) : !form ? (
-        <div className="vn-settings-unavailable">
-          No es posible editar ajustes mientras el backend no responda.
-        </div>
       ) : (
-        <div className="vn-settings-grid">
+        <div className="vn-settings-grid" aria-label={form ? "Ajustes de plataforma" : "Vista previa de ajustes no disponibles"}>
           <article className="vn-settings-card">
             <div className="vn-settings-card-header">
               <span className="vn-settings-card-icon"><Building2 size={20} /></span>
@@ -309,7 +330,7 @@ export default function SuperadminSettingsPage() {
               <label className="vn-settings-field">
                 <span>Nombre de la plataforma</span>
                 <input
-                  value={form.platformName}
+                  value={displayForm.platformName}
                   maxLength={80}
                   disabled={disabled}
                   placeholder="VibeNotas"
@@ -322,7 +343,7 @@ export default function SuperadminSettingsPage() {
                   <Mail size={17} aria-hidden="true" />
                   <input
                     type="email"
-                    value={form.supportEmail}
+                    value={displayForm.supportEmail}
                     maxLength={254}
                     disabled={disabled}
                     placeholder="soporte@ejemplo.com"
@@ -345,14 +366,14 @@ export default function SuperadminSettingsPage() {
               <SettingSwitch
                 title="Preparar modo mantenimiento"
                 description="Solo guarda la preferencia; todavía no interrumpe los accesos."
-                checked={form.maintenanceMode}
+                checked={displayForm.maintenanceMode}
                 disabled={disabled}
                 onChange={(value) => updateField("maintenanceMode", value)}
               />
               <SettingSwitch
                 title="Permitir registros (preferencia)"
                 description="Todavía no activa ni desactiva el registro real de usuarios."
-                checked={form.registrationEnabled}
+                checked={displayForm.registrationEnabled}
                 disabled={disabled}
                 onChange={(value) => updateField("registrationEnabled", value)}
               />
@@ -361,12 +382,12 @@ export default function SuperadminSettingsPage() {
                 <textarea
                   rows={3}
                   maxLength={500}
-                  value={form.maintenanceMessage}
+                  value={displayForm.maintenanceMessage}
                   disabled={disabled}
                   placeholder="Mensaje previsto para futuros periodos de mantenimiento..."
                   onChange={(event) => updateField("maintenanceMessage", event.target.value)}
                 />
-                <small>{form.maintenanceMessage.length}/500 caracteres</small>
+                <small>{displayForm.maintenanceMessage.length}/500 caracteres</small>
               </label>
             </div>
           </article>
@@ -390,7 +411,7 @@ export default function SuperadminSettingsPage() {
                       max={50}
                       step={1}
                       disabled={disabled}
-                      value={form.pdfMaxSizeMb}
+                      value={displayForm.pdfMaxSizeMb}
                       onChange={(event) => updateField("pdfMaxSizeMb", Number(event.target.value))}
                     />
                     <span>MB</span>
@@ -405,7 +426,7 @@ export default function SuperadminSettingsPage() {
                       max={365}
                       step={1}
                       disabled={disabled}
-                      value={form.trashRetentionDays}
+                      value={displayForm.trashRetentionDays}
                       onChange={(event) => updateField("trashRetentionDays", Number(event.target.value))}
                     />
                     <span>días</span>
@@ -431,7 +452,7 @@ export default function SuperadminSettingsPage() {
               <SettingSwitch
                 title="Campañas globales (preferencia)"
                 description="Guarda el ajuste, pero no restringe los envíos hasta integrarlo en Notificaciones."
-                checked={form.globalNotificationsEnabled}
+                checked={displayForm.globalNotificationsEnabled}
                 disabled={disabled}
                 onChange={(value) => updateField("globalNotificationsEnabled", value)}
               />
