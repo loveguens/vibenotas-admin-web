@@ -23,6 +23,7 @@ import AnalyticsPage from "./pages/AnalyticsPage";
 import SubscriptionsPage from "./pages/SubscriptionsPage";
 import ReportsPage from "./pages/ReportsPage";
 import SecurityPage from "./pages/SecurityPage";
+import SuperadminSecurityPage from "./pages/SuperadminSecurityPage";
 import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
 import LogoutPage from "./pages/LogoutPage";
@@ -390,7 +391,7 @@ function App() {
               element={<ReportsPage role="superadmin" />}
             />
 
-            <Route path="/superadmin/security" element={<SecurityPage />} />
+            <Route path="/superadmin/security" element={<SuperadminSecurityPage />} />
 
             <Route path="/superadmin/settings" element={<SettingsPage />} />
 
