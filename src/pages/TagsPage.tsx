@@ -8,6 +8,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import axios from "axios";
 import api from "../services/api";
 import "./TagsPage.css";
 
@@ -46,6 +47,25 @@ function getTagColor(value: string | undefined): string {
   if (value && /^#[0-9a-f]{6}$/i.test(value)) return value;
   return "#F06449";
 }
+function getTagError(error: unknown, fallback: string): string {
+  if (axios.isAxiosError(error)) {
+    if (error.response?.status === 404) {
+      return "El servicio de Etiquetas aún no está disponible en el backend. Debe desplegarse el módulo de Etiquetas.";
+    }
+
+    if (error.response?.status === 403) {
+      return "Tu cuenta no tiene permisos para administrar etiquetas.";
+    }
+
+    const backendMessage = error.response?.data?.message;
+    if (typeof backendMessage === "string" && backendMessage.trim()) {
+      return backendMessage;
+    }
+  }
+
+  return error instanceof Error ? error.message : fallback;
+}
+
 function getTagNoteCount(tag: TagItem): number {
   return Math.max(0, Number(tag.total_notas ?? tag.notas_count ?? 0) || 0);
 }
@@ -77,11 +97,7 @@ export default function TagsPage() {
 
       setTags(response.data.data?.etiquetas ?? response.data.data?.tags ?? []);
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "No se pudieron cargar las etiquetas."
-      );
+      setError(getTagError(err, "No se pudieron cargar las etiquetas."));
     } finally {
       setLoading(false);
     }
@@ -169,11 +185,7 @@ export default function TagsPage() {
       setModalOpen(false);
       await loadTags();
     } catch (err) {
-      setModalError(
-        err instanceof Error
-          ? err.message
-          : "No se pudo guardar la etiqueta."
-      );
+      setModalError(getTagError(err, "No se pudo guardar la etiqueta."));
     } finally {
       setSaving(false);
     }
@@ -201,11 +213,7 @@ export default function TagsPage() {
       setSuccess("Etiqueta eliminada correctamente.");
       await loadTags();
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "No se pudo eliminar la etiqueta."
-      );
+      setError(getTagError(err, "No se pudo eliminar la etiqueta."));
     }
   }
 
@@ -248,7 +256,7 @@ export default function TagsPage() {
         </div>
 
         {error && (
-          <div className="vn-tags-feedback vn-tags-error rounded-3xl border border-red-500/20 bg-red-500/10 p-5 text-red-200">
+          <div className="vn-tags-feedback vn-tags-error rounded-3xl border border-red-500/20 bg-red-500/10 p-5 text-red-200" role="alert">
             <p className="font-semibold">Ocurrió un problema</p>
             <p className="mt-1 text-sm text-red-200/80">{error}</p>
           </div>
