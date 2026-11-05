@@ -770,10 +770,10 @@ html.dark .vn-admin.vn-superadmin-layout .vn-logs-error {
     grid-column: 1/-1;
   }
   .vn-admin.vn-superadmin-layout .vn-logs-table .vn-logs-empty-row td {
-    display: table-cell;
+    display: block;
     padding: 35px 12px;
   }
-  .vn-admin.vn-superadmin-layout .vn-logs-table .vn-logs-empty-row { display: table-row; }
+  .vn-admin.vn-superadmin-layout .vn-logs-table .vn-logs-empty-row { display: block; }
 }
 @media (max-width: 580px) {
   .vn-admin.vn-superadmin-layout .vn-logs-page { gap: 12px; }
