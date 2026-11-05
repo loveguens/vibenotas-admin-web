@@ -136,7 +136,7 @@
 .vn-admin.vn-superadmin-layout .vn-settings-notice p{
   margin:5px 0 0;
   color:var(--settings-muted);
-  font-size:12px;
+  font-size:13px;
   line-height:1.55;
 }
 .vn-admin.vn-superadmin-layout .vn-settings-notice p strong{
@@ -154,7 +154,7 @@
 }
 .vn-admin.vn-superadmin-layout .vn-settings-feedback > svg {flex:0 0 auto;margin-top:2px}
 .vn-admin.vn-superadmin-layout .vn-settings-feedback strong {font-size:13px;font-weight:800}
-.vn-admin.vn-superadmin-layout .vn-settings-feedback p {margin:4px 0 0;line-height:1.6}
+.vn-admin.vn-superadmin-layout .vn-settings-feedback p {margin:4px 0 0;line-height:1.6;font-size:13px}
 .vn-admin.vn-superadmin-layout .vn-settings-error {
   border:1px solid #ecc3bd;
   background:#fff0ed;
@@ -414,14 +414,33 @@ html.dark .vn-admin.vn-superadmin-layout .vn-settings-success {
   animation:vn-settings-pulse 1.4s ease-in-out infinite alternate;
 }
 @keyframes vn-settings-pulse {to{opacity:.5}}
-.vn-admin.vn-superadmin-layout .vn-settings-unavailable {
-  padding:35px;
+/* La vista previa es legible pero no representa valores reales. */
+.vn-admin.vn-superadmin-layout .vn-settings-preview {
+  padding:15px 18px;
   border:1px dashed var(--settings-border);
-  border-radius:17px;
+  border-radius:14px;
   background:var(--settings-surface);
-  color:var(--settings-muted);
-  text-align:center;
+  color:var(--settings-ink);
+}
+.vn-admin.vn-superadmin-layout .vn-settings-preview strong {
+  display:block;
+  margin:0;
   font-size:13px;
+  line-height:1.45;
+  font-weight:800;
+}
+.vn-admin.vn-superadmin-layout .vn-settings-preview p {
+  margin:6px 0 0;
+  color:var(--settings-muted);
+  font-size:13px;
+  line-height:1.65;
+}
+.vn-admin.vn-superadmin-layout .vn-settings-page .vn-settings-grid[aria-label="Vista previa de ajustes no disponibles"] {
+  opacity:.86;
+}
+.vn-admin.vn-superadmin-layout .vn-settings-page .vn-settings-grid[aria-label="Vista previa de ajustes no disponibles"] input,
+.vn-admin.vn-superadmin-layout .vn-settings-page .vn-settings-grid[aria-label="Vista previa de ajustes no disponibles"] textarea {
+  color:var(--settings-muted);
 }
 .vn-admin.vn-superadmin-layout .vn-settings-footer {
   display:flex;
