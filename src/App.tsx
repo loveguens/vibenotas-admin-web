@@ -19,6 +19,7 @@ import ActivityLogsPage from "./pages/ActivityLogsPage";
 import SuperadminActivityLogsPage from "./pages/SuperadminActivityLogsPage";
 import ContentPage from "./pages/ContentPage";
 import TagsPage from "./pages/TagsPage";
+import SuperadminTagsPage from "./pages/SuperadminTagsPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SubscriptionsPage from "./pages/SubscriptionsPage";
@@ -377,7 +378,7 @@ function App() {
 
             <Route path="/superadmin/content" element={<ContentPage />} />
 
-            <Route path="/superadmin/tags" element={<TagsPage />} />
+            <Route path="/superadmin/tags" element={<SuperadminTagsPage />} />
 
             <Route
               path="/superadmin/notifications"
