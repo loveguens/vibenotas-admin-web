@@ -283,6 +283,7 @@ export default function Topbar({ role, onOpenSidebar }: TopbarProps) {
     if (path.includes("/administrators")) return "Administradores";
     if (path.includes("/reports")) return "Reportes";
     if (path.startsWith("/superadmin/logs")) return "Logs de actividad";
+    if (path.startsWith("/superadmin/subscriptions")) return "Suscripciones";
     if (path.includes("/content")) return "Contenido";
     if (path.includes("/profile")) return "Mi perfil";
     if (path.includes("/settings")) return "Configuración";

@@ -22,6 +22,7 @@ import TagsPage from "./pages/TagsPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SubscriptionsPage from "./pages/SubscriptionsPage";
+import SuperadminSubscriptionsPage from "./pages/SuperadminSubscriptionsPage";
 import ReportsPage from "./pages/ReportsPage";
 import SecurityPage from "./pages/SecurityPage";
 import SuperadminSecurityPage from "./pages/SuperadminSecurityPage";
@@ -385,7 +386,7 @@ function App() {
 
             <Route
               path="/superadmin/subscriptions"
-              element={<SubscriptionsPage />}
+              element={<SuperadminSubscriptionsPage />}
             />
 
             <Route
