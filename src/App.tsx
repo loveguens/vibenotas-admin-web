@@ -16,6 +16,7 @@ import OwnerSupervisionPage from "./pages/OwnerSupervisionPage";
 import UsersPage from "./pages/UsersPage";
 import AdministratorsPage from "./pages/AdministratorsPage";
 import ActivityLogsPage from "./pages/ActivityLogsPage";
+import SuperadminActivityLogsPage from "./pages/SuperadminActivityLogsPage";
 import ContentPage from "./pages/ContentPage";
 import TagsPage from "./pages/TagsPage";
 import NotificationsPage from "./pages/NotificationsPage";
@@ -371,7 +372,7 @@ function App() {
               element={<AdministratorsPage />}
             />
 
-            <Route path="/superadmin/logs" element={<ActivityLogsPage />} />
+            <Route path="/superadmin/logs" element={<SuperadminActivityLogsPage />} />
 
             <Route path="/superadmin/content" element={<ContentPage />} />
 

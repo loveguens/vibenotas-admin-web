@@ -1,0 +1,810 @@
+/* Logs de actividad · Superadmin. Misma identidad que Dashboard/Usuarios.
+   Alcance exclusivo de esta página: no altera Owner, Admin ni otras secciones. */
+.vn-admin.vn-superadmin-layout .vn-logs-page {
+  --log-bg: var(--vn-surface);
+  --log-soft: var(--vn-surface-hover);
+  --log-ink: var(--vn-ink);
+  --log-muted: var(--vn-muted);
+  --log-border: var(--vn-line);
+  --log-coral: var(--vn-coral);
+  --log-strong: var(--vn-coral-strong);
+  --log-coral-soft: var(--vn-coral-soft);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1320px;
+  min-width: 0;
+  margin: 0 auto;
+  gap: 17px;
+  color: var(--log-ink);
+  font-family: inherit;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-page button,
+.vn-admin.vn-superadmin-layout .vn-logs-page input,
+.vn-admin.vn-superadmin-layout .vn-logs-page select {
+  font-family: inherit;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-page button:focus-visible,
+.vn-admin.vn-superadmin-layout .vn-logs-page select:focus-visible {
+  outline: 2px solid var(--log-coral);
+  outline-offset: 3px;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-page button:disabled {
+  opacity: .48;
+  cursor: not-allowed;
+}
+/* Encabezado idéntico a las otras páginas finalizadas. */
+.vn-admin.vn-superadmin-layout .vn-logs-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 23px;
+  min-width: 0;
+  padding: 23px 26px;
+  border: 1px solid color-mix(in srgb, var(--log-coral) 26%, var(--log-border));
+  border-radius: 22px;
+  background: linear-gradient(115deg, var(--log-bg), color-mix(in srgb, var(--log-coral-soft) 64%, var(--log-bg)));
+  box-shadow: var(--vn-elevation);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-hero-copy {
+  min-width: 0;
+  max-width: 660px;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-eyebrow,
+.vn-admin.vn-superadmin-layout .vn-logs-panel-eyebrow {
+  margin: 0;
+  color: var(--log-strong);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: .12em;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-hero h1 {
+  margin: 8px 0 0;
+  color: var(--log-ink);
+  font-size: clamp(23px, 2.4vw, 31px);
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: 1.15;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-description {
+  margin: 9px 0 0;
+  color: var(--log-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-refresh {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 10px 15px;
+  border: 1px solid var(--log-border);
+  border-radius: 12px;
+  background: var(--log-bg);
+  color: var(--log-ink);
+  font-size: 13px;
+  font-weight: 750;
+  transition: background .18s, border-color .18s;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-refresh:hover:not(:disabled) {
+  background: var(--log-soft);
+  border-color: color-mix(in srgb, var(--log-coral) 40%, var(--log-border));
+}
+/* KPIs al estilo Dashboard, con mini barras corales. */
+.vn-admin.vn-superadmin-layout .vn-logs-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-stat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 168px;
+  overflow: hidden;
+  padding: 18px 19px;
+  border: 1px solid var(--log-border);
+  border-radius: 21px;
+  background: var(--log-bg);
+  box-shadow: var(--vn-elevation);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-stat-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-stat-top > span:first-child {
+  color: var(--log-muted);
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-stat-icon {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: var(--log-coral-soft);
+  color: var(--log-strong);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-stat strong {
+  margin-top: 7px;
+  color: var(--log-ink);
+  font-size: 33px;
+  font-weight: 800;
+  letter-spacing: -.04em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-stat > p {
+  margin: 10px 0 0;
+  color: var(--log-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-stat-bars {
+  position: absolute;
+  right: 19px;
+  bottom: 19px;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 24px;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-stat-bars i {
+  width: 6px;
+  height: 11px;
+  border-radius: 4px 4px 2px 2px;
+  background: var(--log-coral);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-stat-bars i:nth-child(2) { height: 16px; opacity: .55; }
+.vn-admin.vn-superadmin-layout .vn-logs-stat-bars i:nth-child(3) { height: 22px; opacity: .85; }
+.vn-admin.vn-superadmin-layout .vn-logs-stat-bars i:nth-child(4) { height: 14px; opacity: .5; }
+.vn-admin.vn-superadmin-layout .vn-logs-stat-bars i:nth-child(5) { height: 19px; opacity: .75; }
+/* Barra de búsqueda + estado + tamaño de página. */
+.vn-admin.vn-superadmin-layout .vn-logs-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid var(--log-border);
+  border-radius: 18px;
+  background: var(--log-bg);
+  box-shadow: var(--vn-elevation);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-search {
+  display: flex;
+  align-items: center;
+  flex: 1 1 320px;
+  gap: 10px;
+  min-width: 170px;
+  min-height: 43px;
+  padding: 10px 12px;
+  border: 1px solid var(--log-border);
+  border-radius: 12px;
+  background: var(--log-soft);
+  color: var(--log-muted);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-search:focus-within {
+  border-color: var(--log-coral);
+  outline: 2px solid color-mix(in srgb, var(--log-coral) 20%, transparent);
+  outline-offset: 1px;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-search input {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--log-ink);
+  font-size: 12px;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-search input::placeholder {
+  color: var(--log-muted);
+  opacity: .85;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-search button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  border-radius: 7px;
+  color: var(--log-muted);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-search button:hover {
+  background: var(--log-bg);
+  color: var(--log-ink);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-filters {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-filters button {
+  min-height: 35px;
+  padding: 8px 11px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: var(--log-soft);
+  color: var(--log-ink);
+  font-size: 11px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-filters button[aria-pressed="true"] {
+  background: var(--log-coral);
+  color: #fff;
+  border-color: var(--log-coral);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-filters button:hover:not([aria-pressed="true"],:disabled) {
+  background: var(--log-coral-soft);
+  color: var(--log-strong);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-limit {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: var(--log-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-limit select {
+  min-height: 34px;
+  padding: 6px 8px;
+  border: 1px solid var(--log-border);
+  border-radius: 9px;
+  background: var(--log-soft);
+  color: var(--log-ink);
+  font-size: 11px;
+  font-weight: 750;
+}
+/* Resultado de error visible y legible. */
+.vn-admin.vn-superadmin-layout .vn-logs-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 15px 17px;
+  border: 1px solid #ebbbb3;
+  border-radius: 14px;
+  background: #fff0ed;
+  color: #a52f25;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-error > svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-error > div { flex: 1 1 auto; min-width: 0; }
+.vn-admin.vn-superadmin-layout .vn-logs-error strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-error p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-error button {
+  padding: 8px 11px;
+  border: 1px solid currentColor;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 800;
+}
+/* Tabla. */
+.vn-admin.vn-superadmin-layout .vn-logs-panel {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--log-border);
+  border-radius: 20px;
+  background: var(--log-bg);
+  box-shadow: var(--vn-elevation);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 22px;
+  border-bottom: 1px solid var(--log-border);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-panel-heading h2 {
+  margin: 6px 0 0;
+  color: var(--log-ink);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  line-height: 1.3;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-panel-heading p:not(.vn-logs-panel-eyebrow) {
+  margin: 5px 0 0;
+  color: var(--log-muted);
+  font-size: 12px;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-readonly {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border: 1px solid var(--log-border);
+  border-radius: 9px;
+  background: var(--log-soft);
+  color: var(--log-muted);
+  font-size: 11px;
+  font-weight: 750;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-table {
+  width: 100%;
+  min-width: 850px;
+  border-collapse: collapse;
+  color: var(--log-ink);
+  text-align: left;
+  table-layout: auto;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-table th {
+  padding: 13px 15px;
+  border-bottom: 1px solid var(--log-border);
+  background: var(--log-soft);
+  color: var(--log-muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .075em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-table th:first-child,
+.vn-admin.vn-superadmin-layout .vn-logs-table td:first-child { padding-left: 22px; }
+.vn-admin.vn-superadmin-layout .vn-logs-table th:last-child,
+.vn-admin.vn-superadmin-layout .vn-logs-table td:last-child { padding-right: 22px; }
+.vn-admin.vn-superadmin-layout .vn-logs-table tbody tr {
+  border-bottom: 1px solid var(--log-border);
+  transition: background .18s;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-table tbody tr:last-child { border-bottom: 0; }
+.vn-admin.vn-superadmin-layout .vn-logs-table tbody tr:hover { background: var(--log-soft); }
+.vn-admin.vn-superadmin-layout .vn-logs-table td {
+  padding: 14px 15px;
+  vertical-align: middle;
+  font-size: 12px;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-actor {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 170px;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-avatar {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: var(--log-coral-soft);
+  color: var(--log-strong);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-actor-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 4px;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-actor-copy strong {
+  color: var(--log-ink);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.25;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-actor-copy small {
+  overflow: hidden;
+  max-width: 200px;
+  color: var(--log-muted);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-event-name {
+  display: block;
+  max-width: 245px;
+  color: var(--log-ink);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.4;
+  overflow-wrap:anywhere;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-event-type {
+  display: block;
+  margin-top: 5px;
+  color: var(--log-muted);
+  font-size: 10px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-outcome {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 6px 9px;
+  border: 1px solid var(--log-border);
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-outcome-success {
+  background: color-mix(in srgb,#159165 12%,var(--log-bg));
+  color: #177451;
+  border-color: color-mix(in srgb,#159165 26%,var(--log-border));
+}
+.vn-admin.vn-superadmin-layout .vn-logs-outcome-failure {
+  background: color-mix(in srgb,#c34540 11%,var(--log-bg));
+  color: #bc443b;
+  border-color: color-mix(in srgb,#c34540 26%,var(--log-border));
+}
+.vn-admin.vn-superadmin-layout .vn-logs-outcome-denied {
+  background: color-mix(in srgb,#b76b24 13%,var(--log-bg));
+  color: #975718;
+  border-color: color-mix(in srgb,#b76b24 29%,var(--log-border));
+}
+.vn-admin.vn-superadmin-layout .vn-logs-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--log-muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-date svg { flex: 0 0 auto; color: var(--log-strong); }
+.vn-admin.vn-superadmin-layout .vn-logs-detail-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 7px 9px;
+  border: 1px solid var(--log-border);
+  border-radius: 9px;
+  background: var(--log-soft);
+  color: var(--log-ink);
+  font-size: 11px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-detail-button:hover {
+  border-color: var(--log-coral);
+  color: var(--log-strong);
+  background: var(--log-coral-soft);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-empty-row td {
+  padding: 42px 15px;
+  text-align: center;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-empty-row td > * {
+  display: block;
+  margin: 0 auto 8px;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-empty-row td > svg { color: var(--log-strong); }
+.vn-admin.vn-superadmin-layout .vn-logs-empty-row td strong {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--log-ink);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-empty-row td span {
+  font-size: 12px;
+  color: var(--log-muted);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-loading { padding: 15px; }
+.vn-admin.vn-superadmin-layout .vn-logs-skeleton {
+  min-height: 58px;
+  margin: 9px 0;
+  border-radius: 11px;
+  background: var(--log-soft);
+  animation: vn-logs-pulse 1.4s ease-in-out infinite alternate;
+}
+@keyframes vn-logs-pulse { to { opacity: .5; } }
+.vn-admin.vn-superadmin-layout .vn-logs-empty-error {
+  padding: 35px;
+  color: var(--log-muted);
+  font-size: 12px;
+  text-align: center;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-height: 65px;
+  padding: 12px 21px;
+  border-top: 1px solid var(--log-border);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-pagination > span {
+  color: var(--log-muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-page-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-page-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 1px solid var(--log-border);
+  border-radius: 9px;
+  background: var(--log-soft);
+  color: var(--log-ink);
+  font-size: 11px;
+  font-weight: 750;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-page-actions button:hover:not(:disabled) {
+  background: var(--log-coral-soft);
+  color: var(--log-strong);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-page-actions > strong {
+  padding: 0 3px;
+  color: var(--log-ink);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+/* Detalles: sin exponer direcciones IP originales ni metadatos sin depurar. */
+.vn-admin.vn-superadmin-layout .vn-logs-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  background: rgba(10,13,15,.7);
+  backdrop-filter: blur(5px);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-modal {
+  width: min(100%,680px);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  padding: 22px;
+  border: 1px solid var(--log-border);
+  border-radius: 20px;
+  background: var(--log-bg);
+  color: var(--log-ink);
+  box-shadow: 0 25px 80px rgba(0,0,0,.28);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 17px;
+  border-bottom: 1px solid var(--log-border);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-modal-header h2 {
+  margin: 6px 0 0;
+  color: var(--log-ink);
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -.025em;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-modal-header p:not(.vn-logs-panel-eyebrow) {
+  margin: 5px 0 0;
+  font-size: 12px;
+  color: var(--log-muted);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-modal-header > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 1px solid var(--log-border);
+  border-radius: 10px;
+  background: var(--log-soft);
+  color: var(--log-muted);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-modal-header > button:hover {
+  color: var(--log-strong);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 11px;
+  margin: 18px 0;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-detail-grid > div {
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid var(--log-border);
+  border-radius: 11px;
+  background: var(--log-soft);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-detail-grid dt {
+  margin: 0 0 6px;
+  color: var(--log-muted);
+  font-size: 10px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: .055em;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-detail-grid dd {
+  margin: 0;
+  color: var(--log-ink);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-request {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-request button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 29px;
+  padding: 5px 8px;
+  border: 1px solid var(--log-border);
+  border-radius: 8px;
+  background: var(--log-bg);
+  color: var(--log-strong);
+  font-size: 11px;
+  font-weight: 750;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-meta {
+  padding-top: 16px;
+  border-top: 1px solid var(--log-border);
+}
+.vn-admin.vn-superadmin-layout .vn-logs-meta h3 {
+  margin: 0 0 10px;
+  color: var(--log-ink);
+  font-size: 13px;
+  font-weight: 800;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-meta pre {
+  max-height: 260px;
+  overflow: auto;
+  margin: 0 0 9px;
+  padding: 13px;
+  border: 1px solid var(--log-border);
+  border-radius: 10px;
+  background: var(--log-soft);
+  color: var(--log-ink);
+  font-size: 11px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.vn-admin.vn-superadmin-layout .vn-logs-meta > p {
+  margin: 0;
+  color: var(--log-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+html.dark .vn-admin.vn-superadmin-layout .vn-logs-outcome-success { color:#88dfb7; }
+html.dark .vn-admin.vn-superadmin-layout .vn-logs-outcome-failure { color:#ffa69d; }
+html.dark .vn-admin.vn-superadmin-layout .vn-logs-outcome-denied { color:#f2be7c; }
+html.dark .vn-admin.vn-superadmin-layout .vn-logs-error {
+  border-color:#663b3a;
+  background:#382728;
+  color:#ffb8aa;
+}
+@media (max-width: 1100px) {
+  .vn-admin.vn-superadmin-layout .vn-logs-search { flex-basis: 100%; }
+  .vn-admin.vn-superadmin-layout .vn-logs-filters { flex: 1 1 auto; }
+}
+@media (max-width: 800px) {
+  .vn-admin.vn-superadmin-layout .vn-logs-stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .vn-admin.vn-superadmin-layout .vn-logs-stat:last-child { grid-column: 1/-1; }
+  .vn-admin.vn-superadmin-layout .vn-logs-table { min-width: 0; }
+  .vn-admin.vn-superadmin-layout .vn-logs-table thead { display: none; }
+  .vn-admin.vn-superadmin-layout .vn-logs-table tbody {
+    display: grid;
+    gap: 12px;
+    padding: 12px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-logs-table tbody tr:not(.vn-logs-empty-row) {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 11px;
+    padding: 14px;
+    border: 1px solid var(--log-border);
+    border-radius: 13px;
+    background: var(--log-bg);
+  }
+  .vn-admin.vn-superadmin-layout .vn-logs-table td,
+  .vn-admin.vn-superadmin-layout .vn-logs-table td:first-child,
+  .vn-admin.vn-superadmin-layout .vn-logs-table td:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+    padding: 0;
+  }
+  .vn-admin.vn-superadmin-layout .vn-logs-table tbody tr:not(.vn-logs-empty-row) td::before {
+    content: attr(data-label);
+    color: var(--log-muted);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+  }
+  .vn-admin.vn-superadmin-layout .vn-logs-table tbody tr:not(.vn-logs-empty-row) td:first-child {
+    grid-column: 1/-1;
+  }
+  .vn-admin.vn-superadmin-layout .vn-logs-table .vn-logs-empty-row td {
+    display: block;
+    padding: 35px 12px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-logs-table .vn-logs-empty-row { display: block; }
+}
+@media (max-width: 580px) {
+  .vn-admin.vn-superadmin-layout .vn-logs-page { gap: 12px; }
+  .vn-admin.vn-superadmin-layout .vn-logs-hero {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 17px;
+    gap: 15px;
+    border-radius: 17px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-logs-hero h1 { font-size: 25px; }
+  .vn-admin.vn-superadmin-layout .vn-logs-refresh { width: 100%; }
+  .vn-admin.vn-superadmin-layout .vn-logs-stats { grid-template-columns: 1fr; gap: 10px; }
+  .vn-admin.vn-superadmin-layout .vn-logs-stat { min-height: 151px; padding: 15px; border-radius: 17px; }
+  .vn-admin.vn-superadmin-layout .vn-logs-stat:last-child { grid-column: auto; }
+  .vn-admin.vn-superadmin-layout .vn-logs-toolbar { padding: 10px; gap: 8px; }
+  .vn-admin.vn-superadmin-layout .vn-logs-search { min-width: 0; }
+  .vn-admin.vn-superadmin-layout .vn-logs-filters { flex: 1 1 100%; gap: 5px; }
+  .vn-admin.vn-superadmin-layout .vn-logs-filters button { flex: 1 1 auto; padding: 7px; font-size: 10px; }
+  .vn-admin.vn-superadmin-layout .vn-logs-limit { margin-left: auto; }
+  .vn-admin.vn-superadmin-layout .vn-logs-panel-heading { padding: 17px; }
+  .vn-admin.vn-superadmin-layout .vn-logs-readonly { display: none; }
+  .vn-admin.vn-superadmin-layout .vn-logs-table tbody tr:not(.vn-logs-empty-row) { grid-template-columns: 1fr; }
+  .vn-admin.vn-superadmin-layout .vn-logs-table tbody tr:not(.vn-logs-empty-row) td:first-child { grid-column:auto; }
+  .vn-admin.vn-superadmin-layout .vn-logs-pagination { padding: 15px; }
+  .vn-admin.vn-superadmin-layout .vn-logs-page-actions { width: 100%; justify-content: space-between; }
+  .vn-admin.vn-superadmin-layout .vn-logs-page-actions button { flex: 1 1 auto; }
+  .vn-admin.vn-superadmin-layout .vn-logs-modal { padding: 16px; border-radius: 16px; }
+  .vn-admin.vn-superadmin-layout .vn-logs-detail-grid { grid-template-columns: 1fr; }
+  .vn-admin.vn-superadmin-layout .vn-logs-error { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vn-admin.vn-superadmin-layout .vn-logs-page * { transition: none !important; animation: none !important; }
+}
