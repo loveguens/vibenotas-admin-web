@@ -308,6 +308,37 @@ export default function SuperadminTagsPage() {
           <span className="vn-tags-visible" aria-live="polite">{filteredTags.length} visibles</span>
         </div>
 
+        {!loading && error && (
+          <section className="vn-tags-preview" aria-label="Vista previa sin conexión">
+            <div className="vn-tags-preview-banner">
+              <strong>Vista previa del diseño — sin datos reales</strong>
+              <p>Estas tarjetas son ejemplos de presentación. No representan etiquetas de los usuarios y no permiten crear, editar ni eliminar registros.</p>
+            </div>
+            <div className="vn-tags-grid grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {[
+                { id: "example-work", nombre: "Trabajo (ejemplo)", color: "#F06449" },
+                { id: "example-trip", nombre: "Viajes (ejemplo)", color: "#4299B9" },
+                { id: "example-personal", nombre: "Personal (ejemplo)", color: "#C7845F" },
+              ].map((tag) => (
+                <article key={tag.id} className="vn-tags-item vn-tags-example rounded-3xl border p-5">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="vn-tags-swatch flex h-12 w-12 items-center justify-center rounded-2xl text-white" style={{ backgroundColor: tag.color }}>
+                      <Tag size={21} aria-hidden="true" />
+                    </span>
+                    <span className="vn-tags-example-pill">Ejemplo</span>
+                  </div>
+                  <h2 className="vn-tags-item-name mt-5 text-lg font-bold">{tag.nombre}</h2>
+                  <p className="vn-tags-item-count mt-1 text-sm">Sin datos de asociaciones</p>
+                  <div className="vn-tags-item-footer mt-5 flex items-center gap-2">
+                    <span className="h-3 w-3 rounded-full" style={{ backgroundColor: tag.color }} />
+                    <code>{tag.color}</code>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
         {loading && (
           <div className="vn-tags-grid grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {[1, 2, 3, 4, 5, 6].map((item) => (
