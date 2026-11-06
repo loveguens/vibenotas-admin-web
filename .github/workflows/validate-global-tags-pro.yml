@@ -1,0 +1,21 @@
+name: Validate Global Tags PRO admin
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [feat/global-tags-trash-pro-ui]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: TypeScript and Vite production build
+        run: npm run build
