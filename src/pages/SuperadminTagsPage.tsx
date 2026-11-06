@@ -16,8 +16,6 @@ type TagItem = {
   id: string;
   nombre: string;
   color: string;
-  total_notas?: number;
-  notas_count?: number;
   creado_en?: string;
 };
 
@@ -25,13 +23,12 @@ type TagsResponse = {
   success: boolean;
   message: string;
   data?: {
+    scope?: "global";
     etiquetas?: TagItem[];
     tags?: TagItem[];
     total?: number;
   };
 };
-
-type UsageFilter = "all" | "used" | "unused";
 
 type TagForm = {
   nombre: string;
@@ -78,13 +75,9 @@ function getTagError(error: unknown, fallback: string): string {
   return error instanceof Error ? error.message : fallback;
 }
 
-function getTagNoteCount(tag: TagItem): number {
-  return Math.max(0, Number(tag.total_notas ?? tag.notas_count ?? 0) || 0);
-}
 export default function SuperadminTagsPage() {
   const [tags, setTags] = useState<TagItem[]>([]);
   const [search, setSearch] = useState("");
-  const [usageFilter, setUsageFilter] = useState<UsageFilter>("all");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -107,7 +100,12 @@ export default function SuperadminTagsPage() {
         );
       }
 
-      setTags(response.data.data?.etiquetas ?? response.data.data?.tags ?? []);
+      // Evita exponer etiquetas personales si el backend aún ejecuta el contrato antiguo.
+      if (response.data.data?.scope !== "global") {
+        throw new Error("El backend todavía no confirma la separación de etiquetas privadas y globales. No se muestran etiquetas por seguridad.");
+      }
+
+      setTags(response.data.data?.etiquetas ?? []);
     } catch (err) {
       setTags([]);
       setError(getTagError(err, "No se pudieron cargar las etiquetas."));
@@ -124,18 +122,12 @@ export default function SuperadminTagsPage() {
     return () => window.clearTimeout(initialLoad);
   }, []);
 
-  const usedCount = useMemo(
-    () => tags.filter((tag) => getTagNoteCount(tag) > 0).length,
-    [tags],
-  );
   const filteredTags = useMemo(() => {
     const query = search.trim().toLocaleLowerCase("es-CL");
-    return tags.filter((tag) => {
-      const matchesName = !query || tag.nombre.toLocaleLowerCase("es-CL").includes(query);
-      const used = getTagNoteCount(tag) > 0;
-      return matchesName && (usageFilter === "all" || (usageFilter === "used" ? used : !used));
-    });
-  }, [search, tags, usageFilter]);
+    return tags.filter((tag) =>
+      !query || tag.nombre.toLocaleLowerCase("es-CL").includes(query)
+    );
+  }, [search, tags]);
 
   function openCreateModal() {
     setEditingTag(null);
@@ -244,7 +236,7 @@ export default function SuperadminTagsPage() {
             </h1>
 
             <p className="vn-tags-description mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-              Administra el catálogo de etiquetas sin modificar las etiquetas ya guardadas en tus notas.
+              Crea y administra etiquetas oficiales de VibeNotas. Las etiquetas personales de los usuarios son privadas.
             </p>
           </div>
 
@@ -284,6 +276,11 @@ export default function SuperadminTagsPage() {
           </div>
         )}
 
+        <div className="vn-tags-global-notice" role="status">
+          <strong>Catálogo global independiente</strong>
+          <p>Solo aparecen las etiquetas oficiales creadas por la administración. Nunca mostramos nombres, notas ni cantidades de etiquetas personales.</p>
+        </div>
+
         <div className="vn-tags-toolbar rounded-3xl border border-white/10 bg-[#1E293B]/80 p-4 shadow-xl shadow-black/10 backdrop-blur-xl">
           <div className="vn-tags-search flex items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3">
             <Search size={19} aria-hidden="true" className="text-slate-500" />
@@ -300,10 +297,9 @@ export default function SuperadminTagsPage() {
               </button>
             )}
           </div>
-          <div className="vn-tags-filters" role="group" aria-label="Filtrar por uso">
-            <button type="button" aria-pressed={usageFilter === "all"} onClick={() => setUsageFilter("all")}>Todas <span>{tags.length}</span></button>
-            <button type="button" aria-pressed={usageFilter === "used"} onClick={() => setUsageFilter("used")}>En uso <span>{usedCount}</span></button>
-            <button type="button" aria-pressed={usageFilter === "unused"} onClick={() => setUsageFilter("unused")}>Sin uso <span>{tags.length - usedCount}</span></button>
+          <div className="vn-tags-global-total" aria-live="polite">
+            <Tag size={15} aria-hidden="true" />
+            {tags.length} {tags.length === 1 ? "etiqueta global" : "etiquetas globales"}
           </div>
           <span className="vn-tags-visible" aria-live="polite">{filteredTags.length} visibles</span>
         </div>
@@ -353,8 +349,6 @@ export default function SuperadminTagsPage() {
         {!loading && !error && (
           <div className="vn-tags-grid grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {filteredTags.map((tag) => {
-              const total = getTagNoteCount(tag);
-
               return (
                 <article
                   key={tag.id}
@@ -396,7 +390,7 @@ export default function SuperadminTagsPage() {
                   </h2>
 
                   <p className="vn-tags-item-count mt-1 text-sm text-slate-500">
-                    {total} {total === 1 ? "nota asociada" : "notas asociadas"}
+                    Etiqueta oficial del catálogo de VibeNotas
                   </p>
 
                   <div className="vn-tags-item-footer mt-5 flex items-center gap-2">
@@ -415,7 +409,7 @@ export default function SuperadminTagsPage() {
             {filteredTags.length === 0 && (
               <div className="vn-tags-empty col-span-full rounded-3xl border border-dashed border-white/10 py-16 text-center text-slate-500">
                 <Tag className="mx-auto mb-3" size={30} />
-                {tags.length === 0 ? "Todavía no hay etiquetas. Crea la primera para organizar el contenido." : "No hay etiquetas que coincidan con los filtros."}
+                {tags.length === 0 ? "Todavía no hay etiquetas globales. Puedes crear la primera para ofrecerla como etiqueta oficial." : "No hay etiquetas que coincidan con los filtros."}
               </div>
             )}
           </div>
@@ -435,11 +429,11 @@ export default function SuperadminTagsPage() {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="vn-tags-modal-eyebrow text-sm font-semibold text-violet-300">
-                    {editingTag ? "Editar organización" : "Nueva organización"}
+                    {editingTag ? "Editar etiqueta global" : "Nueva etiqueta global"}
                   </p>
 
                   <h2 id="vn-tags-modal-title" className="vn-tags-modal-title mt-1 text-xl font-bold text-white">
-                    {editingTag ? "Editar etiqueta" : "Crear etiqueta"}
+                    {editingTag ? "Editar etiqueta oficial" : "Crear etiqueta oficial"}
                   </h2>
                 </div>
 
@@ -465,7 +459,6 @@ export default function SuperadminTagsPage() {
                     id="vn-tags-name"
                     autoFocus
                     value={form.nombre}
-                    disabled={Boolean(editingTag && getTagNoteCount(editingTag) > 0)}
                     onChange={(event) =>
                       setForm((current) => ({
                         ...current,
@@ -477,11 +470,6 @@ export default function SuperadminTagsPage() {
                     className="w-full rounded-xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-violet-400/50"
                     required
                   />
-                  {editingTag && getTagNoteCount(editingTag) > 0 && (
-                    <p className="vn-tags-name-locked">
-                      Esta etiqueta se usa en notas. Puedes cambiar su color, pero no su nombre.
-                    </p>
-                  )}
                 </div>
 
                 <div>
