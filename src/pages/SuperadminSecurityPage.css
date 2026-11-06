@@ -1,0 +1,397 @@
+/* VibeNotas · Seguridad Superadmin. Misma identidad y escala tipográfica
+   que Dashboard, Usuarios y Reportes. Aislado de Owner y demás roles. */
+.vn-admin.vn-superadmin-layout .vn-security-page {
+  --sec-bg:var(--vn-surface);
+  --sec-soft:var(--vn-surface-hover);
+  --sec-line:var(--vn-line);
+  --sec-ink:var(--vn-ink);
+  --sec-muted:var(--vn-muted);
+  --sec-coral:var(--vn-coral);
+  --sec-strong:var(--vn-coral-strong);
+  --sec-coral-soft:var(--vn-coral-soft);
+  display:flex;flex-direction:column;gap:17px;
+  width:100%;max-width:1320px;min-width:0;margin:0 auto;
+  color:var(--sec-ink);font-family:inherit;
+}
+.vn-admin.vn-superadmin-layout .vn-security-page button,
+.vn-admin.vn-superadmin-layout .vn-security-page input {
+  font-family:inherit;
+}
+.vn-admin.vn-superadmin-layout .vn-security-page button:focus-visible {
+  outline:2px solid var(--sec-coral);outline-offset:2px;
+}
+.vn-admin.vn-superadmin-layout .vn-security-page button:disabled {opacity:.5;cursor:not-allowed}
+/* Cabecera común del Superadmin. */
+.vn-admin.vn-superadmin-layout .vn-security-hero {
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  padding:23px 26px;min-width:0;
+  border:1px solid color-mix(in srgb,var(--sec-coral) 26%,var(--sec-line));
+  border-radius:22px;
+  background:linear-gradient(115deg,var(--sec-bg),color-mix(in srgb,var(--sec-coral-soft) 64%,var(--sec-bg)));
+  box-shadow:var(--vn-elevation);
+}
+.vn-admin.vn-superadmin-layout .vn-security-hero-copy {min-width:0;max-width:680px}
+.vn-admin.vn-superadmin-layout .vn-security-kicker,
+.vn-admin.vn-superadmin-layout .vn-security-panel-kicker {
+  margin:0;color:var(--sec-strong);font-size:11px;font-weight:800;letter-spacing:.12em;line-height:1.4;
+}
+.vn-admin.vn-superadmin-layout .vn-security-hero h1 {
+  margin:8px 0 0;color:var(--sec-ink);font-size:clamp(23px,2.4vw,31px);
+  font-weight:800;letter-spacing:-.035em;line-height:1.15;
+}
+.vn-admin.vn-superadmin-layout .vn-security-hero-copy>p:last-child {
+  margin:9px 0 0;color:var(--sec-muted);font-size:13px;line-height:1.6;
+}
+.vn-admin.vn-superadmin-layout .vn-security-refresh {
+  display:inline-flex;flex:0 0 auto;align-items:center;justify-content:center;gap:9px;
+  min-height:44px;padding:10px 15px;border:1px solid var(--sec-line);
+  border-radius:12px;background:var(--sec-bg);color:var(--sec-ink);
+  font-size:13px;font-weight:750;
+}
+.vn-admin.vn-superadmin-layout .vn-security-refresh:hover:not(:disabled) {
+  background:var(--sec-soft);border-color:var(--sec-coral);
+}
+/* Tarjetas ejecutivas con barra coral, mismo tamaño de texto. */
+.vn-admin.vn-superadmin-layout .vn-security-stats {
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;
+}
+.vn-admin.vn-superadmin-layout .vn-security-stat {
+  position:relative;display:flex;flex-direction:column;min-width:0;min-height:162px;
+  padding:18px;border:1px solid var(--sec-line);border-radius:19px;
+  background:var(--sec-bg);box-shadow:var(--vn-elevation);overflow:hidden;
+}
+.vn-admin.vn-superadmin-layout .vn-security-stat-head {
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+}
+.vn-admin.vn-superadmin-layout .vn-security-stat-head p {
+  margin:0;color:var(--sec-muted);font-size:12px;font-weight:650;line-height:1.45;
+}
+.vn-admin.vn-superadmin-layout .vn-security-stat-head span {
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+  width:40px;height:40px;border-radius:12px;
+  background:var(--sec-coral-soft);color:var(--sec-strong);
+}
+.vn-admin.vn-superadmin-layout .vn-security-stat>strong {
+  display:block;margin-top:9px;color:var(--sec-ink);
+  font-size:32px;line-height:1;font-weight:800;letter-spacing:-.04em;
+  font-variant-numeric:tabular-nums;
+}
+.vn-admin.vn-superadmin-layout .vn-security-stat>small {
+  margin-top:10px;color:var(--sec-muted);font-size:11px;line-height:1.5;
+}
+.vn-admin.vn-superadmin-layout .vn-security-bars {
+  position:absolute;right:18px;bottom:17px;
+  display:flex;align-items:flex-end;gap:4px;height:23px;
+}
+.vn-admin.vn-superadmin-layout .vn-security-bars i {
+  display:block;width:5px;height:12px;border-radius:4px 4px 2px 2px;background:var(--sec-coral);
+}
+.vn-admin.vn-superadmin-layout .vn-security-bars i:nth-child(2){height:17px;opacity:.5}
+.vn-admin.vn-superadmin-layout .vn-security-bars i:nth-child(3){height:22px;opacity:.85}
+.vn-admin.vn-superadmin-layout .vn-security-bars i:nth-child(4){height:13px;opacity:.6}
+.vn-admin.vn-superadmin-layout .vn-security-bars i:nth-child(5){height:18px;opacity:.75}
+/* Banners semánticos. */
+.vn-admin.vn-superadmin-layout .vn-security-feedback {
+  display:flex;align-items:flex-start;gap:12px;
+  padding:14px 16px;border-radius:13px;font-size:12px;
+}
+.vn-admin.vn-superadmin-layout .vn-security-feedback>svg{flex:0 0 auto;margin-top:2px}
+.vn-admin.vn-superadmin-layout .vn-security-feedback strong{font-size:13px;font-weight:800}
+.vn-admin.vn-superadmin-layout .vn-security-feedback p{margin:4px 0 0;line-height:1.5}
+.vn-admin.vn-superadmin-layout .vn-security-error{
+  color:#ac3328;border:1px solid #edbfb8;background:#fff0ed;
+}
+.vn-admin.vn-superadmin-layout .vn-security-success{
+  color:#166644;border:1px solid #b9dfc8;background:#e9f8ed;
+}
+html.dark .vn-admin.vn-superadmin-layout .vn-security-error{
+  color:#ffb5a8;border-color:#6e4140;background:#39292a;
+}
+html.dark .vn-admin.vn-superadmin-layout .vn-security-success{
+  color:#a4e4c2;border-color:#37644c;background:#20372c;
+}
+/* Paneles de información. */
+.vn-admin.vn-superadmin-layout .vn-security-panel {
+  min-width:0;overflow:hidden;border:1px solid var(--sec-line);
+  border-radius:20px;background:var(--sec-bg);box-shadow:var(--vn-elevation);
+}
+.vn-admin.vn-superadmin-layout .vn-security-panel-heading {
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:20px 22px;border-bottom:1px solid var(--sec-line);
+}
+.vn-admin.vn-superadmin-layout .vn-security-panel-heading h2 {
+  margin:6px 0 0;color:var(--sec-ink);font-size:18px;font-weight:800;
+  letter-spacing:-.025em;line-height:1.3;
+}
+.vn-admin.vn-superadmin-layout .vn-security-panel-heading p:not(.vn-security-panel-kicker) {
+  margin:5px 0 0;color:var(--sec-muted);font-size:12px;line-height:1.45;
+}
+.vn-admin.vn-superadmin-layout .vn-security-readonly{
+  display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;
+  padding:7px 10px;border:1px solid var(--sec-line);
+  border-radius:9px;background:var(--sec-soft);color:var(--sec-muted);
+  font-size:11px;font-weight:750;
+}
+.vn-admin.vn-superadmin-layout .vn-security-toolbar {
+  display:flex;align-items:center;flex-wrap:wrap;gap:10px;
+  padding:12px 15px;border-bottom:1px solid var(--sec-line);
+}
+.vn-admin.vn-superadmin-layout .vn-security-search{
+  display:flex;align-items:center;gap:10px;min-width:220px;
+  flex:1 1 310px;min-height:42px;padding:9px 12px;
+  border:1px solid var(--sec-line);border-radius:11px;
+  background:var(--sec-soft);color:var(--sec-muted);
+}
+.vn-admin.vn-superadmin-layout .vn-security-search:focus-within {
+  border-color:var(--sec-coral);outline:2px solid color-mix(in srgb,var(--sec-coral) 20%,transparent);
+  outline-offset:1px;
+}
+.vn-admin.vn-superadmin-layout .vn-security-search input {
+  flex:1 1 auto;width:100%;min-width:0;border:0;background:transparent;
+  padding:0;color:var(--sec-ink);outline:none;font-size:12px;
+}
+.vn-admin.vn-superadmin-layout .vn-security-search input::placeholder{color:var(--sec-muted);opacity:.84}
+.vn-admin.vn-superadmin-layout .vn-security-search button {
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+  width:25px;height:25px;border-radius:7px;color:var(--sec-muted);
+}
+.vn-admin.vn-superadmin-layout .vn-security-search button:hover{background:var(--sec-bg);color:var(--sec-ink)}
+.vn-admin.vn-superadmin-layout .vn-security-filters{
+  display:flex;flex-wrap:wrap;align-items:center;gap:6px;flex:0 1 auto;
+}
+.vn-admin.vn-superadmin-layout .vn-security-filters button{
+  min-height:35px;padding:7px 10px;border:1px solid transparent;
+  border-radius:9px;background:var(--sec-soft);color:var(--sec-ink);
+  font-size:11px;font-weight:750;white-space:nowrap;
+}
+.vn-admin.vn-superadmin-layout .vn-security-filters button[aria-pressed="true"]{
+  background:var(--sec-coral);border-color:var(--sec-coral);color:#fff;
+}
+.vn-admin.vn-superadmin-layout .vn-security-filters button:hover:not([aria-pressed="true"]){
+  background:var(--sec-coral-soft);color:var(--sec-strong);
+}
+/* Tabla de seguridad, adaptable a tarjetas en móvil. */
+.vn-admin.vn-superadmin-layout .vn-security-table-scroll{width:100%;overflow-x:auto}
+.vn-admin.vn-superadmin-layout .vn-security-table{
+  width:100%;min-width:970px;border-collapse:collapse;text-align:left;color:var(--sec-ink);
+}
+.vn-admin.vn-superadmin-layout .vn-security-table th{
+  padding:12px 14px;border-bottom:1px solid var(--sec-line);
+  background:var(--sec-soft);color:var(--sec-muted);
+  font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;white-space:nowrap;
+}
+.vn-admin.vn-superadmin-layout .vn-security-table th:first-child,
+.vn-admin.vn-superadmin-layout .vn-security-table td:first-child{padding-left:21px}
+.vn-admin.vn-superadmin-layout .vn-security-table th:last-child,
+.vn-admin.vn-superadmin-layout .vn-security-table td:last-child{padding-right:21px}
+.vn-admin.vn-superadmin-layout .vn-security-table tbody tr{border-bottom:1px solid var(--sec-line)}
+.vn-admin.vn-superadmin-layout .vn-security-table tbody tr:last-child{border-bottom:0}
+.vn-admin.vn-superadmin-layout .vn-security-table tbody tr:hover{background:var(--sec-soft)}
+.vn-admin.vn-superadmin-layout .vn-security-table td{padding:13px 14px;vertical-align:middle;font-size:12px}
+.vn-admin.vn-superadmin-layout .vn-security-person{display:flex;align-items:center;gap:9px;min-width:178px}
+.vn-admin.vn-superadmin-layout .vn-security-avatar{
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+  width:36px;height:36px;border-radius:10px;
+  color:var(--sec-strong);background:var(--sec-coral-soft);
+}
+.vn-admin.vn-superadmin-layout .vn-security-person>span:last-child{
+  display:flex;flex-direction:column;gap:4px;min-width:0;
+}
+.vn-admin.vn-superadmin-layout .vn-security-person strong{
+  display:block;overflow:hidden;max-width:180px;color:var(--sec-ink);
+  text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:800;
+}
+.vn-admin.vn-superadmin-layout .vn-security-person small{
+  display:block;overflow:hidden;max-width:180px;color:var(--sec-muted);
+  text-overflow:ellipsis;white-space:nowrap;font-size:10px;
+}
+.vn-admin.vn-superadmin-layout .vn-security-device,
+.vn-admin.vn-superadmin-layout .vn-security-date{
+  display:flex;align-items:center;gap:7px;color:var(--sec-ink);
+  font-size:11px;white-space:nowrap;
+}
+.vn-admin.vn-superadmin-layout .vn-security-device svg,
+.vn-admin.vn-superadmin-layout .vn-security-date svg{color:var(--sec-strong);flex:0 0 auto}
+.vn-admin.vn-superadmin-layout .vn-security-detail-muted{
+  display:block;margin-top:4px;color:var(--sec-muted);font-size:10px;
+}
+.vn-admin.vn-superadmin-layout .vn-security-status,
+.vn-admin.vn-superadmin-layout .vn-security-risk{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:6px 9px;border-radius:8px;border:1px solid var(--sec-line);
+  background:var(--sec-soft);color:var(--sec-muted);
+  font-size:11px;font-weight:750;white-space:nowrap;
+}
+.vn-admin.vn-superadmin-layout .vn-security-status-good{
+  border-color:color-mix(in srgb,#178663 28%,var(--sec-line));
+  background:color-mix(in srgb,#178663 10%,var(--sec-bg));color:#167452;
+}
+.vn-admin.vn-superadmin-layout .vn-security-status-alert,
+.vn-admin.vn-superadmin-layout .vn-security-risk-marked{
+  border-color:color-mix(in srgb,#c77030 29%,var(--sec-line));
+  background:color-mix(in srgb,#c77030 10%,var(--sec-bg));color:#995315;
+}
+html.dark .vn-admin.vn-superadmin-layout .vn-security-status-good{color:#8bddbb}
+html.dark .vn-admin.vn-superadmin-layout .vn-security-status-alert,
+html.dark .vn-admin.vn-superadmin-layout .vn-security-risk-marked{color:#ffc18d}
+.vn-admin.vn-superadmin-layout .vn-security-view{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:33px;padding:7px 12px;border:1px solid var(--sec-line);
+  border-radius:9px;background:var(--sec-soft);color:var(--sec-ink);
+  font-size:11px;font-weight:800;
+}
+.vn-admin.vn-superadmin-layout .vn-security-view:hover{border-color:var(--sec-coral);color:var(--sec-strong);background:var(--sec-coral-soft)}
+.vn-admin.vn-superadmin-layout .vn-security-empty-row td,
+.vn-admin.vn-superadmin-layout .vn-security-empty{
+  padding:35px 16px;color:var(--sec-muted);font-size:12px;text-align:center;
+}
+.vn-admin.vn-superadmin-layout .vn-security-skeletons{padding:12px 15px}
+.vn-admin.vn-superadmin-layout .vn-security-skeleton{
+  height:56px;margin:8px 0;border-radius:11px;background:var(--sec-soft);
+  animation:vn-security-pulse 1.4s ease-in-out infinite alternate;
+}
+@keyframes vn-security-pulse{to{opacity:.52}}
+/* Eventos recientes: lectura rápida y sin información sensible. */
+.vn-admin.vn-superadmin-layout .vn-security-event-list{padding:0 18px}
+.vn-admin.vn-superadmin-layout .vn-security-event{
+  display:flex;align-items:center;gap:12px;min-height:74px;
+  padding:12px 3px;border-bottom:1px solid var(--sec-line);
+}
+.vn-admin.vn-superadmin-layout .vn-security-event:last-child{border-bottom:0}
+.vn-admin.vn-superadmin-layout .vn-security-event-icon{
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+  width:39px;height:39px;border-radius:11px;
+  background:var(--sec-coral-soft);color:var(--sec-strong);
+}
+.vn-admin.vn-superadmin-layout .vn-security-event-main{
+  display:flex;flex:1 1 auto;flex-direction:column;gap:5px;min-width:0;
+}
+.vn-admin.vn-superadmin-layout .vn-security-event-main strong{
+  color:var(--sec-ink);font-size:12px;font-weight:800;overflow-wrap:anywhere;
+}
+.vn-admin.vn-superadmin-layout .vn-security-event-main small{
+  color:var(--sec-muted);font-size:11px;line-height:1.5;
+}
+.vn-admin.vn-superadmin-layout .vn-security-event-result{
+  flex:0 0 auto;padding:6px 9px;border:1px solid var(--sec-line);
+  border-radius:8px;background:var(--sec-soft);color:var(--sec-muted);
+  font-size:11px;font-weight:750;
+}
+.vn-admin.vn-superadmin-layout .vn-security-event-success{color:#147853}
+.vn-admin.vn-superadmin-layout .vn-security-event-denied{color:#b56820}
+.vn-admin.vn-superadmin-layout .vn-security-event-failure{color:#be4840}
+html.dark .vn-admin.vn-superadmin-layout .vn-security-event-success{color:#8bddbb}
+html.dark .vn-admin.vn-superadmin-layout .vn-security-event-denied{color:#ffcc8b}
+html.dark .vn-admin.vn-superadmin-layout .vn-security-event-failure{color:#ffa99f}
+/* Detalle protegido y advertencia explícita de revocación masiva. */
+.vn-admin.vn-superadmin-layout .vn-security-modal-overlay{
+  position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;
+  padding:16px;background:rgba(10,13,15,.72);backdrop-filter:blur(5px);
+}
+.vn-admin.vn-superadmin-layout .vn-security-modal{
+  width:min(100%,650px);max-height:calc(100dvh - 32px);overflow-y:auto;
+  padding:22px;border:1px solid var(--sec-line);border-radius:20px;
+  background:var(--sec-bg);color:var(--sec-ink);box-shadow:0 25px 80px rgba(0,0,0,.28);
+}
+.vn-admin.vn-superadmin-layout .vn-security-modal-head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:15px;padding-bottom:17px;border-bottom:1px solid var(--sec-line);
+}
+.vn-admin.vn-superadmin-layout .vn-security-modal-head h2{
+  margin:6px 0 0;color:var(--sec-ink);font-size:21px;font-weight:800;letter-spacing:-.025em;
+}
+.vn-admin.vn-superadmin-layout .vn-security-modal-head p:not(.vn-security-panel-kicker){
+  margin:5px 0 0;color:var(--sec-muted);font-size:12px;overflow-wrap:anywhere;
+}
+.vn-admin.vn-superadmin-layout .vn-security-modal-head>button{
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+  width:36px;height:36px;border:1px solid var(--sec-line);
+  border-radius:9px;background:var(--sec-soft);color:var(--sec-ink);
+}
+.vn-admin.vn-superadmin-layout .vn-security-fields{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:17px 0;
+}
+.vn-admin.vn-superadmin-layout .vn-security-fields>div{
+  padding:12px;border:1px solid var(--sec-line);border-radius:10px;
+  background:var(--sec-soft);min-width:0;
+}
+.vn-admin.vn-superadmin-layout .vn-security-fields dt{
+  margin:0 0 5px;color:var(--sec-muted);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;
+}
+.vn-admin.vn-superadmin-layout .vn-security-fields dd{
+  margin:0;color:var(--sec-ink);font-size:12px;line-height:1.5;font-weight:750;overflow-wrap:anywhere;
+}
+.vn-admin.vn-superadmin-layout .vn-security-revoke-notice{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:13px;border:1px solid color-mix(in srgb,#c97536 32%,var(--sec-line));
+  border-radius:11px;background:color-mix(in srgb,#c97536 9%,var(--sec-bg));color:var(--sec-ink);
+}
+.vn-admin.vn-superadmin-layout .vn-security-revoke-notice svg{flex:0 0 auto;color:var(--sec-strong)}
+.vn-admin.vn-superadmin-layout .vn-security-revoke-notice p{margin:0;font-size:12px;line-height:1.55}
+.vn-admin.vn-superadmin-layout .vn-security-revoke{
+  display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  min-height:44px;margin-top:15px;padding:11px;border:1px solid #c5483f;
+  border-radius:11px;background:#c5483f;color:white;font-size:12px;font-weight:800;
+}
+.vn-admin.vn-superadmin-layout .vn-security-revoke:hover:not(:disabled){background:#ab342d}
+@media(max-width:1150px){
+  .vn-admin.vn-superadmin-layout .vn-security-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .vn-admin.vn-superadmin-layout .vn-security-search{flex-basis:100%}
+}
+@media(max-width:800px){
+  .vn-admin.vn-superadmin-layout .vn-security-table{min-width:0}
+  .vn-admin.vn-superadmin-layout .vn-security-table thead{display:none}
+  .vn-admin.vn-superadmin-layout .vn-security-table tbody{
+    display:grid;gap:10px;padding:10px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-security-table tbody tr:not(.vn-security-empty-row){
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;
+    padding:14px;border:1px solid var(--sec-line);border-radius:12px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-security-table td,
+  .vn-admin.vn-superadmin-layout .vn-security-table td:first-child,
+  .vn-admin.vn-superadmin-layout .vn-security-table td:last-child{
+    display:flex;flex-direction:column;gap:7px;min-width:0;padding:0;
+  }
+  .vn-admin.vn-superadmin-layout .vn-security-table tbody tr:not(.vn-security-empty-row) td:before{
+    content:attr(data-label);color:var(--sec-muted);
+    font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  }
+  .vn-admin.vn-superadmin-layout .vn-security-table tbody tr:not(.vn-security-empty-row) td:first-child{grid-column:1/-1}
+  .vn-admin.vn-superadmin-layout .vn-security-table .vn-security-empty-row{
+    display:block;grid-column:1/-1;
+  }
+  .vn-admin.vn-superadmin-layout .vn-security-table .vn-security-empty-row td{display:block;padding:35px 12px}
+}
+@media(max-width:600px){
+  .vn-admin.vn-superadmin-layout .vn-security-page{gap:12px}
+  .vn-admin.vn-superadmin-layout .vn-security-hero{
+    flex-direction:column;align-items:stretch;gap:15px;padding:17px;border-radius:17px;
+  }
+  .vn-admin.vn-superadmin-layout .vn-security-hero h1{font-size:25px}
+  .vn-admin.vn-superadmin-layout .vn-security-refresh{width:100%}
+  .vn-admin.vn-superadmin-layout .vn-security-stats{gap:10px}
+  .vn-admin.vn-superadmin-layout .vn-security-stat{padding:14px;min-height:157px;border-radius:15px}
+  .vn-admin.vn-superadmin-layout .vn-security-stat-head span{width:33px;height:33px}
+  .vn-admin.vn-superadmin-layout .vn-security-stat>strong{font-size:28px}
+  .vn-admin.vn-superadmin-layout .vn-security-bars{right:12px}
+  .vn-admin.vn-superadmin-layout .vn-security-panel-heading{padding:16px}
+  .vn-admin.vn-superadmin-layout .vn-security-readonly{display:none}
+  .vn-admin.vn-superadmin-layout .vn-security-toolbar{padding:10px}
+  .vn-admin.vn-superadmin-layout .vn-security-search{min-width:0}
+  .vn-admin.vn-superadmin-layout .vn-security-filters{flex:1 1 100%}
+  .vn-admin.vn-superadmin-layout .vn-security-filters button{flex:1 1 auto;font-size:10px;padding:8px 6px}
+  .vn-admin.vn-superadmin-layout .vn-security-table tbody tr:not(.vn-security-empty-row){grid-template-columns:1fr}
+  .vn-admin.vn-superadmin-layout .vn-security-table tbody tr:not(.vn-security-empty-row) td:first-child{grid-column:auto}
+  .vn-admin.vn-superadmin-layout .vn-security-event-list{padding:0 12px}
+  .vn-admin.vn-superadmin-layout .vn-security-event{gap:9px}
+  .vn-admin.vn-superadmin-layout .vn-security-event-result{font-size:10px}
+  .vn-admin.vn-superadmin-layout .vn-security-modal{padding:16px;border-radius:16px}
+  .vn-admin.vn-superadmin-layout .vn-security-fields{grid-template-columns:1fr}
+}
+@media(max-width:390px){
+  .vn-admin.vn-superadmin-layout .vn-security-stats{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  .vn-admin.vn-superadmin-layout .vn-security-page *{animation:none!important;transition:none!important}
+}
