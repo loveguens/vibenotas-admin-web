@@ -573,3 +573,19 @@ html.dark .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-delete:hover {
     transition:none !important;
   }
 }
+
+/* Protección de etiquetas existentes y estado de API no disponible. */
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-create:disabled {
+  opacity:.55;
+  cursor:not-allowed;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-name-locked {
+  margin:8px 0 0;
+  color:var(--tag-muted);
+  font-size:12px;
+  line-height:1.55;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-form input:disabled {
+  opacity:.66;
+  cursor:not-allowed;
+}
