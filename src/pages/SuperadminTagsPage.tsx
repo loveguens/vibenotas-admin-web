@@ -23,6 +23,7 @@ type TagsResponse = {
   success: boolean;
   message: string;
   data?: {
+    scope?: "global";
     etiquetas?: TagItem[];
     tags?: TagItem[];
     total?: number;
