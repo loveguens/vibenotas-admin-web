@@ -3,6 +3,7 @@ import {
   Edit3,
   Plus,
   RefreshCw,
+  RotateCcw,
   Search,
   Tag,
   Trash2,
@@ -17,6 +18,7 @@ type TagItem = {
   nombre: string;
   color: string;
   creado_en?: string;
+  eliminado_en?: string | null;
 };
 
 type TagsResponse = {
@@ -77,6 +79,10 @@ function getTagError(error: unknown, fallback: string): string {
 
 export default function SuperadminTagsPage() {
   const [tags, setTags] = useState<TagItem[]>([]);
+  const [trash, setTrash] = useState<TagItem[]>([]);
+  const [tab, setTab] = useState<"active" | "trash">("active");
+  const [trashLoading, setTrashLoading] = useState(false);
+  const [restoringId, setRestoringId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -114,6 +120,48 @@ export default function SuperadminTagsPage() {
     }
   }
 
+  async function loadTrash() {
+    setTrashLoading(true);
+    setError("");
+    try {
+      const response = await api.get<TagsResponse>("/admin/tags/trash");
+      if (!response.data.success || response.data.data?.scope !== "global") {
+        throw new Error("El backend no confirma un catálogo global seguro para la papelera.");
+      }
+      setTrash(response.data.data.etiquetas ?? []);
+    } catch (err) {
+      setTrash([]);
+      setError(getTagError(err, "No se pudo cargar la papelera."));
+    } finally {
+      setTrashLoading(false);
+    }
+  }
+
+  function switchTab(next: "active" | "trash") {
+    setTab(next);
+    setSearch("");
+    setError("");
+    if (next === "trash") void loadTrash();
+    else void loadTags();
+  }
+
+  async function restoreTag(tag: TagItem) {
+    if (!window.confirm(`¿Restaurar la etiqueta "${tag.nombre}"?`)) return;
+    setRestoringId(tag.id);
+    setError("");
+    setSuccess("");
+    try {
+      const response = await api.post(`/admin/tags/${tag.id}/restore`);
+      if (!response.data?.success) throw new Error(response.data?.message || "No se pudo restaurar la etiqueta.");
+      await loadTrash();
+      setSuccess("Etiqueta restaurada correctamente.");
+    } catch (err) {
+      setError(getTagError(err, "No se pudo restaurar la etiqueta."));
+    } finally {
+      setRestoringId(null);
+    }
+  }
+
   useEffect(() => {
     const initialLoad = window.setTimeout(() => {
       void loadTags();
@@ -124,10 +172,10 @@ export default function SuperadminTagsPage() {
 
   const filteredTags = useMemo(() => {
     const query = search.trim().toLocaleLowerCase("es-CL");
-    return tags.filter((tag) =>
+    return (tab === "active" ? tags : trash).filter((tag) =>
       !query || tag.nombre.toLocaleLowerCase("es-CL").includes(query)
     );
-  }, [search, tags]);
+  }, [search, tab, tags, trash]);
 
   function openCreateModal() {
     setEditingTag(null);
@@ -198,7 +246,7 @@ export default function SuperadminTagsPage() {
 
   async function deleteTag(tag: TagItem) {
     const confirmed = window.confirm(
-      `¿Eliminar la etiqueta "${tag.nombre}"? Esta acción no se puede deshacer.`
+      `¿Enviar la etiqueta "${tag.nombre}" a la papelera? Podrás restaurarla después.`
     );
 
     if (!confirmed) return;
@@ -215,7 +263,7 @@ export default function SuperadminTagsPage() {
         );
       }
 
-      setSuccess("Etiqueta eliminada correctamente.");
+      setSuccess("Etiqueta enviada a la papelera correctamente.");
       await loadTags();
     } catch (err) {
       setError(getTagError(err, "No se pudo eliminar la etiqueta."));
@@ -242,17 +290,17 @@ export default function SuperadminTagsPage() {
 
           <div className="vn-tags-actions flex flex-wrap gap-3">
             <button
-              onClick={loadTags}
-              disabled={loading}
+              onClick={() => tab === "active" ? void loadTags() : void loadTrash()}
+              disabled={loading || trashLoading}
               className="vn-tags-refresh inline-flex items-center gap-2 rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-3 text-sm font-semibold text-violet-300 transition hover:bg-violet-500/20"
             >
-              <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
+              <RefreshCw size={18} className={loading || trashLoading ? "animate-spin" : ""} />
               Actualizar
             </button>
 
             <button
               onClick={openCreateModal}
-              disabled={loading || Boolean(error)}
+              disabled={tab === "trash" || loading || Boolean(error)}
               title={error ? "Necesitas conexión con el backend para crear etiquetas" : "Nueva etiqueta"}
               className="vn-tags-create inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-950/40 transition hover:brightness-110"
             >
@@ -276,9 +324,14 @@ export default function SuperadminTagsPage() {
           </div>
         )}
 
+        <nav className="vn-tags-tabs" aria-label="Secciones de etiquetas globales">
+          <button type="button" aria-current={tab === "active" ? "page" : undefined} onClick={() => switchTab("active")}><Tag size={16} /> Activas</button>
+          <button type="button" aria-current={tab === "trash" ? "page" : undefined} onClick={() => switchTab("trash")}><Trash2 size={16} /> Papelera</button>
+        </nav>
+
         <div className="vn-tags-global-notice" role="status">
           <strong>Catálogo global independiente</strong>
-          <p>Solo aparecen las etiquetas oficiales creadas por la administración. Nunca mostramos nombres, notas ni cantidades de etiquetas personales.</p>
+          <p>Solo aparecen etiquetas globales oficiales. Las etiquetas personales y las notas privadas no se muestran aquí.</p>
         </div>
 
         <div className="vn-tags-toolbar rounded-3xl border border-white/10 bg-[#1E293B]/80 p-4 shadow-xl shadow-black/10 backdrop-blur-xl">
@@ -299,12 +352,12 @@ export default function SuperadminTagsPage() {
           </div>
           <div className="vn-tags-global-total" aria-live="polite">
             <Tag size={15} aria-hidden="true" />
-            {tags.length} {tags.length === 1 ? "etiqueta global" : "etiquetas globales"}
+            {tab === "active" ? tags.length : trash.length} {tab === "trash" ? "en papelera" : "etiquetas globales"}
           </div>
           <span className="vn-tags-visible" aria-live="polite">{filteredTags.length} visibles</span>
         </div>
 
-        {!loading && error && (
+        {!loading && !trashLoading && error && tab === "active" && (
           <section className="vn-tags-preview" aria-label="Vista previa sin conexión">
             <div className="vn-tags-preview-banner">
               <strong>Vista previa del diseño — sin datos reales</strong>
@@ -335,7 +388,7 @@ export default function SuperadminTagsPage() {
           </section>
         )}
 
-        {loading && (
+        {(tab === "active" ? loading : trashLoading) && (
           <div className="vn-tags-grid grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {[1, 2, 3, 4, 5, 6].map((item) => (
               <div
@@ -346,7 +399,7 @@ export default function SuperadminTagsPage() {
           </div>
         )}
 
-        {!loading && !error && (
+        {!(tab === "active" ? loading : trashLoading) && !error && (
           <div className="vn-tags-grid grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {filteredTags.map((tag) => {
               return (
@@ -363,7 +416,9 @@ export default function SuperadminTagsPage() {
                     </div>
 
                     <div className="vn-tags-item-actions flex gap-1">
-                      <button
+                      {tab === "trash" ? (
+                        <button type="button" onClick={() => void restoreTag(tag)} disabled={restoringId !== null} aria-label={`Restaurar etiqueta ${tag.nombre}`} className="vn-tags-edit" title="Restaurar etiqueta"><RotateCcw size={17} /></button>
+                      ) : <><button
                         type="button"
                         onClick={() => openEditModal(tag)}
                         aria-label={`Editar etiqueta ${tag.nombre}`}
@@ -381,7 +436,7 @@ export default function SuperadminTagsPage() {
                         title="Eliminar etiqueta"
                       >
                         <Trash2 size={17} />
-                      </button>
+                      </button></>}
                     </div>
                   </div>
 
@@ -390,7 +445,7 @@ export default function SuperadminTagsPage() {
                   </h2>
 
                   <p className="vn-tags-item-count mt-1 text-sm text-slate-500">
-                    Etiqueta oficial del catálogo de VibeNotas
+                    {tab === "trash" ? `En papelera desde ${tag.eliminado_en ? new Date(tag.eliminado_en).toLocaleDateString("es-CL") : "fecha no disponible"}` : "Etiqueta oficial del catálogo de VibeNotas"}
                   </p>
 
                   <div className="vn-tags-item-footer mt-5 flex items-center gap-2">
@@ -409,7 +464,7 @@ export default function SuperadminTagsPage() {
             {filteredTags.length === 0 && (
               <div className="vn-tags-empty col-span-full rounded-3xl border border-dashed border-white/10 py-16 text-center text-slate-500">
                 <Tag className="mx-auto mb-3" size={30} />
-                {tags.length === 0 ? "Todavía no hay etiquetas globales. Puedes crear la primera para ofrecerla como etiqueta oficial." : "No hay etiquetas que coincidan con los filtros."}
+                {(tab === "active" ? tags : trash).length === 0 ? (tab === "trash" ? "La papelera está vacía." : "Todavía no hay etiquetas globales.") : "No hay etiquetas que coincidan con los filtros."}
               </div>
             )}
           </div>
