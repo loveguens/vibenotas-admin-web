@@ -109,6 +109,7 @@ export default function SuperadminTagsPage() {
 
       setTags(response.data.data?.etiquetas ?? response.data.data?.tags ?? []);
     } catch (err) {
+      setTags([]);
       setError(getTagError(err, "No se pudieron cargar las etiquetas."));
     } finally {
       setLoading(false);
@@ -243,7 +244,7 @@ export default function SuperadminTagsPage() {
             </h1>
 
             <p className="vn-tags-description mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-              Crea y administra etiquetas para organizar mejor las notas.
+              Administra el catálogo de etiquetas sin modificar las etiquetas ya guardadas en tus notas.
             </p>
           </div>
 
@@ -259,6 +260,8 @@ export default function SuperadminTagsPage() {
 
             <button
               onClick={openCreateModal}
+              disabled={loading || Boolean(error)}
+              title={error ? "Necesitas conexión con el backend para crear etiquetas" : "Nueva etiqueta"}
               className="vn-tags-create inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-950/40 transition hover:brightness-110"
             >
               <Plus size={18} />
@@ -431,6 +434,7 @@ export default function SuperadminTagsPage() {
                     id="vn-tags-name"
                     autoFocus
                     value={form.nombre}
+                    disabled={Boolean(editingTag && getTagNoteCount(editingTag) > 0)}
                     onChange={(event) =>
                       setForm((current) => ({
                         ...current,
@@ -442,6 +446,11 @@ export default function SuperadminTagsPage() {
                     className="w-full rounded-xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-violet-400/50"
                     required
                   />
+                  {editingTag && getTagNoteCount(editingTag) > 0 && (
+                    <p className="vn-tags-name-locked">
+                      Esta etiqueta se usa en notas. Puedes cambiar su color, pero no su nombre.
+                    </p>
+                  )}
                 </div>
 
                 <div>
