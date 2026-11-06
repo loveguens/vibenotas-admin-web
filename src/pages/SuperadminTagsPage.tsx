@@ -100,7 +100,12 @@ export default function SuperadminTagsPage() {
         );
       }
 
-      setTags(response.data.data?.etiquetas ?? response.data.data?.tags ?? []);
+      // Evita exponer etiquetas personales si el backend aún ejecuta el contrato antiguo.
+      if (response.data.data?.scope !== "global") {
+        throw new Error("El backend todavía no confirma la separación de etiquetas privadas y globales. No se muestran etiquetas por seguridad.");
+      }
+
+      setTags(response.data.data?.etiquetas ?? []);
     } catch (err) {
       setTags([]);
       setError(getTagError(err, "No se pudieron cargar las etiquetas."));
