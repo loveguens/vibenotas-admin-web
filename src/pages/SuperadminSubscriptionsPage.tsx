@@ -90,7 +90,16 @@ function hasSafeContract(value: unknown): value is BillingOverview {
   ) {
     return false;
   }
-  return Object.values(result.capabilities).every((enabled) => enabled === false);
+  const required: Array<keyof BillingCapabilities> = [
+    "planCatalog",
+    "subscriptionLedger",
+    "paymentLedger",
+    "paymentProvider",
+    "verifiedWebhooks",
+    "manualPaymentConfirmation",
+    "subscriptionRenewal",
+  ];
+  return required.every((key) => result.capabilities?.[key] === false);
 }
 
 function formatCheckedAt(value: string | undefined): string {
