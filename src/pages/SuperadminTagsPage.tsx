@@ -324,10 +324,6 @@ export default function SuperadminTagsPage() {
           </div>
         )}
 
-        <nav className="vn-tags-tabs" aria-label="Secciones de etiquetas globales">
-          <button type="button" aria-current={tab === "active" ? "page" : undefined} onClick={() => switchTab("active")}><Tag size={16} /> Activas</button>
-          <button type="button" aria-current={tab === "trash" ? "page" : undefined} onClick={() => switchTab("trash")}><Trash2 size={16} /> Papelera</button>
-        </nav>
 
         <div className="vn-tags-global-notice" role="status">
           <strong>Catálogo global independiente</strong>
@@ -335,6 +331,10 @@ export default function SuperadminTagsPage() {
         </div>
 
         <div className="vn-tags-toolbar rounded-3xl border border-white/10 bg-[#1E293B]/80 p-4 shadow-xl shadow-black/10 backdrop-blur-xl">
+          <nav className="vn-tags-tabs" aria-label="Secciones de etiquetas globales">
+            <button type="button" aria-current={tab === "active" ? "page" : undefined} onClick={() => switchTab("active")}><Tag size={16} /> Activas</button>
+            <button type="button" aria-current={tab === "trash" ? "page" : undefined} onClick={() => switchTab("trash")}><Trash2 size={16} /> Papelera</button>
+          </nav>
           <div className="vn-tags-search flex items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3">
             <Search size={19} aria-hidden="true" className="text-slate-500" />
             <input

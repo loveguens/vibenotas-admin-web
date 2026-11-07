@@ -646,9 +646,17 @@ html.dark .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-delete:hover {
 
 /* Navegación accesible entre catálogo activo y papelera. */
 .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-tabs {
-  display:flex;flex-wrap:wrap;gap:9px;padding:5px;
-  border:1px solid var(--tag-line);border-radius:14px;
-  background:var(--tag-surface);
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-self: flex-start;
+  width: fit-content;
+  max-width: 100%;
+  gap: 9px;
+  padding: 5px;
+  border: 1px solid var(--tag-line);
+  border-radius: 14px;
+  background: var(--tag-surface);
 }
 .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-tabs button {
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
@@ -660,4 +668,56 @@ html.dark .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-delete:hover {
 }
 .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-tabs button:focus-visible {
   outline:2px solid var(--tag-coral);outline-offset:2px;
+}
+
+
+/* VIBENOTAS PRO - TABS INTEGRADAS EN TOOLBAR */
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-toolbar .vn-tags-tabs {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  align-self: center;
+  flex-wrap: nowrap;
+  width: auto;
+  max-width: 100%;
+  padding: 0 12px 0 0;
+  gap: 4px;
+  border: 0;
+  border-right: 1px solid var(--tag-line);
+  border-radius: 0;
+  background: transparent;
+}
+
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-toolbar .vn-tags-tabs button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-toolbar .vn-tags-search {
+  flex: 1 1 220px;
+  min-width: 180px;
+}
+
+@media (max-width: 780px) {
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-toolbar .vn-tags-tabs {
+    flex: 1 1 100%;
+    width: 100%;
+    padding-right: 0;
+    border-right: 0;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-toolbar .vn-tags-tabs button {
+    flex: 1 1 0;
+  }
+
+  .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-toolbar .vn-tags-search {
+    flex: 1 1 100%;
+  }
 }
