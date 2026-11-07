@@ -643,3 +643,21 @@ html.dark .vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-delete:hover {
   font-weight: 750;
   white-space: nowrap;
 }
+
+/* Navegación accesible entre catálogo activo y papelera. */
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-tabs {
+  display:flex;flex-wrap:wrap;gap:9px;padding:5px;
+  border:1px solid var(--tag-line);border-radius:14px;
+  background:var(--tag-surface);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-tabs button {
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:40px;padding:9px 16px;border:1px solid transparent;
+  border-radius:10px;color:var(--tag-muted);font-size:13px;font-weight:750;
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-tabs button[aria-current="page"] {
+  color:#fff;background:var(--tag-coral);
+}
+.vn-admin.vn-superadmin-layout .vn-tags-page .vn-tags-tabs button:focus-visible {
+  outline:2px solid var(--tag-coral);outline-offset:2px;
+}
